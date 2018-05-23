@@ -1,0 +1,178 @@
+<template>
+    <div class="bg-reserve">
+      <el-form ref="form" :label-position="'right'" :rules="rules" :inline="true" :model="companyObj" size="mini" label-width="100px">
+        <el-form-item label="酒店编码：">
+          <el-input v-model="companyObj.companyCode" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="酒店名称：" prop="companyName">
+          <el-input v-model="companyObj.companyName"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店地址：" prop="companyAddress">
+          <el-input v-model="companyObj.companyAddress"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店电话：" prop="telPhone">
+          <el-input v-model="companyObj.telPhone"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店传真：">
+          <el-input v-model="companyObj.fax"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店邮编：">
+          <el-input v-model="companyObj.post"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店邮箱：" prop="email">
+          <el-input v-model="companyObj.email"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店网址：">
+          <el-input v-model="companyObj.url"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店城市：" prop="cityName">
+          <el-input v-model="companyObj.cityName"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店介绍：">
+          <el-input type="textarea"
+            autosizea
+            placeholder="请输入内容"
+            :autosize="{ minRows: 6, maxRows: 10}"
+            v-model="companyObj.companyIntroduce">
+          </el-input>
+        </el-form-item>
+        <el-form-item label=" ">
+            <el-button type="primary" @click="saveInfo">保存酒店信息</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+</template>
+
+<script>
+import {
+  getCompanyInfot,
+  updateCompany
+} from "@/api/systemSet/pmsCompanyController";
+export default {
+  data() {
+    return {
+      companyObj: {},
+      rules: {
+        companyName: [
+          {
+            required: true,
+            message: "酒店名称不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        companyAddress: [
+          {
+            required: true,
+            message: "酒店地址不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        telPhone: [
+          {
+            required: true,
+            message: "酒店电话不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        cityName: [
+          {
+            required: true,
+            message: "酒店所在城市不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        email: [
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: "blur,change"
+          }
+        ]
+      }
+    };
+  },
+  methods: {
+    init(){
+      this.getCompany();
+    },
+    getCompany() {
+      getCompanyInfot().then(res => {
+        if (res.code == 1) {
+          this.companyObj = res.data;
+          console.log(this.companyObj);
+        }
+      });
+    },
+    saveInfo() {
+      if (this.verification()) {
+        updateCompany(this.companyObj).then(res => {
+          if (res.code == 1) {
+            this.$message.success("成功修改酒店信息，退出重新登入系统生效！");
+            this.getCompany();
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }
+    },
+    verification() {
+      var content = "";
+      if (this.companyObj.companyName == "") {
+        content = "酒店名称不能为空";
+      } else if (this.companyObj.companyAddress == "") {
+        content = "酒店地址不能为空";
+      } else if (this.companyObj.telPhone == "") {
+        content = "酒店电话不能为空";
+      } else if (this.companyObj.cityName == "") {
+        content = "酒店所在城市不能为空";
+      }
+
+      if (content != "") {
+        this.$message.error(content);
+        return false;
+      }
+      return true;
+    }
+  },
+  mounted() {
+    this.init()
+  },
+};
+</script>
+<style scoped>
+.bg-reserve {
+  width: 800px;
+  background-color: #f7f7f7;
+  position: relative;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding-top: 18px;
+  padding-left: 5px;
+  padding-bottom: 10px;
+}
+.info-title {
+  position: absolute;
+  z-index: 1;
+  top: -6px;
+  display: inline-block;
+  margin: 0;
+  margin-left: 9px;
+  background: #f7f7f7;
+}
+.el-select,
+.el-input {
+  width: 204px;
+}
+.el-textarea {
+  width: 500px;
+}
+.member-level {
+  width: 95px;
+}
+.card-no {
+  width: 104px;
+}
+.address {
+  width: 501px;
+}
+</style>

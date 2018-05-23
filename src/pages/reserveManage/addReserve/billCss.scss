@@ -1,0 +1,173 @@
+.marginTop10{
+    margin: 10px 0;
+  }
+  .tabs-title{
+    background: #cccccc;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 15px;
+  }
+  .tabs-content{
+    padding: 0 15px;
+  }
+  .tabs-content-li{
+    height: 25px;
+    line-height: 25px;
+  }
+  .tabs-content-li+.tabs-content-li{
+    border-top: 1px dashed #cccccc;
+  }
+  .success{
+    color: #67c23a;
+  } 
+  .primary{
+    color: #409eff;
+  }
+  .danger{
+    color: #f56c6c;
+  }
+  .billPric-txt{
+    color: red;
+  }
+  .billPric-txt em{
+    font-style: normal;
+    margin-left: 10px;
+  }
+  .bill-el-button .el-button+.el-button{
+    margin-left: 0;
+  }
+  .bill-el-button .el-button{
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  .pattern-dialog-container{
+    padding: 15px;
+    display: inline-block;
+    width: 97%;
+  }
+  .batchOccupancy-content .el-form-item{
+    margin-bottom: 5px;
+  }
+  .groupSelections-title{
+    border: 1px solid #dddddd;
+    height: 112px;
+    padding: 0 10px;
+  }
+  .groupSelections-title-txt{
+    margin: 0;
+    position: relative;
+    top: -13px;
+    margin-left: 10px;
+  }
+  .left{
+    float: left;
+  }
+  .right{
+    float: right;
+  }
+  .consumptions{
+    color: #67c23a;
+  }  
+  .settlements{
+    color: #409EFF;
+    margin-left: 15px;
+  }
+  .price{
+    color: red;
+    font-size: 20px; 
+    font-style: normal;
+    font-weight: bold;
+  }
+  .licensing-title{
+    border-bottom: 1px solid #dddddd;
+  }
+  .margin0{
+    margin: 0;
+    display: inline-block;
+  }
+  .icon-butn{
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+  }
+  .licensing-content{
+    margin-top: 10px;
+  }
+  .licensing-li{
+    width: 310px;
+    height: 155px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .licensing-text{
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;  
+  }
+  .activesing{
+    border: 1px solid #000;
+  }
+  .licensing-li-top{
+    height: 35px;
+  }
+  .licensing-li-in{
+    height: 85px;
+  } 
+  .licensing-li-in span{
+    display: block;
+    margin-left: 15px;
+  }
+  .licensing-li-in span em,.licensing-li-bottom span em{
+    color: #000;
+    font-style: normal;
+      margin-left: 10px;
+  }
+  .licensing-li-bottom{
+    height: 35px;
+    margin-left: 15px;
+  }
+  .licensing-li-bottom span em{
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .licensing-li-text span{
+    display: block;
+  }
+  .licensing-li-text span .titltop,.licensing-text-bottom span .titltop{
+    width: 100px;
+    display: inline-block;
+  }
+  .licensing-li-text span em,.licensing-text-bottom span em{
+    padding-left: 50px;
+    font-style: normal;
+  }
+  .licensing-text-bottom{
+    padding-top: 10px;
+    border-top: 1px solid #dddddd;
+  }
+  .licensing-li-text span,.licensing-text-bottom span{
+    height: 30px;
+  }
+  .checkout-inpt{
+    width: 120px;
+  }
+  .demo-input-suffix{
+    margin-bottom: 10px;
+  }
+  .WeChat-content{
+    text-align: center;
+  }
+  .WeChat-img{
+    width: 145px;
+    height: 145px;
+    background: #dddddd;
+    display: inline-block;
+  }
+  .buttonsRight{
+    margin-right: 10px !important;
+  }

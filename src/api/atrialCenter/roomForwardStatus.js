@@ -1,0 +1,16 @@
+import request from '@/utils/requestJson'
+/**
+ * 远期房态接口
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+
+ //远期房态列表
+export const frowardRoomList = params => {
+    return request.get('/back/frowardRoom/list',{params:params});
+}
+
+// 远期房态详情
+export const frowardRoomDetail = params => {
+    return request.get('/back/frowardRoom/detail',{params:params});
+}
