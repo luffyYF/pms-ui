@@ -15,7 +15,7 @@
             <el-table-column prop="roomNumber" label="房号"></el-table-column>
             <el-table-column prop="orderStatus" label="状态" width="90">
               <template slot-scope="scope">
-                <span v-if="scope.row.cancelFlag=='Y'" style="color:#999999">订单取消</span>
+                <span v-if="scope.row.pmsCancelFlag=='Y'" style="color:#999999">订单取消</span>
                 <span v-else-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY' || scope.row.orderStatus=='NOSHOW'" style="color:#999999">{{orderStatusMap[scope.row.orderStatus]}}</span>
                 <span v-else>{{orderStatusMap[scope.row.orderStatus]}}</span>
               </template>
@@ -28,7 +28,7 @@
             </el-table-column>
             <el-table-column prop="count" label="操作">
               <template slot-scope="scope">
-                <template v-if="scope.row.mainFlag=='Y' && scope.row.cancelFlag!='Y'">
+                <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
                   <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="toCheckout">退房</el-button>
                 </template>
@@ -114,9 +114,8 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="房间数量：" required>
-                  <!-- TODO 适应豪斯菲尔预定，暂时禁用  -->
                   <!-- @change="loadPrice" -->
-                  <el-input-number :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest' || true"></el-input-number>
+                  <el-input-number :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -148,7 +147,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="离店日期：" required>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.cancelFlag=='Y'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -603,7 +602,7 @@
     import bus from '@/utils/bus'
     import {orderStatusMap,contractMap, paymentMap, credentialsMap} from '@/utils/orm'
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
-    import {isInteger} from '@/utils/validate'
+    import {isInteger, validatePhone} from '@/utils/validate'
     import {MyToFixed} from '@/utils/number'
     import Agreement from '@/components/Agreement/Agreement'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
@@ -670,7 +669,7 @@
             guestPhone:null,
             beginDate: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             endDate: formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss'),
-            cancelFlag: null,
+            pmsCancelFlag: null,
             diyPriceFlag: 'N'
           },
           roomObj: {
@@ -795,7 +794,7 @@
                 guestName: obj.guestName,
                 count: obj.count,
                 mainFlag: obj.mainFlag,
-                cancelFlag: obj.cancelFlag
+                pmsCancelFlag: obj.pmsCancelFlag
               }
               this.roomTable.push(temp)
             })
@@ -840,7 +839,7 @@
           this.form.bornDate = null
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
           this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
-          this.form.cancelFlag = null
+          this.form.pmsCancelFlag = null
           this.form.diyPriceFlag = 'N'
 
           this.memberFlag = false
@@ -849,7 +848,7 @@
           this.form.agreementPk = guest.agreementPk
           this.form.beginDate = guest.beginDate
           this.form.bornDate = guest.bornDate
-          this.form.cancelFlag = guest.cancelFlag
+          this.form.pmsCancelFlag = guest.pmsCancelFlag
           this.form.carNumber = guest.carNumber
           this.form.certificateNo = guest.certificateNo
           this.form.certificateType = guest.certificateType
@@ -1040,6 +1039,46 @@
             }
           });
         },
+        //表单校验
+        formValidate(){
+          if(!this.form.channelTypePk){
+            this.$message({type:'warning', message:'请选择客源渠道'})
+            return false;
+          }
+          if(!this.form.roomTypePk){
+            this.$message({type:'warning', message:'请选择房间类型'})
+            return false;
+          }
+          if(this.form.currPrice==null){
+            this.$message({type:'warning', message:'请填写当前房租'})
+            return false;
+          }
+          if(this.form.count==null || Number(this.form.count)<=0){
+            this.$message({type:'warning', message:'请填写房间数量'})
+            return false;
+          }
+          if(this.form.beginDate==null){
+            this.$message({type:'warning', message:'请选择抵店日期'})
+            return false;
+          }
+          if(this.form.endDate==null){
+            this.$message({type:'warning', message:'请选择离店日期'})
+            return false;
+          }
+          if(!this.form.guestName){
+            this.$message({type:'warning', message:'请填写客人姓名'})
+            return false;
+          }
+          if(!this.form.guestPhone){
+            this.$message({type:'warning', message:'请填写手机号'})
+            return false;
+          }
+          if(!validatePhone(this.form.guestPhone)){
+            this.$message({type:'warning', message:'手机号码不合法'})
+            return false;
+          }
+          return true;
+        },
         parentClearGuest() {//添加客人前 清空
           if(!this.form.guestOrderPk){
             this.$message({type:'warning', message:'请先选择客单'})
@@ -1072,19 +1111,9 @@
           if(this.form.currTitle != '添加客人'){
             return;
           }
-          if(!this.form.guestName){
-            this.$message({type:'warning', message:'请填写客人姓名'})
+          if(!this.formValidate()){
             return;
           }
-          //验证表单
-          // this.$refs.form.validate((valid) => {
-          //   if (valid) {
-          //     alert('submit!');
-          //   } else {
-          //     console.log('error submit!!');
-          //     return false;
-          //   }
-          // });
           let data = {
             guestOrderPk: this.form.guestOrderPk,
             memberPo: {
@@ -1144,9 +1173,12 @@
           this.form.guestPhone = null
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
           this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-          this.form.cancelFlag = 'N'
+          this.form.pmsCancelFlag = 'N'
         },
         addReserveGuest() {//添加预定
+          if(!this.formValidate()){
+            return;
+          }
           addReserveGuest(this.form).then(res=>{
             if(res.code==1){
               this.$message({type:'success', message:'添加预定成功'})
@@ -1192,14 +1224,18 @@
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
         editGuestInfo() {//修改客人信息
-          if(this.form.cancelFlag=='Y'){
+          if(this.form.pmsCancelFlag=='Y'){
             return;
           }
+          if(!this.formValidate()){
+            return;
+          }
+          
           editOrderMember(this.form).then(res=>{
             this.$message({type:'success', message: '客人信息修改成功'})
             bus.$emit('refreshOrderInfo', this.form.orderPk)
           }).catch(error=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            //bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
         toDialogAgreement() {//打开选择协议单位

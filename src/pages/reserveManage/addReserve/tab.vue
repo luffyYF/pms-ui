@@ -119,7 +119,7 @@
           keepTime: null,
           remark: '',
           reserveCardNo: '',
-          roomCount: '',
+          rentCount: '',
           userName: '',
           userPhone: '',
         },
@@ -141,7 +141,7 @@
           keepTime: null,
           remark: '',
           reserveCardNo: '',
-          roomCount: '',
+          rentCount: '',
           userName: '',
           userPhone: '',
         }

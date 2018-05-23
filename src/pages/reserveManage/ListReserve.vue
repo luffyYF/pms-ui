@@ -89,7 +89,8 @@
     <el-table v-loading="loading" :data="tableData | globalFilter(filterText) | pagingFilter(pagination)" filter-change="handlerFilterChange" border>
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
-      <el-table-column label="操作员" prop="numberOfOccupancy">
+      <!-- numberOfOccupancy-->
+      <el-table-column label="操作员" prop="createUserName">
       </el-table-column>
       <el-table-column label="预订人" prop="userName">
       </el-table-column>
@@ -99,7 +100,8 @@
       </el-table-column>
       <el-table-column label="渠道" min-width="150">
         <template slot-scope="scope">
-          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{matchChannel(y.channelTypePk)}}</p>
+          <!-- <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{matchChannel(y.channelTypePk)}}</p> -->
+          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.channelTypeName}}</p>
         </template>
       </el-table-column>
       <el-table-column label="入住人">

@@ -16,7 +16,11 @@
           <p class="partialcheckout-price">
             <span class="left" style="color: red" v-if="countCheckoutDate.settlementAmount-countCheckoutDate.consumptionAmount>=0">找零：</span>
             <span class="left" style="color: red" v-if="countCheckoutDate.settlementAmount-countCheckoutDate.consumptionAmount<0">应收：</span>
-            <span class="left price">{{Math.abs(countCheckoutDate.settlementAmount-countCheckoutDate.consumptionAmount)}}</span>
+            <span class="left price">{{this.backMoney}}</span>
+          </p>
+          <p class="partialcheckout-price" v-if="billForm.onlineFlag">
+            <span class="left" style="color: red">线上退款：</span>
+            <span class="left price">{{billForm.onlineMoney}}</span>
           </p>
         </el-col>
         <el-col :span="12" style="border-left: 1px solid #ddd;">
@@ -68,6 +72,14 @@
               <el-form-item label="备注：">
                 <el-input type="textarea" v-model="billForm.remark"></el-input>
               </el-form-item>
+
+              <el-form-item v-if="onlineVisible">
+                <el-checkbox v-model="billForm.onlineFlag" @change="onlineFlagChange">线上退款</el-checkbox>
+              </el-form-item>
+              <span v-if="billForm.onlineFlag" style="color:red;padding-left:30px">总退款金额：{{tempBackMoney}}元，线上押金：{{countCheckoutDate.cashPledge}}元</span>
+              <el-form-item label="退款金额" v-if="billForm.onlineFlag" required>
+                <el-input type="text" v-model="billForm.onlineMoney" v-on:input="onlineMoneyChange"></el-input>
+              </el-form-item>
             </el-form>
           </div>
         </el-col>
@@ -91,14 +103,19 @@ export default {
       orderPk: "",
       type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 3:豪斯菲尔退房未结
       dialogPartialCheckout: false,
-      countCheckoutDate: [],
+      countCheckoutDate: {},
       guestOrderSelect: [],
       billPks: '',
       paymentMap: paymentMap,
+      backMoney: 0,//找零、欠费金额
+      tempBackMoney: 0,
+      onlineVisible:false,//是否可以线上退款
       billForm: {
         payment: "0",
         remark: null,
         guestOrderPk:'',
+        onlineFlag:false,
+        onlineMoney: 0,
       },
       hfBillForm: {
         orderPk:'',
@@ -121,16 +138,27 @@ export default {
       this.billPks = billPks;
       this.billForm.payment = "0";
       this.billForm.remark = null;
+      this.onlineVisible = false;
+      this.billForm.onlineFlag = false;
+      this.billForm.onlineMoney = 0
       this.hfBillForm.hfCashPledge = hfCashPledge
       this.dialogPartialCheckout = true;
       this.islock = false;
       if(type==2){
         countCheckoutBill({ billPk: billPks }).then(res => {
           this.countCheckoutDate = res.data;
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
+          this.tempBackMoney = this.backMoney;
         });
       }else{
         countCheckoutBill({ orderPk: orderPk }).then(res => {
           this.countCheckoutDate = res.data;
+          let backMoney = this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount;
+          this.backMoney = Math.abs(backMoney);
+          this.tempBackMoney = this.backMoney;
+          if(this.countCheckoutDate.payType==='Y' && backMoney>0){
+            this.onlineVisible = true
+          }
         });
       }
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
@@ -140,18 +168,50 @@ export default {
         }
       });
     },
+    onlineFlagChange(value) {
+      if(value){
+        this.billForm.onlineMoney= this.countCheckoutDate.cashPledge
+        this.backMoney = Number(this.tempBackMoney) - Number(this.billForm.onlineMoney)
+      }else{
+        this.backMoney = Number(this.tempBackMoney);
+      }
+    },
+    onlineMoneyChange(value){
+      this.backMoney = Number(this.tempBackMoney) - Number(value)
+    },
     confirm() {
       if(this.islock){
         return;
       }
-      this.islock = true;
       //确定
       if (this.type == 0) {
+        if(this.billForm.onlineFlag) {
+          if(this.billForm.onlineMoney==null || this.billForm.onlineMoney==''){
+            this.$message.warning('退款金额不能为空')
+            return;
+          }
+          if(Number(this.billForm.onlineMoney)<0){
+            this.$message.warning('退款金额不能小于0')
+            return;
+          }
+          if(Number(this.billForm.onlineMoney) > Number(this.tempBackMoney)){
+            this.$message.warning('不能超出总退款金额')
+            return;
+          }
+          if(Number(this.billForm.onlineMoney) > Number(this.countCheckoutDate.cashPledge)){
+            this.$message.warning('不能超出线上支付的押金')
+            return;
+          }
+        }
+
         let data = {
           orderPk: this.orderPk,
           payment: this.billForm.payment,
-          remark: this.billForm.remark
+          remark: this.billForm.remark,
+          onlineFlag: this.billForm.onlineFlag,
+          onlineMoney: this.billForm.onlineMoney
         };
+        this.islock = true;
         checkoutauthBill(data).then(res => {
           this.dialogPartialCheckout = false;
           this.$message({type:'success', message:'操作成功'})
@@ -162,6 +222,7 @@ export default {
           this.islock = false;
         })
       }else if(this.type==1){
+        this.islock = true;
         checkoutNoPay({orderPk: this.orderPk}).then(res=>{
           this.$message({type:'success', message:'操作成功'})
           this.dialogPartialCheckout = false;
@@ -177,6 +238,7 @@ export default {
           payment:this.billForm.payment,
           remark: this.billForm.remark
         }
+        this.islock = true;
         checkoutPart(data).then(res=>{
           this.$message({type:'success', message:'操作成功'})
           this.dialogPartialCheckout = false;
@@ -191,6 +253,7 @@ export default {
           consumptionAmount:this.hfBillForm.consumptionAmount,
           remark: this.hfBillForm.remark
         }
+        this.islock = true;
         hfCheckoutNoPay(data).then(res=>{
           this.$message({type:'success', message:'操作成功'})
           this.dialogPartialCheckout = false;
