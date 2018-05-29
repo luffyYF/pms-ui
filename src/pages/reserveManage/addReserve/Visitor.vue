@@ -42,7 +42,7 @@
             <el-table-column prop="roomNumber" label="房号"></el-table-column>
             <el-table-column prop="date" label="日期" width="100"></el-table-column>
             <el-table-column prop="personCount" label="人数" width="50"></el-table-column>
-            <el-table-column prop="price" label="房租"></el-table-column>
+            <el-table-column prop="rentPrice" label="房租"></el-table-column>
             <el-table-column prop="status" label="状态">
               <template slot-scope="scope">
                  <span>{{contractMap[scope.row.status]}}</span>
