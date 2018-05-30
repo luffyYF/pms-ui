@@ -1,4 +1,4 @@
-//新增预定-预定信息
+//团队预定
 <template>
   <div>
     <el-form ref="form" :model="form" size="mini" label-width="80px">
@@ -28,7 +28,7 @@
             </el-col> 
             <el-col :span="4">
               <el-form-item label="是否团体">
-                <el-select v-model="form.isTeam">
+                <el-select v-model="form.isTeam" :disabled="true">
                   <el-option label="否" value="N"></el-option>
                   <el-option label="是" value="Y"></el-option>
                 </el-select>
@@ -97,7 +97,7 @@
 </template>
 <script>
   import { paymentMap } from '@/utils/orm'
-  import VisitorTag from './Visitor'
+  import VisitorTag from './addReserve/Visitor'
   import {validatePhone} from '@/utils/validate'
   import {formatDate, copyObj} from '@/utils/index'
   import {reserveOrder} from '@/api/order/pmsOrderController'
@@ -113,9 +113,8 @@
           guarantee: '',
           guaranteeType:'',
           payment: '0',
-          isTeam: 'N',
+          isTeam: 'Y',
           companyPk: '',
-          isTeam: 'N',
           keepTime: null,
           remark: '',
           reserveCardNo: '',
@@ -131,13 +130,12 @@
       init() {
         this.form = {
           orderPk: null,
-          name: '',
+          name: '团队预定 ',
           guarantee: '',
           guaranteeType:'',
           payment: '0',
-          isTeam: 'N',
+          isTeam: 'Y',
           companyPk: '',
-          isTeam: 'N',
           keepTime: null,
           remark: '',
           reserveCardNo: '',
@@ -161,6 +159,52 @@
         }else{
           if(!validatePhone(this.form.userPhone)){
             this.$message({type:'warning', message: '手机号不合法！'})
+            return
+          }
+        }
+        if(!visitorForm.channelTypePk){
+          this.$message({type:'warning', message:'客源渠道不能为空'})
+          return
+        }
+        if(!visitorForm.guestName){
+          this.$message({type:'warning', message:'客人姓名不能为空'})
+          return
+        }
+        if(visitorForm.currPrice==null) {
+          this.$message({type:'warning', message:'当前房租不能为空'})
+          return
+        }
+        if(Number(visitorForm.currPrice)<0){
+          this.$message({type:'warning', message:'当前房租不能小于0'})
+          return
+        }
+        if(visitorForm.deposit==null){
+          this.$message({type:'warning', message:'押金不能为空'})
+          return
+        }
+        if(Number(visitorForm.deposit)<0){
+          this.$message({type:'warning', message:'请输入正确的押金'})
+          return
+        }
+        if(!visitorForm.beginDate){
+          this.$message({type:'warning', message:'抵店日期不能为空'})
+          return
+        }
+        if(!visitorForm.endDate){
+          this.$message({type:'warning', message:'离店日期不能为空'})
+          return
+        }
+        if(!visitorForm.guestPhone){
+          this.$message({type:'warning', message:'请填写手机号'})
+          return
+        }
+        if(!validatePhone(visitorForm.guestPhone)){
+          this.$message({type:'warning', message:'手机号不合法'})
+          return
+        }
+        if(this.form.isTeam=='Y'){
+          if(visitorForm.agreementPk==null || visitorForm.agreementPk==''){
+            this.$message({type:'warning', message: '请选择协议单位'})
             return
           }
         }
