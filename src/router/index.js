@@ -164,7 +164,7 @@ export const constantRouterMap = [
         children: [
           {path: '/', component: AddReserve, label: '新增预定'},
           {path: '/reserveManage/fastReserve', component: FastReserve, label: '快速预定'},
-          {path: '/reserveManage/listReserve', component: ListReserve, label: '预订单列表'}
+          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
         ]
       },
       {

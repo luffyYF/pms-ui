@@ -13,7 +13,7 @@
         <span slot="title">快速预定</span>
       </el-menu-item>
       <el-menu-item index="/reserveManage/listReserve" v-if="powerJudge('1305')">
-        <span slot="title">预订单列表</span>
+        <span slot="title">订单列表</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
