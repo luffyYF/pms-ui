@@ -14,3 +14,8 @@ export const frowardRoomList = params => {
 export const frowardRoomDetail = params => {
     return request.get('/back/frowardRoom/detail',{params:params});
 }
+
+// 获取房型的可预订数量、剩余房间数
+export const getBookableCount = params => {
+    return request.get('/back/frowardRoom/getBookableCount',{params:params});
+}
