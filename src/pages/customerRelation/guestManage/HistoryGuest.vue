@@ -59,15 +59,7 @@
       <el-table v-loading="loading" 
       size="mini" 
       border 
-      :data="tableData
-      | globalFilter(form.memName)
-      | globalFilter(form.certificateNo)
-      | globalFilter(form.memPhone)
-      | globalFilter(form.cardNumber)
-      | globalFilter(form.carNumber)
-      | globalFilter(form.roomNumber)
-      | globalFilter(form.invoiceTitle)
-      " 
+      :data="tableData" 
       style="width: 98.5%; margin:10px;" height="450">
         <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
         </el-table-column>
@@ -119,6 +111,10 @@
           </template>
         </el-table-column> -->
       </el-table>
+      <div class="block teamPagination"  >
+        <el-pagination @current-change="getHistoetGuestPageNum" @size-change="getHistoetGuestPageSize" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+        </div>
     </div>
 
     <el-dialog title="选择协议单位" :visible.sync="agreementUnit" width="55%">
@@ -175,12 +171,15 @@ export default {
         cardNumber: '', 
         carNumber: '', 
         roomNumber: '', 
-        invoiceTitle: ''
+        invoiceTitle: '',
+        pageNum:1,
+        pageSize:10
       },
       agreementUnit: false,
       loading: false,
       protocolNumber: '',
-      tableData: [], //账户列表数据
+      tableData: [],
+      total:0, //账户列表数据
       beginDate: new Date(),
       endDate: new Date()
     };
@@ -195,8 +194,17 @@ export default {
       this.loading = true
       historyLiveInProject(parameters).then(res => {
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.total;
       });
+    },
+    getHistoetGuestPageNum(val){
+        this.form.pageNum = val;
+        this.liveInListData();
+    },
+    getHistoetGuestPageSize(val){
+        this.form.pageSize = val;
+        this.liveInListData();
     },
     guestSearch(){
       this.liveInListData();

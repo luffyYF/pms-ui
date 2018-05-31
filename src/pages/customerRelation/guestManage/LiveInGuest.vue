@@ -35,13 +35,7 @@
           size="mini"
           height="450"
           border 
-          :data="tableData
-          | globalFilter(form.memName)
-          | globalFilter(form.certificateNo)
-          | globalFilter(form.memPhone)
-          | globalFilter(form.cardNumber)
-          | globalFilter(form.carNumber)
-          " 
+          :data="tableData" 
           style="width: 98.5%; margin:10px;"> 
           <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
           </el-table-column>
@@ -93,6 +87,10 @@
             </template>
           </el-table-column> -->
         </el-table>
+        <div class="block teamPagination"  >
+        <el-pagination @current-change="getLiveGuestPageNum" @size-change="getLiveGuestPageSize" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -112,9 +110,12 @@ export default {
         certificateNo:'', 
         memPhone:'', 
         cardNumber:'', 
-        carNumber:''
+        carNumber:'',
+        pageNum:1,
+        pageSize:10
       },
-      tableData: []
+      tableData: [],
+      total:0
     };
   },
   created () {
@@ -126,12 +127,22 @@ export default {
       const parameters = self.form;
       this.loading = true
       liveInProject(parameters).then(res => {
-        console.log(res.data)
+        console.log(res.data.data)
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.total;
         console.log(this.tableData)
       });
     },
+    getLiveGuestPageNum(val){
+        this.form.pageNum = val;
+        this.liveInListData();
+    },
+    getLiveGuestPageSize(val){
+        this.form.pageSize = val;
+        this.liveInListData();
+    }
+    ,
     guestSearch(){
       this.liveInListData();
     }
