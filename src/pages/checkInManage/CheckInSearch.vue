@@ -355,7 +355,10 @@
 </script>
 <style scoped>
 .checkPagination{
+  float: right;
   margin-top: 20px;
+  margin-bottom: 10px;
+  margin-right: 20px;
 }
 .el-select{
   width: 178px;

@@ -39,15 +39,15 @@
           style="width: 98.5%; margin:10px;"> 
           <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
           </el-table-column>
-          <el-table-column prop="memberGrade" label="类型" align="center" width="90">
-            <template slot-scope="scope">
+          <el-table-column prop="gradeName" label="类型" align="center" width="90">
+            <!-- <template slot-scope="scope">
               <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
               <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
               <span v-if="scope.row.memberGrade == 'SENIOR'">高级会员</span>
               <span v-if="scope.row.memberGrade == 'VIP'">VIP会员</span>
               <span v-if="scope.row.memberGrade == 'PLATINUM'">铂金会员</span>
               <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column prop="memName" label="姓名" align="center" width="90">
           </el-table-column>
@@ -87,7 +87,7 @@
             </template>
           </el-table-column> -->
         </el-table>
-        <div class="block teamPagination"  >
+        <div class="block LiveInGuestPagination"  >
         <el-pagination @current-change="getLiveGuestPageNum" @size-change="getLiveGuestPageSize" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
         </div>
@@ -154,6 +154,10 @@ export default {
 </script>
 
 <style scoped>
+.LiveInGuestPagination{
+  float:right;
+  margin: 0 20px 10px 0;
+}
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
