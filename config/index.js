@@ -12,8 +12,8 @@ module.exports = {
     proxyTable: {
       '/pms': {
         // target: "http://10.40.36.227:7777/pms",//设置你调用的接口域名和端口号 别忘了加http
-        // target: "http://10.40.36.76:8888/pms",//设置你调用的接口域名和端口号 别忘了加http
-        target: "http://www.housefeel.cn/test-pms",
+        target: "http://localhost:8080/pms",//设置你调用的接口域名和端口号 别忘了加http
+        // target: "http://www.housefeel.cn/test-pms",
         secure: false,      // 如果是https接口，需要配置这个参数
         changeOrigin: true,  // 跨域带cookies
         pathRewrite: {
@@ -22,7 +22,7 @@ module.exports = {
         }
       },
       '/fs': {
-        target: "http://10.40.36.227:7777/fs",//设置你调用的接口域名和端口号 别忘了加http
+        target: "http://localhost:7777/fs",//设置你调用的接口域名和端口号 别忘了加http
         // target: "http://zh.taofangt.com:8291/test-fs",
         secure: false,      // 如果是https接口，需要配置这个参数
         changeOrigin: true,    // 跨域带cookies
@@ -34,7 +34,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     // host: '10.40.36.9', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
