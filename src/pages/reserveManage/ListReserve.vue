@@ -3,55 +3,60 @@
     <el-form :inline="true" size="mini" label-width="80px"  class="demo-form-inline">
       <el-col :span="24">
         <el-form-item label="快捷搜索:">
-          <el-radio-group v-model="radio5" size="small">
-            <el-radio-button label="今日抵店预订"></el-radio-button>
-            <el-radio-button label="取消预订"></el-radio-button>
-            <el-radio-button label="NoShow预订"></el-radio-button>
-            <el-radio-button label="有效预订"></el-radio-button>
-            <el-radio-button label="全部状态"></el-radio-button>
+          <el-radio-group v-model="formInline.orderStatus" size="small">
+            <el-radio-button label="RESERVE">今日抵店预订</el-radio-button>
+            <el-radio-button label="CANCEL">取消预订</el-radio-button>
+            <el-radio-button label="NOSHOW">NoShow预订</el-radio-button>
+            <el-radio-button label="PAYMENT">有效预订</el-radio-button>
+            <el-radio-button label="">全部状态</el-radio-button>
           </el-radio-group>
         </el-form-item>
       </el-col>
       <el-col :span="24">
         <el-form-item label="预订人:">
-          <el-input v-model="filterText" placeholder="请输入预订人" clearable></el-input>
+          <el-input v-model="formInline.userName" placeholder="请输入预订人" clearable></el-input>
         </el-form-item>
         <!-- <el-form-item label="预订卡号:">
           <el-input v-model="filterText" placeholder="请输入预订卡号" clearable></el-input>
         </el-form-item> -->
         <el-form-item label="入住人:">
-          <el-input v-model="filterText" placeholder="请输入入住人" clearable></el-input>
+          <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable></el-input>
         </el-form-item>
         <el-form-item label="房间数量:">
-          <el-input v-model="filterText" placeholder="请输入房间数量" clearable></el-input>
+          <el-input v-model="formInline.rentCount" placeholder="请输入房间数量" clearable></el-input>
         </el-form-item>
         <el-form-item label="入住时间:">
           <el-date-picker
-            v-model="startTime"
+            v-model="formInline.beginDate"
             align="right"
             type="date"
+            value-format="yyyy-MM-dd"
             placeholder="请选择入住时间"
             :picker-options="startTimeOptions">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="预离时间:">
           <el-date-picker
-            v-model="endTime"
+            v-model="formInline.endDate"
             align="right"
             type="date"
+            value-format="yyyy-MM-dd"
             placeholder="请选择结账时间"
             :picker-options="endTimeOptions">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="渠道:">
+        <!-- <el-form-item label="渠道:">
           <el-select v-model="value" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in channelArr"
+              :key="item.typePk"
+              :label="item.typeName"
+              :value="item.typePk">
             </el-option>
           </el-select>
+        </el-form-item> -->
+        <el-form-item label="　　渠道">
+          <channel-select v-model="formInline.channelTypePk"/>
         </el-form-item>
         <!-- <el-form-item label="价格方案:">
           <el-select v-model="value" placeholder="请选择">
@@ -64,20 +69,20 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="房型:">
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="formInline.roomTypePk" placeholder="全部房型" clearable>
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="(item,index) in roomTypeOptions"
+              :key="index"
+              :label="item.typeName"
+              :value="item.typePk">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="团队名称:">
+        <!-- <el-form-item label="团队名称:">
           <el-input v-model="filterText" placeholder="请输入团队名称" clearable></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="组单号:">
-          <el-input v-model="filterText" placeholder="请输入组单号" clearable></el-input>
+          <el-input v-model="formInline.orderNo" placeholder="请输入组单号" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-tooltip class="item" effect="dark" content="刷新" placement="top">
@@ -86,7 +91,7 @@
         </el-form-item>
       </el-col>
     </el-form>
-    <el-table v-loading="loading" :data="tableData | globalFilter(filterText) | pagingFilter(pagination)" filter-change="handlerFilterChange" border>
+    <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border>
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
       <!-- numberOfOccupancy-->
@@ -168,12 +173,12 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-model="pagination"/>
+    <el-pagination class="positions" @size-change="getSizeChange" @current-change="getList" :current-page="formInline.pageNum" :page-size="formInline.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
 
     <!-- DIALOG -->
     <!-- 订单页面 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
-
+    
     <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
@@ -186,6 +191,8 @@
   import bus from '@/utils/bus'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
+  import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
+  import {listChannelType} from '../../api/systemSet/type/typeController'
   import {listType} from '@/api/utils/pmsTypeController'
   import {powerJudge} from '@/utils/permissionsOperation.js'
 
@@ -205,24 +212,12 @@
         filterDatea:'',
         filterDate:'',
         tableData: [],
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        roomTypeOptions: [],
+        channelOptions: [],
+        agreementOptions: [],
+        industryOptions: [], 
+        saleOptions: [],
         value: '',
-        radio5: '',
         startTimeOptions: {
           disabledDate(time) {
             return time.getTime() > Date.now();
@@ -275,15 +270,17 @@
         },
         startTime: '',
         endTime: '',
+        formInline: {
+          pageSize: 10,
+          pageNum: 1
+        },
+        typeMaster: 'CHANNEL',
+        total: 0,
       }
     },
     created () {
+      this.listMastersType();
       // this.getList()
-      //获取渠道
-      listType({typeMaster:'CHANNEL'}).then(res=>{
-        this.channelArr = res.data
-      }).catch(error=>{
-      })
     },
     watch: {
       filterText: function (value) {}
@@ -322,13 +319,38 @@
         })
         })
       },
-      showOrderInfo(row) {//查看订单
-        // this.dialogVisible = true
-        // this.orderNo = '组单号：' + row.orderNo;
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
-        },1)
+      listMastersType() {//查询分类类型
+        const self = this;
+        self.roomTypeOptions = [];
+        self.channelOptions = [];
+        self.agreementOptions = [];
+        self.industryOptions = [];
+        self.saleOptions = [];
+        listType({typeMasters: 'ROOM_TYPE,CHANNEL,AGREEMENT,INDUSTRY,SALE'}).then(result => {
+          const listTypeData = result.data;
+          for (let index = 0; index < listTypeData.length; index++) {
+            const element = listTypeData[index].typeMaster;
+            if(element == 'ROOM_TYPE'){
+              self.roomTypeOptions.push(listTypeData[index])
+            }else if(element == 'CHANNEL'){
+              self.channelOptions.push(listTypeData[index])
+            }else if(element == 'AGREEMENT'){
+              self.agreementOptions.push(listTypeData[index]);
+            }else if(element == 'INDUSTRY'){
+              self.industryOptions.push(listTypeData[index]);
+            }else{
+              self.saleOptions.push(listTypeData[index]);
+            }
+          }
+        })
       },
+      // showOrderInfo(row) {//查看订单
+      //   // this.dialogVisible = true
+      //   // this.orderNo = '组单号：' + row.orderNo;
+      //   setTimeout(() => {
+      //     this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
+      //   },1)
+      // },
       handlerFilterChange (value) {
         this.total = value.length
       },
@@ -337,8 +359,32 @@
       },
       list(){
         this.loading = true
-        listReserve().then(result => {
-          this.tableData = result.data
+        listReserve(this.formInline).then(result => {
+          this.tableData = result.data.data;
+          this.total = result.data.pageSize;
+          this.formInline.pageNum = 1;
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
+        })
+      },
+      getList(val){
+        this.loading = true;
+        this.formInline.pageNum = val;
+        listReserve(this.formInline).then(result => {
+          this.tableData = result.data.data;
+          this.total = result.data.pageSize;
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
+        })
+      },
+      getSizeChange(val) {
+        this.loading = true;
+        this.formInline.pageSize = val;
+        listReserve(this.formInline).then(result => {
+          this.tableData = result.data.data;
+          this.total = result.data.pageSize;
           this.loading = false
         }).catch(() => {
           this.loading = false
@@ -368,7 +414,7 @@
       }
     },
     filters: {
-
+      
     },
     mounted () {
       bus.$on('closeOrder', () => { this.closeOrderDialog() })
@@ -410,5 +456,9 @@
 }
 .el-button--mini, .el-button--mini.is-round{
   padding: 5px 15px;
+}
+.positions {
+  margin-top: 1%;
+  float: right;
 }
 </style>
