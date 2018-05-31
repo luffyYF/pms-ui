@@ -51,7 +51,7 @@ import ShiftTab from '@/pages/atrialCenter/shiftReport/tab.vue'
 //预订管理
 import ListReserve from '@/pages/reserveManage/ListReserve.vue'
 import FastReserve from '@/pages/reserveManage/FastReserve.vue'
-// import AddReserve from '@/pages/reserveManage/addReserve/tab.vue'
+import AddReserve from '@/pages/reserveManage/AddReserve.vue'
 
 //客户关系
 import MemberManage from '@/pages/customerRelation/memberManage/tab.vue'
