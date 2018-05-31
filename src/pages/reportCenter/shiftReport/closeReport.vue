@@ -37,11 +37,10 @@
       :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      
       <el-form-item>
-        <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
+        <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary">导出EXCEL</el-button>
+        <el-button type="primary" @click="uploadExcels()"><span class="el-icon-printer p-r-5"></span>导出EXCEL</el-button>
         <el-button type="primary"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
@@ -80,7 +79,7 @@
 </template>
 
 <script>
-import {roomStatus,reportShouYinYuanShouKuan} from "@/api/reportCenter/pmsReportFormController"
+import {roomStatus,reportShouYinYuanShouKuan,uploadShouYinYuanShouKuanExcel} from "@/api/reportCenter/pmsReportFormController"
 import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
 import moment from "moment"
@@ -111,6 +110,11 @@ export default {
     this.init()
   },
   methods: {
+    uploadExcels(){
+      alert("123");
+      uploadShouYinYuanShouKuanExcel(this.queryObj).then((data)=>{
+      });
+    },
     init(){
       let self = this
       this.getList()
@@ -147,7 +151,8 @@ export default {
           self.settlement =  data.data.settlement
         }
       });
-    },
+    }
+    ,
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
