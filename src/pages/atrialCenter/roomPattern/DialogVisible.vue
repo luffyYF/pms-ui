@@ -107,7 +107,7 @@
                     <el-button size="mini" @click="saveCheckin" :disabled="islock">保存入住</el-button>
                   </template>
                   <template v-else>
-                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin'">添加客人</el-button>
+                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='RESERVE' ">添加客人</el-button>
                     <el-popover ref="occupancySort" placement="top">
                       <el-button type="primary" size="mini">复制入住</el-button>
                       <el-button type="primary" size="mini">添加入住</el-button>
@@ -116,12 +116,12 @@
                       <el-button type="primary" size="mini">减少客人</el-button>
                     </el-popover>
                     <!-- <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button> -->
-                    <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin'">添加预订</el-button>
+                    <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y'">添加预订</el-button>
                     <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin'">预订排房</el-button>
-                    <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N'">修改房价</el-button>
-                    <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin'">预订管理</el-button>
-                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin'">换房</el-button>
-                    <el-button size="mini" @click="confirmClick">确定</el-button>
+                    <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y'">修改房价</el-button>
+                    <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y'">预订管理</el-button>
+                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || !this.currGuest.roomPk">换房</el-button>
+                    <el-button size="mini" @click="confirmClick" :disabled="this.currGuest.pmsCancelFlag=='Y'">确定</el-button>
                   </template>
                 </div>
               </el-tab-pane>
@@ -507,60 +507,12 @@ export default {
       if(this.islock){ 
         return;
       }
-      const orderPo = this.form
-      const guestOrderPo = this.$refs.visitorForm.form
-      //校验
-      if(!guestOrderPo.channelTypePk){
-        this.$message({type:'warning', message:'客源渠道不能为空'})
-        return
-      }
-      if(!guestOrderPo.guestName){
-        this.$message({type:'warning', message:'客人姓名不能为空'})
-        return
-      }
-      // if(guestOrderPo.price==null) {
-      //   this.$message({type:'warning', message:'房费不能为空'})
-      //   return
-      // }
-      // if(Number(guestOrderPo.price)<0){
-      //   this.$message({type:'warning', message:'房费不能小于0'})
-      //   return
-      // }
-      if(guestOrderPo.currPrice==null) {
-        this.$message({type:'warning', message:'当前房租不能为空'})
-        return
-      }
-      if(Number(guestOrderPo.currPrice)<0){
-        this.$message({type:'warning', message:'当前房租不能小于0'})
-        return
-      }
-      if(guestOrderPo.deposit==null){
-        this.$message({type:'warning', message:'押金不能为空'})
-        return
-      }
-      if(Number(guestOrderPo.deposit)<0){
-        this.$message({type:'warning', message:'请输入正确的押金'})
-        return
-      }
-      if(!guestOrderPo.beginDate){
-        this.$message({type:'warning', message:'抵店日期不能为空'})
-        return
-      }
-      if(!guestOrderPo.endDate){
-        this.$message({type:'warning', message:'离店日期不能为空'})
-        return
-      }
-      if(!guestOrderPo.guestPhone){
-        this.$message({type:'warning', message:'请填写手机号'})
-        return
-      }
-      if(!validatePhone(guestOrderPo.guestPhone)){
-        this.$message({type:'warning', message:'手机号不合法'})
-        return
+      if(!this.formValidate()){
+        return;
       }
       var submitData = {
-        order: orderPo,
-        guestOrder: guestOrderPo
+        order: this.form,
+        guestOrder: this.$refs.visitorForm.form
       }
       let data = copyObj(submitData)
       //请求参数做特殊处理
@@ -576,6 +528,58 @@ export default {
       }).catch(error=>{
         this.islock = false;
       })
+    },
+    //表单校验
+    formValidate(){
+      const orderPo = this.form
+      const guestOrderPo = this.$refs.visitorForm.form
+      if(!guestOrderPo.channelTypePk){
+        this.$message({type:'warning', message:'客源渠道不能为空'})
+        return false
+      }
+      if(!guestOrderPo.guestName){
+        this.$message({type:'warning', message:'客人姓名不能为空'})
+        return false
+      }
+      if(guestOrderPo.currPrice==null) {
+        this.$message({type:'warning', message:'当前房租不能为空'})
+        return false
+      }
+      if(Number(guestOrderPo.currPrice)<0){
+        this.$message({type:'warning', message:'当前房租不能小于0'})
+        return false
+      }
+      if(guestOrderPo.deposit==null){
+        this.$message({type:'warning', message:'押金不能为空'})
+        return false
+      }
+      if(Number(guestOrderPo.deposit)<0){
+        this.$message({type:'warning', message:'请输入正确的押金'})
+        return false
+      } 
+      if(!guestOrderPo.beginDate){
+        this.$message({type:'warning', message:'抵店日期不能为空'})
+        return false
+      }
+      if(!guestOrderPo.endDate){
+        this.$message({type:'warning', message:'离店日期不能为空'})
+        return false
+      }
+      if(!guestOrderPo.guestPhone){
+        this.$message({type:'warning', message:'请填写手机号'})
+        return false
+      }
+      if(!validatePhone(guestOrderPo.guestPhone)){
+        this.$message({type:'warning', message:'手机号不合法'})
+        return false
+      }
+      if(orderPo.isTeam=='Y'){
+        if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
+          this.$message({type:'warning', message: '协议单位不能为空'})
+          return false
+        }
+      }
+      return true
     },
     toCheckout() {
       //切换到账单
@@ -701,6 +705,9 @@ export default {
     },
     confirmClick() {//点击确定
       if(this.currConfirmType=='edit-guest'){
+        if(!this.formValidate()){
+          return;
+        }
         //修改客人信息
         this.$refs.visitorForm.editGuestInfo()
         //修改主订单信息
@@ -713,10 +720,16 @@ export default {
         })
       }
       if(this.currConfirmType=='add-guest'){
+        if(!this.formValidate()){
+          return;
+        }
         //添加客人操作
         this.$refs.visitorForm.parentAddGuest()
       }
       if(this.currConfirmType=='add-reserve'){
+        if(!this.formValidate()){
+          return;
+        }
         //添加预定操作
         this.$refs.visitorForm.addReserveGuest()
       }

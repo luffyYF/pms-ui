@@ -78,7 +78,7 @@
              <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="房间类型：" required>
-                  <el-select v-model="form.roomTypePk" @change="loadPrice" placeholder="请选择房间类型" :disabled="currFormType=='guest-info' || currFormType=='room-info' || currFormType=='add-guest'">
+                  <el-select v-model="form.roomTypePk" @change="roomTypeChange" placeholder="请选择房间类型" :disabled="currFormType=='guest-info' || currFormType=='room-info' || currFormType=='add-guest'">
                     <el-option :label="r.typeName" :value="r.typePk" v-for="r in roomTypeArr" :key="r.typePk"></el-option>
                   </el-select>
                 </el-form-item>
@@ -112,11 +112,14 @@
               </el-col>  
             </el-col>
             <el-col :span="10">
-              <el-col :span="22">
+              <el-col :span="15">
                 <el-form-item label="房间数量：" required>
                   <!-- @change="loadPrice" -->
                   <el-input-number :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest'"></el-input-number>
                 </el-form-item>
+              </el-col>
+              <el-col :span="7" v-if="currFormType=='empty' || currFormType=='room-info'">
+                &nbsp;&nbsp;<span style="color:red">可预订数：{{bookableCount}}</span>
               </el-col>
             </el-col>
           </el-col>
@@ -600,18 +603,19 @@
 
 <script>
     import bus from '@/utils/bus'
+    import Agreement from '@/components/Agreement/Agreement'
+    import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
+    import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import {orderStatusMap,contractMap, paymentMap, credentialsMap} from '@/utils/orm'
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
     import {isInteger, validatePhone} from '@/utils/validate'
     import {MyToFixed} from '@/utils/number'
-    import Agreement from '@/components/Agreement/Agreement'
-    import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
-    import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import {listContract} from "@/api/order/pmsContractControll"
     import {findPriceSchemeDetailPrice} from '@/api/systemSet/priceScheme/priceSchemeController'
     import {reserveOrder, continuedRoom, rowRoomList, changeRoom, checkin, addReserveGuest, editOrderMember,addGuest, calcMoney} from '@/api/order/pmsOrderController'
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
+    import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
     import moment from 'moment'
     export default {
       props: ['parentForm'],
@@ -625,6 +629,7 @@
           orderStatusMap: orderStatusMap,
           contractMap: contractMap,
           paymentMap: paymentMap,
+          bookableCount:0,//可预订数量
           roomTypeArr:[],
           priceSchemeArr: [],
           registForm:{},
@@ -703,7 +708,7 @@
           pickerOptions0: {
           //限制今天以前的日期不可选择
           disabledDate(time) {
-            return time.getTime() < Date.now() - 8.64e7;
+            return time.getTime() < moment().subtract(1, 'days') - 8.64e7;
           }
       }
         }
@@ -712,34 +717,8 @@
         this.listTypeType();
       },
       methods: {
-        tableRowClassName({row, rowIndex}) {
-          if(this.currTableIndex==row.guestOrderPk){
-            return 'success-row';
-          }
-          return '';
-        },
-        //协议类别 协议单位
-        listTypeType(){
-          listType({typeMaster:'AGREEMENT'}).then(res => {
-            this.listTypeDate = res.data
-          })
-          listProject().then(res => {
-            this.listProjectDate = res.data
-          })
-          setTimeout(_=>{
-            for (let index = 0; index < this.listProjectDate.length; index++) {
-              const agreementTypePk = this.listProjectDate[index].agreementTypePk;
-              for (let ken = 0; ken < this.listTypeDate.length; ken++) {
-                const typePk = this.listTypeDate[ken].typePk;
-                if(agreementTypePk == typePk){
-                  this.listProjectDate[index].agreementTypePk = this.listTypeDate[ken].typeName
-                }
-              }
-            }
-          },1000)
-        },
         /**
-         * 初始化空表单
+         * 初始化空表单（外部调用）
          */
         initEmpty() {
           this.initType(_=>{
@@ -750,11 +729,12 @@
             this.currGuestList = []
             this.contractTableData = []
             this.loadPrice()
+            this.getBookableCount()
           })
         },
 
         /**
-         * 初始化带房间的表单（办理入住）
+         * 初始化带房间的表单（办理入住）（外部调用）
          * @augments room 当前选择的房间*/
         initRoomData(room) {
           this.initType(_=>{
@@ -768,10 +748,11 @@
             this.currGuestList = []
             this.contractTableData = []
             this.loadPrice()
+            this.getBookableCount()
           })
         },
         /**
-         * 初始化回显客单数据
+         * 初始化回显客单数据（外部调用）
          * @augments guestList 客单列表
          * @augments loderIndex 装填下标 */
         initGuestData(guestList, loderIndex) {//TODO 初始化加载客单数据
@@ -803,6 +784,131 @@
             })
             this.calcDays()
           });
+        },
+        //添加客人初始化（外部调用）
+        parentClearGuest() {
+          if(!this.form.guestOrderPk){
+            this.$message({type:'warning', message:'请先选择客单'})
+            return;
+          }
+          if(this.form.orderStatus!='CHECKIN'){
+            this.$message({type:'warning', message:'客单入住后才能添加客人'})
+            return;
+          }
+          this.memberFlag = false
+          this.currFormType = 'add-guest'
+          this.form.memPk = undefined
+          this.form.currTitle = '添加客人'
+          this.form.memberCarNo = ''
+          this.form.guestName = ''
+          this.form.guestPhone = ''
+          this.form.guestGender = 'M'
+          this.form.certificateType = 'TWO_IDENTITY'
+          this.form.certificateNo = ''
+          this.form.bornDate = null
+          this.form.email = ''
+          this.form.carNumber = ''
+          this.form.hobbies = ''
+          this.form.nationality = 'DL'
+          this.form.nativePlace = ''
+          this.form.detailAddress = ''
+        },
+        //添加客人（外部调用）
+        parentAddGuest() {
+          if(this.form.currTitle != '添加客人'){
+            return;
+          }
+          // if(!this.formValidate()){
+          //   return;
+          // }
+          let data = {
+            guestOrderPk: this.form.guestOrderPk,
+            memberPo: {
+              memPk: this.form.memPk,
+              memName: this.form.guestName,
+              memPhone: this.form.guestPhone,
+              memSex: this.form.guestGender,
+              certificateType: this.form.certificateType,
+              certificateNo: this.form.certificateNo,
+              birthday: this.form.bornDate ? this.form.bornDate : null,
+              email: this.form.email,
+              carNumber: this.form.carNumber,
+              hobby: this.form.hobbies,
+              nationality: this.form.nationality,
+              nativePlace: this.form.nativePlace,
+              address: this.form.detailAddress
+            }
+          }
+          addGuest(data).then(res=>{
+            if(res.code==1){
+              this.$message({type:'success', message:'添加客人成功'})
+              // this.form.currTitle = '客单信息'
+              bus.$emit('refreshOrderInfo', this.form.orderPk)
+            }
+          })
+        },
+        //添加预定初始化（外部调用）
+        cleanAddReserveGuest() {
+          this.memberFlag = false
+          this.form.currTitle = '添加预定'
+          this.currFormType = 'empty'
+          this.form.memPk = undefined
+          this.form.guestOrderPk = undefined
+          this.form.agreementPk = undefined
+          this.form.unitName = null
+          this.form.roomPk = undefined
+          this.form.roomNumber = null
+          // this.form.roomTypePk = null
+          this.form.count = 1
+          this.form.memberCarNo = null
+          this.form.deposit = 200
+          // this.form.price = 100
+          this.form.currPrice = 0
+          // this.form.channelTypePk=null
+          this.form.isSecret='N'
+          this.form.certificateType='TWO_IDENTITY'
+          this.form.certificateNo=null
+          this.form.nationality='DL'
+          this.form.guestName='新客人'
+          this.form.guestGender = 'M'
+          this.form.nativePlace = null
+          this.form.email = null
+          this.form.carNumber = null
+          this.form.hobbies = null
+          this.form.detailAddress = null
+          this.form.remark = null
+          this.form.bornDate = null
+          this.form.guestPhone = null
+          this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
+          this.form.pmsCancelFlag = 'N'
+          this.getBookableCount()
+        },
+        //添加预定（外部调用）
+        addReserveGuest() {
+          // if(!this.formValidate()){
+          //   return;
+          // }
+          addReserveGuest(this.form).then(res=>{
+            if(res.code==1){
+              this.$message({type:'success', message:'添加预定成功'})
+              bus.$emit('refreshOrderInfo', this.form.orderPk)
+            }
+          })
+        },
+        editGuestInfo() {//修改客人信息（外部调用）
+          if(this.form.pmsCancelFlag=='Y'){
+            return;
+          }
+          // if(!this.formValidate()){
+          //   return;
+          // }
+          editOrderMember(this.form).then(res=>{
+            this.$message({type:'success', message: '客人信息修改成功'})
+            bus.$emit('refreshOrderInfo', this.form.orderPk)
+          }).catch(error=>{
+            //bus.$emit('refreshOrderInfo', this.form.orderPk)
+          })
         },
         formReset() {//重置表单
           this.form.currTitle = ''
@@ -899,17 +1005,6 @@
             this.memberFlag = false
           }
         },
-        initType(callback) {
-          // 获取房型
-          listType({typeMaster:'ROOM_TYPE'}).then(res=>{
-            this.roomTypeArr = res.data;
-            //获取价格方案
-            listPriceScheme().then(res=>{
-              this.priceSchemeArr = res.data
-              callback()
-            })
-          })
-        },
         registeredMemberClose(done) {
           this.$confirm('确认关闭？')
             .then(_ => {
@@ -918,17 +1013,6 @@
             .catch(_ => {});
         },
         loadPrice() {//动态加载当前房租 
-          // if(!this.form.priceSchemePk || !this.form.roomTypePk){
-          //   return;
-          // }
-          // let data = {
-          //   schemePk: this.form.priceSchemePk,
-          //   roomTypePk: this.form.roomTypePk
-          // }
-          // findPriceSchemeDetailPrice(data).then(res=>{
-          //   this.form.price = res.data
-          // })
-
           if(this.currFormType == 'empty' || this.currFormType == 'room-info'){
             if(!this.form.roomTypePk){
               this.$message({type:'warning', message:'请先选择房间类型！'})
@@ -938,15 +1022,6 @@
               this.$message({type:'warning', message:'请先选择抵店日期！'})
               return
             }
-            // if(!this.form.endDate){
-            //   this.$message({type:'warning', message:'请先选择离店日期！'})
-            //   return
-            // }
-            // if(!isInteger(this.form.count)){
-            //   this.$message({type:'warning', message:'房间数量必须填正整数！'})
-            //   this.form.price = 0
-            //   return;
-            // }
             let data = {
               roomTypePk: this.form.roomTypePk,
               beginDate: this.form.beginDate,
@@ -957,18 +1032,26 @@
             })
           }
         },
-        beginDateChange(){//开始日期改变
+        //房型改变
+        roomTypeChange(){
+          this.loadPrice()
+          this.getBookableCount()
+        },
+        //开始日期改变
+        beginDateChange(){
           this.calcDays()
           this.loadPrice()
+          this.getBookableCount()
         },
-        endDateChange(endDate) {//结束日期改变 续房
+        //结束日期改变 续房
+        endDateChange(endDate) {
           if(this.currFormType=='guest-info'){
             this.extendForm.payment='0'
             this.extendForm.settlementAmount=0
             this.dialogExtend = true
           }
           this.calcDays()
-          // this.loadPrice()
+          this.getBookableCount()
         },
         extendClose() {//取消续房
           this.dialogExtend = false
@@ -1040,152 +1123,45 @@
           });
         },
         //表单校验
-        formValidate(){
-          if(!this.form.channelTypePk){
-            this.$message({type:'warning', message:'请选择客源渠道'})
-            return false;
-          }
-          if(!this.form.roomTypePk){
-            this.$message({type:'warning', message:'请选择房间类型'})
-            return false;
-          }
-          if(this.form.currPrice==null){
-            this.$message({type:'warning', message:'请填写当前房租'})
-            return false;
-          }
-          if(this.form.count==null || Number(this.form.count)<=0){
-            this.$message({type:'warning', message:'请填写房间数量'})
-            return false;
-          }
-          if(this.form.beginDate==null){
-            this.$message({type:'warning', message:'请选择抵店日期'})
-            return false;
-          }
-          if(this.form.endDate==null){
-            this.$message({type:'warning', message:'请选择离店日期'})
-            return false;
-          }
-          if(!this.form.guestName){
-            this.$message({type:'warning', message:'请填写客人姓名'})
-            return false;
-          }
-          if(!this.form.guestPhone){
-            this.$message({type:'warning', message:'请填写手机号'})
-            return false;
-          }
-          if(!validatePhone(this.form.guestPhone)){
-            this.$message({type:'warning', message:'手机号码不合法'})
-            return false;
-          }
-          return true;
-        },
-        parentClearGuest() {//添加客人前 清空
-          if(!this.form.guestOrderPk){
-            this.$message({type:'warning', message:'请先选择客单'})
-            return;
-          }
-          if(this.form.orderStatus!='CHECKIN'){
-            this.$message({type:'warning', message:'客单入住后才能添加客人'})
-            return;
-          }
-          this.memberFlag = false
-          this.currFormType = 'add-guest'
-          this.form.memPk = undefined
-          this.form.currTitle = '添加客人'
-          this.form.memberCarNo = ''
-          this.form.guestName = ''
-          this.form.guestPhone = ''
-          this.form.guestGender = 'M'
-          this.form.certificateType = 'TWO_IDENTITY'
-          this.form.certificateNo = ''
-          this.form.bornDate = null
-          this.form.email = ''
-          this.form.carNumber = ''
-          this.form.hobbies = ''
-          this.form.nationality = 'DL'
-          this.form.nativePlace = ''
-          this.form.detailAddress = ''
-          
-        },
-        parentAddGuest() {//添加客人
-          if(this.form.currTitle != '添加客人'){
-            return;
-          }
-          if(!this.formValidate()){
-            return;
-          }
-          let data = {
-            guestOrderPk: this.form.guestOrderPk,
-            memberPo: {
-              memPk: this.form.memPk,
-              memName: this.form.guestName,
-              memPhone: this.form.guestPhone,
-              memSex: this.form.guestGender,
-              certificateType: this.form.certificateType,
-              certificateNo: this.form.certificateNo,
-              birthday: this.form.bornDate ? this.form.bornDate : null,
-              email: this.form.email,
-              carNumber: this.form.carNumber,
-              hobby: this.form.hobbies,
-              nationality: this.form.nationality,
-              nativePlace: this.form.nativePlace,
-              address: this.form.detailAddress
-            }
-          }
-          addGuest(data).then(res=>{
-            if(res.code==1){
-              this.$message({type:'success', message:'添加客人成功'})
-              // this.form.currTitle = '客单信息'
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            }
-          })
-        },
-        cleanAddReserveGuest() {//添加预定前 清空
-          this.memberFlag = false
-          this.form.currTitle = '添加预定'
-          this.currFormType = 'empty'
-          this.form.memPk = undefined
-          this.form.guestOrderPk = undefined
-          this.form.agreementPk = undefined
-          this.form.unitName = null
-          this.form.roomPk = undefined
-          this.form.roomNumber = null
-          this.form.roomTypePk = null
-          this.form.count = 1
-          this.form.memberCarNo = null
-          this.form.deposit = 200
-          // this.form.price = 100
-          this.form.currPrice = 0
-          // this.form.channelTypePk=null
-          this.form.isSecret='N'
-          this.form.certificateType='TWO_IDENTITY'
-          this.form.certificateNo=null
-          this.form.nationality='DL'
-          this.form.guestName='新客人'
-          this.form.guestGender = 'M'
-          this.form.nativePlace = null
-          this.form.email = null
-          this.form.carNumber = null
-          this.form.hobbies = null
-          this.form.detailAddress = null
-          this.form.remark = null
-          this.form.bornDate = null
-          this.form.guestPhone = null
-          this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-          this.form.pmsCancelFlag = 'N'
-        },
-        addReserveGuest() {//添加预定
-          if(!this.formValidate()){
-            return;
-          }
-          addReserveGuest(this.form).then(res=>{
-            if(res.code==1){
-              this.$message({type:'success', message:'添加预定成功'})
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            }
-          })
-        },
+        // formValidate(){
+        //   if(!this.form.channelTypePk){
+        //     this.$message({type:'warning', message:'请选择客源渠道'})
+        //     return false;
+        //   }
+        //   if(!this.form.roomTypePk){
+        //     this.$message({type:'warning', message:'请选择房间类型'})
+        //     return false;
+        //   }
+        //   if(this.form.currPrice==null){
+        //     this.$message({type:'warning', message:'请填写当前房租'})
+        //     return false;
+        //   }
+        //   if(this.form.count==null || Number(this.form.count)<=0){
+        //     this.$message({type:'warning', message:'请填写房间数量'})
+        //     return false;
+        //   }
+        //   if(this.form.beginDate==null){
+        //     this.$message({type:'warning', message:'请选择抵店日期'})
+        //     return false;
+        //   }
+        //   if(this.form.endDate==null){
+        //     this.$message({type:'warning', message:'请选择离店日期'})
+        //     return false;
+        //   }
+        //   if(!this.form.guestName){
+        //     this.$message({type:'warning', message:'请填写客人姓名'})
+        //     return false;
+        //   }
+        //   if(!this.form.guestPhone){
+        //     this.$message({type:'warning', message:'请填写手机号'})
+        //     return false;
+        //   }
+        //   if(!validatePhone(this.form.guestPhone)){
+        //     this.$message({type:'warning', message:'手机号码不合法'})
+        //     return false;
+        //   }
+        //   return true;
+        // },
         chooseEmptyGuest() {//打开选择客人
           this.$refs.chooseGuestRef.init(this.form.guestName)
         },
@@ -1223,21 +1199,6 @@
         reserveManager() {//打开预定管理
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
-        editGuestInfo() {//修改客人信息
-          if(this.form.pmsCancelFlag=='Y'){
-            return;
-          }
-          if(!this.formValidate()){
-            return;
-          }
-          
-          editOrderMember(this.form).then(res=>{
-            this.$message({type:'success', message: '客人信息修改成功'})
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
-          }).catch(error=>{
-            //bus.$emit('refreshOrderInfo', this.form.orderPk)
-          })
-        },
         toDialogAgreement() {//打开选择协议单位
           this.dialogAgreement =true
           setTimeout(()=>{
@@ -1254,6 +1215,58 @@
         clearAgreement() {//清空协议单位
           this.form.agreementPk = undefined
           this.form.unitName = ''
+        },
+        tableRowClassName({row, rowIndex}) {
+          if(this.currTableIndex==row.guestOrderPk){
+            return 'success-row';
+          }
+          return '';
+        },
+
+        /*
+          加载静态数据
+        */
+        getBookableCount(){
+          let data={
+            roomTypePk: this.form.roomTypePk,
+            beginDate: moment(this.form.beginDate).format("YYYY-MM-DD"),
+            endDate: moment(this.form.endDate).format("YYYY-MM-DD")
+          }
+          getBookableCount(data).then(res=>{
+             this.bookableCount = res.data
+           })
+        },
+        initType(callback) {
+          // 获取房型
+          listType({typeMaster:'ROOM_TYPE'}).then(res=>{
+            this.roomTypeArr = res.data;
+            callback()
+            // //获取价格方案
+            // listPriceScheme().then(res=>{
+            //   this.priceSchemeArr = res.data
+            //   callback()
+            // })
+          })
+        },
+        listTypeType(){
+          //协议单位
+          listType({typeMaster:'AGREEMENT'}).then(res => {
+            this.listTypeDate = res.data
+          })
+          listProject().then(res => {
+            this.listProjectDate = res.data
+          })
+          setTimeout(_=>{
+            for (let index = 0; index < this.listProjectDate.length; index++) {
+              const agreementTypePk = this.listProjectDate[index].agreementTypePk;
+              for (let ken = 0; ken < this.listTypeDate.length; ken++) {
+                const typePk = this.listTypeDate[ken].typePk;
+                if(agreementTypePk == typePk){
+                  this.listProjectDate[index].agreementTypePk = this.listTypeDate[ken].typeName
+                }
+              }
+            }
+          },1000)
         },
       },
       mounted() {
