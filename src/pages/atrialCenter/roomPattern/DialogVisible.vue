@@ -107,7 +107,7 @@
                     <el-button size="mini" @click="saveCheckin" :disabled="islock">保存入住</el-button>
                   </template>
                   <template v-else>
-                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.cancelFlag=='Y' || currConfirmType == 'add-checkin'">添加客人</el-button>
+                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin'">添加客人</el-button>
                     <el-popover ref="occupancySort" placement="top">
                       <el-button type="primary" size="mini">复制入住</el-button>
                       <el-button type="primary" size="mini">添加入住</el-button>
@@ -116,12 +116,11 @@
                       <el-button type="primary" size="mini">减少客人</el-button>
                     </el-popover>
                     <!-- <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button> -->
-                    <!-- TODO 适应HF暂时隐藏 -->
-                    <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin'" v-if="false">添加预订</el-button>
-                    <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.cancelFlag=='Y' || currConfirmType == 'add-checkin'">预订排房</el-button>
+                    <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin'">添加预订</el-button>
+                    <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin'">预订排房</el-button>
                     <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N'">修改房价</el-button>
                     <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin'">预订管理</el-button>
-                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.cancelFlag=='Y' || currConfirmType == 'add-checkin'">换房</el-button>
+                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin'">换房</el-button>
                     <el-button size="mini" @click="confirmClick">确定</el-button>
                   </template>
                 </div>
@@ -421,7 +420,7 @@ export default {
         this.reserveTime = new Date(res.data.order.createTime)
         this.dialogVisibleTitle = '组单号：'+this.form.orderNo
         //设置页面类型
-        if(res.data.order.cancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
+        if(res.data.order.pmsCancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
           this.currConfirmType = 'leave-info'
         }else{
           this.currConfirmType = 'edit-guest'
@@ -578,8 +577,10 @@ export default {
         this.islock = false;
       })
     },
-    toCheckout() {//跳转退房
-       this.$refs.billTagForm.lookupBillList(this.currOrderPk);
+    toCheckout() {
+      //切换到账单
+      this.activeName = 'bill'
+      this.$refs.billTagForm.lookupBillList(this.currOrderPk);
     },
     reserveRowRoom() {//预定排房
       this.rowRoomTableData = []
@@ -637,9 +638,10 @@ export default {
         this.$message({type:'success', message:'已排房'})
       })
     },
-    toBillTab() {//切换到账单
-      this.activeName = 'bill'
-    },
+    // toBillTab() {
+    //   //切换到账单
+    //   this.activeName = 'bill'
+    // },
     handleCloseRowRoom() {//排房窗口关闭
       this.dialogRowRoom = false
       this.initOrderInfo(this.currOrderPk, 'visitor')
@@ -742,7 +744,7 @@ export default {
     }
   },
   mounted() {
-    bus.$on('toCheckout', () => { this.toBillTab() })
+    bus.$on('toCheckout', () => { this.toCheckout() })
     bus.$on('togmcount', () => { this.goodsManageCount() })
     bus.$on('refreshOrderInfo', (orderPk) => { this.initOrderInfo(orderPk, 'visitor') })
     bus.$on('dialogVisibleClose', () => { this.dialogVisibleClose() })
