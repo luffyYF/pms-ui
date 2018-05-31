@@ -4,15 +4,15 @@ export const commonReport = [{
     pointer: '500536',
     hidden: true,
     children: [{
-        label: '管理层日报表',
+        label: '每日日报',
         path: '/reportCenter/dailyReport',
         pointer: '500536'
       },
-      /*{
-           label: '查看每天的订房报表情况',
-           path: '/reportCenter/roomDailyReport',
-           pointer: '500536'
-         }*/
+      {
+        label: '经理日报',
+        path: '/reportCenter/roomDailyReport',
+        pointer: '500536'
+      }
     ]
   }, {
     label: '前台交接班和查账',
