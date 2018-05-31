@@ -16,9 +16,9 @@
         <el-form-item label="预订人:">
           <el-input v-model="filterText" placeholder="请输入预订人" clearable></el-input>
         </el-form-item>
-        <el-form-item label="预订卡号:">
-          <el-input v-model="filterOrderNo" placeholder="请输入预订卡号" clearable></el-input>
-        </el-form-item>
+        <!-- <el-form-item label="预订卡号:">
+          <el-input v-model="filterText" placeholder="请输入预订卡号" clearable></el-input>
+        </el-form-item> -->
         <el-form-item label="入住人:">
           <el-input v-model="filterText" placeholder="请输入入住人" clearable></el-input>
         </el-form-item>
@@ -86,7 +86,7 @@
         </el-form-item>
       </el-col>
     </el-form>
-    <el-table v-loading="loading" :data="tableData | globalFilter(filterText,filterOrderNo) | pagingFilter(pagination)" filter-change="handlerFilterChange" border>
+    <el-table v-loading="loading" :data="tableData | globalFilter(filterText) | pagingFilter(pagination)" filter-change="handlerFilterChange" border>
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
       <!-- numberOfOccupancy-->
@@ -173,7 +173,7 @@
     <!-- DIALOG -->
     <!-- 订单页面 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
-    
+
     <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
@@ -198,7 +198,6 @@
         total: 0,
         filterDate: [],
         filterText: '',
-        filterOrderNo:'',
         pagination: {size: 10, current: 1, total: 0},
         loading: false,
         filters: {systemName: '', realName: ''},
@@ -287,9 +286,7 @@
       })
     },
     watch: {
-      filterText: function (value) {
-        
-      }
+      filterText: function (value) {}
     },
     methods: {
       powerJudge(id){
@@ -371,7 +368,7 @@
       }
     },
     filters: {
-      
+
     },
     mounted () {
       bus.$on('closeOrder', () => { this.closeOrderDialog() })

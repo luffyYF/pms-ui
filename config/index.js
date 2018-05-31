@@ -8,7 +8,7 @@ module.exports = {
   dev: {
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',  
+    assetsPublicPath: '/',
     proxyTable: {
       '/pms': {
         // target: "http://10.40.36.227:7777/pms",//设置你调用的接口域名和端口号 别忘了加http
