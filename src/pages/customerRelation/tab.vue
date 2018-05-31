@@ -1,25 +1,5 @@
 <template>
   <div class="height-programme-one">
-    <!-- <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="会员管理" name="first" class="twoLayerOfPage">
-        <member-manage/>
-      </el-tab-pane>
-      <el-tab-pane label="客人管理" name="second" class="twoLayerOfPage">
-        <guest-manage/>
-      </el-tab-pane>
-      <el-tab-pane label="协议管理" name="third" class="twoLayerOfPage">
-        <protocol-manage/>
-      </el-tab-pane>
-      <el-tab-pane label="虚拟账单" name="fourth" class="aLayerOfPage">
-        <virtual-order/>
-      </el-tab-pane>
-      <el-tab-pane label="发票" name="fifth" class="twoLayerOfPage">
-        <invoice/>
-      </el-tab-pane>
-      <el-tab-pane label="旅客信息上传" name="sixth" class="twoLayerOfPage">
-        <passenger-information-uploading/>
-      </el-tab-pane>
-    </el-tabs> -->
     <el-menu
       :default-active="activeMenu"
       mode="horizontal"

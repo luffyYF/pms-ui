@@ -58,11 +58,11 @@ export const commonReport = [{
     //   path: '/reportCenter/historicalRoomExchange',
     //   pointer: '500205'
     // }, 
-    // {
-    //   label: '冲减明细报表',
-    //   path: '/reportCenter/offsetDetail',
-    //   pointer: '500403'
-    // },
+    {
+      label: '冲减明细报表',
+      path: '/reportCenter/offsetDetail',
+      pointer: '500403'
+    },
     //  {
     //   label: '房租合约报表',
     //   path: '/reportCenter/rentContract',
