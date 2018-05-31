@@ -23,10 +23,11 @@
             align="right"
             type="date"
             placeholder="请选择入住时间"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             :picker-options="startTimeOptions">
           </el-date-picker>
         </el-form-item>
+        <!-- yyyy-MM-dd HH:mm:ss -->
         <el-form-item label="结账时间">
           <el-date-picker
             v-model="form.endDate" 
@@ -46,15 +47,7 @@
     </el-col>
     <el-col :span="4"></el-col>
     <el-table v-loading="loading" 
-    :data="tableData 
-    | globalFilter(form.roomNumbers)
-    | globalFilter(form.orderGuestNo)
-    | globalFilter(form.orderNo)
-    | globalFilter(form.name)
-    | globalFilter(form.roomNum)
-    | globalFilter(form.beginDate)
-    | globalFilter(form.endDate)
-    " 
+    :data="tableData" 
     filter-change="handlerFilterChange" border>
       <el-table-column label="组单" align="center" width="80" prop="orderNo" fixed="left">
       </el-table-column>
@@ -86,6 +79,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="block teamPagination"  >
+        <el-pagination @current-change="getchenkTeamGird" @size-change="sizeChange" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+    </div>
     <!-- 订单弹出 -->
     <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
@@ -111,7 +108,9 @@
           name: '',
           roomNum: '',
           beginDate: '', 
-          endDate: ''
+          endDate: '',
+          pageNum:1,
+          pageSize:10
         },
         filterText: '',
         pagination: {size: 10, current: 1, total: 0},
@@ -120,6 +119,7 @@
         filterTable: [],
         filterDatea:'',
         tableData: [],
+        total:0,
         value: '',
         startTimeOptions: {
           disabledDate(time) {
@@ -206,14 +206,22 @@
       },
       getList () {
         const self = this;
-        const parameters = self.form;
+        var parameters = self.form;
         this.loading = true
-        console.log(parameters)
         teamListProject(parameters).then(res => {
           this.loading = false
           console.log(res.data)
-          this.tableData = res.data
+          this.tableData = res.data.data;
+          this.total = res.data.total;
         })  
+      },
+      getchenkTeamGird(val){
+        this.form.pageNum = val;
+        this.getList();
+      },
+      sizeChange(val){
+        this.form.pageSize = val;
+        this.getList();
       }
     },
     mounted () {
@@ -221,6 +229,12 @@
   }
 </script>
 <style scoped>
+.teamPagination{
+  float: right;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
 .el-select{
   width: 178px;
 }

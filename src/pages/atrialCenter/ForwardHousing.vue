@@ -13,7 +13,8 @@
     <!--条件查询-->
     <div class="block">
       <el-form :inline="true" size="mini" :model="selectDate" class="demo-form-inline">
-        <el-form-item label="开始时间:">
+        <date-picker v-model="begenAndEnd"></date-picker>
+        <!-- <el-form-item label="开始时间:">
           <el-date-picker
             v-model="selectDate.beginDate"
             type="date"
@@ -30,7 +31,7 @@
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary"  size="mini" icon="el-icon-search" @click="search">查询</el-button>
         </el-form-item>
@@ -80,7 +81,8 @@
 </template>
 
 <script>
-import DatePicker from "./../../components/DateComponent/DatePicker.vue"
+import DatePicker from '@/components/DateComponent/DatePicker';
+// import DatePicker from "./../../components/DateComponent/DatePicker.vue"
 import RoomOrderTable from "./RoomOrderTable.vue"
 import { frowardRoomList, frowardRoomDetail } from "@/api/atrialCenter/roomForwardStatus";
 import Moment from 'Moment'
@@ -98,7 +100,11 @@ export default {
       tableStyle: "width:" + (document.body.clientWidth - 20) + "px",
       tableColumn: [],
       tableData:[],
-      loading:false
+      loading:false,
+      begenAndEnd:{
+        begin:'',
+        end:''
+      }
     };
   },
   created(){
@@ -171,6 +177,12 @@ export default {
     screenWidth(val) {
       this.screenWidth = val;
       this.tableStyle = "width:" + (this.screenWidth - 20) + "px";
+    },
+    begenAndEnd: function () {
+      if (this.begenAndEnd) {
+        this.selectDate.beginDate =this.begenAndEnd.begin;
+        this.selectDate.endDate = this.begenAndEnd.end;
+      }
     }
   }
 };

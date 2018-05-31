@@ -22,7 +22,7 @@
           </p>
           <full-calendar :events="meetingEventList" lang="zh"
             @eventClick="eventClick"
-            @changeMonth="changeMonth"
+            @changeMonth="changeMonth()"
             @dayClick="dayClick">
           </full-calendar>
         </div>
@@ -527,6 +527,7 @@
 //     }
 //   }
 // ];
+import bus from '@/utils/bus'
 import {addDumbAndBill,mtgRoomGroupOrderList,listDumbHouse,updateBook,batchOperateDq ,listMtgRoom,listBookDqByRoomPkAndDate,addBookAndDq,listBookDqByDate,listBookDqByRoomPkAndBookPk} from '@/api/conferenceRoom/mtgRoomController'
 import Moment from 'Moment'
 export default {
@@ -536,7 +537,7 @@ export default {
   data() {
     return {
       selectRoomPk: '',
-      nowSelectRoom:{roomPk:null},//当前选择的会议室
+      nowSelectRoom:{roomPk:""},//当前选择的会议室
       nowSelectBook:{},//当前选择的会议室预定
       currBook:{},//当前订单管理选中的预定对象
       currBill:{},//当前订单管理选中的挂账对象
@@ -596,7 +597,12 @@ export default {
         if(res.code==1){
           this.meetingRoomList = res.data;
           //默认选中第一个会议室
+          if(this.meetingRoomList != [] ){
+          }else{
+            bus.$emit('conferenceRoomChange')
+          }
           this.changeRoom(this.meetingRoomList[0]);
+          
         }
       }).catch(error=>{
         // this.$message({type:'danger', message: error})
@@ -621,7 +627,10 @@ export default {
     //日历月份点击事件
     changeMonth(start, end, current) {
       //获取选中会议室指定时间段的日程数据
-      this.initRoomClendar(this.nowSelectRoom.roomPk,start,end);
+      if(start && end && current){
+        this.initRoomClendar(this.nowSelectRoom.roomPk,start,end);
+      }
+      
     },
     //初始化指定会议室指定时间段的预定档期
     initRoomClendar(roomPk,beginDate,endDate){
@@ -667,10 +676,19 @@ export default {
     },
     //日历日期点击函数
     dayClick(day, jsEvent) {
-      this.meetingBookObj = {roomPk:this.nowSelectRoom.roomPk};
-      this.book_scheduleList = [];
-      // console.log("dayClick", day, jsEvent);
-      this.orderBookDialog = true;
+      if(!this.nowSelectRoom){
+        bus.$emit('conferenceRoomChange')
+        return;
+      }else{
+        var roomPk = this.nowSelectRoom.roomPk;
+        this.meetingBookObj = {
+          roomPk:roomPk
+        };
+        this.book_scheduleList = [];
+        // console.log("dayClick", day, jsEvent);
+        this.orderBookDialog = true;
+      }
+      
     },
     //添加档期
     addSchedule() {

@@ -142,6 +142,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="block checkPagination"  >
+        <el-pagination @current-change="getchenkGird" @size-change="sizeChange"  :current-page="chenkInSearchData.pageNum" :page-sizes="[5,10,20,30,40,50]" :page-size="chenkInSearchData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+    </div>
     <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
@@ -185,8 +189,11 @@
           beginDate: '', 
           endDate: '',
           orderStatus: '',
-          name:''
+          name:'',
+          pageNum:1,
+          pageSize:10
         },
+        total:0,
         priceList:[],
         total: 0,
         filterDate: [],
@@ -319,9 +326,23 @@
         const parameters = self.chenkInSearchData;
         listProject(parameters).then(res => {
           this.loading = false
-          this.tableData = res.data
+          this.tableData = res.data.data;
+          this.total = res.data.total;
         })  
       },
+      getchenkGird(val){
+        this.loading = true;
+        const self = this;
+        self.chenkInSearchData.pageNum = val;
+        self.getList();
+      },
+      sizeChange(val){
+        this.loading = true;
+        const self = this;
+        self.chenkInSearchData.pageSize = val;
+        self.getList();
+      }
+      ,
       powerJudge(id){
         return powerJudge(id);
       }
@@ -333,6 +354,12 @@
   }
 </script>
 <style scoped>
+.checkPagination{
+  float: right;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
 .el-select{
   width: 178px;
 }

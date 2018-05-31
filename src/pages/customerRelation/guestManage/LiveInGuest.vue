@@ -12,6 +12,16 @@
           <el-form-item label="证件号">
             <el-input v-model="form.certificateNo"></el-input>
           </el-form-item>
+          <el-form-item label="会员等级">
+            <el-select clearable v-model="form.gradePk" placeholder="请选择">
+              <el-option
+                v-for="item in memberGradeData"
+                :key="item.gradePk"
+                :label="item.gradeName"
+                :value="item.gradePk">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="手机号">
             <el-input v-model="form.memPhone"></el-input>
           </el-form-item>
@@ -35,25 +45,19 @@
           size="mini"
           height="450"
           border 
-          :data="tableData
-          | globalFilter(form.memName)
-          | globalFilter(form.certificateNo)
-          | globalFilter(form.memPhone)
-          | globalFilter(form.cardNumber)
-          | globalFilter(form.carNumber)
-          " 
+          :data="tableData" 
           style="width: 98.5%; margin:10px;"> 
           <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
           </el-table-column>
-          <el-table-column prop="memberGrade" label="类型" align="center" width="90">
-            <template slot-scope="scope">
+          <el-table-column prop="gradeName" label="会员类型" align="center" width="90">
+            <!-- <template slot-scope="scope">
               <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
               <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
               <span v-if="scope.row.memberGrade == 'SENIOR'">高级会员</span>
               <span v-if="scope.row.memberGrade == 'VIP'">VIP会员</span>
               <span v-if="scope.row.memberGrade == 'PLATINUM'">铂金会员</span>
               <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column prop="memName" label="姓名" align="center" width="90">
           </el-table-column>
@@ -93,6 +97,10 @@
             </template>
           </el-table-column> -->
         </el-table>
+        <div class="block LiveInGuestPagination"  >
+        <el-pagination @current-change="getLiveGuestPageNum" @size-change="getLiveGuestPageSize" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -101,6 +109,7 @@
 <script>
 import Operation from "./LiveInGuestOperation";
 import {liveInProject,historyLiveInProject} from '@/api/customerRelation/GuestManagement/pmsGuestManagement'
+import {memberGradeList} from '@/api/memberGrade'
 export default {
   components: { Operation },
   data() {
@@ -108,30 +117,54 @@ export default {
       dialogHistoryVisible: false,
       loading: false,
       form: {
-        memName:'', 
+        memName:'',
+        gradePk:'',
         certificateNo:'', 
         memPhone:'', 
         cardNumber:'', 
-        carNumber:''
+        carNumber:'',
+        pageNum:1,
+        pageSize:10
       },
-      tableData: []
+      memberGradeData:[]
+      ,
+      tableData: [],
+      total:0
     };
   },
   created () {
     this.liveInListData();
+    this.getGradeList();
   },
   methods: {
+    getGradeList(){
+      this.loading = true
+      memberGradeList().then(res => {
+        this.loading = false;
+        this.memberGradeData = res.data;
+      });
+    },
     liveInListData(){
       const self = this;
       const parameters = self.form;
       this.loading = true
       liveInProject(parameters).then(res => {
-        console.log(res.data)
+        console.log(res.data.data)
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.total;
         console.log(this.tableData)
       });
     },
+    getLiveGuestPageNum(val){
+        this.form.pageNum = val;
+        this.liveInListData();
+    },
+    getLiveGuestPageSize(val){
+        this.form.pageSize = val;
+        this.liveInListData();
+    }
+    ,
     guestSearch(){
       this.liveInListData();
     }
@@ -143,6 +176,10 @@ export default {
 </script>
 
 <style scoped>
+.LiveInGuestPagination{
+  float:right;
+  margin: 0 20px 10px 0;
+}
 .bg-reserve {
   position: relative;
   background: #f7f7f7;

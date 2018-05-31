@@ -16,9 +16,9 @@
         <el-form-item label="预订人:">
           <el-input v-model="filterText" placeholder="请输入预订人" clearable></el-input>
         </el-form-item>
-        <el-form-item label="预订卡号:">
+        <!-- <el-form-item label="预订卡号:">
           <el-input v-model="filterText" placeholder="请输入预订卡号" clearable></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="入住人:">
           <el-input v-model="filterText" placeholder="请输入入住人" clearable></el-input>
         </el-form-item>
@@ -173,7 +173,7 @@
     <!-- DIALOG -->
     <!-- 订单页面 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
-    
+
     <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
@@ -368,7 +368,7 @@
       }
     },
     filters: {
-      
+
     },
     mounted () {
       bus.$on('closeOrder', () => { this.closeOrderDialog() })

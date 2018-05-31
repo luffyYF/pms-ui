@@ -11,6 +11,16 @@
         <el-form-item label="证件号">
           <el-input v-model="form.certificateNo"></el-input>
         </el-form-item>
+        <el-form-item label="会员等级">
+            <el-select clearable v-model="form.gradePk" placeholder="请选择">
+              <el-option
+                v-for="item in memberGradeData"
+                :key="item.gradePk"
+                :label="item.gradeName"
+                :value="item.gradePk">
+              </el-option>
+            </el-select>
+          </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="form.memPhone"></el-input>
         </el-form-item>
@@ -54,32 +64,24 @@
       </div>
     </el-form>
     <!-- table -->
-    <div class="bg-reserve">
+    <div class="bg-reserve pd">
       <h5 class="info-title">账户列表</h5>
       <el-table v-loading="loading" 
       size="mini" 
       border 
-      :data="tableData
-      | globalFilter(form.memName)
-      | globalFilter(form.certificateNo)
-      | globalFilter(form.memPhone)
-      | globalFilter(form.cardNumber)
-      | globalFilter(form.carNumber)
-      | globalFilter(form.roomNumber)
-      | globalFilter(form.invoiceTitle)
-      " 
+      :data="tableData" 
       style="width: 98.5%; margin:10px;" height="450">
         <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
         </el-table-column>
-        <el-table-column prop="memberGrade" label="类型" align="center" width="90">
-          <template slot-scope="scope">
+        <el-table-column prop="gradeName" label="会员类型" align="center" width="90">
+          <!-- <template slot-scope="scope">
             <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
             <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
             <span v-if="scope.row.memberGrade == 'SENIOR'">高级会员</span>
             <span v-if="scope.row.memberGrade == 'VIP'">VIP会员</span>
             <span v-if="scope.row.memberGrade == 'PLATINUM'">铂金会员</span>
             <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
         </el-table-column>
@@ -119,6 +121,10 @@
           </template>
         </el-table-column> -->
       </el-table>
+      <div class="block HistoryGuestPagination"  >
+        <el-pagination @current-change="getHistoetGuestPageNum" @size-change="getHistoetGuestPageSize" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+        </div>
     </div>
 
     <el-dialog title="选择协议单位" :visible.sync="agreementUnit" width="55%">
@@ -165,6 +171,7 @@
 
 <script>
 import {liveInProject,historyLiveInProject} from '@/api/customerRelation/GuestManagement/pmsGuestManagement'
+import {memberGradeList} from '@/api/memberGrade'
 export default {
   data() {
     return {
@@ -175,28 +182,49 @@ export default {
         cardNumber: '', 
         carNumber: '', 
         roomNumber: '', 
-        invoiceTitle: ''
-      },
+        invoiceTitle: '',
+        pageNum:1,
+        pageSize:10,
+        gradePk:''
+      },memberGradeData:[],
       agreementUnit: false,
       loading: false,
       protocolNumber: '',
-      tableData: [], //账户列表数据
+      tableData: [],
+      total:0, //账户列表数据
       beginDate: new Date(),
       endDate: new Date()
     };
   },
   created () {
     this.liveInListData();
+    this.getGradeList();
   },
   methods: {
+    getGradeList(){
+      this.loading = true
+      memberGradeList().then(res => {
+        this.loading = false;
+        this.memberGradeData = res.data;
+      });
+    },
     liveInListData(){
       const self = this;
       const parameters = self.form;
       this.loading = true
       historyLiveInProject(parameters).then(res => {
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.total;
       });
+    },
+    getHistoetGuestPageNum(val){
+        this.form.pageNum = val;
+        this.liveInListData();
+    },
+    getHistoetGuestPageSize(val){
+        this.form.pageSize = val;
+        this.liveInListData();
     },
     guestSearch(){
       this.liveInListData();
@@ -209,6 +237,13 @@ export default {
 </script>
 
 <style scoped>
+.pd{
+  padding-bottom: 40px;
+}
+.HistoryGuestPagination{
+  float:right;
+  margin: 0 20px 10px 0;
+}
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
