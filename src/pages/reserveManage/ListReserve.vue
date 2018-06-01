@@ -344,13 +344,13 @@
           }
         })
       },
-      showOrderInfo(row) {//查看订单
-        // this.dialogVisible = true
-        // this.orderNo = '组单号：' + row.orderNo;
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
-        },1)
-      },
+      // showOrderInfo(row) {//查看订单
+      //   // this.dialogVisible = true
+      //   // this.orderNo = '组单号：' + row.orderNo;
+      //   setTimeout(() => {
+      //     this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
+      //   },1)
+      // },
       handlerFilterChange (value) {
         this.total = value.length
       },
