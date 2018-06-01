@@ -57,7 +57,7 @@
     },
     data () {
       return {
-        activeName: ''
+        activeMenu: ''
       }
     },
     methods: {
@@ -70,7 +70,7 @@
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
-      this.activeName = this.$refs.checkTabs.panes[0].name
+      // this.activeName = this.$refs.checkTabs.panes[0].name
     },
   }
 </script>

@@ -667,7 +667,7 @@
         currentRoomList(data).then(res1=>{
           let tempdata = res1.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
-            this.roomType = res2.data
+            this.roomType = res2.data.data
             for(let i = 0; i<tempdata.length; i++){
               let roomTypePk = tempdata[i].roomTypePk
               this.roomType.forEach(type => {
