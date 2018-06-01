@@ -27,10 +27,10 @@
               :value="item.gradeName">
             </el-option>
           </el-select> -->
-          <member-grade v-model="form.memberGradeName"/>
+          <member-grade v-model="form.gradePk"/>
         </el-form-item>
         <el-form-item label="有效期">
-          <el-date-picker v-model="form.invalidDateCard" type="date"></el-date-picker>
+          <el-date-picker v-model="form.invalidDateCard" value-format="yyyy-MM-dd" type="date"></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="seaechFromList">搜索</el-button>
@@ -43,14 +43,7 @@
       <el-table v-loading="loading" 
       size="mini" 
       border 
-      :data="tableData 
-      | globalFilter(form.cardNumber)
-      | globalFilter(form.memName)
-      | globalFilter(form.memPhone)
-      | globalFilter(form.certificateNo)
-      | globalFilter(form.memberGrade)
-      | globalFilter(form.invalidDateCard)
-      " 
+      :data="tableData"
       style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
         </el-table-column>
@@ -96,6 +89,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination class="positions" @size-change="getSizeChange" @current-change="memberListData" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
 
     <!-- 会员管理 dialog -->
@@ -165,6 +159,7 @@ import MemberGrade from '@/components/MemberGrade/MemberGrade'
 import MemberOperationManagement from './MemberOperationManagement';
 // import {listGrade} from '@/api/systemSet/member/pmsMemberGradeController'
 import {listMember,recoverMember,updateMember} from '@/api/customerRelation/pmsMemberController'
+import {findGrade} from '@/api/customerRelation/pmsMemberGradeController'
 export default {
   components: {MemberGrade,MemberOperationManagement},
   data() {
@@ -173,16 +168,13 @@ export default {
       dialogMemberVisible: false,
       loading: false,
       form: {
-        cardNumber:'', 
-        memName:'', 
-        memPhone:'', 
-        certificateNo:'', 
-        memberGrade:'', 
-        invalidDateCard:'',
-        memberGradeName:''
+        deleteFlag: 'N',
+        pageNum:1,
+        pageSize: 10
       },
       tableData: [], //列表数据
-      membeInfo: '' //会员资料
+      membeInfo: '', //会员资料
+      total: 0
     };
   },
   mounted(){
@@ -192,28 +184,43 @@ export default {
     init(){
       this.memberListData();
     },
-    memberListData() {
+    memberListData(val) {
       this.loading = true
-      listMember({deleteFlag: 'N'}).then(res => {
+      this.form.pageNum = val;
+      listMember(this.form).then(res => {
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.pageSize;
+        console.log(this.tableData)
+      });
+    },
+    getSizeChange(val) {
+      this.loading = true
+      this.form.pageSize = val;
+      listMember(this.form).then(res => {
+        this.loading = false
+        this.tableData = res.data.data;
+        this.total = res.data.pageSize;
+        this.form.pageNum = 1;
         console.log(this.tableData)
       });
     },
     seaechFromList(){
-      this.memberListData();
+      this.memberListData(1);
     },
     memberMangerClick(row) {
-      console.log(row)
       this.membeInfo = row;
-      this.dialogMemberVisible = true;
+      findGrade({gradePk:row.gradePk}).then(res => {
+        this.membeInfo.gradeName = res.data.gradeName;
+        this.dialogMemberVisible = true;
+      });
     },
     delMemberList(){
       this.memberListData();
     },
     //会员等级改变触发
     memberLevelChange(res){
-      this.form.memberGrade=res.form.memberGrade;
+      this.form.gradePk=res.form.memberGrade;
       // this.form.cardFee=res.form.cardFee;
       // this.form.invalidDateCard=res.form.invalidDateCard;
     },
@@ -255,6 +262,9 @@ export default {
 .height110{
   height: 110px;
   padding: 20px 10px 0 10px;
+}
+.positions {
+  float: right;
 }
 </style>
 <style>

@@ -17,7 +17,7 @@
           <el-input v-model="formInline.userName" placeholder="请输入预订人" clearable></el-input>
         </el-form-item>
         <!-- <el-form-item label="预订卡号:">
-          <el-input v-model="filterText" placeholder="请输入预订卡号" clearable></el-input>
+          <el-input v-model="filterOrderNo" placeholder="请输入预订卡号" clearable></el-input>
         </el-form-item> -->
         <el-form-item label="入住人:">
           <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable></el-input>
@@ -344,13 +344,13 @@
           }
         })
       },
-      showOrderInfo(row) {//查看订单
-        // this.dialogVisible = true
-        // this.orderNo = '组单号：' + row.orderNo;
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
-        },1)
-      },
+      // showOrderInfo(row) {//查看订单
+      //   // this.dialogVisible = true
+      //   // this.orderNo = '组单号：' + row.orderNo;
+      //   setTimeout(() => {
+      //     this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
+      //   },1)
+      // },
       handlerFilterChange (value) {
         this.total = value.length
       },
@@ -359,6 +359,7 @@
       },
       list(){
         this.loading = true
+        this.formInline.pageNum = 1;
         listReserve(this.formInline).then(result => {
           this.tableData = result.data.data;
           this.total = result.data.pageSize;

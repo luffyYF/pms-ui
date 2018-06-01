@@ -2,7 +2,7 @@
   <div>
     <div class="bg-reserve">
       <h5 class="info-title">协议类别管理</h5>
-      <el-button type="primary" size="mini" class="add-pro" @click="addRows">添加行业分类</el-button>
+      <el-button type="primary" size="mini" class="add-pro" @click="addRows">添加协议类别</el-button>
       <el-table
         size="mini" 
         border 
@@ -33,6 +33,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination class="positions" @size-change="getSizeChange" @current-change="list" :current-page="queryParams.pageNum" :page-size="queryParams.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
   </div>
 </template>
@@ -46,11 +47,17 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
         typeMaster: 'AGREEMENT',
         options:[],
         tableData: [],
+        queryParams: {
+          typeMaster: 'AGREEMENT',
+          pageSize: 10,
+          pageNum: 1
+        },
+        total: 0,
       }
     },
     methods: {
       init() {
-        this.list()
+        this.list(1)
       },
       saveClick(row) {
         console.log(row)
@@ -64,7 +71,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
                 type: 'success'
               });
             }
-            self.list();
+            self.list(self.queryParams.pageNum);
           })
         }else{
           delete row.createTime;
@@ -76,7 +83,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
                 type: 'success'
               });
             }
-            self.list();
+            self.list(self.queryParams.pageNum);
           })
         }
       },
@@ -95,7 +102,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
                 type: 'success'
               })
             }
-            self.list();
+            self.list(self.queryParams.pageNum);
           })
         }).catch(() => {
           this.$message({
@@ -121,10 +128,25 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
           })
         }
       },
-      list(){
+      list(val){
         const self = this
-        listType({typeMaster: this.typeMaster}).then(result => {
-          self.tableData = result.data
+        self.queryParams.pageNum = val;
+        listType(self.queryParams).then(result => {
+          self.tableData = result.data.data;
+          self.total = result.data.pageSize;
+        }).catch(() => {
+          self.loading = false
+        })
+      },
+      getSizeChange(val) {
+        const self = this
+        self.queryParams.pageSize = val;
+        if (val > self.total) {
+          self.queryParams.pageNum = 1;
+        }
+        listType(self.queryParams).then(result => {
+          self.tableData = result.data.data;
+          self.total = result.data.pageSize;
         }).catch(() => {
           self.loading = false
         })
@@ -158,6 +180,9 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
   float:left;
   margin-bottom: 10px;
   margin-left: 10px;
+}
+.positions {
+  float: right;
 }
 </style>
 

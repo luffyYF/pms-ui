@@ -3,7 +3,8 @@
         <div class="primary-tool">
             <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
             <el-button type="primary" size="mini">PDF预览</el-button>
-            <el-button type="primary" size="mini" @click="getExcel()">导出EXCEL</el-button>
+            <!-- 导出EXCEL -->
+              <el-button type="primary" size="mini" ><a :href="baseRul+'pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel'">导出EXCEL</a></el-button>
             <el-button type="primary" size="mini">添加到收藏夹</el-button>
             <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -46,7 +47,8 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      }
+      },
+      baseRul:"http://localhost:8083/pms/"
     };
   },
   created() {
@@ -65,26 +67,17 @@ export default {
       this.getList()
     },
     getExcel(){
-      zaiZhuKeRenCaiWuMingXiExcel().then(res=>{
-        alert(JSON.stringify(res));
-        this.download(res);
-      }).catch(error=>{
-      })
+        alert("55");
+        window.open("/http://localhost:8083/pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel", '_blank'); 
+  
+        // window.open = "http://localhost:8083/pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel";
+        alert("66");
+      // zaiZhuKeRenCaiWuMingXiExcel().then(res=>{
+      //   // alert(JSON.stringify(res));
+      //   // this.download(res);
+      // }).catch(error=>{
+      // })
     },
-    download (data) {
-        if (!data) {
-            return
-        }
-        let url = window.URL.createObjectURL(new Blob([data]))
-        let link = document.createElement('a')
-        link.style.display = 'none'
-        link.href = url
-        link.setAttribute('download', 'excel.xlsx')
-
-        document.body.appendChild(link)
-        link.click()
-    }
-    ,
     getList(){
       let self = this
       reportZaiiZhuKeRenCaiWuMingXi().then((data)=>{

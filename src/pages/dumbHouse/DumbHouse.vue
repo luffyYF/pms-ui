@@ -354,7 +354,7 @@
       //获取协议的单位
       listProjectDate(){
         listProject().then(res => {
-          this.agreementList = res.data;
+          this.agreementList = res.data.data;
         })
       },
       getList () {  //获取列表数据

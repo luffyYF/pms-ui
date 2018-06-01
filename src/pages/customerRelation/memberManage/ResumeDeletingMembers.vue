@@ -6,16 +6,16 @@
       <div class="bg-reserve">
         <h5 class="info-title">删除会员查询</h5>
         <el-form-item label="卡号">
-          <el-input v-model="form.cardNumber"></el-input> 
+          <el-input v-model="form.cardNumber" clearable></el-input> 
         </el-form-item> 
         <el-form-item label="姓名">
-          <el-input v-model="form.memName"></el-input>
+          <el-input v-model="form.memName" clearable></el-input>
         </el-form-item>
         <el-form-item label="手机号码">
-          <el-input v-model="form.memPhone"></el-input>
+          <el-input v-model="form.memPhone" clearable></el-input>
         </el-form-item>
         <el-form-item label="证件号">
-          <el-input v-model="form.certificateNo"></el-input>
+          <el-input v-model="form.certificateNo" clearable></el-input>
         </el-form-item>
         <el-form-item label="会员级别">
           <!-- <el-select class="member-level" v-model="form.memberGradeName" @change="selectMember">
@@ -27,7 +27,7 @@
               :value="item.gradeName">
             </el-option>
           </el-select> -->
-          <member-grade/>
+          <member-grade v-model="form.gradePk"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="searchDateList">搜索</el-button>
@@ -40,12 +40,7 @@
       <el-table v-loading="loading" 
       size="mini" 
       border 
-      :data="tableData
-      | globalFilter(form.cardNumber)
-      | globalFilter(form.memName)
-      | globalFilter(form.memPhone)
-      | globalFilter(form.certificateNo)
-      | globalFilter(form.memberGrade)" 
+      :data="tableData" 
       height="450" 
       style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
@@ -94,6 +89,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination class="positions" @size-change="getSizeChange" @current-change="deleteMemberList" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
 
     <!-- 用户信息 dialog -->
@@ -122,14 +118,12 @@ export default {
       loading: false,
       memberLevel: [],
       form: {
-        cardNumber: '', 
-        memName: '', 
-        memPhone: '', 
-        certificateNo: '', 
-        memberGrade: '',
-        memberGradeName:''
+        deleteFlag: 'Y',
+        pageSize: 10,
+        pageNum: 1
       },
       tableData: [], //列表数据
+      total: 0
     };
   },
   mounted(){
@@ -140,13 +134,24 @@ export default {
       this.deleteMemberList();
     },
     searchDateList(){
-      this.deleteMemberList();
+      this.deleteMemberList(1);
     },
-    deleteMemberList() {
+    deleteMemberList(val) {
       this.loading = true
-      listMember({deleteFlag: 'Y'}).then(res => {
+      this.form.pageNum = val;
+      listMember(this.form).then(res => {
+        this.loading = false;
+        this.tableData = res.data.data;
+        this.total = res.data.pageSize;
+      });
+    },
+    getSizeChange(val) {
+      this.loading = true
+      this.form.pageSize = val;
+      listMember(this.form).then(res => {
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.pageSize;
       });
     },
     recoverMangerClick(row) {
@@ -176,7 +181,7 @@ export default {
     },
     //会员等级改变触发
     memberLevelChange(res){
-      this.form.memberGrade=res.form.memberGrade;
+      this.form.gradePk=res.form.memberGrade;
       // this.form.cardFee=res.form.cardFee;
       // this.form.invalidDateCard=res.form.invalidDateCard;
     },
@@ -206,6 +211,9 @@ export default {
 }
 .el-date-editor.el-input {
   width: 178px;
+}
+.positions {
+  float: right;
 }
 </style>
 
