@@ -219,7 +219,15 @@ export const constantRouterMap = [
           {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询', pointer: '501503'}
         ]
       },
-      {path: '/financialAudit', component: FinancialAuditTag, name: '财务稽核', hidden: false},
+      {
+        path: '/financialAudit', 
+        component: FinancialAuditTag, 
+        name: '财务稽核', 
+        hidden: false,
+        children: [
+          {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表', pointer: '500403'}
+        ]
+      },
       {path: '/dumbHouse', component: DumbHouseTag, name: '哑房账', hidden: false},
       {path: '/commodityDept', component: CommodityDeptTag, name: '商品部', hidden: false},
       {path: '/stock', component: StockTag, name: '库存', hidden: false},

@@ -1,6 +1,21 @@
 <template>
   <div class="height-programme-one">
-    <el-tabs v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
+    <el-menu
+      :default-active="activeMenu"
+      mode="horizontal"
+      ref="customeMenu"
+      :router=true
+      class="el-menu-vertical-demo">
+      <el-menu-item index="/financialAudit" v-if="powerJudge('500403')">
+        <span slot="title">冲减明细报表</span>
+      </el-menu-item>
+    </el-menu>
+    <el-col class="menu-content" :span="24">
+      <transition name="el-fade-in-linear">
+        <router-view></router-view>
+      </transition>
+    </el-col>
+    <!-- <el-tabs v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
       <el-tab-pane label="历史换房报表" name="first" class="aLayerOfPage" v-if="powerJudge('1801')">
         <history-exchange-houses/>
       </el-tab-pane>
@@ -19,7 +34,7 @@
       <el-tab-pane label="营业收入上缴" name="sixth" class="aLayerOfPage" v-if="powerJudge('1806')">
         <business-income-paid/>
       </el-tab-pane>
-    </el-tabs>
+    </el-tabs> -->
   </div>
 </template>
 
@@ -32,14 +47,14 @@
   import BusinessIncomePaid from './BusinessIncomePaid/tab'
   import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
-     components: {
-       HistoryExchangeHouses,
-       PunchingSubtraction,
-       RentContractReport,
-       DailyRentalHourRoom,
-       HistoricalDeparture,
-       BusinessIncomePaid
-     },
+    components: {
+      HistoryExchangeHouses,
+      PunchingSubtraction,
+      RentContractReport,
+      DailyRentalHourRoom,
+      HistoricalDeparture,
+      BusinessIncomePaid
+    },
     data () {
       return {
         activeName: ''
