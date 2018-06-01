@@ -17,7 +17,7 @@
           <el-input v-model="formInline.userName" placeholder="请输入预订人" clearable></el-input>
         </el-form-item>
         <!-- <el-form-item label="预订卡号:">
-          <el-input v-model="filterText" placeholder="请输入预订卡号" clearable></el-input>
+          <el-input v-model="filterOrderNo" placeholder="请输入预订卡号" clearable></el-input>
         </el-form-item> -->
         <el-form-item label="入住人:">
           <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable></el-input>
