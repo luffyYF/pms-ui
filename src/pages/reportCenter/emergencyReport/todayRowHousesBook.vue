@@ -3,7 +3,7 @@
         <div>
           <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
-          <el-button type="primary" size="mini">导出EXCEL</el-button>
+          <el-button type="primary" size="mini"><a :href="baseRul+'pms/report/jinRiYuDiYiPaiFangYuDingExcel'">导出EXCEL</a></el-button>
           <el-button type="primary" size="mini">添加到收藏夹</el-button>
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -20,7 +20,7 @@
               size="mini" 
               border 
               style="width: 100%; margin:0 auto;">
-              <el-table-column prop="roomTypeName" align="center" label="姓名" ></el-table-column>
+              <el-table-column prop="roomTypeName" align="center" label="名称" ></el-table-column>
               <el-table-column prop="roomNumber" align="center" label="房号" ></el-table-column>
               <el-table-column prop="roomStatus" align="center" label="房型" >
                 <template slot-scope="scope">
@@ -51,7 +51,7 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      }
+      },baseRul:"http://localhost:8083/pms/"
     };
   },
   created() {

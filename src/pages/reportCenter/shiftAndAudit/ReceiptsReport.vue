@@ -1,21 +1,8 @@
 <template>
   <div class="container">
     <el-form :inline="true" size="mini"  class="demo-form-inline">
-      <el-form-item label="开始日期">
-        <el-date-picker
-          v-model="queryObj.begin"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="结束日期">
-        <el-date-picker
-          v-model="queryObj.end"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择日期">
-        </el-date-picker>
+      <el-form-item label="日期">
+       <date-picker v-model="begenAndEnd"></date-picker>
       </el-form-item>
       <el-form-item label="收银员">
         <el-select v-model="queryObj.userPk" placeholder="选择收银员">
@@ -86,11 +73,13 @@
 </template>
 
 <script>
+import DatePicker from '@/components/DateComponent/DatePicker';
 import {roomStatus,reportShouYinYuanShouKuan} from "@/api/reportCenter/pmsReportFormController"
 import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
 import moment from "moment"
 export default {
+  components: {DatePicker},
   data() {
     return {
       userInfo:{},
@@ -105,8 +94,19 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
+      },begenAndEnd:{
+        begin:'',
+        end:''
       }
     };
+  },
+  watch:{
+    begenAndEnd: function () {
+      if (this.begenAndEnd) {
+        this.queryObj.begin =this.begenAndEnd.begin;
+        this.queryObj.end = this.begenAndEnd.end;
+      }
+    }
   },
   created() {
     var test = window.localStorage.getItem("current_logon_company");

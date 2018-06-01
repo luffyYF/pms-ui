@@ -597,8 +597,7 @@ export default {
         if(res.code==1){
           this.meetingRoomList = res.data;
           //默认选中第一个会议室
-          if(!this.meetingRoomList){
-            
+          if(this.meetingRoomList != [] ){
           }else{
             bus.$emit('conferenceRoomChange')
           }

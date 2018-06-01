@@ -2,31 +2,48 @@
   <div class="bg-server">
     <el-form ref="form" :inline="true" :model="form1" border size="mini" label-width="80px">
       <el-form-item label="外借状态">
-        <el-select v-model="form.region" placeholder="请选择外借状态">
-          <el-option label="未归还" value="shanghai"></el-option>
-          <el-option label="归还" value="beijing"></el-option>
-          <el-option label="赔偿" value="beijing"></el-option>
+        <el-select v-model="form.status" placeholder="请选择外借状态">
+          <el-option label="未归还" value="NORETURN"></el-option>
+          <el-option label="归还" value="RETURN"></el-option>
+          <el-option label="赔偿" value="PAYFOR"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="租借时间">
-        <el-date-picker v-model="datepicker1" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <!-- <date-picker v-model="begenAndEnd"></date-picker> -->
+        <!-- <el-date-picker v-model="form.beginDate" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker> -->
+        <el-date-picker
+            v-model="form.beginDate"
+            align="right"
+            type="date"
+            placeholder="请选择开始时间"
+            value-format="yyyy-MM-dd"
+            :picker-options="startTimeOptions">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="外借房号">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.roomNumber"></el-input>
       </el-form-item>
       <el-form-item label="客人姓名">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.guestName"></el-input>
       </el-form-item>
       <el-form-item label="归还时间">
-        <el-date-picker v-model="datepicker2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <!-- <el-date-picker v-model="form.endDate" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker> -->
+        <el-date-picker
+            v-model="form.endDate"
+            align="right"
+            type="date"
+            placeholder="请选择开始时间"
+            value-format="yyyy-MM-dd"
+            :picker-options="startTimeOptions">
+        </el-date-picker>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-checkbox-group v-model="form.type">
           <el-checkbox label="查询全部" name="type"></el-checkbox>
         </el-checkbox-group>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查找</el-button>
+        <el-button type="primary" @click="selectGood">查找</el-button>
       </el-form-item>
     </el-form>
     <p style="margin-top:0;color:red;">*双击表格可进行操作</p>
@@ -110,6 +127,7 @@
   </div>
 </template>
 <script>
+import DatePicker from '@/components/DateComponent/DatePicker';
 import {letoutMap} from '@/utils/orm'
 import {
   pmsGoodsAdd,
@@ -129,11 +147,44 @@ export default {
     return {
       letoutMap: letoutMap,
       goodsList: [],
-      form: {},
+      form: {
+        name:'',
+        type:'WJ',
+        status:'',
+        guestName:'',
+        roomNumber:'',
+        beginDate:'',
+        endDate:''
+      },
       form1: {},
       tableData: [],
       datepicker1: "",
-      datepicker2: ""
+      datepicker2: "",
+        startTimeOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }, {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          }]
+        }
     };
   },
   methods: {
@@ -150,6 +201,20 @@ export default {
           this.loading = false;
         });
     },
+    selectGood(){
+      this.loading = true;
+      pmsGoodsListCondition(this.form)
+        .then(res => {
+          this.loading = false;
+          if (res.code == 1) {
+            this.goodsList = res.data;
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    }
+    ,
     cellClickHandle(row) {
       this.form = row;
     },

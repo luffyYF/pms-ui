@@ -3,7 +3,8 @@
         <div class="primary-tool">
             <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
             <el-button type="primary" size="mini">PDF预览</el-button>
-            <el-button type="primary" size="mini">导出EXCEL</el-button>
+            <!-- 导出EXCEL -->
+              <el-button type="primary" size="mini" ><a :href="baseRul+'pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel'">导出EXCEL</a></el-button>
             <el-button type="primary" size="mini">添加到收藏夹</el-button>
             <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-import {reportZaiiZhuKeRenCaiWuMingXi} from "@/api/reportCenter/pmsReportFormController"
+import {reportZaiiZhuKeRenCaiWuMingXi,zaiZhuKeRenCaiWuMingXiExcel} from "@/api/reportCenter/pmsReportFormController"
 import moment from "moment"
 export default {
   data() {
@@ -46,7 +47,8 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      }
+      },
+      baseRul:"http://localhost:8083/pms/"
     };
   },
   created() {
@@ -63,6 +65,18 @@ export default {
   methods: {
     init(){
       this.getList()
+    },
+    getExcel(){
+        alert("55");
+        window.open("/http://localhost:8083/pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel", '_blank'); 
+  
+        // window.open = "http://localhost:8083/pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel";
+        alert("66");
+      // zaiZhuKeRenCaiWuMingXiExcel().then(res=>{
+      //   // alert(JSON.stringify(res));
+      //   // this.download(res);
+      // }).catch(error=>{
+      // })
     },
     getList(){
       let self = this

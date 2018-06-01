@@ -17,7 +17,7 @@
           <el-input v-model="formInline.userName" placeholder="请输入预订人" clearable></el-input>
         </el-form-item>
         <!-- <el-form-item label="预订卡号:">
-          <el-input v-model="filterOrderNo" placeholder="请输入预订卡号" clearable></el-input>
+          <el-input v-model="filterText" placeholder="请输入预订卡号" clearable></el-input>
         </el-form-item> -->
         <el-form-item label="入住人:">
           <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable></el-input>
@@ -91,7 +91,7 @@
         </el-form-item>
       </el-col>
     </el-form>
-    <el-table v-loading="loading" :data="tableData | globalFilter(filterText,filterOrderNo) | pagingFilter(pagination)" filter-change="handlerFilterChange" border>
+    <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border>
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
       <!-- numberOfOccupancy-->
@@ -205,7 +205,6 @@
         total: 0,
         filterDate: [],
         filterText: '',
-        filterOrderNo:'',
         pagination: {size: 10, current: 1, total: 0},
         loading: false,
         filters: {systemName: '', realName: ''},
@@ -284,9 +283,7 @@
       // this.getList()
     },
     watch: {
-      filterText: function (value) {
-        
-      }
+      filterText: function (value) {}
     },
     methods: {
       powerJudge(id){
@@ -347,13 +344,13 @@
           }
         })
       },
-      // showOrderInfo(row) {//查看订单
-      //   // this.dialogVisible = true
-      //   // this.orderNo = '组单号：' + row.orderNo;
-      //   setTimeout(() => {
-      //     this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
-      //   },1)
-      // },
+      showOrderInfo(row) {//查看订单
+        // this.dialogVisible = true
+        // this.orderNo = '组单号：' + row.orderNo;
+        setTimeout(() => {
+          this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
+        },1)
+      },
       handlerFilterChange (value) {
         this.total = value.length
       },

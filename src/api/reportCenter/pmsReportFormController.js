@@ -135,7 +135,13 @@ export const reportShiShiFangTai = params => {
 export const reportShouYinYuanShouKuan = params => {
     return request.get('/pms/report/shouYinYuanShouKuan',{params:params})
 }
-
+export const uploadShouYinYuanShouKuanExcel = params => {
+    return request.get('/pms/report/uploadShouYinYuanShouKuanExcel',{params:params})
+}
+//在住客人财务详细 excel
+export const zaiZhuKeRenCaiWuMingXiExcel = params => {
+    return request.get('/pms/report/zaiZhuKeRenCaiWuMingXiExcel',{params:params})
+}
 /**
  * 收银入账明细报表
  * begin 开始时间

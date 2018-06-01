@@ -12,6 +12,16 @@
           <el-form-item label="证件号">
             <el-input v-model="form.certificateNo"></el-input>
           </el-form-item>
+          <el-form-item label="会员等级">
+            <el-select clearable v-model="form.gradePk" placeholder="请选择">
+              <el-option
+                v-for="item in memberGradeData"
+                :key="item.gradePk"
+                :label="item.gradeName"
+                :value="item.gradePk">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="手机号">
             <el-input v-model="form.memPhone"></el-input>
           </el-form-item>
@@ -39,7 +49,7 @@
           style="width: 98.5%; margin:10px;"> 
           <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
           </el-table-column>
-          <el-table-column prop="gradeName" label="类型" align="center" width="90">
+          <el-table-column prop="gradeName" label="会员类型" align="center" width="90">
             <!-- <template slot-scope="scope">
               <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
               <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
@@ -99,6 +109,7 @@
 <script>
 import Operation from "./LiveInGuestOperation";
 import {liveInProject,historyLiveInProject} from '@/api/customerRelation/GuestManagement/pmsGuestManagement'
+import {memberGradeList} from '@/api/memberGrade'
 export default {
   components: { Operation },
   data() {
@@ -106,7 +117,8 @@ export default {
       dialogHistoryVisible: false,
       loading: false,
       form: {
-        memName:'', 
+        memName:'',
+        gradePk:'',
         certificateNo:'', 
         memPhone:'', 
         cardNumber:'', 
@@ -114,14 +126,24 @@ export default {
         pageNum:1,
         pageSize:10
       },
+      memberGradeData:[]
+      ,
       tableData: [],
       total:0
     };
   },
   created () {
     this.liveInListData();
+    this.getGradeList();
   },
   methods: {
+    getGradeList(){
+      this.loading = true
+      memberGradeList().then(res => {
+        this.loading = false;
+        this.memberGradeData = res.data;
+      });
+    },
     liveInListData(){
       const self = this;
       const parameters = self.form;

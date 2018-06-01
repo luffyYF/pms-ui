@@ -111,6 +111,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/bus'
   import {listMtgRoom,addMtgRoom,updateMtgRoom,delMtgRoom} from '@/api/conferenceRoom/mtgRoomController'
   export default {
     components: {},
@@ -131,7 +132,14 @@
         this.loading = true
         listMtgRoom().then(res => {
           this.loading = false
-          this.tableData = res.data
+          this.tableData = res.data;
+          if(this.tableData[0] != null){
+              bus.$emit('conferenceRoomChangefalse');
+              // alert("2")
+          }else{
+              // alert("3")
+              bus.$emit('conferenceRoomChange');
+          }
         }).catch(error=>{
           // this.$message({type:'danger', message: error})
         })

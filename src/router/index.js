@@ -54,7 +54,7 @@ import ListReserve from '@/pages/reserveManage/ListReserve.vue'
 import GroupReserve from '@/pages/reserveManage/GroupReserve.vue'
 import AddReserve from '@/pages/reserveManage/AddReserve.vue'
 
-//客户关系      
+//客户关系
 import MemberManage from '@/pages/customerRelation/memberManage/tab.vue'
 import GuestManage from '@/pages/customerRelation/guestManage/tab.vue'
 import VirtualOrder from '@/pages/customerRelation/VirtualOrder.vue'
