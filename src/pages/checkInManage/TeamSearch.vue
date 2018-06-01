@@ -207,9 +207,6 @@
       getList () {
         const self = this;
         var parameters = self.form;
-        if(self.form.roomNum == ''){
-          parameters.roomNum = 0;
-        }
         this.loading = true
         teamListProject(parameters).then(res => {
           this.loading = false
@@ -233,7 +230,10 @@
 </script>
 <style scoped>
 .teamPagination{
+  float: right;
   margin-top: 20px;
+  margin-bottom: 10px;
+  margin-right: 20px;
 }
 .el-select{
   width: 178px;

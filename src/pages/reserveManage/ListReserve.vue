@@ -362,6 +362,7 @@
       },
       list(){
         this.loading = true
+        this.formInline.pageNum = 1;
         listReserve(this.formInline).then(result => {
           this.tableData = result.data.data;
           this.total = result.data.pageSize;

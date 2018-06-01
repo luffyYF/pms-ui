@@ -30,8 +30,7 @@
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
       this.activeName = this.$refs.checkTabs.panes[0].name;
-      
-      bus.$on('conferenceRoomChange', () => {alert("sds"); this.setActiveName() })
+      bus.$on('conferenceRoomChange', () => {this.setActiveName() })
     },
     methods: {
       handleClick (tab, event) {

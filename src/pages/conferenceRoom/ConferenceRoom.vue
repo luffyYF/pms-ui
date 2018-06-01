@@ -597,10 +597,13 @@ export default {
         if(res.code==1){
           this.meetingRoomList = res.data;
           //默认选中第一个会议室
-          this.changeRoom(this.meetingRoomList[0]);
           if(!this.meetingRoomList){
+            
+          }else{
             bus.$emit('conferenceRoomChange')
           }
+          this.changeRoom(this.meetingRoomList[0]);
+          
         }
       }).catch(error=>{
         // this.$message({type:'danger', message: error})

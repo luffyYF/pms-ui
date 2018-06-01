@@ -9,4 +9,8 @@ export const listGrade = params => {
    return request.get('/back/grade/list', {params: params})
 }
 
+export const findGrade = params => {
+    return request.get('/back/grade/find', {params: params})
+ }
+
 
