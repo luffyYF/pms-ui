@@ -44,15 +44,15 @@
             </el-table-column>		
           </el-table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.userName}}</span></p>
-          <p>注：宾客账=借方总计-结算【当宾客账为负数时，代表结算大于消费，即多收客人的押金】</p>
-          <p style="padding-left:28px;">自动房费：夜核房费、公寓租金</p>
-          <p style="padding-left:28px;">房费调整：全日租、半日租、钟点房费、特殊房费、房费调整</p>
-          <p style="padding-left:28px;">零售早餐：早餐券、正餐券、晚餐券、餐费</p>
-          <p style="padding-left:28px;">客房赔偿：赔偿（通过客房赔偿添加的项目全部统计在赔偿下）</p>
-          <p style="padding-left:28px;">其他消费：传真复印、其他杂费、外界租金、清洁费</p>
-          <p style="padding-left:28px;">现金：现金、现金支出、收预付金、人民币押金、退预付金、杂费现金押金、公寓押金</p>
-          <p style="padding-left:28px;">银行卡：银行卡、网上支付、银行卡支付、银行卡押金、杂费银行卡押金</p>
-          <p style="padding-left:28px;">其他结算：退订退款、积分兑换、汇款、集团招待、优惠券、礼券、储值卡、支付宝支付等</p>
+          <p class="note_p">注：宾客账=借方总计-结算【当宾客账为负数时，代表结算大于消费，即多收客人的押金】</p>
+          <p class="note_p1">自动房费：夜核房费、公寓租金</p>
+          <p class="note_p1">房费调整：全日租、半日租、钟点房费、特殊房费、房费调整</p>
+          <p class="note_p1">零售早餐：早餐券、正餐券、晚餐券、餐费</p>
+          <p class="note_p1">客房赔偿：赔偿（通过客房赔偿添加的项目全部统计在赔偿下）</p>
+          <p class="note_p1">其他消费：传真复印、其他杂费、外界租金、清洁费</p>
+          <p class="note_p1">现金：现金、现金支出、收预付金、人民币押金、退预付金、杂费现金押金、公寓押金</p>
+          <p class="note_p1">银行卡：银行卡、网上支付、银行卡支付、银行卡押金、杂费银行卡押金</p>
+          <p class="note_p2">其他结算：退订退款、积分兑换、汇款、集团招待、优惠券、礼券、储值卡、支付宝支付等</p>
         </div>
       </div>
     </el-col>
@@ -134,6 +134,19 @@ export default {
   margin: 0;
   border-top: 0;
   padding: 5px 10px;
+}
+.note_p,
+.note_p1,
+.note_p2{
+  color:red;
+  margin:5px;
+}
+.note_p1{
+  padding-left:28px;
+}
+.note_p2{
+  padding-left:28px;
+  margin-bottom:65px
 }
 </style>
 

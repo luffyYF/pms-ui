@@ -170,9 +170,9 @@
                 <div class="pattern-li-info">
                   <!--  v-if="item.guestOrderPk" -->
                   <template v-if="item.futureFlag=='Y'">
-                    <!-- 预抵客人信息 
+                    <!-- 预抵客人信息 -->
                     <label class="userinfo">{{item.futureInfo.guestName}}</label>
-                    <label class="channelinfo">{{item.futureInfo.channelTypeName}}</label>-->
+                    <label class="channelinfo">{{item.futureInfo.channelTypeName}}</label>
                   </template>
                   <template v-if="item.guestOrderPk">
                     <!-- 在住客人信息 -->

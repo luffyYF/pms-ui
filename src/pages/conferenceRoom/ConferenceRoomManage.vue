@@ -238,9 +238,8 @@
 
 <style scoped>
 .content-body{
-  background-color: #e4e7ed;
+  background-color: #f7f7f7;
   padding: 5px 20px 20px 20px;
-  width: 1200px;
 }
 .title-span{
     font-size: 16px;

@@ -161,7 +161,8 @@ import {listShift,addShift,updateShift,delShift} from '@/api/utils/pmsShiftContr
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
-  margin-top: 10px;
+  width: 98%;
+  margin: 10px auto;
   border: 1px solid #ccc;
   padding-top: 18px;
 }

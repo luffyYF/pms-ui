@@ -55,12 +55,12 @@
             <div class="nav-txt">报表中心</div>
           </div>
         </router-link>
-        <router-link to="/financialAudit" v-if="screenWidth > 1010" v-power:id="'18'">
+        <!-- <router-link to="/financialAudit" v-if="screenWidth > 1010" v-power:id="'18'">
           <div class="nav-li">
             <div class="nav-icon financial-audit-icon"></div>
             <div class="nav-txt">财务稽核</div>
           </div>
-        </router-link>
+        </router-link> -->
         <router-link to="/dumbHouse" v-if="screenWidth > 1080" v-power:id="'19'">
           <div class="nav-li">
             <div class="nav-icon dumb-house-icon"></div>
@@ -172,7 +172,7 @@
       <transition name="el-fade-in-linear">
         <router-view></router-view>
       </transition>
-      <audio id="audio" src="http://www.housefeel.cn/Control/File/mp3/yuyintishi.mp3"></audio>
+      <audio id="audio" src="http://www.housefeel.cn/web/Control/File/mp3/yuyintishi.mp3"></audio>
     </el-col>
   </el-row>
 </template>

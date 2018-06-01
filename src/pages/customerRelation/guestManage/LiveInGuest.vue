@@ -22,7 +22,7 @@
             <el-input v-model="form.carNumber"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" icon="el-icon-search" @click="guestSearch">搜索</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-search" @click="guestSearch" style="margin-left:30px">搜索</el-button>
           </el-form-item>
         </div>
       </div>
@@ -43,9 +43,9 @@
           | globalFilter(form.carNumber)
           " 
           style="width: 98.5%; margin:10px;"> 
-          <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
+          <el-table-column prop="cardNumber" label="会员号" align="center">
           </el-table-column>
-          <el-table-column prop="memberGrade" label="类型" align="center" width="90">
+          <el-table-column prop="memberGrade" label="类型" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
               <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
@@ -55,7 +55,7 @@
               <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
             </template>
           </el-table-column>
-          <el-table-column prop="memName" label="姓名" align="center" width="90">
+          <el-table-column prop="memName" label="姓名" align="center">
           </el-table-column>
           <el-table-column prop="nativePlace" label="籍贯" align="center" width="90">
           </el-table-column>
@@ -77,15 +77,15 @@
           </el-table-column>
           <el-table-column prop="certificateNo" label="证件号" align="center" width="200">
           </el-table-column>
-          <el-table-column prop="carNumber" label="车牌号" align="center" width="120">
+          <el-table-column prop="carNumber" label="车牌号" align="center" width="200">
           </el-table-column>
-          <el-table-column prop="address" label="地址" align="center" width="200">
+          <el-table-column prop="address" label="地址" align="center" width="220">
           </el-table-column>
-          <el-table-column prop="memPhone" label="手机号码" align="center" width="120">
+          <el-table-column prop="memPhone" label="手机号码" align="center" width="200">
           </el-table-column>
           <el-table-column prop="roomNumber" label="房号" align="center" width="90">
           </el-table-column>    
-          <el-table-column prop="beginAndEnd" label="起止时间" align="center" width="160">
+          <el-table-column prop="beginAndEnd" label="起止时间" align="center" width="250">
           </el-table-column>
           <!-- <el-table-column fixed="right" label="操作" align="center" min-width="160">
             <template slot-scope="scope">

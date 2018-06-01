@@ -33,7 +33,7 @@
           <el-date-picker v-model="form.invalidDateCard" type="date"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="seaechFromList">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="seaechFromList" style="margin-left:30px">搜索</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -120,6 +120,9 @@
               <span v-if="membeInfo.memSex == 'N'">未知</span>
             </el-col>
             <el-col :span="6">籍贯：{{membeInfo.nativePlace}}</el-col>
+            <el-col :span="6">出生：{{membeInfo.birthday}}</el-col>
+          </el-col>
+          <el-col :span="24">
             <el-col :span="6">证件：
               <span v-if="membeInfo.certificateType == 'TWO_IDENTITY'">二代身份证</span>
               <span v-if="membeInfo.certificateType == 'ONE_IDENTITY'">一代身份证</span>
@@ -134,10 +137,7 @@
               <span v-if="membeInfo.certificateType == 'BOOKLET'">户口簿</span>
               <span v-if="membeInfo.certificateType == 'POLICE_OFFICER'">警官证</span>
             </el-col>
-          </el-col>
-          <el-col :span="24">
             <el-col :span="6">证件号：{{membeInfo.certificateNo}}</el-col>
-            <el-col :span="6">出生：{{membeInfo.birthday}}</el-col>
             <el-col :span="6">手机：{{membeInfo.memPhone}}</el-col>
             <el-col :span="6">邮箱：{{membeInfo.email}}</el-col>
           </el-col>

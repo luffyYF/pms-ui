@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="bg-reserve">
-      <h5 class="info-title">协议类别管理</h5>
+      <h5 class="info-title">销售员管理</h5>
       <el-button type="primary" size="mini" class="add-pro" @click="addRows">添加行业分类</el-button>
       <el-table
         size="mini" 

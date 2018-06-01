@@ -5,7 +5,7 @@
       <el-form ref="form" :model="form" size="mini" :inline="true" class="demo-form-inline">
         <el-form-item>
           <el-button type="primary" size="mini" class="add-pro" @click="addRows">添加原因</el-button>
-          <span class="red">&nbsp;&nbsp;原因必填，不能超过45个汉字</span>
+          <span class="red">&nbsp;&nbsp;*注：原因必填，不能超过45个汉字</span>
         </el-form-item>
       </el-form>
       <el-table
@@ -14,7 +14,7 @@
         highlight-current-row
         v-loading="loading"
         :data="tableData" 
-        style="width: 98%; margin:10px;">
+        style="width: 98%; margin:0px auto;">
         <el-table-column prop="typeName" label="原因" align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row.typeName" size="mini" placeholder="请输入原因"></el-input>
@@ -163,13 +163,15 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
 }
 .red{
   color: red;
+  margin-top: 5px;
+  display: inline-block;
 }
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
   margin-top: 10px;
   border: 1px solid #ccc;
-  padding-top: 18px;
+  padding: 20px 0px 15px;
 }
 .info-title {
   position: absolute;
@@ -183,6 +185,6 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
 .add-pro{
   float:left;
   margin-bottom: 10px;
-  margin-left: 10px;
+  margin-left: -5px;
 }
 </style>

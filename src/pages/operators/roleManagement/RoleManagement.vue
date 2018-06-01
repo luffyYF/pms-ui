@@ -3,7 +3,7 @@
     <el-row style="margin-top:15px;">
       <span class="title-span">角色列表</span>
       <el-button type="primary" size="mini" @click="addListRole" v-if="powerJudge('401701')">添加角色</el-button>
-      <span style="color:red;">注：角色级别低的操作员不能修改和创建角色级别高的操作员</span>
+      <span style="color:red;">*注：角色级别低的操作员不能修改和创建角色级别高的操作员</span>
     </el-row>
     <hr>
     <el-table :data="tableData" border height="450" style="width: 100%">

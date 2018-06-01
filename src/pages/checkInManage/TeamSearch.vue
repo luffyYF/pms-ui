@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-col :span="20">
+    <el-col :span="24">
       <el-form :inline="true" ref="form" :model="form" size="mini" label-width="80px"  class="demo-form-inline">
         <el-form-item label="入住房号">
           <el-input v-model="form.roomNumbers" placeholder="请输入入住房号" clearable style="width: 178px;"></el-input>
@@ -55,7 +55,7 @@
     | globalFilter(form.beginDate)
     | globalFilter(form.endDate)
     " 
-    filter-change="handlerFilterChange" border>
+    filter-change="handlerFilterChange" border style="width:98%;margin:auto">
       <el-table-column label="组单" align="center" width="80" prop="orderNo" fixed="left">
       </el-table-column>
       <el-table-column label="团体名称" align="center" width="80" prop="name">
@@ -233,4 +233,5 @@
 .el-table--border{
   top: 10px;
 }
+
 </style>

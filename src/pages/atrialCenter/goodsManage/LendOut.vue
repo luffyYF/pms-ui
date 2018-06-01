@@ -247,4 +247,8 @@ export default {
   padding: 15px;
   width: 1000px;
 }
+/* .height-programme-one .el-tabs .el-tabs__content{
+  height: calc(100% - 70px);
+  overflow-y: auto;
+} */
 </style>

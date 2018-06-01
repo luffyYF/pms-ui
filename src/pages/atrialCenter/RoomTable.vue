@@ -1,9 +1,9 @@
 <template>
   <div class="about_spacing">
     <div class="margin_bottom_z line_height_z">
-    可售房 = 总房数 - 预订当天到 - 当日预计不离店房 - 维修房 - 停用房 <br>
-    可用房 = 总房数 - 在住房 - 维修房 - 停用房 <br>
-    出租率 = 房晚数 / (总房间数 — 维修房(不可以入住) — 停用房 — 自用房 — 免费房) * 100 <br>
+    <p>*注：可售房 = 总房数 - 预订当天到 - 当日预计不离店房 - 维修房 - 停用房 </p>
+    <p>可用房 = 总房数 - 在住房 - 维修房 - 停用房 </p>
+    <p>出租率 = 房晚数 / (总房间数 — 维修房(不可以入住) — 停用房 — 自用房 — 免费房) * 100 </p>
     </div>
     
     <el-table
@@ -129,3 +129,18 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
     }
   }
 </script>
+<style scoped>
+.margin_bottom_z{
+    margin-bottom: 10px;
+    /* background:  #fdf7f7; */
+    padding: 10px;
+    color:red;
+}
+.margin_bottom_z p{
+  padding-left: 32px;
+  margin:5px;
+}
+.margin_bottom_z p:first-child{
+  padding-left: 0px;
+}
+</style>

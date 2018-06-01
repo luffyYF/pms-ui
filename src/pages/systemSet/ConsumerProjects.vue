@@ -4,9 +4,9 @@
       <h5 class="info-title">消费项目设置</h5>
       <el-row><el-button type="primary" size="mini" class="add-pro" @click="addProtocolClick">添加消费项目</el-button></el-row>
       <div class="bg-purple-dark">
-        * 注意： <br/>
-        1、请不要随意删除消费项目，以免影响统计。<br/>
-        2、价格为0的入账时系统默认为手动输入费用金额。<br/>
+        <p>* 注意： </p>
+        <p>1、请不要随意删除消费项目，以免影响统计。</p>
+        <p>2、价格为0的入账时系统默认为手动输入费用金额。</p>
       </div>
       <el-row style="padding:10px;">
         <el-form size="mini">
@@ -215,9 +215,10 @@ import {listProject,delProject,updateProject,addProject} from '@/api/systemSet/p
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
-  margin-top: 10px;
   border: 1px solid #ccc;
   padding-top: 18px;
+  width: 98%;
+  margin: 10px auto;
 }
 .info-title {
   position: absolute;
@@ -234,8 +235,12 @@ import {listProject,delProject,updateProject,addProject} from '@/api/systemSet/p
   margin-left: 10px;
 }
 .bg-purple-dark {
-  background-color: #fdf7f7;
-  border-color: #eed3d7;
+  /* background-color: #fdf7f7;
+  border-color: #eed3d7; */
   padding: 10px;
+  color:red;
+}
+.bg-purple-dark p{
+  margin:5px;
 }
 </style>

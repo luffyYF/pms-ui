@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="primary-tool">
     <el-form :inline="true" size="mini"  class="demo-form-inline">
       <el-form-item label="开始日期">
         <el-date-picker
@@ -45,6 +46,7 @@
         <el-button type="primary"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
+    </div>
     <div class="table-container">
       <h3>{{activeCompany.companyName}}</h3>
       <h4>收银员收款报表</h4>
@@ -192,7 +194,7 @@ export default {
   .table-container {
     padding: 20px;
     text-align: center;
-    border-top: 3px solid #eee;
+    /* border-top: 3px solid #eee; */
     margin-bottom: 50px;
     overflow-y: auto;
   }

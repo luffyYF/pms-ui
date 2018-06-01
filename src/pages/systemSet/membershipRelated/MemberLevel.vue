@@ -9,7 +9,7 @@
         :data="tableData" 
         v-loading="loading"
         style="width: 98%; margin:10px;">
-        <el-table-column prop="gradeLevel" label="级别" align="center" width="100">
+        <el-table-column prop="gradeLevel" label="级别" align="center" width="90">
           <template slot-scope="scope">
             <span v-if="scope.row.gradePk != ''">{{scope.row.gradeLevel}}</span>
             <el-input v-model="scope.row.gradeLevel" v-if="scope.row.gradePk == ''" size="mini" placeholder="级别"></el-input>
@@ -20,7 +20,7 @@
             <el-input v-model="scope.row.gradeName" class="claName" size="mini" placeholder="请输入会员级别名称"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="autoUpgradeFlag" label="自动升级" align="center" width="100">
+        <el-table-column prop="autoUpgradeFlag" label="自动升级" align="center" width="110">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.autoUpgradeFlag">
               <el-radio size="mini" label="Y">自动升级</el-radio>
@@ -40,7 +40,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="totalFraction" label="升级条件" align="center" width="200">
+        <el-table-column prop="totalFraction" label="升级条件" align="center" width="220">
           <template slot-scope="scope">
             <div class="checked"><el-checkbox v-model="scope.row.totalFractionFlag" true-label="Y" false-label="N" size="mini">总积分数</el-checkbox><el-input size="mini"  v-model="scope.row.totalFraction" placeholder="0"></el-input>分</div>
             <div class="checked" style="padding-left:52px;">扣除<el-input size="mini" v-model="scope.row.deductionFraction" placeholder="0"></el-input>分</div>
@@ -62,7 +62,7 @@
             </el-time-picker>
           </template>
         </el-table-column>
-        <el-table-column prop="bookRetain" label="预订保留" align="center">
+        <el-table-column prop="bookRetain" label="预订保留" align="center" width="150">
           <template slot-scope="scope">
             <el-time-picker
               size="mini"
@@ -76,23 +76,23 @@
             </el-time-picker>
           </template>
         </el-table-column>
-        <el-table-column prop="autoCancelFlag" label="预订保留自动取消" align="lert">
+        <el-table-column prop="autoCancelFlag" label="预订保留自动取消" align="center" width="160">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.autoCancelFlag">
-              <el-radio size="mini" label="Y">取消</el-radio>&nbsp;&nbsp;
-              <el-radio size="mini" label="N">不取消</el-radio>
+              <el-radio size="mini" label="Y" class="span">取消</el-radio>&nbsp;&nbsp;
+              <el-radio size="mini" label="N" class="span">不取消</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column prop="integralFlag" label="超出有效期积分设置" align="center">
+        <el-table-column prop="integralFlag" label="超出有效期积分设置" align="center" width="160">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.integralFlag">
-              <el-radio size="mini" label="Y">清零</el-radio>&nbsp;&nbsp;
-              <el-radio size="mini" label="N">保留</el-radio>
+              <el-radio size="mini" label="Y" class="span">清零</el-radio>&nbsp;&nbsp;
+              <el-radio size="mini" label="N" class="span">保留</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column prop="discountFlag" label="超出有效期折扣设置" align="center">
+        <el-table-column prop="discountFlag" label="超出有效期折扣设置" align="center" width="160">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.discountFlag">
               <el-radio size="mini" label="Y">不能打折</el-radio>&nbsp;&nbsp;
@@ -100,7 +100,7 @@
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column prop="registerIntegral" label="注册送积分" align="center" width="100px">
+        <el-table-column prop="registerIntegral" label="注册送积分" align="center" width="120px">
           <template slot-scope="scope">
             <el-input size="mini" v-model="scope.row.registerIntegral" placeholder="0"></el-input>分
           </template>
@@ -231,6 +231,9 @@
 .el-radio+.el-radio{
   margin-left: 0;
 }
+.el-radio .el-radio__label {
+  padding-left: 3px;
+}
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
@@ -251,5 +254,8 @@
   float:left;
   margin-bottom: 10px;
   margin-left: 10px;
+}
+.span{
+  margin-right: 5px;
 }
 </style>
