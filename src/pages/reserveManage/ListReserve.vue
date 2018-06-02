@@ -115,7 +115,7 @@
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.guestPhone}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="房型" min-width="130">
+      <el-table-column label="房型" min-width="130" show-overflow-tooltip>
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.roomTypeName}}</p>
         </template>
@@ -183,7 +183,9 @@
       <el-table-column label="操作" min-width="200" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
-          <el-button size="mini" type="danger" :disabled="getOrderStatus(scope.row.guestDtos).reserveCount == 0" @click="cancelOrder(scope.row)">取消订单</el-button>
+          <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0">
+            <el-button size="mini" type="danger" @click="cancelOrder(scope.row)">取消订单</el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
