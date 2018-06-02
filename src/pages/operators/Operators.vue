@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item label="员工姓名" v-if="!showModifyBtn">
         <el-select v-model="addOperaterObj.userPk" placeholder="请选择" :disabled="showModifyBtn" @change="empSelectChange">
-          <el-option v-for="item in userList" :key="item.value" :label="item.userName" :value="item.userPk">
+          <el-option v-for="item in userList" :key="item.userPk" :label="item.userName" :value="item.userPk">
           </el-option>
         </el-select>
       </el-form-item>
@@ -73,7 +73,7 @@
       <el-table-column
         prop="userPhone"
         align="center"
-        label="操作员">
+        label="手机号">
       </el-table-column>
       <!-- <el-table-column
         prop="name"
