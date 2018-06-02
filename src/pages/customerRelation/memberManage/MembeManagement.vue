@@ -182,7 +182,7 @@ export default {
   },
   methods: {
     init(){
-      this.memberListData();
+      this.memberListData(1);
     },
     memberListData(val) {
       this.loading = true
@@ -206,17 +206,14 @@ export default {
       });
     },
     seaechFromList(){
-      this.memberListData(1);
+      this.memberListData(this.form.pageNum);
     },
     memberMangerClick(row) {
       this.membeInfo = row;
-      findGrade({gradePk:row.gradePk}).then(res => {
-        this.membeInfo.gradeName = res.data.gradeName;
-        this.dialogMemberVisible = true;
-      });
+      this.dialogMemberVisible = true;
     },
     delMemberList(){
-      this.memberListData();
+      this.memberListData(1);
     },
     //会员等级改变触发
     memberLevelChange(res){

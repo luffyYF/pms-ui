@@ -230,6 +230,10 @@
             border
             style="width: 100%;margin-top:10px;">
             <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
+            <el-table-column
               prop="companyName"
               label="预定公司名称"
               align="center">
@@ -332,7 +336,7 @@
             <el-input v-model="billDetail.money"></el-input>
           </el-form-item>
           <el-form-item label="挂账组单">
-            <el-input disabled v-model="billDetail.singleGroupPk" ></el-input>
+            <el-input disabled v-model="billDetail.orderGuestNo" ></el-input>
             <el-button type="text" @click="choseGroup">选择</el-button>
           </el-form-item>
           <el-form-item>
@@ -584,6 +588,7 @@ export default {
       },
       groupList:[     //组单表格列表
       ],
+      bookPk: '',
     };
   },
   mounted() {
@@ -820,9 +825,7 @@ export default {
           this.showAllSchedule(this.currBook);
           this.initDate();
         }
-      }).catch(error=>{
-        this.$message({type:'danger', message: error})
-      })
+      }).catch()
     },
     //确认全部档期
     confirmAllDq(rows){
@@ -889,6 +892,7 @@ export default {
     //挂账按钮
     submitBillBtn(row){
       this.billDetail = row;
+      this.bookPk = row.bookPk;
       this.billDetail.billId = 'CRO'+Moment(new Date()).format("YYYYMMDDhhmmss");
       this.billDialog = true;
     },
@@ -925,6 +929,7 @@ export default {
       this.currBill = row;
       if("ORDERGUEST"==this.currGroupType){
         this.billDetail.singleGroupPk = this.currBill.orderPk;
+        this.billDetail.orderGuestNo = this.currBill.orderNo;
       }else{
         this.billDetail.singleGroupPk = this.currBill.orderNo;
       }
@@ -945,12 +950,14 @@ export default {
         consumptionAmount:this.billDetail.money,
         settlementAmount:0,
         billType: 'DUMB',
+        orderPk: this.billDetail.singleGroupPk,
         // dumbPk: this.billDetail.singleGroupPk,
         businessDate:Moment(new Date()).format("YYYY-MM-DD")
       };
       let data = {
         dumbHousePo:dumbHousePo,
-        billPo:billPo
+        billPo:billPo,
+        bookPk: this.bookPk
       }
       addDumbAndBill(data).then(res=>{
         if(res.code==1){

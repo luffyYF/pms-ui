@@ -551,7 +551,7 @@
                   <el-col :span="12">
                     <el-col :span="22">
                       <el-form-item label="	协议单位：">
-                        <el-input v-model="registForm.guestName"></el-input>
+                        <el-input v-model="registForm.unitName"></el-input>
                       </el-form-item>
                     </el-col>
                   </el-col>
@@ -561,7 +561,7 @@
                     <span class="paddingLeft">注：<span class="required-icon">*</span> 为必填项！请用户仔细填写！</span>
                   </el-col>
                   <el-col :span="12">
-                    <el-col :span="22"><span @click="seeCompany = true" class="alignRight">选择协议单位</span></el-col>
+                    <el-col :span="22"><span @click="toDialogAgreement('registMember')" class="alignRight">选择协议单位</span></el-col>
                   </el-col>
                 </el-col>
               </el-form>
@@ -710,7 +710,8 @@
           disabledDate(time) {
             return time.getTime() < moment().subtract(1, 'days') - 8.64e7;
           }
-      }
+      },
+          regisType: '',
         }
       },
       created() {
@@ -1199,7 +1200,10 @@
         reserveManager() {//打开预定管理
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
-        toDialogAgreement() {//打开选择协议单位
+        toDialogAgreement(val) {//打开选择协议单位
+          if(val == 'registMember') {
+            this.regisType = 'registMember';
+          }
           this.dialogAgreement =true
           setTimeout(()=>{
             this.$refs.agreementRef.init()
@@ -1210,6 +1214,10 @@
           if(this.currFormType!='add-guest'){
             this.form.agreementPk = po.agreementPk
             this.form.unitName = po.unitName
+          }
+          if(this.regisType == 'registMember') {
+            this.registForm.agreementPk = po.agreementPk;
+            this.registForm.unitName = po.unitName;
           }
         },
         clearAgreement() {//清空协议单位

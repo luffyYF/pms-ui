@@ -89,6 +89,7 @@ export default {
       console.log(this.queryObj)
       reportCuiZhangBaoBiao(this.queryObj).then((data)=>{
         console.log(data)
+        self.listData.splice(0,data.data.length);
         if(data.code == 1){
         //   self.listData = data.data;
           data.data.forEach((obj)=>{

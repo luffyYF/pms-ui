@@ -3,7 +3,7 @@
     <el-form :inline="true" size="mini" label-width="80px"  class="demo-form-inline">
       <el-col :span="24">
         <el-form-item label="快捷搜索:">
-          <el-radio-group v-model="formInline.orderStatus" size="small">
+          <el-radio-group v-model="formInline.orderStatus" @change="getListForStatus" size="small">
             <el-radio-button label="RESERVE">今日抵店预订</el-radio-button>
             <el-radio-button label="CANCEL">取消预订</el-radio-button>
             <el-radio-button label="NOSHOW">NoShow预订</el-radio-button>
@@ -85,13 +85,11 @@
           <el-input v-model="formInline.orderNo" placeholder="请输入组单号" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-            <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
-          </el-tooltip>
+          <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
         </el-form-item>
       </el-col>
     </el-form>
-    <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border>
+    <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border max-height="628">
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
       <!-- numberOfOccupancy-->
@@ -99,8 +97,8 @@
       </el-table-column>
       <el-table-column label="预订人" prop="userName">
       </el-table-column>
-      <el-table-column label="预订卡号" prop="reserveCardNo">
-      </el-table-column>
+      <!-- <el-table-column label="预订卡号" prop="reserveCardNo">
+      </el-table-column> -->
       <el-table-column label="预订手机" prop="userPhone" min-width="130">
       </el-table-column>
       <el-table-column label="渠道" min-width="150">
@@ -129,14 +127,14 @@
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">￥ {{y.currPrice}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="担保">
+      <!-- <el-table-column label="担保">
         <template slot-scope="scope">
           <span v-if="scope.row.guaranteeType=='GUARANTEE_ARRIVAL'">担保到达</span>
           <span v-if="scope.row.guaranteeType=='GUARANTEE_ALL'">全程担保</span>
         </template>
       </el-table-column>
       <el-table-column label="时效" prop="keepTime">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="抵店日期" width="180">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.beginDate}}</p>
@@ -162,14 +160,26 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="settlementAmount">
+      <el-table-column label="状态" min-width="120">
+        <template slot-scope="scope">
+          <template v-if="getOrderStatus(scope.row.guestDtos).status == 'OBLIGATION'"></template>
+          <template v-else>
+            <span v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span>
+            <span v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0" >预定：{{getOrderStatus(scope.row.guestDtos).reserveCount}}</span>
+            <span v-if="getOrderStatus(scope.row.guestDtos).paymentCount > 0" >已支付：{{getOrderStatus(scope.row.guestDtos).paymentCount}}</span>
+            <span v-if="getOrderStatus(scope.row.guestDtos).cancelCount > 0" >取消：{{getOrderStatus(scope.row.guestDtos).cancelCount}}</span>
+            <span v-if="getOrderStatus(scope.row.guestDtos).checkinCount > 0" >在住：{{getOrderStatus(scope.row.guestDtos).checkinCount}}</span>
+            <span v-if="getOrderStatus(scope.row.guestDtos).leaveCount > 0" >结账离店：{{getOrderStatus(scope.row.guestDtos).leaveCount}}</span>
+            <span v-if="getOrderStatus(scope.row.guestDtos).leaveNoPayCount > 0" >不结账退房：{{getOrderStatus(scope.row.guestDtos).leaveNoPayCount}}</span>
+          </template>
+        </template>
       </el-table-column>
-      <el-table-column label="备注" prop="remark">
-      </el-table-column>
-      <el-table-column label="操作" min-width="200">
+      <!-- <el-table-column label="备注" prop="remark">
+      </el-table-column> -->
+      <el-table-column label="操作" min-width="200" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
-          <el-button size="mini" type="danger" :disabled="!powerJudge('400401')" @click="cancelOrder(scope.row)">取消订单</el-button>
+          <el-button size="mini" type="danger" :disabled="getOrderStatus(scope.row.guestDtos).reserveCount == 0" @click="cancelOrder(scope.row)">取消订单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -271,6 +281,8 @@
         startTime: '',
         endTime: '',
         formInline: {
+          roomTypePk: '',
+          orderStatus: 'RESERVE',
           pageSize: 10,
           pageNum: 1
         },
@@ -326,8 +338,9 @@
         self.agreementOptions = [];
         self.industryOptions = [];
         self.saleOptions = [];
+        self.roomTypeOptions.push({typeName: '全部房型', typePk: ''});
         listType({typeMasters: 'ROOM_TYPE,CHANNEL,AGREEMENT,INDUSTRY,SALE'}).then(result => {
-          const listTypeData = result.data;
+          const listTypeData = result.data.data;
           for (let index = 0; index < listTypeData.length; index++) {
             const element = listTypeData[index].typeMaster;
             if(element == 'ROOM_TYPE'){
@@ -344,13 +357,13 @@
           }
         })
       },
-      // showOrderInfo(row) {//查看订单
-      //   // this.dialogVisible = true
-      //   // this.orderNo = '组单号：' + row.orderNo;
-      //   setTimeout(() => {
-      //     this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
-      //   },1)
-      // },
+      showOrderInfo(row) {//查看订单
+        // this.dialogVisible = true
+        // this.orderNo = '组单号：' + row.orderNo;
+        setTimeout(() => {
+          this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestDtos[0].guestOrderPk)
+        },1)
+      },
       handlerFilterChange (value) {
         this.total = value.length
       },
@@ -364,6 +377,17 @@
           this.tableData = result.data.data;
           this.total = result.data.pageSize;
           this.formInline.pageNum = 1;
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
+        })
+      },
+      getListForStatus() {
+        this.loading = true;
+        this.formInline.pageNum = 1;
+        listReserve(this.formInline).then(result => {
+          this.tableData = result.data.data;
+          this.total = result.data.pageSize;
           this.loading = false
         }).catch(() => {
           this.loading = false
@@ -402,6 +426,39 @@
           }
         });
         return {rowRooms:rowRooms.join(','), noRowRooms: noRowRooms}
+      },
+      getOrderStatus(guestDots) {
+        let noShowCount = 0;
+        let reserveCount = 0;
+        let checkinCount = 0;
+        let paymentCount = 0;
+        let leaveCount = 0;
+        let cancelCount = 0;
+        let leaveNoPayCount = 0;
+        guestDots.forEach(guest => {
+          if(guest['orderStatus'] == "RESERVE"){
+            reserveCount++;
+          }
+          if(guest['orderStatus'] == "CHECKIN"){
+            checkinCount++;
+          }
+          if(guest['orderStatus'] == "PAYMENT"){
+            paymentCount++;
+          }
+          if(guest['orderStatus'] == "LEAVE"){
+            leaveCount++;
+          }
+          if(guest['orderStatus'] == "CANCEL"){
+            cancelCount++;
+          }
+          if(guest['orderStatus'] == "NOSHOW"){
+            noShowCount++;
+          }
+          if(guest['orderStatus'] == "LEAVENOPAY"){
+            leaveNoPayCount++;
+          }
+        });
+        return {reserveCount: reserveCount,checkinCount: checkinCount,paymentCount: paymentCount,leaveCount: leaveCount,cancelCount: cancelCount,noShowCount: noShowCount,leaveNoPayCount: leaveNoPayCount}
       },
       matchChannel(typePk) {
         let name = ""
