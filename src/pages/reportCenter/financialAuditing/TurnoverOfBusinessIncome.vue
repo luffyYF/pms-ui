@@ -6,7 +6,7 @@
         <div style="margin-top:10px;">
           <el-button type="primary" size="mini" @click="reportBusinessIncome()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
-          <el-button type="primary" size="mini">导出EXCEL</el-button>
+          <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'businessDate='+datepicker" target="_blank">导出EXCEL</a></el-button>
           <el-button type="primary" size="mini">添加到收藏夹</el-button>
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -61,6 +61,7 @@
   </div>
 </template>
 <script>
+import common from "@/api/common"
 import {reportBusinessIncome} from '@/api/reportCenter/pmsReportFormController'
 import moment from "moment"
 export default {
@@ -79,7 +80,9 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      }
+      },
+      baseUrl:common.baseUrl,
+      ziurl:"/pms/report/businessIncomeExcel?"
     }
   },
   created(){
@@ -116,6 +119,10 @@ export default {
 }
 </script>
 <style scoped>
+.exportLink{
+  color: white;
+  text-decoration: none;
+}
 .title{
   border-bottom: 2px solid #ddd;
   padding-bottom: 15px;
