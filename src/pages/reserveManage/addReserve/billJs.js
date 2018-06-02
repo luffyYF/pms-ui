@@ -120,7 +120,12 @@
             guestOrderPk: this.serachForm.guestOrderPk
           }
           listBill(data).then(res => {
-            this.billsList = res.data
+            this.billsList = res.data;
+            this.billsList.forEach((bill, index) => {
+              bill.consumptionAmount = Math.round(bill.consumptionAmount*100)/100;
+              bill.settlementAmount = Math.round(bill.settlementAmount*100)/100;
+              console.log(bill.settlementAmount)
+            });
           })
         },
         initGuestSelect(orderPk) {//查找客单下拉框列表
