@@ -616,6 +616,7 @@
     import {reserveOrder, continuedRoom, rowRoomList, changeRoom, checkin, addReserveGuest, editOrderMember,addGuest, calcMoney} from '@/api/order/pmsOrderController'
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
+    import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
     import moment from 'moment'
     export default {
       props: ['parentForm'],
@@ -629,6 +630,7 @@
           orderStatusMap: orderStatusMap,
           contractMap: contractMap,
           paymentMap: paymentMap,
+          bookableCount:0,//可预订数量
           roomTypeArr:[],
           priceSchemeArr: [],
           registForm:{},
