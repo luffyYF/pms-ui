@@ -11,7 +11,7 @@
             <el-table-column prop="roomTypeName" label="房型"></el-table-column>
             <el-table-column prop="personNames" label="姓名"></el-table-column>
             <el-table-column prop="date" label="日期"></el-table-column>
-            <el-table-column prop="price" label="房租"></el-table-column>
+            <el-table-column prop="rentPrice" label="房租"></el-table-column>
             <el-table-column prop="status" label="状态">
               <template slot-scope="scope">
                 <span>{{contractMap[scope.row.status]}}</span>
@@ -48,7 +48,7 @@
                                         <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="addForm.date" style="width: 100%;"></el-date-picker>
                                     </el-form-item>
                                     <el-form-item label="房价">
-                                        <el-input v-model="addForm.price"></el-input>
+                                        <el-input v-model="addForm.rentPrice"></el-input>
                                     </el-form-item>
                                     <el-form-item label="备注">
                                         <el-input v-model="addForm.remark"></el-input>
@@ -78,7 +78,7 @@
                                         </el-select>
                                     </el-form-item> -->
                   <el-form-item label="房价">
-                    <el-input v-model="modifyForm.price"></el-input>
+                    <el-input v-model="modifyForm.rentPrice"></el-input>
                   </el-form-item>
                   <el-form-item label="备注">
                     <el-input v-model="modifyForm.remark"></el-input>
@@ -121,14 +121,14 @@ export default {
       modifyForm: {
         channelTypeName: null,
         date: null,
-        price: null,
+        rentPrice: null,
         remark: null
       },
       addForm: {
         channelTypeName: null,
         guestOrderPk: null,
         date: null,
-        price: null
+        rentPrice: null
       },
       guestSelectArr: [],
       selectionRows: [] //已勾选的数据
@@ -166,13 +166,13 @@ export default {
       this.addForm.guestOrderPk = null;
       this.addForm.channelTypeName = null;
       this.addForm.date = null;
-      this.addForm.price = null;
+      this.addForm.rentPrice = null;
       this.addForm.remark = null;
     },
     initModifyForm() {
       this.modifyForm.channelTypeName = null;
       this.modifyForm.date = null;
-      this.modifyForm.price = null;
+      this.modifyForm.rentPrice = null;
       this.modifyForm.remark = null;
     },
 
@@ -182,7 +182,7 @@ export default {
         if (guestSel.guestOrderPk == guestOrderPk) {
           this.initAddForm();
           this.addForm.guestOrderPk = guestSel.guestOrderPk;
-          this.addForm.price = guestSel.price;
+          this.addForm.rentPrice = guestSel.price;
           this.addForm.date = guestSel.beginDate.substring(0, 10);
           this.addForm.channelTypeName = guestSel.channelTypeName;
           //   this.addForm.roomPk = guestSel.roomPk;
@@ -198,7 +198,7 @@ export default {
       //单击Table
       this.modifyForm.channelTypeName = row.channelTypeName;
       this.modifyForm.date = row.date;
-      this.modifyForm.price = row.price;
+      this.modifyForm.rentPrice = row.rentPrice;
       this.modifyForm.remark = row.remark;
     },
     addContract() {
@@ -215,7 +215,7 @@ export default {
         this.$message({ type: "warning", message: "价格不能为空！" });
         return;
       }
-      this.addForm.price = Number(this.addForm.price);
+      this.addForm.rentPrice = Number(this.addForm.rentPrice);
       addContract(this.addForm).then(res => {
         this.$message({ type: "success", message: "添加成功" });
         this.init(this.currOrderPk);
@@ -244,7 +244,7 @@ export default {
         this.$message({ type: "warning", message: "请先勾选合约" });
         return;
       }
-      this.$confirm("确定修改房租为￥" + this.modifyForm.price + "?", "提示", {
+      this.$confirm("确定修改房租为￥" + this.modifyForm.rentPrice + "?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -253,7 +253,7 @@ export default {
         this.selectionRows.forEach(row => {
           let obj = {
             contractPk: row.contractPk,
-            price: Number(this.modifyForm.price),
+            rentPrice: Number(this.modifyForm.rentPrice),
             remark: this.modifyForm.remark
           };
           data.push(obj);
