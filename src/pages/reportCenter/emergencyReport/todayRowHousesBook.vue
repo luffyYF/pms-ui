@@ -3,7 +3,7 @@
         <div>
           <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
-          <el-button type="primary" size="mini"><a :href="baseRul+'pms/report/jinRiYuDiYiPaiFangYuDingExcel'">导出EXCEL</a></el-button>
+          <el-button type="primary" size="mini"><a class="exportLink" :href="baseRul+'pms/report/jinRiYuDiYiPaiFangYuDingExcel'" target="_blank">导出EXCEL</a></el-button>
           <el-button type="primary" size="mini">添加到收藏夹</el-button>
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -91,6 +91,10 @@ export default {
 </script>
 
 <style scoped>
+  .exportLink{
+    color: white;
+    text-decoration: none;
+  }
  .table-container {
     padding: 20px;
     text-align: center;
