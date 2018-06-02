@@ -93,7 +93,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="getList">搜索订单</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList(1)">搜索订单</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -219,11 +219,12 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination class="positions" @size-change="getSizeChange" @current-change="getList" :current-page="searForm.pageNum" :page-size="searForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="countSize"></el-pagination>
   </div>
 </template>
 
 <script>
-  import {listByCondition,updateDumbHouse,listLog} from '@/api/dumbHouse/pmsDumbHouseController'
+  import {listByGrid,updateDumbHouse,listLog} from '@/api/dumbHouse/pmsDumbHouseController'
   import {listProject } from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
   import BillTag from "../reserveManage/addReserve/bill"
   import Moment from 'Moment'
@@ -245,6 +246,8 @@
           checkoutDateEnd:null,
           createTimeStart:null,
           createTimeEnd:null,
+          pageNum: 1,
+          pageSize: 10
         },
         agreementList: [], //协议单位
         tableData: [],//哑房账列表对象
@@ -329,10 +332,11 @@
         formInline:{},
         operDialogVisible:false,
         logList:[],//操作记录集合
+        countSize: 0,
       }
     },
     created () {//初始化加载
-      this.getList();
+      this.getList(this.searForm.pageNum);
       this.listProjectDate();
     },
     watch: {
@@ -357,9 +361,10 @@
           this.agreementList = res.data.data;
         })
       },
-      getList () {  //获取列表数据
+      getList (val) {  //获取列表数据
         this.loading = true;
         let searchForm = {};
+        this.searForm.pageNum = val;
         searchForm = this.searForm;
         if(searchForm.createTime){
           searchForm.createTimeStart=Moment(searchForm.createTime[0]).format("YYYY-MM-DD hh:mm:ss");
@@ -369,20 +374,53 @@
           searchForm.createTimeEnd = null;
         }
         if(searchForm.checkoutDate){
-          searchForm.checkoutDateStart=searchForm.checkoutDate[0];
-          searchForm.checkoutDateEnd=searchForm.checkoutDate[1];
+          searchForm.checkoutDateStart=Moment(searchForm.checkoutDate[0]).format("YYYY-MM-DD hh:mm:ss");
+          searchForm.checkoutDateEnd=Moment(searchForm.checkoutDate[1]).format("YYYY-MM-DD hh:mm:ss");
         }else{
           searchForm.checkoutDateStart = null;
           searchForm.checkoutDateEnd = null;
         }
         // console.log(searchForm);
-        listByCondition(searchForm).then(res => {
+        listByGrid(searchForm).then(res => {
           this.loading = false;
-          this.tableData = res.data;
+          this.tableData = res.data.data;
+          this.countSize = res.data.pageSize;
         }).catch(error=>{
           this.$message({type:'danger', message: error})
           this.loading = false;
         }); 
+      },
+      getSizeChange(val) {
+        this.loading = true;
+        let searchForm = {};
+        this.searForm.pageSize = val;
+        if(val > this.countSize) {
+          this.searForm.pageNum = 1;
+        }
+        searchForm = this.searForm;
+        if(searchForm.createTime){
+          searchForm.createTimeStart=Moment(searchForm.createTime[0]).format("YYYY-MM-DD hh:mm:ss");
+          searchForm.createTimeEnd=Moment(searchForm.createTime[1]).format("YYYY-MM-DD hh:mm:ss");
+        }else{
+          searchForm.createTimeStart = null;
+          searchForm.createTimeEnd = null;
+        }
+        if(searchForm.checkoutDate){
+          searchForm.checkoutDateStart=Moment(searchForm.checkoutDate[0]).format("YYYY-MM-DD hh:mm:ss");
+          searchForm.checkoutDateEnd=Moment(searchForm.checkoutDate[1]).format("YYYY-MM-DD hh:mm:ss");
+        }else{
+          searchForm.checkoutDateStart = null;
+          searchForm.checkoutDateEnd = null;
+        }
+        // console.log(searchForm);
+        listByGrid(searchForm).then(res => {
+          this.loading = false;
+          this.tableData = res.data.data;
+          this.countSize = res.data.pageSize;
+        }).catch(error=>{
+          this.$message({type:'danger', message: error})
+          this.loading = false;
+        });
       },
       showDumbDetail(row){
         var dumPk = row.dumbPk
@@ -398,7 +436,7 @@
             this.$message({type:'success', message: '修改成功'})
             this.dumbDetailObj = {};
             this.dialogTableVisible = false;
-            this.getList();
+            this.getList(this.searForm.pageNum);
           }
         }).catch(error=>{
           this.$message({type:'danger', message: error})
@@ -494,5 +532,8 @@
     right: 30px;
     z-index: 9999;
     top: 60px;
+}
+.positions {
+  float: right;
 }
 </style>

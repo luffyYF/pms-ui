@@ -303,7 +303,7 @@ export default {
     listType(){
       const self = this
       listType({typeMaster: 'ROOM_TYPE'}).then(result => {
-        self.listTypeData = result.data
+        self.listTypeData = result.data.data
         console.log(self.listTypeData)
       })
     },

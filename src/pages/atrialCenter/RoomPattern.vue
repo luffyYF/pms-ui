@@ -954,13 +954,13 @@
     },
     mounted() {
       listType({typeMaster:'REPAIR'}).then(res=>{
-        this.repairType = res.data
+        this.repairType = res.data.data
       })
       listType({typeMaster:'DISABLE'}).then(res=>{
-        this.disableRoomType = res.data
+        this.disableRoomType = res.data.data
       })
       listType({typeMaster:'CHANNEL'}).then(res=>{
-        this.channelArr = res.data
+        this.channelArr = res.data.data
       })
       listStorey().then(res=>{
         this.floorArr = res.data

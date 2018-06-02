@@ -50,8 +50,8 @@
               <el-col :span="12">  
                 <el-form-item label="性别">
                   <el-select v-model="message.memSex">
-                    <el-option label="男" value="W"></el-option>
-                    <el-option label="女" value="M"></el-option>
+                    <el-option label="男" value="M"></el-option>
+                    <el-option label="女" value="W"></el-option>
                     <el-option label="未知" value="N"></el-option>
                   </el-select>
                 </el-form-item>
