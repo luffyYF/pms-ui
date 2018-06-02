@@ -26,6 +26,13 @@
             <el-input v-model="scope.row.typeDescribe" class="el-Name" size="mini" placeholder="请输入简称"></el-input>
           </template>
         </el-table-column>
+		<el-table-column prop="basePrice" label="基础价" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.basePrice" class="el-Name" size="mini" placeholder="请输入基础价"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="roomCount" label="房间总数" align="center">
+        </el-table-column>
         <el-table-column prop="usingFlag" label="超时退房小时计费" align="center" width="200">
           <template slot-scope="scope">
             <el-select v-model="scope.row.usingFlag" size="mini" placeholder="请选择状态">
