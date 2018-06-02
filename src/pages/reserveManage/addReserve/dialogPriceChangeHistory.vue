@@ -2,7 +2,7 @@
 <template>
   <div>
     <el-dialog class="pattern-dialog" title="房价变更记录" :visible.sync="dialogPriceChange" width="80%" :append-to-body="true" :before-close="handleClose">
-      <div class="pattern-dialog-container">
+      <div class="pattern-dialog-container dialog-table-content">
         <el-col :span="24" style="margin:10px 0;">
           房号筛选：
           <el-select placeholder="全部" size="mini" v-model="searchGuestOrderPk" @change="listTable">
@@ -78,6 +78,12 @@ export default {
 };
 </script>
 
+
 <style>
+.dialog-table-content{
+  height: 500px;
+  overflow: auto;
+}
 
 </style>
+

@@ -255,6 +255,7 @@ export default {
   border: 1px solid #ccc;
   padding: 15px;
   width: 1000px;
+  margin-bottom: 80px;
 }
 </style>
 <style>

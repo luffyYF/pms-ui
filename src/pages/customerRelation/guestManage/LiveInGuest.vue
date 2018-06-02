@@ -168,4 +168,5 @@ export default {
 .info-li {
   margin-bottom: 0 !important;
 }
+
 </style>

@@ -1404,5 +1404,6 @@
 .el-main[data-v-622e77e1] {
     left: 290px;
     width: calc(100% - 290px);
+    height: calc(100% - 135px);
 }
 </style>

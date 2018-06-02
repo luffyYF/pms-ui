@@ -246,9 +246,13 @@ export default {
   border: 1px solid #ccc;
   padding: 15px;
   width: 1000px;
+  margin-bottom: 80px;
 }
-/* .height-programme-one .el-tabs .el-tabs__content{
-  height: calc(100% - 70px);
-  overflow-y: auto;
-} */
+
 </style>
+<style>
+.el-tabs__content{
+  overflow-y: auto;
+}
+</style>
+

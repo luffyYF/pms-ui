@@ -1,7 +1,7 @@
 // 组订单弹出
 <template>
   <div>
-    <el-dialog class="dialogVisibleClass" top="5vh" :title="dialogVisibleTitle" :visible.sync="dialogVisible" width="1160px" :close-on-click-modal="false" :before-close="dialogVisibleClose">
+    <el-dialog class="dialogVisibleClass" top="5vh" :title="dialogVisibleTitle" :visible.sync="dialogVisible" width="1120px" :close-on-click-modal="false" :before-close="dialogVisibleClose">
       <div class="pattern-dialog-container">
         <div class="pattern-dialog-title">
           <h5 class="info-title">预定信息</h5>
