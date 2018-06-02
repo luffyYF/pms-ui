@@ -119,6 +119,9 @@
                   <el-input-number :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
+              <el-col :span="7" v-if="currFormType=='empty' || currFormType=='room-info'">
+                &nbsp;&nbsp;<span style="color:red">可预订数：{{bookableCount}}</span>
+              </el-col>
             </el-col>
           </el-col>
           <el-col :span="24">
