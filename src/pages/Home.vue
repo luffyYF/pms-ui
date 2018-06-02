@@ -172,7 +172,7 @@
       <transition name="el-fade-in-linear">
         <router-view></router-view>
       </transition>
-      <audio id="audio" src="http://www.housefeel.cn/web/Control/File/mp3/yuyintishi.mp3"></audio>
+      <audio id="audio" src="http://www.housefeel.cn/Control/File/mp3/yuyintishi.mp3"></audio>
     </el-col>
   </el-row>
 </template>

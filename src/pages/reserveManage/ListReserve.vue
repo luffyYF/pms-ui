@@ -125,7 +125,6 @@
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">￥ {{y.currPrice}}</p>
         </template>
       </el-table-column>
-
       <el-table-column label="抵店日期" width="180">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.beginDate}}</p>

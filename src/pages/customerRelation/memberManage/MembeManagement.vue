@@ -118,7 +118,8 @@
             <el-col :span="8">出生：{{membeInfo.birthday}}</el-col>
           </el-col>
           <el-col :span="24">
-<el-col :span="6">手机：{{membeInfo.memPhone}}</el-col>            <el-col :span="8">证件：
+            <el-col :span="6">手机：{{membeInfo.memPhone}}</el-col>
+            <el-col :span="8">证件：
               <span v-if="membeInfo.certificateType == 'TWO_IDENTITY'">二代身份证</span>
               <span v-if="membeInfo.certificateType == 'ONE_IDENTITY'">一代身份证</span>
               <span v-if="membeInfo.certificateType == 'ORDER'">其他</span>
@@ -134,6 +135,7 @@
             </el-col>
             <el-col :span="8">证件号：{{membeInfo.certificateNo}}</el-col>
           </el-col>
+          <el-col :span="24">
             <el-col :span="6">国家：{{membeInfo.country}}</el-col>
             <el-col :span="8">邮箱：{{membeInfo.email}}</el-col>
             <el-col :span="10">地址：{{membeInfo.address}}</el-col>
@@ -153,76 +155,79 @@
 </template>
 
 <script>
-import bus from '@/utils/bus'
-import MemberGrade from '@/components/MemberGrade/MemberGrade'
-import MemberOperationManagement from './MemberOperationManagement';
+import bus from "@/utils/bus";
+import MemberGrade from "@/components/MemberGrade/MemberGrade";
+import MemberOperationManagement from "./MemberOperationManagement";
 // import {listGrade} from '@/api/systemSet/member/pmsMemberGradeController'
-import {listMember,recoverMember,updateMember} from '@/api/customerRelation/pmsMemberController'
-import {findGrade} from '@/api/customerRelation/pmsMemberGradeController'
+import {
+  listMember,
+  recoverMember,
+  updateMember
+} from "@/api/customerRelation/pmsMemberController";
+import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
 export default {
-  components: {MemberGrade,MemberOperationManagement},
+  components: { MemberGrade, MemberOperationManagement },
   data() {
     return {
       memberLevel: [],
       dialogMemberVisible: false,
       loading: false,
       form: {
-        deleteFlag: 'N',
-        pageNum:1,
+        deleteFlag: "N",
+        pageNum: 1,
         pageSize: 10
       },
       tableData: [], //列表数据
-      membeInfo: '', //会员资料
+      membeInfo: "", //会员资料
       total: 0
     };
   },
-  mounted(){
-    bus.$on('memberGrade', (res) => { this.memberLevelChange(res) })
+  mounted() {
+    bus.$on("memberGrade", res => {
+      this.memberLevelChange(res);
+    });
   },
   methods: {
-    init(){
-      this.memberListData();
+    init() {
+      this.memberListData(1);
     },
     memberListData(val) {
-      this.loading = true
+      this.loading = true;
       this.form.pageNum = val;
       listMember(this.form).then(res => {
-        this.loading = false
+        this.loading = false;
         this.tableData = res.data.data;
         this.total = res.data.pageSize;
-        console.log(this.tableData)
+        console.log(this.tableData);
       });
     },
     getSizeChange(val) {
-      this.loading = true
+      this.loading = true;
       this.form.pageSize = val;
       listMember(this.form).then(res => {
-        this.loading = false
+        this.loading = false;
         this.tableData = res.data.data;
         this.total = res.data.pageSize;
         this.form.pageNum = 1;
-        console.log(this.tableData)
+        console.log(this.tableData);
       });
     },
-    seaechFromList(){
-      this.memberListData(1);
+    seaechFromList() {
+      this.memberListData(this.form.pageNum);
     },
     memberMangerClick(row) {
       this.membeInfo = row;
-      findGrade({gradePk:row.gradePk}).then(res => {
-        this.membeInfo.gradeName = res.data.gradeName;
-        this.dialogMemberVisible = true;
-      });
+      this.dialogMemberVisible = true;
     },
-    delMemberList(){
-      this.memberListData();
+    delMemberList() {
+      this.memberListData(1);
     },
     //会员等级改变触发
-    memberLevelChange(res){
-      this.form.gradePk=res.form.memberGrade;
+    memberLevelChange(res) {
+      this.form.gradePk = res.form.memberGrade;
       // this.form.cardFee=res.form.cardFee;
       // this.form.invalidDateCard=res.form.invalidDateCard;
-    },
+    }
   }
 };
 </script>
@@ -250,15 +255,15 @@ export default {
 .el-date-editor.el-input {
   width: 178px;
 }
-.body-conten{
+.body-conten {
   background: #f7f7f7;
   padding: 10px;
 }
-.height38{
+.height38 {
   height: 38px;
   padding: 20px 10px 0 10px;
 }
-.height110{
+.height110 {
   height: 110px;
   padding: 20px 10px 0 10px;
 }
@@ -267,9 +272,8 @@ export default {
 }
 </style>
 <style>
-.dialogMemberManage .el-dialog .el-dialog__body{
+.dialogMemberManage .el-dialog .el-dialog__body {
   padding: 0;
 }
-
 </style>
 

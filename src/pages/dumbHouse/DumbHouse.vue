@@ -211,9 +211,9 @@
                 </center>
               </el-tab-pane>
               <!-- 账单 -->
-              <el-tab-pane label="账单" name="second" :disabled="dumbHouse">
+              <!-- <el-tab-pane label="账单" name="second" :disabled="dumbHouse">
                 <bill-tag ref="bill" :dumb-obj="scope.row"/>
-              </el-tab-pane>
+              </el-tab-pane> -->
             </el-tabs>
           </el-dialog>
         </template>
@@ -532,6 +532,9 @@
     right: 30px;
     z-index: 9999;
     top: 50px;
+}
+.positions {
+  float: right;
 }
 .positions {
   float: right;
