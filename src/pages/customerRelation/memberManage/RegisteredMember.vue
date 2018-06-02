@@ -27,7 +27,7 @@
         <el-form-item label="姓名" prop="memName" required>
           <el-input v-model="form.memName"></el-input>
         </el-form-item>
-        <el-form-item label="卡号" prop="memberGrade" required>
+        <el-form-item label="卡号" prop="gradePk" required>
           <!-- <el-select class="member-level" v-model="form.memberGrade" @visible-change="memberLevelChange" placeholder="请选会员级别">
             <el-option
               v-for="item in memberLevel"
@@ -36,7 +36,7 @@
               :value="item.id">
             </el-option>
           </el-select> -->
-          <member-grade v-model="form.memberGrade" style="width:100px;float: left;"/>
+          <member-grade v-model="form.gradePk" style="width:100px;float: left;"/>
           <el-input style="float: left;" class="card-no" v-model="form.cardNumber" required></el-input>
         </el-form-item>
         <el-form-item label="卡费" porp="cardFee">
@@ -358,7 +358,7 @@ export default {
           "memPhone": '',
           "memPk": '',
           "memSex": 'N',
-          "memberGrade":'',
+          "gradePk":'',
           "nativePlace": '',
           "recommendCard": '',
           "referee": '',
@@ -371,7 +371,7 @@ export default {
       },
       rules: {
         certificateNo: [{ required: true, message: "证件类型不能为空" }],
-        memberGrade: [{ validator: validateMemberGrade}],
+        gradePk: [{ validator: validateMemberGrade}],
         memName: [{ required: true, message: "姓名不能为空" }],
         nativePlace: [{ required: true, message: "籍贯不能为空" }],
         birthday: [{ required: true, message: "出生日期不能为空" }],
@@ -397,12 +397,12 @@ export default {
     },
     //选中协议单位
     chooseAgreement(res){
-      this.form.agreementPk = res.agreementPk;
+      this.form.agreementUnitPk = res.agreementPk;
       this.form.unitName = res.unitName;
       this.showAgreementFlag = false;
     },
     memberLevelChange(res){
-      this.form.memberGrade = res.form.memberGrade
+      this.form.gradePk = res.form.memberGrade
       this.form.cardFee=res.form.cardFee;
       this.form.invalidDateCard=res.form.invalidDateCard;
     },
@@ -412,9 +412,17 @@ export default {
           var obj = result.data
           this.form.birthday = obj.birthday
           this.form.nativePlace = obj.province 
-          this.form.address = obj.province + obj.city + obj.region
           this.form.memSex = obj.gender == '男'?'M':'W'
           this.form.country = '中国'
+          if (obj.region == null) {
+            if (obj.city == null) {
+              this.form.address = obj.province
+            }else{
+              this.form.address = obj.province + obj.city
+            }
+          }else{
+            this.form.address = obj.province + obj.city + obj.region
+          }
         }
       })
     },

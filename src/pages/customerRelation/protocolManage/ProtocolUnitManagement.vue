@@ -14,7 +14,7 @@
                 v-for="(items,index) in agreementOptions"
                 :key="index"
                 :label="items.typeName"
-                :value="items.typeName">
+                :value="items.typePk">
               </el-option>
             </el-select>
           </el-form-item>
@@ -25,7 +25,7 @@
                 v-for="(item,index) in saleOptions"
                 :key="index"
                 :label="item.typeName"
-                :value="item.typeName">
+                :value="item.typePk">
               </el-option>
             </el-select>
           </el-form-item>
@@ -56,22 +56,16 @@
       size="mini" 
       border 
       v-loading="loading" 
-      :data="tableData 
-      | globalFilter(conditionalQuery.unitName)
-      | globalFilter(conditionalQuery.agreementTypePk)
-      | globalFilter(conditionalQuery.saleTypePk)
-      | globalFilter(conditionalQuery.billFlag)
-      | globalFilter(conditionalQuery.status)
-      " 
+      :data="tableData" 
       height="450" 
       style="width: 98.5%; margin:10px;">
         <!-- <el-table-column prop="companyPk" label="所属分店" align="center" width="120">
         </el-table-column> -->
         <el-table-column prop="unitName" label="单位名称" align="center">
         </el-table-column>
-        <el-table-column prop="agreementTypePk" label="协议分类" align="center">
+        <el-table-column prop="typeName" label="协议分类" align="center">
         </el-table-column>
-        <el-table-column prop="saleTypePk" label="销售员" align="center" width="90">
+        <el-table-column prop="saleName" label="销售员" align="center" width="90">
         </el-table-column>
         <el-table-column prop="unitPhone" label="单位电话" align="center" width="150">
         </el-table-column>
@@ -90,6 +84,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination class="positions" @size-change="getSizeChange" @current-change="agreementList" :current-page="conditionalQuery.pageNum" :page-size="conditionalQuery.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
 
     <!-- 添加修改协议单位 dialog -->
@@ -104,7 +99,7 @@
                     v-for="(items,index) in agreementOptions"
                     :key="index"
                     :label="items.typeName"
-                    :value="items.typeCode">
+                    :value="items.typePk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -123,7 +118,7 @@
                     v-for="(item,index) in industryOptions"
                     :key="index"
                     :label="item.typeName"
-                    :value="item.typeCode">
+                    :value="item.typePk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -135,7 +130,7 @@
                     v-for="(item,index) in saleOptions"
                     :key="index"
                     :label="item.typeName"
-                    :value="item.typeCode">
+                    :value="item.typePk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -170,7 +165,7 @@
           <el-col :span="24">
             <el-col :span="11">
               <el-form-item label="挂账" prop="billFlag">
-                <el-select v-model="form.billFlag" placeholder="请选择挂账" style="width:178px">
+                <el-select v-model="form.billFlag" @change="billFlagChange" placeholder="请选择挂账" style="width:178px">
                   <el-option label="可用" value="Y"></el-option>
                   <el-option label="不可用" value="N"></el-option>
                 </el-select>
@@ -178,7 +173,7 @@
             </el-col>
             <el-col :span="11">
               <el-form-item label="挂账限额" prop="billPrice">
-                <el-input v-model="form.billPrice" style="width:178px"></el-input>
+                <el-input v-model="form.billPrice" :disabled="form.billFlag == 'N' ? true : false" style="width:178px"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -394,11 +389,8 @@ export default {
         unitPhone: '',
       },
       conditionalQuery: { 
-        unitName: '',
-        agreementTypePk: '',
-        saleTypePk: '',
-        billFlag: '',
-        status: ''
+        pageNum: 1,
+        pageSize: 10
       },
       roomTypeData:{ 
         companyPk:'',
@@ -474,11 +466,12 @@ export default {
       protocolPriceEffective: [], //协议单位有效价格明细
       protocolPriceDelete: [], //协议单位删除价格明细
       beginDate: new Date(),
-      endDate: new Date()
+      endDate: new Date(),
+      total: 0,
     };
   },
   created () {
-    this.agreementList();
+    this.agreementList(1);
     this.listMastersType();
   },
   methods: {
@@ -511,10 +504,11 @@ export default {
                 });
                 this.dialogProtocolVisible = false;
                 this.$refs[formName].resetFields();
-                this.agreementList();
+                this.agreementList(self.conditionalQuery.pageNum);
               }
             })
           }else{
+            console.log(self.form.billPrice);
             updateProject(self.form).then(result => {
               if(result.code == 1){
                 self.$message({
@@ -523,7 +517,7 @@ export default {
                 });
                 this.dialogProtocolVisible = false;
                 this.$refs[formName].resetFields();
-                this.agreementList();
+                this.agreementList(self.conditionalQuery.pageNum);
               }
             })
           }
@@ -538,6 +532,7 @@ export default {
       self.form = row;
       this.dialogProtocolVisible = true
       this.proDialogTitle = '修改协议单位'
+      delete self.form.typeName;
     },
     specialPriceClick(row) {//特殊房间设置
       this.dialogSpecialPriceVisible = true;
@@ -558,7 +553,7 @@ export default {
               message: '删除成功'
             });
             this.dialogProtocolVisible = false;
-            this.agreementList();
+            this.agreementList(self.conditionalQuery.pageNum);
           }
         }) 
       }).catch(()=>{
@@ -575,7 +570,7 @@ export default {
       self.industryOptions = [];
       self.saleOptions = [];
       listType({typeMasters: 'ROOM_TYPE,AGREEMENT,INDUSTRY,SALE'}).then(result => {
-        const listTypeData = result.data;
+        const listTypeData = result.data.data;
         for (let index = 0; index < listTypeData.length; index++) {
           const element = listTypeData[index].typeMaster;
           if(element == 'ROOM_TYPE'){
@@ -594,17 +589,35 @@ export default {
     protocolSearch() {//搜索
       const self = this;
       const parameters = self.conditionalQuery;
-      this.agreementList();
+      this.agreementList(1);
     },
-    agreementList() {//查询列表
+    agreementList(val) {//查询列表
       const self = this;
+      self.conditionalQuery.pageNum = val;
       const parameters = self.conditionalQuery;
       this.loading = true
       // console.log(parameters)
       listProject(parameters).then(res => {
         this.loading = false
-        this.tableData = res.data;
+        this.tableData = res.data.data;
+        this.total = res.data.pageSize;
       })  
+    },
+    getSizeChange(val) {
+      const self = this;
+      self.conditionalQuery.pageSize = val;
+      if (val > self.total) {
+        self.conditionalQuery.pageNum = 1;
+      }
+      const parameters = self.conditionalQuery;
+      this.loading = true
+      // console.log(parameters)
+      listProject(parameters).then(res => {
+        this.loading = false
+        this.tableData = res.data.data;
+        this.total = res.data.pageSize;
+        self.conditionalQuery.pageNum = 1;
+      })
     },
     listPriceMasters() {//查询协议单位房间价格
       listPriceProject().then(result => {
@@ -639,6 +652,11 @@ export default {
           })
         }
         // console.log(this.roomTypeData)
+      }
+    },
+    billFlagChange(val) {
+      if (val == 'N') {
+        this.form.billPrice = 0;
       }
     }
   }
@@ -701,6 +719,9 @@ export default {
   width: 60px;
   display: inline-block;
   text-align: center;
+}
+.positions {
+  float: right;
 }
 </style>
 <style>

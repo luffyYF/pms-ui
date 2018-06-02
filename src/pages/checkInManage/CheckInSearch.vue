@@ -17,7 +17,7 @@
               v-for="(item,index) in roomTypeOptions"
               :key="index"
               :label="item.typeName"
-              :value="item.typeName">
+              :value="item.typePk">
             </el-option>
           </el-select>
         </el-form-item>
@@ -303,7 +303,7 @@
         self.industryOptions = [];
         self.saleOptions = [];
         listType({typeMasters: 'ROOM_TYPE,CHANNEL,AGREEMENT,INDUSTRY,SALE'}).then(result => {
-          const listTypeData = result.data;
+          const listTypeData = result.data.data;
           for (let index = 0; index < listTypeData.length; index++) {
             const element = listTypeData[index].typeMaster;
             if(element == 'ROOM_TYPE'){

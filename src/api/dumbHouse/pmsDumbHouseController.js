@@ -12,6 +12,10 @@ export const listByCondition = params => {
    return request.post('/back/dumbHouse/listByCondition',params)
 }
 
+export const listByGrid = params => {
+    return request.get('/back/dumbHouse/listByGrid', {params:params})
+ }
+
 export const addDumbHouse = params => {
    return request.post('/back/dumbHouse/add', params)
 }

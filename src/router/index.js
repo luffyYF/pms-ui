@@ -50,8 +50,9 @@ import ShiftTab from '@/pages/atrialCenter/shiftReport/tab.vue'
 
 //预订管理
 import ListReserve from '@/pages/reserveManage/ListReserve.vue'
-import FastReserve from '@/pages/reserveManage/FastReserve.vue'
-// import AddReserve from '@/pages/reserveManage/addReserve/tab.vue'
+// import FastReserve from '@/pages/reserveManage/FastReserve.vue'
+import GroupReserve from '@/pages/reserveManage/GroupReserve.vue'
+import AddReserve from '@/pages/reserveManage/AddReserve.vue'
 
 //客户关系
 import MemberManage from '@/pages/customerRelation/memberManage/tab.vue'
@@ -162,8 +163,8 @@ export const constantRouterMap = [
         name: '预定管理',
         hidden: false,
         children: [
-          {path: '/', component: AddReserve, label: '新增预定'},
-          {path: '/reserveManage/fastReserve', component: FastReserve, label: '快速预定'},
+          {path: '/', component: AddReserve, label: '散客预定'},
+          {path: '/reserveManage/groupReserve', component: GroupReserve, label: '团队预定'},
           {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
         ]
       },
@@ -218,7 +219,15 @@ export const constantRouterMap = [
           {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询', pointer: '501503'}
         ]
       },
-      {path: '/financialAudit', component: FinancialAuditTag, name: '财务稽核', hidden: false},
+      {
+        path: '/financialAudit', 
+        component: FinancialAuditTag, 
+        name: '财务稽核', 
+        hidden: false,
+        children: [
+          {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表', pointer: '500403'}
+        ]
+      },
       {path: '/dumbHouse', component: DumbHouseTag, name: '哑房账', hidden: false},
       {path: '/commodityDept', component: CommodityDeptTag, name: '商品部', hidden: false},
       {path: '/stock', component: StockTag, name: '库存', hidden: false},

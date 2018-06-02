@@ -1,216 +1,164 @@
 <template>
-  <div>
-    <el-row>
-        <el-col :span="24">
-            <el-button type="primary"  size="mini">打印</el-button>
-            <el-button type="primary" @click="exportData" size="mini">导出Excel</el-button>
-            <el-button type="primary"  size="mini">打印</el-button>
-        </el-col>
-        <div class="print-content">
-            <table style="width: 842px" cellpadding="0" cellspacing="0" border="0" bgcolor="white">
-                <tbody>
-                    <tr>
-                        <td><img alt="" src="/px" style="width: 1px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 56px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 18px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 23px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 22px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 66px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 69px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 15px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 29px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 16px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 25px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 86px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 9px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 100px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 1px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 12px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 7px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 31px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 19px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 2px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 65px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 72px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 23px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 35px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 36px; height: 1px;"></td>
-                        <td><img alt="" src="/px" style="width: 4px; height: 1px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="24" valign="middle" style="text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 16.0px; font-weight: bold;">深圳市前海豪斯菲尔信息科技有限公司</span></td>
-                        <td colspan="2"><img alt="" src="/px" style="width: 40px; height: 37px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="24" valign="middle" style="text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 16.0px; font-weight: bold;">催账报表</span></td>
-                        <td colspan="2"><img alt="" src="/px" style="width: 40px; height: 25px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="3"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">打印日期：</span></td>
-                        <td colspan="5"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">2018-03-07</span></td>
-                        <td colspan="3" rowspan="2"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">打印时间：</span></td>
-                        <td colspan="3" rowspan="2"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">15:17:59</span></td>
-                        <td><img alt="" src="/px" style="width: 1px; height: 15px;"></td>
-                        <td colspan="4"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">生产日期：</span></td>
-                        <td><img alt="" src="/px" style="width: 2px; height: 15px;"></td>
-                        <td colspan="4"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">2018-03-07</span></td>
-                        <td colspan="2"><img alt="" src="/px" style="width: 40px; height: 15px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="8"><img alt="" src="/px" style="width: 270px; height: 1px;"></td>
-                        <td colspan="12"><img alt="" src="/px" style="width: 307px; height: 1px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="18" valign="middle"><span style="font-family: 新宋体; color: #000000; font-size: 12.0px;">注：余额 = 已交押金-消费总额-需加收房费；当余额小于100.0时显示。</span></td>
-                        <td colspan="8"><img alt="" src="/px" style="width: 256px; height: 25px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="2" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">组单号</span></td>
-                        <td colspan="2" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">房号</span></td>
-                        <td colspan="2" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">姓名</span></td>
-                        <td valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">房型</span></td>
-                        <td colspan="2" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">房价</span></td>
-                        <td colspan="3" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">入住日期</span></td>
-                        <td colspan="4" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">预离日期</span></td>
-                        <td colspan="3" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">押金</span></td>
-                        <td colspan="2" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">消费总额</span></td>
-                        <td valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">需加收房费</span></td>
-                        <td colspan="3" valign="middle" style="background-color: #CCCCCC; border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; border-right-style: solid; border-right-width: 1px; border-right-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #333333; background-color: #CCCCCC; font-size: 13.0px;">余额</span></td>
-                        <td><img alt="" src="/px" style="width: 4px; height: 27px;"></td>
-                    </tr>
-                    
-                    <tr valign="top">
-                    <td style="border-left-style: solid; border-left-width: 1px; border-left-color: #000000; "><img alt="" src="/px" border="0"></td>
-                        <td><img alt="" src="/px" style="width: 56px; height: 22px;"></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">129</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">新客人</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">孝道</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 新宋体; color: #000000; font-size: 12.0px;">286.0</span></td>
-                        <td colspan="3" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">2018-03-07 14:35</span></td>
-                        <td colspan="4" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">2018-03-24 12:00</span></td>
-                        <td colspan="3" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">0.00</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">0.00</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">286.00</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">欠</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-right-style: solid; border-right-width: 1px; border-right-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">286.00</span></td>
-                        <td><img alt="" src="/px" style="width: 4px; height: 22px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="2" valign="middle" style="border-left-style: solid; border-left-width: 1px; border-left-color: #000000; "><img alt="" src="/px" border="0"></td>
-                        <td colspan="14" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">小计（房间数：18）</span></td>
-                        <td colspan="3" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">0.00</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">0.00</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">8591.00</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">欠</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-right-style: solid; border-right-width: 1px; border-right-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">8591.00</span></td>
-                        <td><img alt="" src="/px" style="width: 4px; height: 22px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="16" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">总计（房间数：19）</span></td>
-                        <td colspan="3" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">0.00</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">4000.00</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">8601.00</span></td>
-                        <td valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-left-style: solid; border-left-width: 1px; border-left-color: #000000; text-align: center;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">欠</span></td>
-                        <td colspan="2" valign="middle" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; border-right-style: solid; border-right-width: 1px; border-right-color: #000000; text-align: right;"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">12601.00</span></td>
-                        <td><img alt="" src="/px" style="width: 4px; height: 22px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td><img alt="" src="/px" style="width: 1px; height: 1px;"></td>
-                        <td colspan="24" style="border-top-style: solid; border-top-width: 1px; border-top-color: #000000; "><img alt="" src="/px" border="0"></td>
-                        <td><img alt="" src="/px" style="width: 4px; height: 1px;"></td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="5" valign="middle"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">第1页，</span></td>
-                        <td colspan="5" valign="middle"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">共1页</span></td>
-                        <td colspan="3" valign="middle"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">操作员：</span></td>
-                        <td colspan="4" valign="middle"><span style="font-family: 宋体; color: #000000; font-size: 12.0px;">深圳前海豪斯菲尔</span></td>
-                        <td colspan="9"><img alt="" src="/px" style="width: 287px; height: 20px;"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </el-row>  
+  <div class="container">
+    <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
+      <el-form-item>
+        <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
+        <el-button type="primary">PDF预览</el-button>
+        <el-button type="primary">导出EXCEL</el-button>
+        <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button>
+        <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
+      </el-form-item>
+    </el-form>
+    <div class="table-container" id="print-accountsummaryreport">
+       <h3>{{activeCompany.companyName}}</h3>
+      <h4>催账报表</h4>
+      <div class="table-box">
+        <p>打印日期：<span class="head-item">{{sDate}}</span>打印时间：<span class="head-item">{{sTime}}</span>酒店日期：<span class="head-item">{{userInfo.userName}}</span></p>
+        <p>注：余额 = 已交押金-消费总额。</p>
+        <el-table 
+          :header-cell-style="tableStyleObj" 
+          :cell-style="tableStyleObj" 
+          :data="listData" 
+          border
+          style="width: 100% margin-top:-2px;"
+          :span-method="arraySpanMethod"
+          :row-class-name="tableRowClassName">
+          <el-table-column prop="orderNo" align="center" label="组单"></el-table-column>
+          <el-table-column prop="roomNumber" align="center" label="房号"></el-table-column>
+          <el-table-column prop="guestName" align="center" label="姓名"></el-table-column>
+          <el-table-column prop="roomTypeName" align="center" label="房型"></el-table-column>
+          <el-table-column prop="price" align="center"  label="房价"></el-table-column>
+          <el-table-column prop="beginDate" align="center" label="入住日期"></el-table-column>
+          <el-table-column prop="endDate" align="center" label="预离日期"></el-table-column>
+          <el-table-column prop="settlementAmount" align="center" label="押金"></el-table-column>
+          <el-table-column prop="consumptionAmount" align="center" label="消费总额"></el-table-column>
+          <el-table-column prop="remainingSum" align="center" label="余额"></el-table-column>
+        </el-table>
+      </div>
+    </div>
+
+    <!-- 打印填充 iframe-->
+    <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
   </div>
 </template>
 
 <script>
-import {table2csvData,csvColumns} from './data/tabeData'
+import {reportCuiZhangBaoBiao} from "@/api/reportCenter/pmsReportFormController"
+import {listCashierOperator} from "@/api/operators/pmsUserController"
+import moment from "moment"
 export default {
-  data() {
+   data() {
     return {
-        tableData:[],
-        columnsCsv:csvColumns,
-        csvData:table2csvData,
-        formInline: {
-            region: "weihetingyong"
-        },
-        keepingData: []
+      userInfo:{},
+      sDate: moment().format("YYYY-MM-DD"),
+      sTime: moment().format("HH:mm:ss"),
+      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
+      listData: [],
+      selectShiftData:[],
+      listCashierOperatorData:[],
+      activeCompany:{},
+      tableStyleObj:{
+        border: '1px solid #ebeef5',
+        'border-left': '0',
+        'border-top': '0',
+        padding: '8px',
+        'text-align':'center'
+      }
     };
   },
+  created() {
+    var test = window.localStorage.getItem("current_logon_company");
+    this.activeCompany = JSON.parse(test);
+    if (
+      this.activeCompany.companyName == "" ||
+      this.activeCompany.companyName == null ||
+      this.activeCompany.companyName == undefined
+    ) {
+      this.activeCompany.companyName == "";
+    }
+    this.userInfo = JSON.parse(localStorage.sessionInfo);
+    this.init()
+  },
   methods: {
-    exportData() {
-        console.log(this.$refs.tableCsv)
-      this.$refs.tableCsv.exportCsv({
-          filename: '原始数据'
+    init(){
+      let self = this
+      this.getList()
+    },
+    getList(){
+      let self = this
+      console.log(this.queryObj)
+      reportCuiZhangBaoBiao(this.queryObj).then((data)=>{
+        console.log(data)
+        self.listData.splice(0,data.data.length);
+        if(data.code == 1){
+        //   self.listData = data.data;
+          data.data.forEach((obj)=>{
+            obj.plusMinus = "余"
+            if(obj.remainingSum < 0){
+                obj.plusMinus = "欠"
+                obj.remainingSum  = Math.abs(obj.remainingSum)
+            }
+            self.listData.push(obj);
+          })
+        }
       });
     },
-    housekeepingDate() {
-      var data = [
-        {
-          roomNumber: "1343",
-          roomType: "单身公寓",
-          setter: "陆少游",
-          startDate: "2017-02-25",
-          preEndDate: "2017-12-25",
-          relieveSetter: "杜少甫",
-          endDate: "2018-02-03",
-          reason: "度量空间不够",
-          level: "管理员",
-          remarks: "暂定"
-        },
-        {
-          roomNumber: "1343",
-          roomType: "单身公寓",
-          setter: "陆少游",
-          startDate: "2017-02-25",
-          preEndDate: "2017-12-25",
-          relieveSetter: "杜少甫",
-          endDate: "2018-02-03",
-          reason: "度量空间不够",
-          level: "管理员",
-          remarks: "暂定"
-        },
-        {
-          roomNumber: "1343",
-          roomType: "单身公寓",
-          setter: "陆少游",
-          startDate: "2017-02-25",
-          preEndDate: "2017-12-25",
-          relieveSetter: "杜少甫",
-          endDate: "2018-02-03",
-          reason: "度量空间不够",
-          level: "管理员",
-          remarks: "暂定"
-        }
-      ];
-      this.keepingData = data;
-      // getHousekeepingList().then(res => {
-      //   this.keepingData = new HousekeepingList(res.data)
-      // })
+    arraySpanMethod({ row, column, rowIndex, columnIndex }) {
+      if(row.project){
+        return [1, 9];
+      }
+    },
+    tableRowClassName({row, rowIndex}) {
+      if(row.project){
+        return 'warning-row';
+      }
+      // if (rowIndex === 1) {
+        
+      // } else if (rowIndex === 3) {
+      //   return 'success-row';
+      // }
+      return '';
+    },
+     //打印预览
+    print(){
+      let bodyhtml = document.getElementById("print-accountsummaryreport").innerHTML;
+      var f = document.getElementById("printIframe");
+      f.contentDocument.write(bodyhtml);
+      f.contentDocument.close();
+      f.contentWindow.print();
     }
-  },
-  mounted() {
-    this.housekeepingDate();
   }
-};
-</script>
-<style scoped>
-.bg-purple-dark {
-  background-color: #fdf7f7;
-  border-color: #eed3d7;
-  padding: 10px;
 }
-.keeping-content {
-  padding: 10px;
+</script>
+
+<style scoped>
+.container {
+  height: 100%;
+}
+.table-container {
+  padding: 20px;
+  text-align: center;
+  height: calc(100% - 200px);
+  overflow-y: auto;
+  border-top: 3px solid #eee;
+}
+.head-item {
+  display: inline-block;
+  padding: 0 15px;
+}
+.item-type {
+  border-left:1px solid #ebeef5;
+  border-right:1px solid #ebeef5;
+  margin: 0;
+  line-height: 60px;
+  font-size: 14px;
+  color: #909399;
 }
 </style>
+<style>
+.el-table .warning-row {
+  background: oldlace;
+}
+</style>
+
+

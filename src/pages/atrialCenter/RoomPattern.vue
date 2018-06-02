@@ -667,7 +667,7 @@
         currentRoomList(data).then(res1=>{
           let tempdata = res1.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
-            this.roomType = res2.data
+            this.roomType = res2.data.data
             for(let i = 0; i<tempdata.length; i++){
               let roomTypePk = tempdata[i].roomTypePk
               this.roomType.forEach(type => {
@@ -954,13 +954,13 @@
     },
     mounted() {
       listType({typeMaster:'REPAIR'}).then(res=>{
-        this.repairType = res.data
+        this.repairType = res.data.data
       })
       listType({typeMaster:'DISABLE'}).then(res=>{
-        this.disableRoomType = res.data
+        this.disableRoomType = res.data.data
       })
       listType({typeMaster:'CHANNEL'}).then(res=>{
-        this.channelArr = res.data
+        this.channelArr = res.data.data
       })
       listStorey().then(res=>{
         this.floorArr = res.data
