@@ -163,6 +163,9 @@
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="settlementAmount">
+        <template slot-scope="scope">
+          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{orderStatusMap[y.orderStatus]}}</p>
+        </template>
       </el-table-column>
       <el-table-column label="备注" prop="remark">
       </el-table-column>
@@ -184,11 +187,11 @@
         <DialogCheckinVisible ref="checkinDialogRef" />
       </div>
     </el-dialog> -->
-
   </section>
 </template>
 <script>
   import bus from '@/utils/bus'
+  import {orderStatusMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
@@ -200,6 +203,7 @@
     components: {DialogCheckinVisible},
     data () {
       return {
+        orderStatusMap:orderStatusMap,
         // orderNo:'',
         channelArr: [],
         total: 0,

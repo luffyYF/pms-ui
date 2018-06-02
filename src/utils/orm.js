@@ -4,6 +4,7 @@
 
 //订单状态
 export const orderStatusMap = {
+  OBLIGATION:'待付款',
   RESERVE: "预定",
   CHECKIN: "在住",
   LEAVE: "结账离店",
