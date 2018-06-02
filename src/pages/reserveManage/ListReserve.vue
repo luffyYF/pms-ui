@@ -152,15 +152,29 @@
       </el-table-column>
       <el-table-column label="状态" min-width="120">
         <template slot-scope="scope">
-          <template v-if="getOrderStatus(scope.row.guestDtos).status == 'OBLIGATION'"></template>
-          <template v-else>
-            <span v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span>
-            <span v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0" >预定：{{getOrderStatus(scope.row.guestDtos).reserveCount}}</span>
-            <span v-if="getOrderStatus(scope.row.guestDtos).paymentCount > 0" >已支付：{{getOrderStatus(scope.row.guestDtos).paymentCount}}</span>
-            <span v-if="getOrderStatus(scope.row.guestDtos).cancelCount > 0" >取消：{{getOrderStatus(scope.row.guestDtos).cancelCount}}</span>
-            <span v-if="getOrderStatus(scope.row.guestDtos).checkinCount > 0" >在住：{{getOrderStatus(scope.row.guestDtos).checkinCount}}</span>
-            <span v-if="getOrderStatus(scope.row.guestDtos).leaveCount > 0" >结账离店：{{getOrderStatus(scope.row.guestDtos).leaveCount}}</span>
-            <span v-if="getOrderStatus(scope.row.guestDtos).leaveNoPayCount > 0" >不结账退房：{{getOrderStatus(scope.row.guestDtos).leaveNoPayCount}}</span>
+          <template v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >
+            <span>NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0" >
+            <span>预定：{{getOrderStatus(scope.row.guestDtos).reserveCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).paymentCount > 0" >
+            <span>已支付：{{getOrderStatus(scope.row.guestDtos).paymentCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).cancelCount > 0" >
+            <span>取消：{{getOrderStatus(scope.row.guestDtos).cancelCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).checkinCount > 0" >
+            <span>在住：{{getOrderStatus(scope.row.guestDtos).checkinCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).leaveCount > 0" >
+            <span>结账离店：{{getOrderStatus(scope.row.guestDtos).leaveCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).leaveNoPayCount > 0" >
+            <span>不结账退房：{{getOrderStatus(scope.row.guestDtos).leaveNoPayCount}}</span><br>
+          </template>
+          <template v-if="getOrderStatus(scope.row.guestDtos).obligAtionCount > 0" >
+            <span>待付款：{{getOrderStatus(scope.row.guestDtos).obligAtionCount}}</span><br>
           </template>
         </template>
       </el-table-column>
@@ -426,6 +440,7 @@
         let leaveCount = 0;
         let cancelCount = 0;
         let leaveNoPayCount = 0;
+        let obligAtionCount = 0;
         guestDots.forEach(guest => {
           if(guest['orderStatus'] == "RESERVE"){
             reserveCount++;
@@ -448,8 +463,11 @@
           if(guest['orderStatus'] == "LEAVENOPAY"){
             leaveNoPayCount++;
           }
+          if(guest['orderStatus'] == "OBLIGATION"){
+            obligAtionCount++;
+          }
         });
-        return {reserveCount: reserveCount,checkinCount: checkinCount,paymentCount: paymentCount,leaveCount: leaveCount,cancelCount: cancelCount,noShowCount: noShowCount,leaveNoPayCount: leaveNoPayCount}
+        return {reserveCount: reserveCount,checkinCount: checkinCount,paymentCount: paymentCount,leaveCount: leaveCount,cancelCount: cancelCount,noShowCount: noShowCount,leaveNoPayCount: leaveNoPayCount,obligAtionCount: obligAtionCount}
       },
       matchChannel(typePk) {
         let name = ""
