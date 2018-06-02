@@ -184,11 +184,11 @@
         <DialogCheckinVisible ref="checkinDialogRef" />
       </div>
     </el-dialog> -->
-
   </section>
 </template>
 <script>
   import bus from '@/utils/bus'
+  import {orderStatusMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
@@ -200,6 +200,7 @@
     components: {DialogCheckinVisible},
     data () {
       return {
+        orderStatusMap:orderStatusMap,
         // orderNo:'',
         channelArr: [],
         total: 0,

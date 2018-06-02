@@ -107,7 +107,7 @@
                     <el-button size="mini" @click="saveCheckin" :disabled="islock">保存入住</el-button>
                   </template>
                   <template v-else>
-                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.cancelFlag=='Y' || currConfirmType == 'add-checkin'">添加客人</el-button>
+                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='RESERVE' || this.currGuest.orderStatus=='OBLIGATION'">添加客人</el-button>
                     <el-popover ref="occupancySort" placement="top">
                       <el-button type="primary" size="mini">复制入住</el-button>
                       <el-button type="primary" size="mini">添加入住</el-button>
@@ -116,13 +116,12 @@
                       <el-button type="primary" size="mini">减少客人</el-button>
                     </el-popover>
                     <!-- <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button> -->
-                    <!-- TODO 适应HF暂时隐藏 -->
-                    <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin'" v-if="false">添加预订</el-button>
-                    <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.cancelFlag=='Y' || currConfirmType == 'add-checkin'">预订排房</el-button>
-                    <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N'">修改房价</el-button>
-                    <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin'">预订管理</el-button>
-                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.cancelFlag=='Y' || currConfirmType == 'add-checkin'">换房</el-button>
-                    <el-button size="mini" @click="confirmClick">确定</el-button>
+                    <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
+                    <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
+                    <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
+                    <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
+                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION'">换房</el-button>
+                    <el-button size="mini" @click="confirmClick" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
                   </template>
                 </div>
               </el-tab-pane>
@@ -421,7 +420,7 @@ export default {
         this.reserveTime = new Date(res.data.order.createTime)
         this.dialogVisibleTitle = '组单号：'+this.form.orderNo 
         //设置页面类型
-        if(res.data.order.cancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
+        if(res.data.order.pmsCancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
           this.currConfirmType = 'leave-info'
         }else{
           this.currConfirmType = 'edit-guest'
