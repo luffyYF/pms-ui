@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="primary-tool">
     <el-form :inline="true" size="mini"  class="demo-form-inline">
       <el-form-item label="开始日期">
         <el-date-picker
@@ -40,10 +41,11 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary" @click="uploadExcels()"><span class="el-icon-printer p-r-5"></span>导出EXCEL</el-button>
+        <el-button type="primary"><a :href="baseRul+'pms/report/zaiZhuKeRenCaiWuMingXiExcel?begin='+queryObj.begin+'&end='+queryObj.end">导出EXCEL</a></el-button>
         <el-button type="primary"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
+    </div>
     <div class="table-container">
       <h3>{{activeCompany.companyName}}</h3>
       <h4>收银员收款报表</h4>
@@ -93,7 +95,8 @@ export default {
       consumer: [],
       settlement:[],
       selectShiftData:[],
-      listCashierOperatorData:[]
+      listCashierOperatorData:[],
+      baseRul:"http://localhost:8083/pms/"
     };
   },
   created() {
@@ -197,7 +200,7 @@ export default {
   .table-container {
     padding: 20px;
     text-align: center;
-    border-top: 3px solid #eee;
+    /* border-top: 3px solid #eee; */
     margin-bottom: 50px;
     overflow-y: auto;
   }

@@ -318,6 +318,7 @@ export default {
 }
 .book-info{
   height: 468px;
+  margin-left: 5%;
 }
 .book-info .el-col{
   padding-top: 18px; 

@@ -15,7 +15,7 @@
         <div class="channel-item-icon">
           {{item.typeName}}
         </div>
-        <span class="channel-item-type">{{item.typeName}}</span>
+        
         <span v-if="item.defaultFlag != 'Y'" class="remove-channel" @click="deleteClick(item)"><i class="el-icon-remove" style="color:red;font-size:22px;"></i></span>
       </div>
       <div class="channel-item" style="border-color:#0074E4;" @click="addChannel">
@@ -26,11 +26,6 @@
       </div>
       <div class="channel-item add-channel" v-show="showAddChannel">
         <el-form :inline="true" :model="formInline" class="demo-form-inline" style="margin-top:20px;" size="mini">
-          <el-form-item>
-            <el-select v-model="formInline.type">
-              <el-option label="线上" value="shanghai"></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item>
             <el-input v-model="formInline.typeName"></el-input>
           </el-form-item>
@@ -208,9 +203,8 @@ export default {
 }
 .add-channel {
   text-align: center;
-  width: 480px;
+  width: 265px;
   border-color: #0074e4;
-  padding-left: 10px;
   padding-right: 10px;
   line-height: 0;
 }

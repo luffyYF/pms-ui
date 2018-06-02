@@ -3,10 +3,10 @@
     <el-row>
       <el-col :span="24">
         <div class="bg-purple-dark line_height_z margin_bottom_z">
-          注：占用房 / 可售房 <br>
-          占用房 = 今天预计不离店房 + 预订当天到 <br>
-          可售房 = 总房 - 维修房 - 停用房 - 今天预计不离店房 - 预订当天到 - 可用预留房数 <br>
-          占用房 + 可售房 = 总房数 - 维修房 - 停用房 - 可用预留房数
+          <p>*注：占用房 / 可售房</p>
+          <p>占用房 = 今天预计不离店房 + 预订当天到</p>
+          <p>可售房 = 总房 - 维修房 - 停用房 - 今天预计不离店房 - 预订当天到 - 可用预留房数</p>
+          <p>占用房 + 可售房 = 总房数 - 维修房 - 停用房 - 可用预留房数</p>
         </div>
       </el-col>
     </el-row>
@@ -39,6 +39,7 @@
     </div>
     <br/>
     <!--表格-->
+    <div>
     <el-table
       size="mini"
       border
@@ -77,6 +78,7 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
   </div>
 </template>
 
@@ -189,10 +191,18 @@ export default {
 </script>
 
 <style scoped>
-.bg-purple-dark {
-  background-color: #fdf7f7;
-  border-color: #eed3d7;
-  padding: 10px;
+.margin_bottom_z{
+    margin-bottom: 10px;
+    /* background:  #fdf7f7; */
+    padding: 10px;
+    color:red;
+}
+.margin_bottom_z p{
+  padding-left: 32px;
+  margin:5px;
+}
+.margin_bottom_z p:first-child{
+  padding-left: 0px;
 }
 </style>
 <style>

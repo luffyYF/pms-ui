@@ -33,7 +33,7 @@
           <el-date-picker v-model="form.invalidDateCard" value-format="yyyy-MM-dd" type="date"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="seaechFromList">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="seaechFromList" style="margin-left:30px">搜索</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -43,8 +43,8 @@
       <el-table v-loading="loading" 
       size="mini" 
       border 
-      :data="tableData"
-      style="width: 98.5%; margin:10px;">
+
+:data="tableData"      style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
@@ -104,17 +104,21 @@
           <h5 class="info-title">会员基本信息</h5>
           <el-col :span="24">
             <el-col :span="6">卡号：{{membeInfo.cardNumber}}	</el-col>
-            <el-col :span="6">会员级别：{{membeInfo.gradeName}}</el-col>
+            <el-col :span="8">姓名：{{membeInfo.memName}}</el-col>
+            <el-col :span="8">会员级别：{{membeInfo.gradeName}}</el-col>
           </el-col>
           <el-col :span="24">
-            <el-col :span="6">姓名：{{membeInfo.memName}}</el-col>
+            
             <el-col :span="6">性别：
               <span v-if="membeInfo.memSex == 'M'">男</span>
               <span v-if="membeInfo.memSex == 'W'">女</span>
               <span v-if="membeInfo.memSex == 'N'">未知</span>
             </el-col>
-            <el-col :span="6">籍贯：{{membeInfo.nativePlace}}</el-col>
-            <el-col :span="6">证件：
+            <el-col :span="8">籍贯：{{membeInfo.nativePlace}}</el-col>
+            <el-col :span="8">出生：{{membeInfo.birthday}}</el-col>
+          </el-col>
+          <el-col :span="24">
+<el-col :span="6">手机：{{membeInfo.memPhone}}</el-col>            <el-col :span="8">证件：
               <span v-if="membeInfo.certificateType == 'TWO_IDENTITY'">二代身份证</span>
               <span v-if="membeInfo.certificateType == 'ONE_IDENTITY'">一代身份证</span>
               <span v-if="membeInfo.certificateType == 'ORDER'">其他</span>
@@ -128,16 +132,11 @@
               <span v-if="membeInfo.certificateType == 'BOOKLET'">户口簿</span>
               <span v-if="membeInfo.certificateType == 'POLICE_OFFICER'">警官证</span>
             </el-col>
+            <el-col :span="8">证件号：{{membeInfo.certificateNo}}</el-col>
           </el-col>
-          <el-col :span="24">
-            <el-col :span="6">证件号：{{membeInfo.certificateNo}}</el-col>
-            <el-col :span="6">出生：{{membeInfo.birthday}}</el-col>
-            <el-col :span="6">手机：{{membeInfo.memPhone}}</el-col>
-            <el-col :span="6">邮箱：{{membeInfo.email}}</el-col>
-          </el-col>
-          <el-col :span="24">
             <el-col :span="6">国家：{{membeInfo.country}}</el-col>
-            <el-col :span="18">地址：{{membeInfo.address}}</el-col>
+            <el-col :span="8">邮箱：{{membeInfo.email}}</el-col>
+            <el-col :span="10">地址：{{membeInfo.address}}</el-col>
           </el-col>
         </div>
         <div class="bg-reserve height38">
@@ -271,5 +270,6 @@ export default {
 .dialogMemberManage .el-dialog .el-dialog__body{
   padding: 0;
 }
+
 </style>
 

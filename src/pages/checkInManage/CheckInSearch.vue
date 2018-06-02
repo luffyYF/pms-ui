@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-col :span="20">
+    <el-col :span="24">
       <el-form ref="chenkInSearchData" :inline="true" :model="chenkInSearchData" size="mini" label-width="80px"  class="demo-form-inline">
         <el-row>
           <!-- <el-form-item label="快捷搜索">
@@ -17,7 +17,7 @@
               v-for="(item,index) in roomTypeOptions"
               :key="index"
               :label="item.typeName"
-              :value="item.typeName">
+              :value="item.typePk">
             </el-option>
           </el-select>
         </el-form-item>
@@ -74,13 +74,13 @@
           <channel-select v-model="chenkInSearchData.channelTypePk"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="getList">搜索订单</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:15px">搜索订单</el-button>
           <el-button type="primary" icon="el-icon-download" @click="getList" v-if="powerJudge('401602')">导出excel</el-button>
         </el-form-item>
       </el-form>
     </el-col>
     <el-col :span="4"></el-col>
-    <el-table v-loading="loading" style="top: 10px;"
+    <el-table v-loading="loading" style="top: 10px;width:98%;margin:auto"
     :data="tableData" 
     filter-change="handlerFilterChange" 
     height="450"
@@ -303,7 +303,7 @@
         self.industryOptions = [];
         self.saleOptions = [];
         listType({typeMasters: 'ROOM_TYPE,CHANNEL,AGREEMENT,INDUSTRY,SALE'}).then(result => {
-          const listTypeData = result.data;
+          const listTypeData = result.data.data;
           for (let index = 0; index < listTypeData.length; index++) {
             const element = listTypeData[index].typeMaster;
             if(element == 'ROOM_TYPE'){

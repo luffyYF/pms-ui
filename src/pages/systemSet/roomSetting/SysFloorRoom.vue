@@ -2,11 +2,12 @@
   <div class="content-body" v-loading="loading">
     <!-- table -->
     <el-row>
-      <el-col :span="5" class="bg-reserve book-info">
+      <el-col :span="5">
+        <div class="bg-reserve book-info">
         <h5 class="info-title">楼层</h5>
-        <el-form label-width="80px" :inline="true" size="mini">
+        <el-form label-width="80px" size="mini"  label-position="top" style="padding-left:10px">
           <el-form-item label="楼层名">
-            <el-input v-model="storeyName"></el-input>
+            <el-input v-model="storeyName" class="block_input"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="addStorey" type="primary">保存</el-button>
@@ -16,7 +17,7 @@
           border 
           :data="storeyData"
           @row-click.self="storeyRowClick"
-          height="455">
+          height="388">
           <el-table-column prop="storeyName" label="楼层" align="center">
           </el-table-column>
           <el-table-column
@@ -28,6 +29,7 @@
             </template>
           </el-table-column>
         </el-table>
+        </div>
       </el-col>
       <el-col :span="16" :offset="1">
         <div class="bg-reserve book-info">
@@ -43,7 +45,7 @@
           <el-table size="mini" 
             border 
             :data="roomData"
-            height="500">
+            height="473">
             <el-table-column prop="roomNumber" label="房号" align="center">
             </el-table-column>
             <el-table-column prop="roomTypePk" label="房型" align="center">
@@ -77,7 +79,7 @@
       </el-col>
     </el-row>
     <!-- 添加房间 -->
-    <el-dialog title="添加房间" :visible.sync="addRoomDialog">
+    <el-dialog title="添加房间" :visible.sync="addRoomDialog" width="820px">
       <el-form :model="addFrom" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼层：">
           <span class="text-cs">{{selectStorey.storeyName}}</span>
@@ -105,7 +107,7 @@
         </el-form-item>
         <el-form-item label="房间锁号：">
           <el-input v-model="addFrom.roomLockNumber" auto-complete="off" placeholder="请选择房间锁号" style="width:300px;"></el-input>
-           注：房间锁号 请根据门锁软件中的对应房号进行配置
+          <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
         </el-form-item>
         <el-form-item label="概况：">
           <el-input
@@ -123,7 +125,7 @@
       </div>
     </el-dialog>
     <!-- 修改房间 -->
-    <el-dialog title="修改房间" :visible.sync="updateRoomDialog">
+    <el-dialog title="修改房间" :visible.sync="updateRoomDialog" width="820px">
       <el-form :model="selectRoom" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼层：">
           <span class="text-cs">{{selectStorey.storeyName}}</span>
@@ -151,7 +153,7 @@
         </el-form-item>
         <el-form-item label="房间锁号：">
           <el-input v-model="selectRoom.roomLockNumber" auto-complete="off" placeholder="请选择房间锁号" style="width:300px;"></el-input>
-           注：房间锁号 请根据门锁软件中的对应房号进行配置
+          <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
         </el-form-item>
         <el-form-item label="概况：">
           <el-input
@@ -169,7 +171,7 @@
       </div>
     </el-dialog>
     <!-- 批量添加房间 -->
-    <el-dialog title="批量添加房间" :visible.sync="batchAddRoomDialog">
+    <el-dialog title="批量添加房间" :visible.sync="batchAddRoomDialog" width="820px">
       <el-form :model="previewData" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼层：" required>
           <el-select v-model="previewData.storeyPk" prop="storeyPk" placeholder="请选择房间类型" @change="enters">
@@ -573,5 +575,8 @@ export default {
 }
 .colic{
   width: 120px;
+}
+.block_input{
+  width:96%;
 }
 </style>

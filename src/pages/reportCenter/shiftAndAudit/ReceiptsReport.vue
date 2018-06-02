@@ -1,7 +1,9 @@
+
 <template>
+<!-- 报表中心 - 收银员 -->
   <div class="container">
-    <el-form :inline="true" size="mini"  class="demo-form-inline">
-      <el-form-item label="日期">
+    <el-form :inline="true" size="mini" :rules="addressRules"  class="demo-form-inline">
+      <el-form-item label="日期" prop="begenAndEnd">
        <date-picker v-model="begenAndEnd"></date-picker>
       </el-form-item>
       <el-form-item label="收银员">
@@ -28,7 +30,7 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary">导出EXCEL</el-button>
+        <el-button type="primary"><a :href="baseRul+ziurl+'begin='+begenAndEnd.begin+'&end='+begenAndEnd.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk" class="exportLink" target="_blank">导出EXCEL</a></el-button>
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
@@ -95,9 +97,16 @@ export default {
         padding: '8px',
         'text-align':'center'
       },begenAndEnd:{
-        begin:'',
-        end:''
-      }
+        begin:moment().format("YYYY-MM-DD"),
+        end:moment().format("YYYY-MM-DD")
+      },
+      addressRules: {
+        // begenAndEnd: [
+        //   { required: true, message: "请选择时间", trigger: "change" }
+        // ]
+      },
+      baseRul:"http://localhost:8083/pms/"
+      ,ziurl:"pms/report/uploadShouYinYuanShouKuanExcel?"
     };
   },
   watch:{
@@ -197,9 +206,13 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  height: 100%;
-}
+  .exportLink{
+      color: white;
+      text-decoration: none;
+    }
+  .container {
+    height: 100%;
+  }
   .p-r-5 {
     display: inline-block;
     padding-right: 5px;

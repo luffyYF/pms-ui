@@ -2,7 +2,7 @@
 <template>
   <div class="about_spacing">
     <el-row class="margin_bottom_z">
-      <el-col :span="24"><div class="bg-purple-dark">注："占" 表示计划当日的维修或停用房被占用！</div></el-col>
+      <el-col :span="24"><div class="bg-purple-dark">*注："占" 表示计划当日的维修或停用房被占用！</div></el-col>
     </el-row>  
     <el-row>
       <el-col :span="24">
@@ -111,9 +111,11 @@ import { roomReasonList, roomReasonDelBatch } from "@/api/atrialCenter/roomStatu
 </script>
 <style scoped>
 .bg-purple-dark {
-  background-color: #fdf7f7;
-  border-color: #eed3d7;
+  /* background-color: #fdf7f7;
+  border-color: #eed3d7; */
   padding: 10px;
+  margin-bottom: 10px;
+  color:red;
 }
 .keeping-content{
   padding: 10px;

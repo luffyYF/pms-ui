@@ -116,9 +116,8 @@ export default {
 <style scoped>
 .content-body{
   background-color: #f7f7f7;
-  padding: 5px 20px 20px 20px;
+  padding: 10px 20px 20px 20px;
   height: 100%;
-  width: 600px;
 }
 .table-item-name {
   text-align: left;

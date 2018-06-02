@@ -1,6 +1,6 @@
 <template>
   <div class="content-body">
-    <el-form :inline="true" :rules="rules" ref="dumbHouseObj" :model="dumbHouseObj" size="mini" label-width="80px">
+    <el-form :inline="true" :rules="rules" ref="dumbHouseObj" :model="dumbHouseObj" size="mini" label-width="100px">
       <el-form-item label="协议单位">
         <el-select v-model="dumbHouseObj.agreementPk" placeholder="协议单位">
           <el-option label="全部" value=""></el-option>
@@ -19,8 +19,8 @@
         <el-input
           type="textarea"
           :rows="2"
-          style="width: 450px;"
           placeholder="请输入内容"
+          class="el_input_textarea"
           v-model="dumbHouseObj.remark">
           </el-input>
       </el-form-item>
@@ -35,9 +35,9 @@
         <el-input v-model="dumbHouseObj.createUserName" readonly placeholder=""></el-input>
       </el-form-item>
     </el-form>
-    <center>
+    <div class="button">
       <el-button size="mini" type="primary" @click="save">新 增</el-button>
-    </center>
+    </div>
   </div>
 </template>
 
@@ -79,7 +79,7 @@
       //获取协议的单位
       listProjectDate(){
         listProject().then(res => {
-          this.agreementList = res.data;
+          this.agreementList = res.data.data;
         })
       },
       save(){//新增哑房账
@@ -126,7 +126,17 @@
 <style scoped>
 .content-body{
   background-color: #f7f7f7;
-  padding: 20px;
+  padding: 20px 0px;
   width: 650px;
+}
+.el_input_textarea{
+  min-height: 30px;
+  width: 439px;
+  padding: 5px;
+  margin-left: -3px;
+}
+.button{
+  margin-left: 32px;
+  margin-top: 20px;
 }
 </style>

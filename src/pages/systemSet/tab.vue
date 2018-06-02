@@ -19,9 +19,9 @@
       <el-tab-pane label="消费项目设置" name="consumerProjects" class="aLayerOfPage" v-if="powerJudge('2406')">
         <consumer-projects ref="consumerProjects"/>
       </el-tab-pane>
-      <el-tab-pane label="团付模板设置" name="seventh" class="aLayerOfPage" v-if="powerJudge('2407')">
+      <!-- <el-tab-pane label="团付模板设置" name="seventh" class="aLayerOfPage" v-if="powerJudge('2407')">
         <regiment-payment-template/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="渠道管理" name="channelManagement" class="aLayerOfPage" v-if="powerJudge('2408')">
         <channel-management ref="channelManagement"/>
       </el-tab-pane>

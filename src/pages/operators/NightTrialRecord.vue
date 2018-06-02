@@ -81,7 +81,6 @@ export default {
 .content-body {
   background-color: #f7f7f7;
   padding: 5px 20px 30px 20px;
-  width: 900px;
   overflow-y: auto;
 }
 .title-span {
