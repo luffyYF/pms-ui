@@ -204,3 +204,18 @@ export const reportZaiDianBinKeYueJiYaJin = params => {
 export const reportZaiiZhuKeRenCaiWuMingXi = params => {
     return request.get('/pms/report/zaiZhuKeRenCaiWuMingXi',{params:params})
 }
+
+/**
+ * 催账报表
+ */
+export const reportCuiZhangBaoBiao = params => {
+    return request.get('/pms/report/cuiZhangBaoBiao',{params:params})
+}
+
+/**
+ * 经理日报表
+ * begin 开始时间
+ */
+export const reportJingLiRiBao = params => {
+    return request.get('/pms/report/jingLiRiBao',{params:params})
+}

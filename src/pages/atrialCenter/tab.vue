@@ -21,9 +21,9 @@
       <el-menu-item index="/atrialCenter/GoodsManageTag" v-if="powerJudge('1105')">
         <span slot="title">物品管理</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/atrialCenter/AccountStatement" v-if="powerJudge('1106')">
+      <el-menu-item index="/atrialCenter/AccountStatement" v-if="powerJudge('1106')">
         <span slot="title">催账报表</span>
-      </el-menu-item> -->
+      </el-menu-item>
       <!-- <el-menu-item index="/atrialCenter/JointRealManage" v-if="powerJudge('1107')">
         <span slot="title">联房管理</span>
       </el-menu-item> -->
