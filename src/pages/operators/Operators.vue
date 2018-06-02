@@ -33,7 +33,7 @@
         <el-button type="primary" v-if="showModifyBtn" @click="submitModify">修改</el-button>
         <el-button type="primary" v-if="showModifyBtn" @click="cancelModify">取消修改</el-button>
       </el-form-item>
-      <p style="margin:0 0 10px;padding:0 20px;color:red;">密码请使用字母、数字和符号两种以上的组合，6-15个字符。</p>
+      <p style="margin:0 0 10px;padding:0 11px;color:red;">*注：密码请使用字母、数字和符号两种以上的组合，6-15个字符。</p>
     </el-form>
     <hr>
     <el-form :inline="true" size="mini" :model="selectUserForm" class="demo-form-inline">

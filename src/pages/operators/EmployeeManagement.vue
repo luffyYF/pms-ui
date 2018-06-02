@@ -16,7 +16,7 @@
             <el-button type="primary" @click="conditionalQuery">查询</el-button>
           </el-form-item>
         </el-form>
-        <p style="color:red;margin-top:0;">注：员工状态为离职时，登陆账号失效。</p>
+        <p style="color:red;margin-top:0;">*注：员工状态为离职时，登陆账号失效。</p>
 
         <el-table
           :data="userList"

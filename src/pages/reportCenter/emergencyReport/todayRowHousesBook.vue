@@ -1,6 +1,6 @@
 <template>
   <div style="height:100%;">
-        <div>
+        <div class="primary-tool">
           <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
           <el-button type="primary" size="mini"><a :href="baseRul+'pms/report/jinRiYuDiYiPaiFangYuDingExcel'">导出EXCEL</a></el-button>

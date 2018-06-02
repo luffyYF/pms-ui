@@ -374,6 +374,8 @@ export default {
   display: table;
   cursor: pointer;
   float: left;
+  margin-top: -2px;
+  margin-left: 3px;
 }
 .el-button--mini, .el-button--mini.is-round{
   padding: 5px 15px;

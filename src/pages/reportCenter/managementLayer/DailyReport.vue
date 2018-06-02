@@ -17,7 +17,7 @@
           <h3>{{activeCompany.companyName}}</h3>
           <h3>管理层日报表</h3>
         </div>
-        <div class="tabs-contetn">
+        <div class="tabs-content">
           <!-- <p style="margin: 0px">打印日期：<span>自 2018-03-09 至 2018-03-09</span>&nbsp;&nbsp;&nbsp;&nbsp;营业日期：<span>2018-03-09</span> </p> -->
           <el-table 
             :header-cell-style="tableStyleObj" 
@@ -30,15 +30,15 @@
             <el-table-column prop="month" label="本月累计"></el-table-column>
             <el-table-column prop="year" label="本年累计"></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.userName}}</span></p>
+          <p style="height:20px;margin:15px 0px"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.userName}}</span></p>
           <p style="height:20px;color:red">注(1)：此报表为夜审报表，数据统计截止到昨天。</p>
           <p style="height:20px;color:red">注(1)：房晚数 = 夜核房晚数 + 日租房晚数 + 钟点房晚数 + 特殊房晚数 + 公寓房晚数</p>
-          <p style="height:20px;color:red;padding-left:44px">应收合计 = 房租收入+其他收入</p>
-          <p style="height:20px;color:red;padding-left:44px">会员房晚：会员入住的，不区分客人来源</p>
-          <p style="height:20px;color:red;padding-left:44px">平均房价 = 房租收入/房晚数</p>
-          <p style="height:20px;color:red;padding-left:44px">房均消费 = 应收合计/房晚数</p>
-          <p style="height:20px;color:red;padding-left:44px">人均消费 = 应收合计/人晚数</p>
-          <p style="height:20px;color:red;padding-left:44px;margin-bottom:50px;">出租率 = 房晚数 / (总房间数) * 100</p>
+          <p class="tabs-content-p">应收合计 = 房租收入+其他收入</p>
+          <p class="tabs-content-p">会员房晚：会员入住的，不区分客人来源</p>
+          <p class="tabs-content-p">平均房价 = 房租收入/房晚数</p>
+          <p class="tabs-content-p">房均消费 = 应收合计/房晚数</p>
+          <p class="tabs-content-p">人均消费 = 应收合计/人晚数</p>
+          <p>出租率 = 房晚数 / (总房间数) * 100</p>
         </div>
       </div>
     </el-col>
@@ -97,12 +97,30 @@ export default {
 }
 </script>
 <style scoped>
+.el-input--mini .el-input__inner {
+    height: 28px !important;
+    line-height: 25px;
+}
 .title{
   border-bottom: 2px solid #ddd;
   padding-bottom: 15px;
 }
 .tavs-title{
   text-align: center;
+}
+.tabs-content p{
+  margin:5px;
+}
+.tabs-content-p{
+  height:20px;
+  color:red;
+  padding-left:44px;
+}
+.tabs-content p:last-child{
+  height:20px;
+  color:red;
+  padding-left:44px;
+  margin-bottom:65px;
 }
 .left{
   float: left;

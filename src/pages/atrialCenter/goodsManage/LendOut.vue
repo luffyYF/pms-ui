@@ -311,5 +311,13 @@ export default {
   border: 1px solid #ccc;
   padding: 15px;
   width: 1000px;
+  margin-bottom: 80px;
+}
+
+</style>
+<style>
+.el-tabs__content{
+  overflow-y: auto;
 }
 </style>
+

@@ -8,7 +8,7 @@
         highlight-current-row
         :data="tableData" 
         v-loading="loading"
-        style="width: 80%; margin:10px;">
+        style="width: 98%; margin:10px auto;">
         <el-table-column prop="typeName" label="名称" align="center" width="200">
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center">
@@ -78,9 +78,10 @@
 .bg-reserve {
   position: relative;
   background: #f7f7f7;
-  margin-top: 10px;
   border: 1px solid #ccc;
   padding-top: 18px;
+  width: 98%;
+  margin:10px auto;
 }
 .info-title {
   position: absolute;

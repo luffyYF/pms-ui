@@ -53,7 +53,7 @@
             <el-option label="午夜计费" value="4"></el-option>
           </el-select>
         </el-form-item>
-        <p v-if="form.billingMethod == 4" style="color:red;">注：午夜计费方式会在夜审时生成一笔相应的夜核房费。</p>
+        <p v-if="form.billingMethod == 4" style="color:red;">*注：午夜计费方式会在夜审时生成一笔相应的夜核房费。</p>
         <div v-if="form.billingMethod == 2">
           <el-form-item label="跨天：" :label-width="formLabelWidth">
             <el-input v-model="form.interDay" auto-complete="off" clearable></el-input>
@@ -524,7 +524,6 @@ export default {
   margin-top: 10px;
   border: 1px solid #ccc;
   padding-top: 18px;
-  width: 1000px;
 }
 .info-title {
   position: absolute;

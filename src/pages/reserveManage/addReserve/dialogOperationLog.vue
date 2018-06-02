@@ -66,4 +66,11 @@ export default {
   }
 };
 </script>
+<style scoped>
+.pattern-dialog-container{
+  height: 600px;
+  overflow: auto;
+}
+
+</style>
 

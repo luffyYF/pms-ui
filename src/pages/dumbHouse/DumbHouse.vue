@@ -1,6 +1,6 @@
 <template>
   <div class="content-body">
-    <el-col :span="20">
+    <el-col :span="24">
       <!-- 筛选条件表单 -->
       <el-form :model="searForm" :inline="true" size="mini" label-width="80px"  class="demo-form-inline">
         <el-form-item label="组单号">
@@ -93,7 +93,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="getList">搜索订单</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:10px">搜索订单</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -493,6 +493,6 @@
     position: absolute;
     right: 30px;
     z-index: 9999;
-    top: 60px;
+    top: 50px;
 }
 </style>

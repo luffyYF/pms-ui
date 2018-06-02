@@ -157,11 +157,23 @@ export default {
 .calendar-box .full-calendar-body .weeks {
   width: 490px;
   margin: 0 auto;
-  background-color: #f60;
+  background-color: #409EFF;
   color: #fff;
 }
+.calendar-box .full-calendar-body .weeks .week {
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid #fff;
+  font-weight: normal
+}
+.calendar-box .full-calendar-body .weeks strong:first-child{
+  border-left: 1px solid #409Eff;
+}
+.calendar-box .full-calendar-body .weeks strong:last-child{
+  border-right: 1px solid #409Eff;
+}
 .calendar-box .full-calendar-body .dates .week-row {
-  border-left: 1px solid #f60;
+  border-left: 1px solid #409EFF;
 }
 .calendar-box .full-calendar-body .dates .week-row,
 .calendar-box .full-calendar-body .dates .dates-events .events-week {
@@ -170,16 +182,16 @@ export default {
 }
 /* .calendar-box .full-calendar-body .dates .dates-events .events-week .events-day, */
 .calendar-box .full-calendar-body .dates .week-row .day-cell {
-  border-right: 1px solid #f60;
-  border-bottom: 1px solid #f60;
+  border-right: 1px solid #409EFF;
+  border-bottom: 1px solid #409EFF;
   position: relative;
 }
 .calendar-box .full-calendar-body .event-item{
   padding: 0 !important;
 }
 .calendar-box .full-calendar-body .event-item.festival {
-  background-color: red !important;
-  color: #fff !important;
+  background-color: rgb(117, 188, 255) !important;
+  color: rgb(0, 0, 0) !important;
   text-align: center;
   position: absolute;
   bottom: 0;
@@ -199,7 +211,7 @@ export default {
 } */
 .calendar-box .full-calendar-body .event-item.price {
   background-color:transparent !important;
-  color: #f60 !important;
+  color: #409EFF !important;
   font-size: 12px !important;
   font-weight: 600;
   text-align: center;
@@ -217,13 +229,16 @@ export default {
   .day-number {
   text-align: center !important;
   padding-bottom: 0px;
+  margin-top:15px;
+  
 }
+
 .calendar-box .full-calendar-body .dates .week-row .day-cell {
   min-height: 60px;
   overflow: hidden;
 }
 .calendar-box .full-calendar-body .dates .week-row .day-cell.today {
-  background-color: #f60;
+  background-color: #409EFF;
 }
 .calendar-box
   .full-calendar-body

@@ -86,7 +86,7 @@
         </el-form-item>
         <el-form-item>
           <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-            <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="list" style="margin-left:10px">查询</el-button>
           </el-tooltip>
         </el-form-item>
       </el-col>
@@ -94,8 +94,7 @@
     <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border>
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
-      <!-- numberOfOccupancy-->
-      <el-table-column label="操作员" prop="createUserName">
+      <el-table-column label="操作员" prop="numberOfOccupancy">
       </el-table-column>
       <el-table-column label="预订人" prop="userName">
       </el-table-column>
@@ -105,8 +104,7 @@
       </el-table-column>
       <el-table-column label="渠道" min-width="150">
         <template slot-scope="scope">
-          <!-- <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{matchChannel(y.channelTypePk)}}</p> -->
-          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.channelTypeName}}</p>
+          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{matchChannel(y.channelTypePk)}}</p>
         </template>
       </el-table-column>
       <el-table-column label="入住人">

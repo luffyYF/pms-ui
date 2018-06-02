@@ -22,7 +22,7 @@
           <el-form-item>
             钟点房计费缓冲时间&nbsp;&nbsp;
             <el-input v-model="form.bufferTime" size="mini" clearable></el-input>
-            &nbsp;&nbsp;分钟<span class="red">&nbsp;&nbsp;&nbsp;&nbsp;（如果起步时间配置是180分钟，缓冲：20分钟,则真正计费的起步时间是200分钟，超过的时间顺延。）</span>
+            &nbsp;&nbsp;分钟<span class="red">&nbsp;&nbsp;&nbsp;&nbsp;（*注：如果起步时间配置是180分钟，缓冲：20分钟,则真正计费的起步时间是200分钟，超过的时间顺延。）</span>
           </el-form-item>
           <el-form-item>
             <el-checkbox v-model="checkExceedTime"></el-checkbox>
@@ -341,7 +341,6 @@ export default {
   width: 110px;
 }
 .content-body {
-  width: 1100px;
   background-color: #f7f7f7;
   padding: 5px 20px 20px 20px;
 }
