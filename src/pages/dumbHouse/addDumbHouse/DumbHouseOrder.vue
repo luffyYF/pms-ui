@@ -79,7 +79,7 @@
       //获取协议的单位
       listProjectDate(){
         listProject().then(res => {
-          this.agreementList = res.data;
+          this.agreementList = res.data.data;
         })
       },
       save(){//新增哑房账

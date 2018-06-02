@@ -154,43 +154,22 @@ export default {
           filename: '原始数据'
       });
     },
-    housekeepingDate() {
-      var data = [
-        {
-          roomNumber: "1343",
-          roomType: "单身公寓",
-          setter: "陆少游",
-          startDate: "2017-02-25",
-          preEndDate: "2017-12-25",
-          relieveSetter: "杜少甫",
-          endDate: "2018-02-03",
-          reason: "度量空间不够",
-          level: "管理员",
-          remarks: "暂定"
-        },
-        {
-          roomNumber: "1343",
-          roomType: "单身公寓",
-          setter: "陆少游",
-          startDate: "2017-02-25",
-          preEndDate: "2017-12-25",
-          relieveSetter: "杜少甫",
-          endDate: "2018-02-03",
-          reason: "度量空间不够",
-          level: "管理员",
-          remarks: "暂定"
-        },
-        {
-          roomNumber: "1343",
-          roomType: "单身公寓",
-          setter: "陆少游",
-          startDate: "2017-02-25",
-          preEndDate: "2017-12-25",
-          relieveSetter: "杜少甫",
-          endDate: "2018-02-03",
-          reason: "度量空间不够",
-          level: "管理员",
-          remarks: "暂定"
+    getList(){
+      let self = this
+      console.log(this.queryObj)
+      reportCuiZhangBaoBiao(this.queryObj).then((data)=>{
+        console.log(data)
+        self.listData.splice(0,data.data.length);
+        if(data.code == 1){
+        //   self.listData = data.data;
+          data.data.forEach((obj)=>{
+            obj.plusMinus = "余"
+            if(obj.remainingSum < 0){
+                obj.plusMinus = "欠"
+                obj.remainingSum  = Math.abs(obj.remainingSum)
+            }
+            self.listData.push(obj);
+          })
         }
       ];
       this.keepingData = data;

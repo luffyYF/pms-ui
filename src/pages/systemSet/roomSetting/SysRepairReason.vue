@@ -140,7 +140,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
         const self = this
         this.loading = true;
         listType({typeMasters: this.typeMaster}).then(result => {
-          self.tableData = result.data
+          self.tableData = result.data.data
           console.log(self.tableData);
           self.loading = false
         }).catch(() => {
