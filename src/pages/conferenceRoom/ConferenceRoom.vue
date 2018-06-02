@@ -15,7 +15,7 @@
       </el-col>
       <el-col :span="19">
         <div class="conferenceList" style="padding-top:0;height:620px;">
-          <p style="font-weight:600;margin-bottom:0;">
+          <p style="font-weight:600;margin-bottom:0;padding-left: 50px;">
             会议室日程安排
             <span><span class="tip-block bg-red"></span>预订已确认</span>
             <span><span class="tip-block bg-family"></span>预订未确认</span>
@@ -1003,8 +1003,8 @@ export default {
   background-color: #409eff;
 }
 .conferenceList {
-   border: 1px solid #eee;
-  height: 590px;
+  border: 1px solid #eee;
+  height: 620px;
   overflow-y: auto;
   background: #fff;
 }
@@ -1029,6 +1029,13 @@ export default {
 }
 .conferenceList .full-calendar-body .weeks {
   background-color: #a2d2f0;
+  border: none;
+}
+.conferenceList .full-calendar-body .weeks .week {
+    flex: 1;
+    text-align: center;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
 }
 .conferenceList .full-calendar-body .dates .week-row .day-cell {
   border-right: 2px solid #fff;
@@ -1051,6 +1058,9 @@ export default {
 }
 .conferenceList .full-calendar-body .dates .week-row .day-cell {
   min-height: 70px;
+}
+.conferenceList .full-calendar-body .dates .week-row{
+  border: none;
 }
 .conferenceList .full-calendar-body .dates .dates-events .events-week .events-day {
   min-height: 79px;

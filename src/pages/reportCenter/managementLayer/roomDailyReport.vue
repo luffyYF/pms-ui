@@ -1,172 +1,102 @@
 <template>
-  <div class="container">
-    <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
-      <el-form-item label="日期">
-        <el-date-picker
-          v-model="queryObj.begin"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
-        <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary">导出EXCEL</el-button>
-        <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button>
-        <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
-      </el-form-item>
-    </el-form>
-    <div class="table-container" id="print-accountsummaryreport">
-       <h3>{{activeCompany.companyName}}</h3>
-      <h4>经理日报表</h4>
-      <div class="table-box">
-        <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.userName}}</span></p>
-        <el-table 
-          :header-cell-style="tableStyleObj" 
-          :cell-style="tableStyleObj" 
-          :data="listData" 
-          border
-          style="width: 100% margin-top:-2px;"
-          :span-method="arraySpanMethod"
-          :row-class-name="tableRowClassName">
-          <el-table-column prop="name" align="center" label="统计项目">
-            <template slot-scope="scope">
-              <span>{{scope.row.project?scope.row.projectName:scope.row.name}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="DAY" align="center" label="今日发生"></el-table-column>
-          <el-table-column prop="MONTH" align="center" label="本月累计"></el-table-column>
-          <el-table-column prop="UP_MONTH" align="center" label="上月同期"></el-table-column>
-          <el-table-column prop="YEAR" align="center" label="本年累计"></el-table-column>
-          <el-table-column prop="UP_YEAR" align="center" label="上年同期"></el-table-column>
-          <!-- <el-table-column prop="settlementAmount" align="center"  label="年增长率"></el-table-column> -->
-        </el-table>
+  <div>
+      <el-col :span="24" class="title">
+      <div class="demo-input-suffix">
+        <!-- 营业日期：<el-date-picker v-model="datepicker" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini"></el-date-picker> -->
+        营业日期：<el-date-picker v-model="datepicker"
+                    type="daterange"
+                    value-format="yyyy-MM-dd"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期" 
+                    :picker-options="startTimeOptions"
+                    @change="roomDailyReportList" size="mini">
+                </el-date-picker>
+        <el-button type="primary" size="mini">网页预览</el-button>
+        <el-button type="primary" size="mini">PDF预览</el-button>
+        <el-button type="primary" size="mini">导出EXCEL</el-button>
+        <el-button type="primary" size="mini">添加到收藏夹</el-button>
+        <el-button type="primary" size="mini">打印预览</el-button>
       </div>
-    </div>
-    <!-- 打印填充 iframe-->
-    <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
+    </el-col>
+    <el-col :span="24">
+      <div class="tabs">
+        <div class="tavs-title">
+          <h3>深圳市前海豪斯菲尔信息科技有限公司</h3>
+          <h3>管理层日报表</h3>
+        </div>
+        <div class="tabs-contetn">
+          <!-- <p style="margin: 0px">打印日期：<span>自 2018-03-09 至 2018-03-09</span>&nbsp;&nbsp;&nbsp;&nbsp;营业日期：<span>2018-03-09</span> </p> -->
+          <el-table :data="tableData" border height="350" style="width: 100%; margin-top: 5px">
+            <!-- <el-table-column prop="name" label="星期"></el-table-column> -->
+            <el-table-column prop="businessDate" label="日期"></el-table-column>
+            <el-table-column prop="totalRoomNum" label="可出租间数"></el-table-column>
+            <el-table-column prop="rentalRoomNum" label="过夜出租间数"></el-table-column>
+            <!-- <el-table-column prop="name" label="时租间数"></el-table-column> -->
+            <!-- <el-table-column label="过夜出租率">
+                <template slot-scope="scope">{{(scope.row.rentalRoomNum/scope.row.totalRoomNum)}}</template>
+            </el-table-column> -->
+            <el-table-column label="平均房价">
+                <template slot-scope="scope">{{scope.row.totalIncome == 0 ? 0 : scope.row.totalIncome/scope.row.rentalRoomNum}}</template>
+            </el-table-column>
+            <el-table-column prop="totalIncome" label="总收入"></el-table-column>
+          </el-table>
+          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	深圳前海豪菲尔</span></p>
+        </div>
+      </div>
+    </el-col>
   </div>
 </template>
-
 <script>
-import {reportJingLiRiBao} from "@/api/reportCenter/pmsReportFormController"
-import moment from "moment"
+import {dailyMgReport,roomDailyReport} from '@/api/reportCenter'
+import {formatDate, copyObj} from '@/utils/index'
 export default {
-   data() {
+  data() {
     return {
-      userInfo:{},
-      sDate: moment().format("YYYY-MM-DD"),
-      sTime: moment().format("HH:mm:ss"),
-      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
-      listData: [],
-      selectShiftData:[],
-      listCashierOperatorData:[],
-      activeCompany:{},
-      tableStyleObj:{
-        border: '1px solid #ebeef5',
-        'border-left': '0',
-        'border-top': '0',
-        padding: '8px',
-        'text-align':'center'
+      datepicker: '',
+      datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+      tableData: [],
+      startTimeOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
       }
-    };
-  },
-  created() {
-    var test = window.localStorage.getItem("current_logon_company");
-    this.activeCompany = JSON.parse(test);
-    if (
-      this.activeCompany.companyName == "" ||
-      this.activeCompany.companyName == null ||
-      this.activeCompany.companyName == undefined
-    ) {
-      this.activeCompany.companyName == "";
     }
-    this.userInfo = JSON.parse(localStorage.sessionInfo);
-    this.init()
+  },
+  created(){
+    this.roomDailyReportList();
   },
   methods: {
-    init(){
-      let self = this
-      this.getList()
-    },
-    getList(){
-      let self = this
-      console.log(this.queryObj)
-      reportJingLiRiBao(this.queryObj).then((data)=>{
-        console.log(data)
-        if(data.code == 1){
-          self.listData = [];
-          let typeNameObj = "";
-          data.data.forEach((obj)=>{
-            if(typeNameObj == "" || obj.type != typeNameObj){
-              typeNameObj = obj.type
-              self.listData.push({
-                projectName:typeNameObj,
-                project:true
-              });
-            }
-            obj.project = false
-            self.listData.push(obj);
-          })
-        }
+    roomDailyReportList(){
+      const datepicker = this.datepicker;
+      console.log(datepicker[0])
+      roomDailyReport({begin: datepicker[0],end: datepicker[1]}).then(res => {
+        console.log(res.data)
+        this.tableData = res.data;
       });
-    },
-    arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      if(row.project){
-        return [1, 6];
-      }
-    },
-    tableRowClassName({row, rowIndex}) {
-      if(row.project){
-        return 'warning-row';
-      }
-      // if (rowIndex === 1) {
-        
-      // } else if (rowIndex === 3) {
-      //   return 'success-row';
-      // }
-      return '';
-    },
-     //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-accountsummaryreport").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
     }
   }
 }
 </script>
-
 <style scoped>
-.container {
-  height: 100%;
+.title{
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 15px;
 }
-.table-container {
-  padding: 20px;
+.tavs-title{
   text-align: center;
-  height: calc(100% - 200px);
-  overflow-y: auto;
-  border-top: 3px solid #eee;
 }
-.head-item {
-  display: inline-block;
-  padding: 0 15px;
+.left{
+  float: left;
 }
-.item-type {
-  /* border-left:1px solid #ebeef5;
-  border-right:1px solid #ebeef5; */
+.right{
+  float: right;
+}
+.tabsAdd{
+  border: 1px solid #ddd;
   margin: 0;
-  line-height: 60px;
-  font-size: 14px;
-  color: #909399;
-}
-</style>
-<style>
-.el-table .warning-row {
-  background: oldlace;
+  border-top: 0;
+  padding: 5px 10px;
 }
 </style>
 

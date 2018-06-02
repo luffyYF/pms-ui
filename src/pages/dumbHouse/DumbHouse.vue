@@ -1,6 +1,6 @@
 <template>
   <div class="content-body">
-    <el-col :span="20">
+    <el-col :span="24">
       <!-- 筛选条件表单 -->
       <el-form :model="searForm" :inline="true" size="mini" label-width="80px"  class="demo-form-inline">
         <el-form-item label="组单号">
@@ -531,7 +531,10 @@
     position: absolute;
     right: 30px;
     z-index: 9999;
-    top: 60px;
+    top: 50px;
+}
+.positions {
+  float: right;
 }
 .positions {
   float: right;

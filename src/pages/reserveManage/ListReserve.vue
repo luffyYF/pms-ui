@@ -92,8 +92,7 @@
     <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border max-height="628">
       <el-table-column label="预订单" prop="orderNo" width="120">
       </el-table-column>
-      <!-- numberOfOccupancy-->
-      <el-table-column label="操作员" prop="createUserName">
+      <el-table-column label="操作员" prop="numberOfOccupancy">
       </el-table-column>
       <el-table-column label="预订人" prop="userName">
       </el-table-column>
@@ -103,8 +102,7 @@
       </el-table-column>
       <el-table-column label="渠道" min-width="150">
         <template slot-scope="scope">
-          <!-- <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{matchChannel(y.channelTypePk)}}</p> -->
-          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.channelTypeName}}</p>
+          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{matchChannel(y.channelTypePk)}}</p>
         </template>
       </el-table-column>
       <el-table-column label="入住人">
@@ -127,14 +125,6 @@
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">￥ {{y.currPrice}}</p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="担保">
-        <template slot-scope="scope">
-          <span v-if="scope.row.guaranteeType=='GUARANTEE_ARRIVAL'">担保到达</span>
-          <span v-if="scope.row.guaranteeType=='GUARANTEE_ALL'">全程担保</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="时效" prop="keepTime">
-      </el-table-column> -->
       <el-table-column label="抵店日期" width="180">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.beginDate}}</p>

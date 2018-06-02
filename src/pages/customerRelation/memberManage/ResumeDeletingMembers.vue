@@ -30,7 +30,7 @@
           <member-grade v-model="form.gradePk"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="searchDateList">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="searchDateList" style="margin-left:30px">搜索</el-button>
         </el-form-item>
       </div>
     </el-form>

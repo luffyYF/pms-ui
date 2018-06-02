@@ -204,29 +204,3 @@ export const reportZaiDianBinKeYueJiYaJin = params => {
 export const reportZaiiZhuKeRenCaiWuMingXi = params => {
     return request.get('/pms/report/zaiZhuKeRenCaiWuMingXi',{params:params})
 }
-
-/**
- * 催账报表
- */
-export const reportCuiZhangBaoBiao = params => {
-    return request.get('/pms/report/cuiZhangBaoBiao',{params:params})
-}
-
-/**
- * 经理日报表
- * begin 开始时间
- */
-export const reportJingLiRiBao = params => {
-    return request.get('/pms/report/jingLiRiBao',{params:params})
-}
-
-	
-	
-	
-
-// 营业状况统计 businessCondition
-// 营业收入明细 projectData
-// 房费收入分析 houseFeeIncome
-// 房晚数分析 rentalRoomNumMapList
-// 出租率分析 leaseRateMapList  
-// 平均房价分析 averageRoomRateMapList	

@@ -71,23 +71,16 @@
       border 
       :data="tableData" 
       style="width: 98.5%; margin:10px;" height="450">
-        <el-table-column prop="cardNumber" label="会员号" align="center" width="100">
+        <el-table-column prop="cardNumber" label="会员号" align="center">
         </el-table-column>
         <el-table-column prop="gradeName" label="会员类型" align="center" width="90">
-          <!-- <template slot-scope="scope">
-            <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
-            <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
-            <span v-if="scope.row.memberGrade == 'SENIOR'">高级会员</span>
-            <span v-if="scope.row.memberGrade == 'VIP'">VIP会员</span>
-            <span v-if="scope.row.memberGrade == 'PLATINUM'">铂金会员</span>
-            <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
-          </template> -->
+
         </el-table-column>
-        <el-table-column prop="memName" label="姓名" align="center" width="90">
+        <el-table-column prop="memName" label="姓名" align="center">
         </el-table-column>
-        <el-table-column prop="nativePlace" label="籍贯" align="center" width="90">
+        <el-table-column prop="nativePlace" label="籍贯" align="center" width="100">
         </el-table-column>
-        <el-table-column prop="certificateType" label="证件类型" align="center" width="100">
+        <el-table-column prop="certificateType" label="证件类型" align="center" width="110">
           <template slot-scope="scope">
             <span v-if="scope.row.certificateType == 'TWO_IDENTITY'">二代身份证</span>
             <span v-if="scope.row.certificateType == 'ONE_IDENTITY'">一代身份证</span>
@@ -103,17 +96,17 @@
             <span v-if="scope.row.certificateType == 'POLICE_OFFICER'">警官证</span>
           </template>
         </el-table-column>
-        <el-table-column prop="certificateNo" label="证件号" align="center" width="200">
+        <el-table-column prop="certificateNo" label="证件号" align="center" width="210">
         </el-table-column>
-        <el-table-column prop="carNumber" label="车牌号" align="center" width="120">
+        <el-table-column prop="carNumber" label="车牌号" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="address" label="地址" align="center" width="200">
+        <el-table-column prop="address" label="地址" align="center" width="220">
         </el-table-column>
-        <el-table-column prop="memPhone" label="手机号码" align="center" width="120">
+        <el-table-column prop="memPhone" label="手机号码" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="roomNumber" label="房号" align="center" width="90">
+        <el-table-column prop="roomNumber" label="房号" align="center" width="100">
         </el-table-column>
-        <el-table-column prop="invoiceTitle" label="发票" align="center" width="160">
+        <el-table-column prop="invoiceTitle" label="发票" align="center" width="200">
         </el-table-column>
         <!-- <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <template slot-scope="scope">
@@ -190,7 +183,7 @@ export default {
       agreementUnit: false,
       loading: false,
       protocolNumber: '',
-      tableData: [],
+      tableData: [], //账户列表数据
       total:0, //账户列表数据
       beginDate: new Date(),
       endDate: new Date()

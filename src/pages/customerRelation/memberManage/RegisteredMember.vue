@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="registeredmember-main">
     <!-- 会员来源信息 -->
     <div class="bg-reserve">
       <h5 class="info-title">会员来源信息（不可修改）</h5>
@@ -525,5 +525,11 @@ export default {
 }
 .address {
   width: 501px;
+}
+
+</style>
+<style>
+.menu-content {
+    overflow: auto;
 }
 </style>

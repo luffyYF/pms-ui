@@ -3,13 +3,13 @@
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="收银员收款报表" name="one" class="aLayerOfPage" v-if="powerJudge('110801')">
-        <close-report/>
+        
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
-<script>
+<script> 
   import CloseReport from './closeReport'
   import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {

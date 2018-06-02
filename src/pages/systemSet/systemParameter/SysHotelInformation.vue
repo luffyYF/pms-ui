@@ -164,7 +164,10 @@ export default {
   width: 204px;
 }
 .el-textarea {
-  width: 500px;
+  width: 521px;
+}
+.el-textarea_inner {
+  padding: 5px;
 }
 .member-level {
   width: 95px;

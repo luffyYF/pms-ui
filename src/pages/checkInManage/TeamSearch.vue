@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-col :span="20">
+    <el-col :span="24">
       <el-form :inline="true" ref="form" :model="form" size="mini" label-width="80px"  class="demo-form-inline">
         <el-form-item label="入住房号">
           <el-input v-model="form.roomNumbers" placeholder="请输入入住房号" clearable style="width: 178px;"></el-input>
@@ -48,7 +48,7 @@
     <el-col :span="4"></el-col>
     <el-table v-loading="loading" 
     :data="tableData" 
-    filter-change="handlerFilterChange" border>
+    filter-change="handlerFilterChange" border style="width:98%;margin:auto">
       <el-table-column label="组单" align="center" width="80" prop="orderNo" fixed="left">
       </el-table-column>
       <el-table-column label="团体名称" align="center" width="80" prop="name">
@@ -84,11 +84,11 @@
         </el-pagination>
     </div>
     <!-- 订单弹出 -->
-    <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
+    <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose"> -->
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
       </div>
-    </el-dialog>
+    <!-- </el-dialog> -->
   </section>
 </template>
 <script>
@@ -247,4 +247,5 @@
 .el-table--border{
   top: 10px;
 }
+
 </style>

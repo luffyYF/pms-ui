@@ -317,8 +317,10 @@ export default {
 
 <style scoped>
 .pattern-dialog-container {
-  display: table;
+  /* display: table; */
+  overflow: auto;
 }
+
 </style>
 <style>
 .el-table tr.success-row {

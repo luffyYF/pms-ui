@@ -88,7 +88,7 @@
     </div>
 
     <!-- 添加修改协议单位 dialog -->
-    <el-dialog :title="proDialogTitle" :visible.sync="dialogProtocolVisible" size="mini">
+    <el-dialog :title="proDialogTitle" :visible.sync="dialogProtocolVisible" size="mini" class="addagreement">
       <div class="body-conten">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="24">
@@ -727,5 +727,8 @@ export default {
 <style>
 .protocolPrice-contenter .el-dialog .el-dialog__body {
     padding: 0;
+}
+.el-dialog{
+  width:680px;
 }
 </style>
