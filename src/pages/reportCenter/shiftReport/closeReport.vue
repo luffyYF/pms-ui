@@ -41,7 +41,7 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary" @click="uploadExcels()"><span class="el-icon-printer p-r-5"></span>导出EXCEL</el-button>
+        <el-button type="primary"><a :href="baseRul+'pms/report/zaiZhuKeRenCaiWuMingXiExcel?begin='+queryObj.begin+'&end='+queryObj.end">导出EXCEL</a></el-button>
         <el-button type="primary"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
@@ -95,7 +95,8 @@ export default {
       consumer: [],
       settlement:[],
       selectShiftData:[],
-      listCashierOperatorData:[]
+      listCashierOperatorData:[],
+      baseRul:"http://localhost:8083/pms/"
     };
   },
   created() {

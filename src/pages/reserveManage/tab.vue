@@ -9,8 +9,8 @@
       <el-menu-item index="/reserveManage" v-if="powerJudge('1302')">
         <span slot="title">新增预定</span>
       </el-menu-item>
-      <el-menu-item index="/reserveManage/fastReserve" v-if="powerJudge('1301')">
-        <span slot="title">快速预定</span>
+      <el-menu-item index="/reserveManage/groupReserve" v-if="powerJudge('1301')">
+        <span slot="title">团队预定</span>
       </el-menu-item>
       <el-menu-item index="/reserveManage/listReserve" v-if="powerJudge('1305')">
         <span slot="title">订单列表</span>

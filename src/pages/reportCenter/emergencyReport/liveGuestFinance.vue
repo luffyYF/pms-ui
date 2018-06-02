@@ -4,9 +4,9 @@
             <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
             <el-button type="primary" size="mini">PDF预览</el-button>
             <!-- 导出EXCEL -->
-              <el-button type="primary" size="mini" ><a :href="baseRul+'pms/pms/report/zaiZhuKeRenCaiWuMingXiExcel'">导出EXCEL</a></el-button>
+              <el-button type="primary" size="mini" ><a class="exportLink" :href="baseRul+'pms/report/zaiZhuKeRenCaiWuMingXiExcel'" target="_blank">导出EXCEL</a></el-button>
             <el-button type="primary" size="mini">添加到收藏夹</el-button>
-            <el-button type="primary" size="mini" @click="print">打印预览</el-button>
+            <el-button type="primary" size="mini" @click="print">打印预览</el-button> 
         </div>
         <div class="table-container" id="print-liveguestfinance">
           <h3>{{activeCompany.companyName}}</h3>
@@ -99,6 +99,10 @@ export default {
 </script>
 
 <style scoped>
+  .exportLink{
+    color: white;
+    text-decoration: none;
+  }
  .table-container {
     padding: 20px;
     text-align: center;

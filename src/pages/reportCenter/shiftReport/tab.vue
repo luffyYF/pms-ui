@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script>
+<script> 
   import CloseReport from './closeReport'
   import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {

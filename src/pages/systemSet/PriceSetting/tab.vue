@@ -47,7 +47,7 @@
         const self = this
         this.loading = true;
         listType({typeMaster: 'ROOM_TYPE'}).then(result => {
-          self.tableData = result.data
+          self.tableData = result.data.data;
           self.loading = false
         }).catch(() => {
           self.loading = false

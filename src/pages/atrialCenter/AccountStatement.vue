@@ -145,7 +145,7 @@ export default {
             region: "weihetingyong"
         },
         keepingData: []
-    };
+    }
   },
   methods: {
     exportData() {
@@ -171,16 +171,14 @@ export default {
             self.listData.push(obj);
           })
         }
-      ];
-      this.keepingData = data;
-      // getHousekeepingList().then(res => {
-      //   this.keepingData = new HousekeepingList(res.data)
-      // })
+        this.keepingData = data;
+      })
     }
   },
   mounted() {
     this.housekeepingDate();
   }
+ 
 };
 </script>
 <style scoped>

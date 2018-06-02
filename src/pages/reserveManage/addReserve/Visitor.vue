@@ -1320,7 +1320,10 @@
             bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
-        toDialogAgreement() {//打开选择协议单位
+        toDialogAgreement(buttonType) {//打开选择协议单位
+          if(buttonType == 'registMember'){
+            this.regisType = buttonType
+          }
           this.dialogAgreement =true
           setTimeout(()=>{
             this.$refs.agreementRef.init()

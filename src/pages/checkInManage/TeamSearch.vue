@@ -84,11 +84,11 @@
         </el-pagination>
     </div>
     <!-- 订单弹出 -->
-    <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
+    <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose"> -->
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
       </div>
-    </el-dialog>
+    <!-- </el-dialog> -->
   </section>
 </template>
 <script>
