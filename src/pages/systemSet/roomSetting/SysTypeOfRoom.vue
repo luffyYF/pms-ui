@@ -175,7 +175,7 @@
         const self = this
         this.loading = true;
         listType({typeMaster: this.typeMaster}).then(result => {
-          self.tableData = result.data
+          self.tableData = result.data.data
           self.loading = false
         }).catch(() => {
           self.loading = false

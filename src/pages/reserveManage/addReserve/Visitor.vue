@@ -1247,7 +1247,7 @@
         initType(callback) {
           // 获取房型
           listType({typeMaster:'ROOM_TYPE'}).then(res=>{
-            this.roomTypeArr = res.data;
+            this.roomTypeArr = res.data.data;
             callback()
             // //获取价格方案
             // listPriceScheme().then(res=>{

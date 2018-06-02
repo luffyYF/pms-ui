@@ -418,7 +418,7 @@ export default {
           orderNo: res.data.order.orderNo
         }
         this.reserveTime = new Date(res.data.order.createTime)
-        this.dialogVisibleTitle = '组单号：'+this.form.orderNo
+        this.dialogVisibleTitle = '组单号：'+this.form.orderNo 
         //设置页面类型
         if(res.data.order.pmsCancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
           this.currConfirmType = 'leave-info'
@@ -762,7 +762,7 @@ export default {
     bus.$on('refreshOrderInfo', (orderPk) => { this.initOrderInfo(orderPk, 'visitor') })
     bus.$on('dialogVisibleClose', () => { this.dialogVisibleClose() })
     listType({typeMaster:'ROOM_TYPE'}).then(res=>{
-      this.roomTypeArr = res.data;
+      this.roomTypeArr = res.data.data;
     }).catch(error=>{
     })
   }
