@@ -15,7 +15,7 @@
             <el-table-column prop="roomNumber" label="房号"></el-table-column>
             <el-table-column prop="orderStatus" label="状态" width="90">
               <template slot-scope="scope">
-                <span v-if="scope.row.cancelFlag=='Y'" style="color:#999999">订单取消</span>
+                <span v-if="scope.row.pmsCancelFlag=='Y'" style="color:#999999">订单取消</span>
                 <span v-else-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY' || scope.row.orderStatus=='NOSHOW'" style="color:#999999">{{orderStatusMap[scope.row.orderStatus]}}</span>
                 <span v-else>{{orderStatusMap[scope.row.orderStatus]}}</span>
               </template>
@@ -1267,7 +1267,7 @@
           this.form.guestPhone = null
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
           this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-          this.form.cancelFlag = 'N'
+          this.form.pmsCancelFlag = 'N'
         },
         addReserveGuest() {//添加预定
           addReserveGuest(this.form).then(res=>{
@@ -1315,7 +1315,7 @@
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
         editGuestInfo() {//修改客人信息
-          if(this.form.cancelFlag=='Y'){
+          if(this.form.pmsCancelFlag=='Y'){
             return;
           }
           editOrderMember(this.form).then(res=>{

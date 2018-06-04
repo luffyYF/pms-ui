@@ -29,7 +29,7 @@
               </el-col>
               <el-col class="dialog-li">
                 <el-form-item label="是否团体"> 
-                  <el-select v-model="form.isTeam" :disabled="currConfirmType=='edit-guest'">
+                  <el-select v-model="form.isTeam" :disabled="true">
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
                     </el-select>

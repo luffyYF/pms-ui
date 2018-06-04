@@ -46,6 +46,7 @@ export const contractMap = {
 }
 //支付方式
 export const paymentMap = {
+  '-1': '无',
   0: '现金',
   1: '微信',
   2: '支付宝',
