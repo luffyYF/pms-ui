@@ -156,7 +156,6 @@ export default {
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
           if(this.countCheckoutDate.payType==='Y' && this.backMoney>0){
             this.onlineVisible = true
-            alert(1)
           }
         });
       }else if(type==0){
