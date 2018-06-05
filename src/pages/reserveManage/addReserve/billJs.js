@@ -124,7 +124,6 @@
             this.billsList.forEach((bill, index) => {
               bill.consumptionAmount = Math.round(bill.consumptionAmount*100)/100;
               bill.settlementAmount = Math.round(bill.settlementAmount*100)/100;
-              console.log(bill.settlementAmount)
             });
           })
         },
@@ -337,11 +336,12 @@
                 .catch(_ => {});
             } else {
               if(type==1){//退房未结
-                if(this.currOrderInfo.order.hfFlag=='Y'){
-                  this.$refs.billSettlementRef.init(this.orderPk, 3, '',this.currOrderInfo.order.hfCashPledge)
-                }else{
-                  this.$refs.billSettlementRef.init(this.orderPk, 1)
-                }
+                // if(this.currOrderInfo.order.hfFlag=='Y'){
+                //   this.$refs.billSettlementRef.init(this.orderPk, 3, '',this.currOrderInfo.order.hfCashPledge)
+                // }else{
+                //   this.$refs.billSettlementRef.init(this.orderPk, 1)
+                // }
+                this.$refs.billSettlementRef.init(this.orderPk, 1)
               }else if(type==2){//部分结账
                 let select = this.multipleSelection;
                 let pks = []

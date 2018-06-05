@@ -76,10 +76,10 @@
         </el-col>
         <el-col :span="24" class="bill-el-button">
           结账处理：
-          <el-button size="mini" @click="settlement(0)" v-if="powerJudge('402010') && (currOrderInfo.order.orderStatus=='LEAVE' || currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY')" >结账</el-button>
+          <el-button size="mini" @click="settlement(0)" v-if="powerJudge('402010') && (currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY')" >结账</el-button>
           <!-- (currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') -->
           <!-- <el-button size="mini">部分结账回复</el-button> -->
-          <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> -->
+          <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> --> 
           <!-- <el-button size="mini">取消入住</el-button> -->
           <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN'">退房未结</el-button>
           <el-button size="mini" @click="settlement(2)" v-if="powerJudge('402011')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>

@@ -18,22 +18,58 @@
             <span class="left" style="color: red" v-if="countCheckoutDate.settlementAmount-countCheckoutDate.consumptionAmount<0">应收：</span>
             <span class="left price">{{this.backMoney}}</span>
           </p>
-          <p class="partialcheckout-price" v-if="billForm.onlineFlag">
+          <!--<p class="partialcheckout-price" v-if="billForm.onlineFlag">
             <span class="left" style="color: red">线上退款：</span>
             <span class="left price">{{billForm.onlineMoney}}</span>
-          </p>
+          </p>-->
         </el-col>
         <el-col :span="12" style="border-left: 1px solid #ddd;">
-          <div v-if="type==1">
-            提示:不结账退房后账务情况请在【入住管理】的【房退未结】里查询,可重新结账!
-            
-          </div>
-          <div v-else-if="type==3">
+          <el-form ref="billForm" :model="billForm" size="mini" label-width="90px">
+            <div v-if="type==0 || type==2">
+                <el-form-item label="结算项目：">
+                  <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出">
+                    <el-option label="现金" value="shanghai"></el-option>
+                    <el-option label="银行卡" value="beijing"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="支付方式" required>
+                  <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:100%">
+                    <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="客单：">
+                  <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
+                    <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="备注：">
+                  <el-input type="textarea" v-model="billForm.remark"></el-input>
+                </el-form-item>
+            </div>
+            <div v-if="type==1">
+              提示:不结账退房后账务情况请在【入住管理】的【房退未结】里查询,可重新结账!
+              <el-form-item v-if="onlineVisible">
+                <el-checkbox v-model="billForm.onlineFlag" @change="onlineFlagChange">线上退款</el-checkbox>
+              </el-form-item>
+              <el-form-item label="客单：" v-if="billForm.onlineFlag">
+                <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
+                  <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <span v-if="billForm.onlineFlag" style="color:red;padding-left:30px">线上押金：{{countCheckoutDate.cashPledge}}元</span> <!-- 总退款金额：{{tempBackMoney}}元，-->
+              <el-form-item label="退款金额" v-if="billForm.onlineFlag" required>
+                <el-input type="text" v-model="billForm.onlineMoney" ></el-input><!-- v-on:input="onlineMoneyChange"-->
+              </el-form-item>
+            </div>
+          </el-form>
+          <!-- <div v-else-if="type==3">
              提示:不结账退房后账务情况请在【入住管理】的【房退未结】里查询
             <el-form ref="hfBillForm" :model="hfBillForm" size="mini" label-width="130px">
               <el-form-item label="豪斯菲尔押金：">
                 <span style="color:red">￥{{hfBillForm.hfCashPledge}}</span>
-                <!-- <el-input type="text" v-model="hfBillForm.hfCashPledge" ></el-input> -->
               </el-form-item>
               <el-form-item label="豪斯菲尔赔偿金额：">
                 <el-input type="text" v-model="hfBillForm.consumptionAmount"></el-input>
@@ -42,46 +78,7 @@
                 <el-input type="textarea" v-model="hfBillForm.remark"></el-input>
               </el-form-item>
             </el-form>
-          </div>
-          <div v-else>
-            <el-form ref="billForm" :model="billForm" size="mini" label-width="90px">
-              <el-form-item label="结算项目：">
-                <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出">
-                  <el-option label="现金" value="shanghai"></el-option>
-                  <el-option label="银行卡" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="支付方式" required>
-                <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:100%">
-                  <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="客单：">
-                <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                  <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <!-- <el-form-item label="发票设置：">
-                <el-radio-group v-model="form.region">
-                  <el-radio label="不开发票"></el-radio>
-                  <el-radio label="开发票"></el-radio>
-                </el-radio-group>
-              </el-form-item> -->
-              <el-form-item label="备注：">
-                <el-input type="textarea" v-model="billForm.remark"></el-input>
-              </el-form-item>
-
-              <el-form-item v-if="onlineVisible">
-                <el-checkbox v-model="billForm.onlineFlag" @change="onlineFlagChange">线上退款</el-checkbox>
-              </el-form-item>
-              <span v-if="billForm.onlineFlag" style="color:red;padding-left:30px">总退款金额：{{tempBackMoney}}元，线上押金：{{countCheckoutDate.cashPledge}}元</span>
-              <el-form-item label="退款金额" v-if="billForm.onlineFlag" required>
-                <el-input type="text" v-model="billForm.onlineMoney" v-on:input="onlineMoneyChange"></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
+          </div> -->
         </el-col>
       </el-col>
     </div>
@@ -101,14 +98,14 @@ export default {
     return {
       islock: false,
       orderPk: "",
-      type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 3:豪斯菲尔退房未结
+      type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 【废】3:豪斯菲尔退房未结 
       dialogPartialCheckout: false,
       countCheckoutDate: {},
       guestOrderSelect: [],
       billPks: '',
       paymentMap: paymentMap,
       backMoney: 0,//找零、欠费金额
-      tempBackMoney: 0,
+      // tempBackMoney: 0,
       onlineVisible:false,//是否可以线上退款
       billForm: {
         payment: "0",
@@ -129,13 +126,14 @@ export default {
   methods: {
     /**
      * orderPk 订单主键
-     * type 弹窗类型 0:结账  1:退房未结  2:部分结账  3.豪斯菲尔退房未结
+     * type 弹窗类型 0:结账  1:退房未结  2:部分结账
      * billPks 部分结账的账单主键，逗号拼接
      *  */
     init(orderPk, type, billPks,hfCashPledge) {
       this.type = type;
       this.orderPk = orderPk;
       this.billPks = billPks;
+      this.billForm.guestOrderPk = '';
       this.billForm.payment = "0";
       this.billForm.remark = null;
       this.onlineVisible = false;
@@ -145,20 +143,27 @@ export default {
       this.dialogPartialCheckout = true;
       this.islock = false;
       if(type==2){
+        //部分结账
         countCheckoutBill({ billPk: billPks }).then(res => {
           this.countCheckoutDate = res.data;
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
-          this.tempBackMoney = this.backMoney;
         });
-      }else{
+      }else if(type==1){
+        // 退房未结
         countCheckoutBill({ orderPk: orderPk }).then(res => {
           this.countCheckoutDate = res.data;
-          let backMoney = this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount;
-          this.backMoney = Math.abs(backMoney);
-          this.tempBackMoney = this.backMoney;
-          if(this.countCheckoutDate.payType==='Y' && backMoney>0){
+          // console.log(this.countCheckoutDate)
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
+          if(this.countCheckoutDate.payType==='Y' && this.backMoney>0){
             this.onlineVisible = true
+            alert(1)
           }
+        });
+      }else if(type==0){
+        // 结账
+        countCheckoutBill({ orderPk: orderPk }).then(res => {
+          this.countCheckoutDate = res.data;
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
         });
       }
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
@@ -171,45 +176,22 @@ export default {
     onlineFlagChange(value) {
       if(value){
         this.billForm.onlineMoney= this.countCheckoutDate.cashPledge
-        this.backMoney = Number(this.tempBackMoney) - Number(this.billForm.onlineMoney)
-      }else{
-        this.backMoney = Number(this.tempBackMoney);
       }
     },
-    onlineMoneyChange(value){
-      this.backMoney = Number(this.tempBackMoney) - Number(value)
-    },
+    // onlineMoneyChange(value){
+    //   this.backMoney = Number(this.tempBackMoney) - Number(value)
+    // },
     confirm() {
       if(this.islock){
         return;
       }
       //确定
       if (this.type == 0) {
-        if(this.billForm.onlineFlag) {
-          if(this.billForm.onlineMoney==null || this.billForm.onlineMoney==''){
-            this.$message.warning('退款金额不能为空')
-            return;
-          }
-          if(Number(this.billForm.onlineMoney)<0){
-            this.$message.warning('退款金额不能小于0')
-            return;
-          }
-          if(Number(this.billForm.onlineMoney) > Number(this.tempBackMoney)){
-            this.$message.warning('不能超出总退款金额')
-            return;
-          }
-          if(Number(this.billForm.onlineMoney) > Number(this.countCheckoutDate.cashPledge)){
-            this.$message.warning('不能超出线上支付的押金')
-            return;
-          }
-        }
-
         let data = {
           orderPk: this.orderPk,
+          guestOrderPk: this.billForm.guestOrderPk,
           payment: this.billForm.payment,
           remark: this.billForm.remark,
-          onlineFlag: this.billForm.onlineFlag,
-          onlineMoney: this.billForm.onlineMoney
         };
         this.islock = true;
         checkoutauthBill(data).then(res => {
@@ -222,8 +204,28 @@ export default {
           this.islock = false;
         })
       }else if(this.type==1){
+        if(this.billForm.onlineFlag) {
+          if(this.billForm.onlineMoney==null || this.billForm.onlineMoney==''){
+            this.$message.warning('退款金额不能为空')
+            return;
+          }
+          if(Number(this.billForm.onlineMoney)<0){
+            this.$message.warning('退款金额不能小于0')
+            return;
+          }
+          if(Number(this.billForm.onlineMoney) > Number(this.countCheckoutDate.cashPledge)){
+            this.$message.warning('不能超出线上支付的押金')
+            return;
+          }
+        }
+        let data = {
+          orderPk: this.orderPk,
+          guestOrderPk: this.billForm.guestOrderPk,
+          onlineFlag: this.billForm.onlineFlag,
+          onlineMoney: this.billForm.onlineMoney
+        };
         this.islock = true;
-        checkoutNoPay({orderPk: this.orderPk}).then(res=>{
+        checkoutNoPay(data).then(res=>{
           this.$message({type:'success', message:'操作成功'})
           this.dialogPartialCheckout = false;
           this.islock = false;

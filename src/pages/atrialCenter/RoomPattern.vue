@@ -301,7 +301,7 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button size="mini" type="primary" @click="submitRoomReason('REPAIR')" v-if="repairForm.reasonPk==null">确认</el-button>
+          <el-button size="mini" type="primary" @click="submitRoomReason('REPAIR')" v-if="repairForm.reasonPk==null" :disabled="btnlock">确认</el-button>
           <el-button size="mini" type="primary" @click="dialogRepairRoom = false">关闭</el-button>
         </span>
       </el-dialog>
@@ -365,7 +365,7 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button size="mini" type="primary" @click="submitRoomReason('DISABLE')" v-if="disableForm.reasonPk==null">确认</el-button>
+          <el-button size="mini" type="primary" @click="submitRoomReason('DISABLE')" v-if="disableForm.reasonPk==null" :disabled="btnlock">确认</el-button>
           <el-button size="mini" type="primary" @click="dialogDisableRoom = false">关闭</el-button>
         </span>
       </el-dialog>
@@ -650,7 +650,7 @@
           children: 'children',
           label: 'label'
         },
-
+        btnlock:false,
       };
     },
     methods: {
@@ -729,6 +729,7 @@
       },
       showRepair(room) {//转维修房
         this.dialogRepairRoom = true
+        this.btnlock=false
         this.repairForm= {
           reasonPk: null,
           roomPk: room.roomPk,
@@ -743,6 +744,7 @@
       },
       showDisable(room) {//转停用房
         this.dialogDisableRoom = true
+        this.btnlock=false
         this.disableForm= {
           reasonPk: null,
           roomPk: room.roomPk,
@@ -802,22 +804,28 @@
           data.remark= this.disableForm.remark
           data.typeMaster= submitType
         }
+        if(this.btnlock){
+          return
+        }else {
+          this.btnlock = true;
+        }
         addRoomReason(data).then(res=>{
-          if(res.code==1) {
-            this.roomList.forEach((room, index) => {
-              if(room.roomPk==data.roomPk){
-                room.reasonPk = res.data;
-                if(submitType=='REPAIR'){
-                  room.roomStatus='REPAIR_ROOM'
-                  this.dialogRepairRoom = false
-                }else if(submitType=='DISABLE'){
-                  room.roomStatus='DISABLE_ROOM'
-                  this.dialogDisableRoom = false
-                }
+          this.roomList.forEach((room, index) => {
+            if(room.roomPk==data.roomPk){
+              room.reasonPk = res.data;
+              if(submitType=='REPAIR'){
+                room.roomStatus='REPAIR_ROOM'
+                this.dialogRepairRoom = false
+              }else if(submitType=='DISABLE'){
+                room.roomStatus='DISABLE_ROOM'
+                this.dialogDisableRoom = false
               }
-            })
-            this.$message({type:'success', message: '操作成功'})
-          }
+            }
+          })
+          this.btnlock = false;
+          this.$message({type:'success', message: '操作成功'})
+        }).catch(()=>{
+          this.btnlock = false;
         })
       },
       finshRoomReason(room, reasonType) {//删除房间原因

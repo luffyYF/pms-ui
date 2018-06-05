@@ -32,7 +32,7 @@
                   <el-select v-model="form.isTeam" :disabled="true">
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
-                    </el-select>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col class="dialog-li">
