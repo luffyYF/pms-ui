@@ -182,8 +182,8 @@
                 </div>
 
                 <div class="pattern-li-date" v-if="item.guestOrderPk">
-                    <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
-                    <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label>
+                  <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
+                  <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label>
                 </div>
 
               <!-- 状态图标 -->

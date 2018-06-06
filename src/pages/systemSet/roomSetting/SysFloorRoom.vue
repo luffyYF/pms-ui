@@ -78,13 +78,14 @@
         </div>
       </el-col>
     </el-row>
+
     <!-- 添加房间 -->
     <el-dialog title="添加房间" :visible.sync="addRoomDialog" width="820px">
       <el-form :model="addFrom" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼层：">
           <span class="text-cs">{{selectStorey.storeyName}}</span>
         </el-form-item>
-        <el-form-item label="房号：">
+        <el-form-item label="房号：" required>
           <el-input v-model="addFrom.roomNumber" placeholder="请输入房号" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="房间类型：">
@@ -95,7 +96,7 @@
               :label="item.typeName"
               :value="item.typePk"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="房间朝向：">
           <el-input v-model="addFrom.roomOrientation" placeholder="请输入房号" auto-complete="off"></el-input>
         </el-form-item>
@@ -117,6 +118,18 @@
             v-model="addFrom.roomSurvey"
             style="width:300px;">
           </el-input>
+        </el-form-item>
+        <el-form-item style="display:block;margin-left:32px;">
+            <el-checkbox label="配置智能锁" v-model="addFrom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
+        </el-form-item>
+        <el-form-item label="楼栋编号：" v-if="addFrom.intelligentFlag=='Y'" required>
+          <el-input v-model="addFrom.intelligentBanNo" placeholder="请输入楼栋编号：" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="楼层编号：" v-if="addFrom.intelligentFlag=='Y'" required>
+          <el-input v-model="addFrom.intelligentFloorNo" placeholder="请输入楼层编号" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="房间编号：" v-if="addFrom.intelligentFlag=='Y'" required>
+          <el-input v-model="addFrom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -163,6 +176,18 @@
             v-model="selectRoom.roomSurvey"
             style="width:300px;">
           </el-input>
+        </el-form-item>
+        <el-form-item style="display:block;margin-left:32px;">
+          <el-checkbox label="配置智能锁" v-model="selectRoom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
+        </el-form-item>
+        <el-form-item label="楼栋编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
+          <el-input v-model="selectRoom.intelligentBanNo" placeholder="请输入楼栋编号：" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="楼层编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
+          <el-input v-model="selectRoom.intelligentFloorNo" placeholder="请输入楼层编号" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="房间编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
+          <el-input v-model="selectRoom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -267,7 +292,7 @@ export default {
         "storeyName": "",
         "storeyPk": "",
         "telPhone": "",
-        "telPhoneLine": ""
+        "telPhoneLine": "",
       },
       addFrom: {
         "doorLockKey": "",
@@ -284,7 +309,11 @@ export default {
         "storeyName": "",
         "storeyPk": "",
         "telPhone": "",
-        "telPhoneLine": ""
+        "telPhoneLine": "",
+        "intelligentFlag": "N",
+        "intelligentBanNo":null,
+        "intelligentFloorNo":null,
+        "intelligentRoomNo":null
       }
     };
   },
@@ -364,7 +393,6 @@ export default {
     },
     listRoom(storeyPk) {
       const self = this;
-      console.log(storeyPk)
       listRoom({storeyPk: self.selectStorey.storeyPk}).then(result => {
         self.roomData = result.data
         self.loading = false
@@ -379,6 +407,7 @@ export default {
           type: 'warning'
         });
       }else{
+        this.addFrom={intelligentFlag:'N'}
         this.addRoomDialog = true
       }
     },
@@ -446,7 +475,7 @@ export default {
     updateClick(row){
       let str = JSON.stringify(row)
       this.selectRoom = JSON.parse(str)
-      this.updateRoomDialog = true 
+      this.updateRoomDialog = true
     },
     updateRoom(){
       const self = this
