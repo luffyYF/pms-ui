@@ -176,14 +176,14 @@
                   </template>
                   <template v-if="item.guestOrderPk">
                     <!-- 在住客人信息 -->
-                    <label class="userinfo">{{item.guestInfo.guestName}}</label>
-                    <label class="channelinfo">{{item.guestInfo.channelTypeName}}</label>
+                    <label class="userinfo">{{item.guestInfo ? item.guestInfo.guestName : ''}}</label>
+                    <label class="channelinfo">{{item.guestInfo ? item.guestInfo.channelTypeName : ''}}</label>
                   </template>
                 </div>
 
                 <div class="pattern-li-date" v-if="item.guestOrderPk">
-                    <label class="userinfo">入住：{{simpleDate(item.guestInfo.beginDate) }}</label><br>
-                    <label class="userinfo">离开：{{simpleDate(item.guestInfo.endDate)}}</label>
+                    <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
+                    <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label>
                 </div>
 
               <!-- 状态图标 -->
