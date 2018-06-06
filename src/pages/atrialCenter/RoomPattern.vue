@@ -170,9 +170,9 @@
                 <div class="pattern-li-info">
                   <!--  v-if="item.guestOrderPk" -->
                   <template v-if="item.futureFlag=='Y'">
-                    <!-- 预抵客人信息 -->
+                    <!-- 预抵客人信息
                     <label class="userinfo">{{item.futureInfo.guestName}}</label>
-                    <label class="channelinfo">{{item.futureInfo.channelTypeName}}</label>
+                    <label class="channelinfo">{{item.futureInfo.channelTypeName}}</label> -->
                   </template>
                   <template v-if="item.guestOrderPk">
                     <!-- 在住客人信息 -->
@@ -883,11 +883,11 @@
       toDialogVisible(item, type) {//打开订单弹窗
         if(type=='info'){
           setTimeout(() => {
-            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'visitor', item.guestInfo.guestOrderPk)
+            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'visitor', item.guestOrderPk)
           },0)
         }else if(type=='settle'){
           setTimeout(() => {
-            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'bill', item.guestInfo.guestOrderPk)
+            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'bill', item.guestOrderPk)
           },0)
         }
       },
