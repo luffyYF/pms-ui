@@ -133,12 +133,13 @@
         </div>
       </div>
     </el-dialog>
-    <el-dialog class="son-dialog" top="1vh" title="换房" :visible.sync="dialogChangeRoom" width="40%" :append-to-body="true">
-      <div class="pattern-dialog-container">
+    <el-dialog class="son-dialog" top="8vh" title="换房" :visible.sync="dialogChangeRoom" width="600px" :append-to-body="true">
+      <!--<div class="pattern-dialog-container">-->
+        <h4>当前房型：{{roomFilterObj.roomTypeName}}</h4>
         <el-row>
           <el-col :span="12">
             可选房型
-            <el-select size="mini" v-model="roomFilterObj.roomTypePk" @change="listRowRoomList">
+            <el-select size="mini" v-model="roomFilterObj.roomTypePk" @change="listRowRoomList" :clearable="true" placeholder="全部房型">
               <el-option v-for="item in roomTypeArr"
                 :key="item.typePk"
                 :label="item.typeName"
@@ -153,7 +154,7 @@
         </el-row>
         <el-table
           ref="changeRoomTable"
-          :data="changeRoomTableData"
+          :data="changeRoomTableData | globalFilter(roomFilterObj.roomNumber  )"
           tooltip-effect="dark"
           style="width: 100%"
           height="300"
@@ -170,7 +171,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
+      <!--</div>-->
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="dialogChangeRoom = false">关闭</el-button>
       </span>
@@ -336,6 +337,7 @@ export default {
       rowRoomTableData: [],
       roomTypeArr:[],
       roomFilterObj: {//过滤可选择的房间数据
+        roomTypeName:'',
         roomTypePk:'',
         roomNumber:''
       },
@@ -469,6 +471,13 @@ export default {
         this.goodsManageCountMap = res.data
       })
     },
+    showChangeRoom() {//更换房间
+      this.dialogChangeRoom = true
+      // this.roomFilterObj.roomTypePk=this.currGuest.roomTypePk
+      // this.listRowRoomList(this.currGuest.roomTypePk)
+      this.roomFilterObj.roomTypeName = this.currGuest.roomTypeName
+      this.listRowRoomList()
+    },
     listRowRoomList(roomTypePk) { //查找可更换的房间
       let data = {
         roomTypePk: roomTypePk,
@@ -497,11 +506,6 @@ export default {
         })
         
       })
-    },
-    showChangeRoom() {//更换房间
-      this.dialogChangeRoom = true
-      this.roomFilterObj.roomTypePk=this.currGuest.roomTypePk
-      this.listRowRoomList(this.currGuest.roomTypePk)
     },
     saveCheckin() {//保存入住
       if(this.islock){ 

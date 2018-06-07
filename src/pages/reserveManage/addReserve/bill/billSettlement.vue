@@ -111,7 +111,7 @@ export default {
         payment: "0",
         remark: null,
         guestOrderPk:'',
-        onlineFlag:false,
+        onlineFlag:true,
         onlineMoney: 0,
       },
       hfBillForm: {
@@ -137,7 +137,7 @@ export default {
       this.billForm.payment = "0";
       this.billForm.remark = null;
       this.onlineVisible = false;
-      this.billForm.onlineFlag = false;
+      this.billForm.onlineFlag = true;
       this.billForm.onlineMoney = 0
       this.hfBillForm.hfCashPledge = hfCashPledge
       this.dialogPartialCheckout = true;
@@ -152,10 +152,10 @@ export default {
         // 退房未结
         countCheckoutBill({ orderPk: orderPk }).then(res => {
           this.countCheckoutDate = res.data;
-          // console.log(this.countCheckoutDate)
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
-          if(this.countCheckoutDate.payType==='Y' && this.backMoney>0){
+          if(this.countCheckoutDate.payType==='Y'){
             this.onlineVisible = true
+            this.billForm.onlineMoney=this.countCheckoutDate.cashPledge
           }
         });
       }else if(type==0){
@@ -217,12 +217,20 @@ export default {
             return;
           }
         }
-        let data = {
-          orderPk: this.orderPk,
-          guestOrderPk: this.billForm.guestOrderPk,
-          onlineFlag: this.billForm.onlineFlag,
-          onlineMoney: this.billForm.onlineMoney
-        };
+        let data;
+        if(this.onlineVisible && this.billForm.onlineFlag){//线上退款
+           data = {
+            orderPk: this.orderPk,
+            guestOrderPk: this.billForm.guestOrderPk,
+            onlineFlag: this.billForm.onlineFlag,
+            onlineMoney: this.billForm.onlineMoney
+          };
+        }else {
+          data = {
+            orderPk: this.orderPk,
+            guestOrderPk: this.billForm.guestOrderPk,
+          };
+        }
         this.islock = true;
         checkoutNoPay(data).then(res=>{
           this.$message({type:'success', message:'操作成功'})
