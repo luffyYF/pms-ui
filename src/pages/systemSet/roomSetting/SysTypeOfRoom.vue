@@ -84,6 +84,7 @@
   export default {
     data() {
       return {
+        submitLock:false,
         checked:'',
         typeMaster: 'ROOM_TYPE',
         value2: new Date(),
@@ -100,12 +101,18 @@
     },
     methods: {
       init() {
+        this.submitLock = false
         this.listRoomType()
       },
       saveClick(row) {
-        console.log(row)
         const self = this
         if(row.typePk == ''){
+
+          if(this.submitLock){
+            return;
+          }else{
+            this.submitLock = true
+          }
           addType(row).then(result => {
             if(result.code == 1){
               self.storeyName = '';
@@ -115,10 +122,19 @@
               });
             }
             self.listRoomType();
+            this.submitLock = false
+          }).catch(()=>{
+            this.submitLock = false
           })
         }else{
           delete row.createTime;
           delete row.updateTime;
+          
+          if(this.submitLock){
+            return;
+          }else{
+            this.submitLock = true
+          }
           updateype(row).then(result => {
             if(result.code == 1){
               self.$message({
@@ -127,6 +143,9 @@
               });
             }
             self.listRoomType();
+            this.submitLock = false
+          }).catch(()=>{
+            this.submitLock = false
           })
         }
       },
