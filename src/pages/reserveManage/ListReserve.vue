@@ -110,12 +110,12 @@
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.guestName}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="入住手机" min-width="130">
+      <el-table-column label="入住手机" min-width="180">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.guestPhone}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="房型" min-width="130" show-overflow-tooltip>
+      <el-table-column label="房型" min-width="180" show-overflow-tooltip>
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.roomTypeName}}</p>
         </template>
@@ -506,7 +506,7 @@
 <style scoped>
 
 .guest-item{
-  line-height: 4px;
+  /* line-height: 4px; */
 }
 .el-select{
   width: 158px;

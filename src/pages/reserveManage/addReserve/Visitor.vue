@@ -213,7 +213,7 @@
               </el-col>
               <el-col :span="5">
                 <span class="iconCarNoVip" title="读会员卡"></span>
-                <span class="iconCarNoAdd" title="发展新会员" @click="registeredMember = true"></span>
+                <!-- <span class="iconCarNoAdd" title="发展新会员" @click="registeredMember = true"></span> -->
                 <!-- <span class="iconCarNoCopy" title="发展新会员" @click="registeredMember = true"></span> -->
               </el-col>
             </el-col>
