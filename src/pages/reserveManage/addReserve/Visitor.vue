@@ -757,6 +757,7 @@
             this.currGuestList = []
             this.contractTableData = []
             this.loadPrice()
+            this.getBookableCount()
           })
         },
 

@@ -87,7 +87,7 @@
 
         <el-col :span="24" class="reserve-contert">
             <el-form-item class="addreserve-btn">
-              <el-button type="primary" @click="onSubmit" v-loading.fullscreen.lock="fullscreenLoading">保存预订</el-button>
+              <el-button type="primary" @click="onSubmit" :disabled="submitLock">保存预订</el-button><!--v-loading.fullscreen.lock="fullscreenLoading"-->
               <el-button type="primary" @click="init">重置</el-button>
             </el-form-item>
         </el-col>
@@ -106,6 +106,7 @@
     components: {VisitorTag},
     data() {
       return {
+        submitLock:false,//提交表单锁
         paymentMap:paymentMap,
         form: {
           orderPk: null,
@@ -123,7 +124,7 @@
           userPhone: '',
         },
         reserveTime: new Date(),
-        fullscreenLoading:false,
+        // fullscreenLoading:false,
       }
     },
     methods: {
@@ -145,6 +146,7 @@
         }
         this.reserveTime = new Date()
         this.$refs.visitorRef.initEmpty()
+        this.submitLock=false;
       },
       onSubmit() {//保存预定
         let visitorForm = this.$refs.visitorRef.form;
@@ -209,11 +211,18 @@
           order: this.form,
           guestOrder: visitorForm
         }
-        this.fullscreenLoading = true;
+        // this.fullscreenLoading = true;
+        if(this.submitLock){
+          return
+        }else{
+          this.submitLock=true;
+        }
         reserveOrder(data).then(res=>{
           this.$message({type:'success', message: '预定成功'})
           this.init()
-          this.fullscreenLoading = false;
+          this.submitLock=false;
+        }).catch(()=>{
+          this.submitLock=false;
         })
       },
     },
