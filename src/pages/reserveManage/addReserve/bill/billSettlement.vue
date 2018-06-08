@@ -137,7 +137,7 @@ export default {
       this.billForm.payment = "0";
       this.billForm.remark = null;
       this.onlineVisible = false;
-      this.billForm.onlineFlag = true;
+      this.billForm.onlineFlag = false;
       this.billForm.onlineMoney = 0
       this.hfBillForm.hfCashPledge = hfCashPledge
       this.dialogPartialCheckout = true;
@@ -155,6 +155,7 @@ export default {
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
           if(this.countCheckoutDate.payType==='Y'){
             this.onlineVisible = true
+            this.billForm.onlineFlag = true;
             this.billForm.onlineMoney=this.countCheckoutDate.cashPledge
           }
         });
