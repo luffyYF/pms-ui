@@ -4,8 +4,8 @@
 
 //订单状态
 export const orderStatusMap = {
-  OBLIGATION:'待付款',
   RESERVE: "预定",
+  OBLIGATION:'待付款',
   CHECKIN: "在住",
   LEAVE: "结账离店",
   LEAVENOPAY: "不结账退房",
@@ -54,7 +54,8 @@ export const paymentMap = {
   4: '预授权',
   5: 'AR帐',
   6: '支票',
-  7: '汇款'
+  7: '汇款',
+  8: 'POS机'
 }
 //账单状态
 export const billStatusMap = {

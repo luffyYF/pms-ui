@@ -101,7 +101,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog class="pattern-dialog height240" title="拆账" :visible.sync="dialogTollAllocation" width="25%" :before-close="handleClose" :append-to-body=true>
+    <el-dialog class="pattern-dialog height240" title="拆账" :visible.sync="dialogTollAllocation" width="25%" :before-close="handleClose" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
         <el-form ref="splitForm" :model="splitForm" size="mini" label-width="100px" class="batchOccupancy-content">
           <el-form-item label="原始金额：">
@@ -121,7 +121,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog class="pattern-dialog height240" title="冲减" :visible.sync="dialogOffset" width="30%" :before-close="handleClose" :append-to-body=true>
+    <el-dialog class="pattern-dialog height240" title="冲减" :visible.sync="dialogOffset" width="30%" :before-close="handleClose" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
        <el-form ref="splitForm" :model="splitForm" size="mini" label-width="100px" class="batchOccupancy-content">
           <el-form-item label="授权员：">
@@ -144,7 +144,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog class="pattern-dialog height280" title="入账" :visible.sync="dialogAccountedFor" width="30%" :close-on-click-modal="false" :append-to-body=true>
+    <el-dialog class="pattern-dialog height280" title="入账" :visible.sync="dialogAccountedFor" width="30%" :close-on-click-modal="false" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
         <el-form ref="formAddBill" :model="formAddBill" size="mini" label-width="80px">
           <el-form-item label="项目" required>

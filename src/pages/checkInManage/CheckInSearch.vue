@@ -188,7 +188,7 @@
           orderNo: '', 
           beginDate: '', 
           endDate: '',
-          orderStatus: '',
+          orderStatus: 'CHECKIN',
           name:'',
           pageNum:1,
           pageSize:10
@@ -328,7 +328,9 @@
           this.loading = false
           this.tableData = res.data.data;
           this.total = res.data.total;
-        })  
+        }).catch(()=>{
+          this.loading = false
+        })
       },
       getchenkGird(val){
         this.loading = true;
