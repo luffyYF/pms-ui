@@ -91,7 +91,7 @@
                   <el-select v-model="form.priceSchemePk" @change="loadPrice" placeholder="请选择价格方案" :disabled="form.guestOrderPk!==undefined">
                     <el-option v-for="y in priceSchemeArr" :key="y.schemePk" :label="y.schemeName" :value="y.schemePk"></el-option>
                   </el-select>
-                </el-form-item> 
+                </el-form-item>
               </el-col>
               <el-col :span="2"><span class="required-icon icon-distance">*</span></el-col>
             </el-col>
@@ -109,7 +109,7 @@
                 <el-form-item label="当前房租：" required>
                     <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
                 </el-form-item>
-              </el-col>  
+              </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="15">
@@ -130,7 +130,7 @@
                 <el-form-item label="房间押金：" required>
                   <el-input-number v-model="form.deposit" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
                 </el-form-item>
-              </el-col>  
+              </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
@@ -186,7 +186,7 @@
                 <span class="iconSearch" @click="chooseEmptyGuest" title="根据客人姓名查询历史客人"></span>
               </el-col>
             </el-col>
-            
+
             <el-col :span="12">
               <el-col :span="18">
                 <el-form-item label="协议单位：">
@@ -203,7 +203,7 @@
                 <el-form-item label="手机号码：" required>
                   <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange"></el-input>
                 </el-form-item>
-              </el-col>  
+              </el-col>
             </el-col>
             <el-col :span="12">
               <el-col :span="18">
@@ -234,7 +234,7 @@
                 <el-form-item label="证件号码：">
                   <el-input v-model="form.certificateNo" :disabled="memberFlag"></el-input>
                 </el-form-item>
-              </el-col>  
+              </el-col>
               <el-col :span="2">
                 <span class="iconSearch" @click="seeCompany" title="根据证件号查询历史客人"></span>
               </el-col>
@@ -254,12 +254,12 @@
                 <el-form-item label="出生日期：">
                   <el-date-picker v-model="form.bornDate" :disabled="memberFlag" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
-              </el-col>  
+              </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="客人国籍：">
-                  <el-select v-model="form.nationality" :disabled="memberFlag" clearable>
+                  <el-select v-model="form.nationality" :disabled="memberFlag">
                     <el-option label="大陆" value="DL"></el-option>
                     <el-option label="港澳台" value="GAT"></el-option>
                     <el-option label="国外" value="GW"></el-option>
@@ -272,7 +272,7 @@
                 <el-form-item label="客人籍贯：">
                   <el-input v-model="form.nativePlace" :disabled="memberFlag"></el-input>
                 </el-form-item>
-              </el-col>  
+              </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
@@ -286,7 +286,7 @@
                 <el-form-item label="兴趣爱好：">
                   <el-input v-model="form.hobbies" :disabled="memberFlag"></el-input>
                 </el-form-item>
-              </el-col>  
+              </el-col>
             </el-col>
           </el-col>
           <el-col :span="24">
@@ -568,7 +568,7 @@
             </el-row>
           </div>
         </div>
-      </div>  
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary">保存注册信息</el-button>
         <el-button size="mini" type="primary" @click="registeredMember = false">清空</el-button>
@@ -679,8 +679,8 @@
           },
           roomObj: {
             roomType: '',
-            roomNumber: '', 
-            state: '', 
+            roomNumber: '',
+            state: '',
             username: '',
             number: ''
           },
@@ -907,7 +907,7 @@
           this.form.bornDate = null
           this.form.guestPhone = null
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
+          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
           this.form.pmsCancelFlag = 'N'
           this.getBookableCount()
         },
@@ -1018,7 +1018,7 @@
           this.form.roomPk = guest.roomPk
           this.form.roomTypeName = guest.roomTypeName
           this.form.roomTypePk = guest.roomTypePk
-          
+
           this.form.unitName = null
           if(this.form.agreementPk){
             findUnitName({agreementPk:this.form.agreementPk}).then(res=>{
@@ -1050,8 +1050,8 @@
             })
             .catch(_ => {});
         },
-        loadPrice() {//动态加载当前房租 
-     
+        loadPrice() {//动态加载当前房租
+
           if(this.currFormType == 'empty' || this.currFormType == 'room-info'){
             if(!this.form.roomTypePk){
               this.$message({type:'warning', message:'请先选择房间类型！'})
@@ -1061,7 +1061,7 @@
               this.$message({type:'warning', message:'请先选择抵店日期！'})
               return
             }
-           
+
             let data = {
               roomTypePk: this.form.roomTypePk,
               beginDate: this.form.beginDate,
@@ -1162,7 +1162,7 @@
             }
           });
         },
-       
+
         parentClearGuest() {//添加客人前 清空
           if(!this.form.guestOrderPk){
             this.$message({type:'warning', message:'请先选择客单'})
@@ -1189,7 +1189,7 @@
           this.form.nationality = 'DL'
           this.form.nativePlace = ''
           this.form.detailAddress = ''
-          
+
         },
         parentAddGuest() {//添加客人
           if(this.form.currTitle != '添加客人'){
@@ -1266,7 +1266,7 @@
           this.form.bornDate = null
           this.form.guestPhone = null
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
+          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
           this.form.pmsCancelFlag = 'N'
         },
         addReserveGuest() {//添加预定
@@ -1306,9 +1306,9 @@
           this.form.bornDate = guest.birthday
 
           if(guest.memType=='MEMBER'){
-            this.memberFlag = true              
+            this.memberFlag = true
           }else{
-            this.memberFlag = false              
+            this.memberFlag = false
           }
         },
         reserveManager() {//打开预定管理
@@ -1480,7 +1480,7 @@
     margin-right: 10px;
 }
 .visitor-addReservations .el-date-editor.el-input,
-.visitor-addReservations .el-date-editor.el-input__inner, 
+.visitor-addReservations .el-date-editor.el-input__inner,
 .visitor-addReservations .el-select{
     width: 100%;
 }
