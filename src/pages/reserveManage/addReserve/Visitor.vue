@@ -259,8 +259,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="客人国籍：">
-                  <el-select v-model="form.nationality" :disabled="memberFlag">
-                    <el-option label="选择国籍" value=""></el-option>
+                  <el-select v-model="form.nationality" :disabled="memberFlag" clearable>
                     <el-option label="大陆" value="DL"></el-option>
                     <el-option label="港澳台" value="GAT"></el-option>
                     <el-option label="国外" value="GW"></el-option>
