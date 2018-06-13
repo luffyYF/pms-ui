@@ -26,7 +26,7 @@
                 <span>{{scope.row.guestName}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="count" label="操作">
+            <el-table-column prop="count" label="操作" :fixed="'right'">
               <template slot-scope="scope">
                 <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
@@ -757,6 +757,7 @@
             this.currGuestList = []
             this.contractTableData = []
             this.loadPrice()
+            this.getBookableCount()
           })
         },
 

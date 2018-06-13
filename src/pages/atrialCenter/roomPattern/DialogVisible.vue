@@ -642,6 +642,7 @@ export default {
     },
     toBillTab() {//切换到账单
       this.activeName = 'bill'
+      this.$refs.billTagForm.lookupBillList(this.currOrderPk);
     },
     handleCloseRowRoom() {//排房窗口关闭
       this.dialogRowRoom = false
