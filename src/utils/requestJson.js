@@ -76,7 +76,8 @@ service.interceptors.response.use(
         Message({message: res.data, type: 'error', duration: 5 * 1000})
       } else {
         // Message({message: res.msg, type: 'error', duration: 5 * 1000})
-        Message({message: "网络连接失败", type: 'error', duration: 5 * 1000})
+        // Message({message: "网络连接失败", type: 'error', duration: 5 * 1000})
+        console.log("网络连接失败")
       }
       return Promise.reject('error')
     } else {
@@ -84,11 +85,12 @@ service.interceptors.response.use(
     }
   },
   error => {
-    Message({
-      message: "网络连接失败",
-      type: 'error',
-      duration: 5 * 1000
-    })
+    // Message({
+    //   message: "网络连接失败",
+    //   type: 'error',
+    //   duration: 5 * 1000
+    // })
+    console.log("网络连接失败")
     // Message({
     //   message: error.message,
     //   type: 'error',
