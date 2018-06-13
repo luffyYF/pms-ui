@@ -38,7 +38,6 @@
         <el-form-item label="预离时间:">
           <el-date-picker
             v-model="formInline.endDate"
-            align="right"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择结账时间"
@@ -194,7 +193,7 @@
     <!-- DIALOG -->
     <!-- 订单页面 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
-    
+
     <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
         <DialogCheckinVisible ref="checkinDialogRef" />
@@ -232,7 +231,7 @@
         roomTypeOptions: [],
         channelOptions: [],
         agreementOptions: [],
-        industryOptions: [], 
+        industryOptions: [],
         saleOptions: [],
         value: '',
         startTimeOptions: {
@@ -261,9 +260,9 @@
           }]
         },
         endTimeOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
+          // disabledDate(time) {
+          //   return time.getTime() > Date.now();
+          // },
           shortcuts: [{
             text: '今天',
             onClick(picker) {
@@ -483,7 +482,7 @@
       }
     },
     filters: {
-      
+
     },
     mounted () {
       bus.$on('closeOrder', () => { this.closeOrderDialog() })
