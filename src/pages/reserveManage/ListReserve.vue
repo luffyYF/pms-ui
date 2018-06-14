@@ -136,7 +136,7 @@
       </el-table-column>
       <el-table-column label="房间数">
         <template slot-scope="scope">
-          <span>{{scope.row.guestDtos.length}}</span>
+          <span>{{roomCount(scope.row.guestDtos)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="排房情况" min-width="140">
@@ -424,15 +424,31 @@
       getRowrooms(guestDots) {
         let rowRooms = []
         let noRowRooms = 0
+        var roomNumber = '无';
         guestDots.forEach(guest => {
           if(guest['roomPk'] && guest['roomNumber']){
-            rowRooms.push(guest.roomNumber)
+            if(guest['roomNumber']!= roomNumber  ){
+              rowRooms.push(guest.roomNumber);
+              roomNumber = guest['roomNumber']
+            }
           }else{
             noRowRooms++
           }
         });
         return {rowRooms:rowRooms.join(','), noRowRooms: noRowRooms}
       },
+      roomCount(guestDots){
+        var count = 0;
+        var roomNumber = null;
+        for(var i=0 ;i<guestDots.length;i++){
+          if(roomNumber != guestDots[i].roomNumber || guestDots[i].roomNumber==null){
+            roomNumber = guestDots[i].roomNumber;
+            count = count+1;
+          }
+        }
+        return count;
+      }
+      ,
       getOrderStatus(guestDots) {
         let noShowCount = 0;
         let reserveCount = 0;
