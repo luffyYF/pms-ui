@@ -142,10 +142,11 @@ export default {
         data.forEach(item =>{
           var dayNum = item[column.property] ==null?0:item[column.property];
           var RoomNum = item.totalRoomNum==null?0:item.totalRoomNum;
+          console.log(RoomNum)
           day += dayNum;
           room += RoomNum;
         }); 
-        sums[index] = day + ' / '+ room;
+        sums[index] = day + ' / '+ (room-day);
       })
       return sums;
     },

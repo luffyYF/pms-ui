@@ -66,9 +66,6 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
           {name:'脏房',value:'DIRTY'},
           // {name:'清洁已检查',value:'CLEAN_CHECKED'},
           {name:'出租率',value:'czl'},
-          
-          
-          
         ],
         roomCountList:[],
 
@@ -96,6 +93,7 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
       getSummaries (param) {
         const { columns, data } = param
         const sums = []
+        const sum = columns.length;
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '总计'
@@ -104,6 +102,11 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
           const values = data.map(item => {
             return item[column.property]==null?0:Number(item[column.property])
           })
+          if(index === sum-1){
+              var fen = sums[3]/sums[8]*100;
+              sums[index] = fen.toFixed(2)+'%';
+              return ;
+          }
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
@@ -119,7 +122,6 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
             sums[index] = ''
           }
         })
-
         return sums
       }
     },

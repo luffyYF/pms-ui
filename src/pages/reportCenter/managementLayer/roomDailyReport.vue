@@ -13,7 +13,7 @@
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
         <el-button type="primary">导出EXCEL</el-button>
-        <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button>
+        <!-- <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button> -->
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>

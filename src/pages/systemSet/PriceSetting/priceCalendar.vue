@@ -86,7 +86,7 @@ export default {
     init(roomTypePk) {
       this.roomTypePk = roomTypePk;
       this.dialogVisible = true;
-      this.calendarPrice('2018-05-04')
+      this.calendarPrice(moment().format("YYYY-MM-DD"))
     },
     // setBeginDate() {
     //   let firstCell = this.$refs.fullcalendarRef.getElementsByClassName(
