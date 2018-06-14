@@ -7,7 +7,7 @@
         <el-button type="primary" size="mini" @click="dailyReport()">网页预览</el-button>
         <el-button type="primary" size="mini">PDF预览</el-button>
         <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'date='+datepicker" target="_blank">导出EXCEL</a></el-button>
-        <el-button type="primary" size="mini">添加到收藏夹</el-button>
+        <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
         <el-button type="primary" size="mini" @click="print">打印预览</el-button>
       </div>
     </el-col>

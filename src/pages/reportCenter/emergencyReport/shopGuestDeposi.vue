@@ -38,7 +38,11 @@
             </el-table-column>
             <el-table-column prop="roomNumber" align="center" label="房号" ></el-table-column>
             <el-table-column prop="typeName" align="center" label="房型" ></el-table-column>
-            <el-table-column prop="price" align="center" label="房价" ></el-table-column>
+            <el-table-column align="center" label="房价" >
+              <template slot-scope="props">
+                  {{props.row.price | unit}}
+                </template>
+            </el-table-column>
             <el-table-column prop="beginDate" align="center" label="入住时间" ></el-table-column>
             <el-table-column prop="endDate" align="center" label="预离时间" ></el-table-column>
             <el-table-column label="收款明细" align="center">
@@ -98,6 +102,14 @@ export default {
       this.activeCompany.companyName == undefined
     ) {
       this.activeCompany.companyName == "";
+    }
+  },
+  filters: {
+    unit: function (value) {
+      if(!value){
+        return 0;
+      }
+      return value+"元"
     }
   },
   methods: {

@@ -45,8 +45,8 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+queryObj.begin+'&end='+queryObj.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk" class="exportLink" target="_blank">导出EXCEL</a></el-button>
-        <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button>
+        <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+queryObj.begin+'&end='+queryObj.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk+'&projectPks='+checkedItem" class="exportLink" target="_blank">导出EXCEL</a></el-button>
+        <!-- <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button> -->
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
@@ -59,8 +59,7 @@
         :header-cell-style="tableStyleObj"
         :cell-style="tableStyleObj"
         :data="admissionBank"
-        border show-summary
-        :summary-method="getSummaries" style="width: 100%">
+        border style="width: 100%">
         <el-table-column prop="createUserName" align="center" label="收银员" width="80"></el-table-column>
         <el-table-column prop="projectName" align="center" label="项目"></el-table-column>
         <el-table-column prop="orderGuestNo" align="center" label="组单"></el-table-column>
@@ -99,7 +98,7 @@ export default {
       admissionBank:[],
       sDate: moment().format("YYYY-MM-DD"),
       sTime: moment().format("HH:mm:ss"),
-      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
+      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD"),projectPks:null},
       selectShiftData:[],
       listCashierOperatorData:[],
       tableStyleObj:{
@@ -161,63 +160,20 @@ export default {
           self.queryObj.userName = data.userName
         }
       });
+      this.queryObj.projectPks =JSON.stringify(this.checkedItem);
+      // console.log(this.checkedItem.length);
       reportShouYinYuanRuZhangMingXi(this.queryObj).then((data)=>{
         if(data.code == 1){
           self.admissionBank =  data.data
         }
       });
     },
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总计';
-          return;
-        }
-        if(index===2){
-          sums[index] = 'N/A';
-          return;
-        }
-        if(index===3){
-          sums[index] = 'N/A';
-          return;
-        }
-        if(index===4){
-          sums[index] = 'N/A';
-          return;
-        }
-        if(index===5){
-          sums[index] = 'N/A';
-          return;
-        }
-        if(index===9){
-          sums[index] = 'N/A';
-          return;
-        }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
-            }
-          }, 0);
-          sums[index] = Number(sums[index]).toFixed(2)
-          sums[index] += ' 元';
-        } else {
-          sums[index] = 'N/A';
-        }
-      });
-      return sums;
-    },
     handleCheckAllChange(val) {
       this.checkedItem = val ? this.allItemList : [];
       this.isIndeterminate = false;
     },
     handleCheckedItemChange(value) {
+     
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.allItemList.length;
       this.isIndeterminate =

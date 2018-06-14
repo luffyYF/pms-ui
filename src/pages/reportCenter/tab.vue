@@ -3,9 +3,9 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="报表中心" name="first" class="reportCenter-tabpane">
         <el-col :span="5" class="reportCenter-navmenu">
-          <div class="collection-folder">
+          <!-- <div class="collection-folder">
             <span class="titl"><i class="el-icon-star-on"></i>收藏夹</span>
-          </div>
+          </div> -->
           <div class="common-report">
             <span class="titl"><i class="el-icon-share"></i>常用报表</span>
             <el-tree :data="commonReport" @node-click="handleNodeCommonReport"></el-tree>

@@ -27,7 +27,11 @@
                   <span>{{roomStatus[scope.row.roomStatus]}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="roomPrice" align="center" label="房价"></el-table-column>
+              <el-table-column align="center" label="房价">
+                <template slot-scope="props">
+                  {{props.row.roomPrice | unit}}
+                </template>
+              </el-table-column>
               <el-table-column prop="beginDate" align="center" label="入住时间" ></el-table-column>
               <el-table-column prop="endDate" align="center" label="预离时间"></el-table-column>
             </el-table>
@@ -65,6 +69,14 @@ export default {
       this.activeCompany.companyName == undefined
     ) {
       this.activeCompany.companyName == "";
+    }
+  },
+  filters: {
+    unit: function (value) {
+      if(!value){
+        return 0;
+      }
+      return value+"元"
     }
   },
   methods: {
