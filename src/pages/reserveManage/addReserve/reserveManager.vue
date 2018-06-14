@@ -22,7 +22,7 @@
                 <el-button size="mini" type="primary" @click="checkin">入住</el-button>
                 <el-button size="mini" type="primary">批量入住</el-button>
                 <el-button size="mini" type="primary" @click="cancelReserve">取消预订</el-button>
-                <el-button size="mini" type="primary" @click="batchCancelReserve">批量取消预订</el-button>
+                <el-button size="mini" type="primary" @click="batchCancelReserve">取消所有预订</el-button>
                 <el-button size="mini" type="primary">延时入住</el-button>
                 <el-button size="mini" @click="dialogReservationManag = false">关闭</el-button>
             </span>
@@ -110,8 +110,8 @@ export default {
         this.out()
       })
     },
-    batchCancelReserve() {//批量取消预订
-      this.$confirm('是否批量取消预订?', '提示', {
+    batchCancelReserve() {//取消所有预定
+      this.$confirm('是否取消所有 预订?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

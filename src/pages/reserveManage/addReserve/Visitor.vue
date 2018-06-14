@@ -876,39 +876,37 @@
         },
         //添加预定初始化（外部调用）
         cleanAddReserveGuest() {
-          this.memberFlag = false
+          this.formReset();
+          // this.memberFlag = false
           this.form.currTitle = '添加预定'
           this.currFormType = 'empty'
-          this.form.memPk = undefined
-          this.form.guestOrderPk = undefined
-          this.form.agreementPk = undefined
-          this.form.unitName = null
-          this.form.roomPk = undefined
-          this.form.roomNumber = null
-          // this.form.roomTypePk = null
-          this.form.count = 1
-          this.form.memberCarNo = null
-          this.form.deposit = 200
-          // this.form.price = 100
-          this.form.currPrice = 0
-          // this.form.channelTypePk=null
-          this.form.isSecret='N'
-          this.form.certificateType='TWO_IDENTITY'
-          this.form.certificateNo=null
-          this.form.nationality='DL'
-          this.form.guestName='新客人'
-          this.form.guestGender = 'M'
-          this.form.nativePlace = null
-          this.form.email = null
-          this.form.carNumber = null
-          this.form.hobbies = null
-          this.form.detailAddress = null
-          this.form.remark = null
-          this.form.bornDate = null
-          this.form.guestPhone = null
-          this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-          this.form.pmsCancelFlag = 'N'
+          // this.form.memPk = undefined
+          // this.form.guestOrderPk = undefined
+          // this.form.agreementPk = undefined
+          // this.form.unitName = null
+          // this.form.roomPk = undefined
+          // this.form.roomNumber = null
+          // this.form.count = 1
+          // this.form.memberCarNo = null
+          // this.form.deposit = 200
+          // this.form.currPrice = 0
+          // this.form.isSecret='N'
+          // this.form.certificateType='TWO_IDENTITY'
+          // this.form.certificateNo=null
+          // this.form.nationality='DL'
+          // this.form.guestName='新客人'
+          // this.form.guestGender = 'M'
+          // this.form.nativePlace = null
+          // this.form.email = null
+          // this.form.carNumber = null
+          // this.form.hobbies = null
+          // this.form.detailAddress = null
+          // this.form.remark = null
+          // this.form.bornDate = null
+          // this.form.guestPhone = null
+          // this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+          // this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
+          // this.form.pmsCancelFlag = 'N'
           this.getBookableCount()
         },
         //添加预定（外部调用）
@@ -946,13 +944,12 @@
           this.form.count = 1
           this.form.checkinDays = 1
           this.form.deposit = 200
-          // this.form.price = 100
-          this.currPrice = 0
+          this.form.currPrice = 0
           this.form.roomNumber = null
           this.form.roomTypePk = this.roomTypeArr[0].typePk
           this.form.roomPk = undefined
-          // this.form.channelTypePk = null
           this.form.checkInType = '0'
+          this.form.memberCarNo = null
           this.form.isSecret = 'N'
           this.form.certificateType = 'TWO_IDENTITY'
           this.form.nationality = 'DL'
@@ -972,8 +969,8 @@
           this.form.bornDate = null
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
           this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
-          this.form.pmsCancelFlag = null
-          this.form.diyPriceFlag = 'N'
+          this.form.pmsCancelFlag = 'N'
+          // this.form.diyPriceFlag = 'N'
 
           this.memberFlag = false
         },
@@ -1163,120 +1160,111 @@
           });
         },
        
-        parentClearGuest() {//添加客人前 清空
-          if(!this.form.guestOrderPk){
-            this.$message({type:'warning', message:'请先选择客单'})
-            return;
-          }
-          if(this.form.orderStatus!='CHECKIN'){
-            this.$message({type:'warning', message:'客单入住后才能添加客人'})
-            return;
-          }
-          this.memberFlag = false
-          this.currFormType = 'add-guest'
-          this.form.memPk = undefined
-          this.form.currTitle = '添加客人'
-          this.form.memberCarNo = ''
-          this.form.guestName = ''
-          this.form.guestPhone = ''
-          this.form.guestGender = 'M'
-          this.form.certificateType = 'TWO_IDENTITY'
-          this.form.certificateNo = ''
-          this.form.bornDate = null
-          this.form.email = ''
-          this.form.carNumber = ''
-          this.form.hobbies = ''
-          this.form.nationality = 'DL'
-          this.form.nativePlace = ''
-          this.form.detailAddress = ''
+        // parentClearGuest() {//添加客人前 清空
+        //   if(!this.form.guestOrderPk){
+        //     this.$message({type:'warning', message:'请先选择客单'})
+        //     return;
+        //   }
+        //   if(this.form.orderStatus!='CHECKIN'){
+        //     this.$message({type:'warning', message:'客单入住后才能添加客人'})
+        //     return;
+        //   }
+        //   this.memberFlag = false
+        //   this.currFormType = 'add-guest'
+        //   this.form.memPk = undefined
+        //   this.form.currTitle = '添加客人'
+        //   this.form.memberCarNo = ''
+        //   this.form.guestName = ''
+        //   this.form.guestPhone = ''
+        //   this.form.guestGender = 'M'
+        //   this.form.certificateType = 'TWO_IDENTITY'
+        //   this.form.certificateNo = ''
+        //   this.form.bornDate = null
+        //   this.form.email = ''
+        //   this.form.carNumber = ''
+        //   this.form.hobbies = ''
+        //   this.form.nationality = 'DL'
+        //   this.form.nativePlace = ''
+        //   this.form.detailAddress = ''
           
-        },
-        parentAddGuest() {//添加客人
-          if(this.form.currTitle != '添加客人'){
-            return;
-          }
-          if(!this.form.guestName){
-            this.$message({type:'warning', message:'请填写客人姓名'})
-            return;
-          }
-          //验证表单
-          // this.$refs.form.validate((valid) => {
-          //   if (valid) {
-          //     alert('submit!');
-          //   } else {
-          //     console.log('error submit!!');
-          //     return false;
-          //   }
-          // });
-          let data = {
-            guestOrderPk: this.form.guestOrderPk,
-            memberPo: {
-              memPk: this.form.memPk,
-              memName: this.form.guestName,
-              memPhone: this.form.guestPhone,
-              memSex: this.form.guestGender,
-              certificateType: this.form.certificateType,
-              certificateNo: this.form.certificateNo,
-              birthday: this.form.bornDate ? this.form.bornDate : null,
-              email: this.form.email,
-              carNumber: this.form.carNumber,
-              hobby: this.form.hobbies,
-              nationality: this.form.nationality,
-              nativePlace: this.form.nativePlace,
-              address: this.form.detailAddress
-            }
-          }
-          addGuest(data).then(res=>{
-            if(res.code==1){
-              this.$message({type:'success', message:'添加客人成功'})
-              // this.form.currTitle = '客单信息'
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            }
-          })
-        },
-        cleanAddReserveGuest() {//添加预定前 清空
-          this.memberFlag = false
-          this.form.currTitle = '添加预定'
-          this.currFormType = 'empty'
-          this.form.memPk = undefined
-          this.form.guestOrderPk = undefined
-          this.form.agreementPk = undefined
-          this.form.unitName = null
-          this.form.roomPk = undefined
-          this.form.roomNumber = null
-          this.form.roomTypePk = null
-          this.form.count = 1
-          this.form.memberCarNo = null
-          this.form.deposit = 200
-          // this.form.price = 100
-          this.form.currPrice = 0
-          // this.form.channelTypePk=null
-          this.form.isSecret='N'
-          this.form.certificateType='TWO_IDENTITY'
-          this.form.certificateNo=null
-          this.form.nationality='DL'
-          this.form.guestName='新客人'
-          this.form.guestGender = 'M'
-          this.form.nativePlace = null
-          this.form.email = null
-          this.form.carNumber = null
-          this.form.hobbies = null
-          this.form.detailAddress = null
-          this.form.remark = null
-          this.form.bornDate = null
-          this.form.guestPhone = null
-          this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-          this.form.pmsCancelFlag = 'N'
-        },
-        addReserveGuest() {//添加预定
-          addReserveGuest(this.form).then(res=>{
-            if(res.code==1){
-              this.$message({type:'success', message:'添加预定成功'})
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            }
-          })
-        },
+        // },
+        // parentAddGuest() {//添加客人
+        //   if(this.form.currTitle != '添加客人'){
+        //     return;
+        //   }
+        //   if(!this.form.guestName){
+        //     this.$message({type:'warning', message:'请填写客人姓名'})
+        //     return;
+        //   }
+        //   let data = {
+        //     guestOrderPk: this.form.guestOrderPk,
+        //     memberPo: {
+        //       memPk: this.form.memPk,
+        //       memName: this.form.guestName,
+        //       memPhone: this.form.guestPhone,
+        //       memSex: this.form.guestGender,
+        //       certificateType: this.form.certificateType,
+        //       certificateNo: this.form.certificateNo,
+        //       birthday: this.form.bornDate ? this.form.bornDate : null,
+        //       email: this.form.email,
+        //       carNumber: this.form.carNumber,
+        //       hobby: this.form.hobbies,
+        //       nationality: this.form.nationality,
+        //       nativePlace: this.form.nativePlace,
+        //       address: this.form.detailAddress
+        //     }
+        //   }
+        //   addGuest(data).then(res=>{
+        //     if(res.code==1){
+        //       this.$message({type:'success', message:'添加客人成功'})
+        //       // this.form.currTitle = '客单信息'
+        //       bus.$emit('refreshOrderInfo', this.form.orderPk)
+        //     }
+        //   })
+        // },
+        // cleanAddReserveGuest() {//添加预定前 清空
+        //   this.memberFlag = false
+        //   this.form.currTitle = '添加预定'
+        //   this.currFormType = 'empty'
+        //   this.form.memPk = undefined
+        //   this.form.guestOrderPk = undefined
+        //   this.form.agreementPk = undefined
+        //   this.form.unitName = null
+        //   this.form.roomPk = undefined
+        //   this.form.roomNumber = null
+        //   this.form.roomTypePk = null
+        //   this.form.count = 1
+        //   this.form.memberCarNo = null
+        //   this.form.deposit = 200
+        //   // this.form.price = 100
+        //   this.form.currPrice = 0
+        //   // this.form.channelTypePk=null
+        //   this.form.isSecret='N'
+        //   this.form.certificateType='TWO_IDENTITY'
+        //   this.form.certificateNo=null
+        //   this.form.nationality='DL'
+        //   this.form.guestName='新客人'
+        //   this.form.guestGender = 'M'
+        //   this.form.nativePlace = null
+        //   this.form.email = null
+        //   this.form.carNumber = null
+        //   this.form.hobbies = null
+        //   this.form.detailAddress = null
+        //   this.form.remark = null
+        //   this.form.bornDate = null
+        //   this.form.guestPhone = null
+        //   this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+        //   this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
+        //   this.form.pmsCancelFlag = 'N'
+        // },
+        // addReserveGuest() {//添加预定
+        //   addReserveGuest(this.form).then(res=>{
+        //     if(res.code==1){
+        //       this.$message({type:'success', message:'添加预定成功'})
+        //       bus.$emit('refreshOrderInfo', this.form.orderPk)
+        //     }
+        //   })
+        // },
         chooseEmptyGuest() {//打开选择客人
           this.$refs.chooseGuestRef.init(this.form.guestName)
         },
