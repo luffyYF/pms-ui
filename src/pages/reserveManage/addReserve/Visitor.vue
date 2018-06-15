@@ -795,6 +795,7 @@
             guestList.forEach(obj => {
               let temp = {
                 roomPk: obj.roomPk,
+                orderPk: obj.orderPk,
                 guestOrderPk: obj.guestOrderPk,
                 roomTypeName: obj.roomTypeName,
                 roomNumber: obj.roomNumber,
@@ -1134,7 +1135,7 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            checkin({guestOrderPks:[row.guestOrderPk]}).then(res=>{
+            checkin({orderPk:row.orderPk, guestOrderPks:[row.guestOrderPk]}).then(res=>{
               row.orderStatus='CHECKIN'
               this.$message({
                 type: 'success',

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" size="mini" label-width="80px"  class="demo-form-inline">
+    <el-form :inline="true" size="mini" label-width="90px"  class="demo-form-inline">
       <el-col :span="24">
         <el-form-item label="快捷搜索:">
           <el-radio-group v-model="formInline.orderStatus" @change="getListForStatus" size="small">
@@ -19,8 +19,14 @@
         <!-- <el-form-item label="预订卡号:">
           <el-input v-model="filterOrderNo" placeholder="请输入预订卡号" clearable></el-input>
         </el-form-item> -->
+        <el-form-item label="预订手机号:">
+          <el-input v-model="formInline.userPhone" placeholder="预订人手机号" clearable></el-input>
+        </el-form-item>
         <el-form-item label="入住人:">
           <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="入住手机号:">
+          <el-input v-model="formInline.guestPhone" placeholder="入住人手机号" clearable></el-input>
         </el-form-item>
         <el-form-item label="房间数量:">
           <el-input v-model="formInline.rentCount" placeholder="请输入房间数量" clearable></el-input>
@@ -44,29 +50,9 @@
             :picker-options="endTimeOptions">
           </el-date-picker>
         </el-form-item>
-        <!-- <el-form-item label="渠道:">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in channelArr"
-              :key="item.typePk"
-              :label="item.typeName"
-              :value="item.typePk">
-            </el-option>
-          </el-select>
-        </el-form-item> -->
         <el-form-item label="　　渠道">
           <channel-select v-model="formInline.channelTypePk"/>
         </el-form-item>
-        <!-- <el-form-item label="价格方案:">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item> -->
         <el-form-item label="房型:">
           <el-select v-model="formInline.roomTypePk" placeholder="全部房型" clearable>
             <el-option
@@ -77,9 +63,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="团队名称:">
-          <el-input v-model="filterText" placeholder="请输入团队名称" clearable></el-input>
-        </el-form-item> -->
         <el-form-item label="组单号:">
           <el-input v-model="formInline.orderNo" placeholder="请输入组单号" clearable></el-input>
         </el-form-item>
@@ -151,29 +134,34 @@
       </el-table-column>
       <el-table-column label="状态" min-width="120">
         <template slot-scope="scope">
-          <template v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >
-            <span>NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span><br>
+          <template v-if="formInline.orderStatus=='CANCEL'">
+            <span>取消预订</span><br>
           </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0" >
-            <span>预定：{{getOrderStatus(scope.row.guestDtos).reserveCount}}</span><br>
-          </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).paymentCount > 0" >
-            <span>已支付：{{getOrderStatus(scope.row.guestDtos).paymentCount}}</span><br>
-          </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).cancelCount > 0" >
-            <span>取消：{{getOrderStatus(scope.row.guestDtos).cancelCount}}</span><br>
-          </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).checkinCount > 0" >
-            <span>在住：{{getOrderStatus(scope.row.guestDtos).checkinCount}}</span><br>
-          </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).leaveCount > 0" >
-            <span>结账离店：{{getOrderStatus(scope.row.guestDtos).leaveCount}}</span><br>
-          </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).leaveNoPayCount > 0" >
-            <span>不结账退房：{{getOrderStatus(scope.row.guestDtos).leaveNoPayCount}}</span><br>
-          </template>
-          <template v-if="getOrderStatus(scope.row.guestDtos).obligAtionCount > 0" >
-            <span>待付款：{{getOrderStatus(scope.row.guestDtos).obligAtionCount}}</span><br>
+          <template v-else>
+            <template v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >
+              <span>NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0" >
+              <span>预定：{{getOrderStatus(scope.row.guestDtos).reserveCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).paymentCount > 0" >
+              <span>已支付：{{getOrderStatus(scope.row.guestDtos).paymentCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).cancelCount > 0" >
+              <span>取消：{{getOrderStatus(scope.row.guestDtos).cancelCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).checkinCount > 0" >
+              <span>在住：{{getOrderStatus(scope.row.guestDtos).checkinCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).leaveCount > 0" >
+              <span>结账离店：{{getOrderStatus(scope.row.guestDtos).leaveCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).leaveNoPayCount > 0" >
+              <span>不结账退房：{{getOrderStatus(scope.row.guestDtos).leaveNoPayCount}}</span><br>
+            </template>
+            <template v-if="getOrderStatus(scope.row.guestDtos).obligAtionCount > 0" >
+              <span>待付款：{{getOrderStatus(scope.row.guestDtos).obligAtionCount}}</span><br>
+            </template>
           </template>
         </template>
       </el-table-column>

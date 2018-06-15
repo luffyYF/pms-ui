@@ -511,57 +511,11 @@ export default {
       if(this.islock){ 
         return;
       }
+      if(!this.formValidate()){
+        return;
+      }
       const orderPo = this.form
       const guestOrderPo = this.$refs.visitorForm.form
-      //校验
-      if(!guestOrderPo.channelTypePk){
-        this.$message({type:'warning', message:'客源渠道不能为空'})
-        return
-      }
-      if(!guestOrderPo.guestName){
-        this.$message({type:'warning', message:'客人姓名不能为空'})
-        return
-      }
-      // if(guestOrderPo.price==null) {
-      //   this.$message({type:'warning', message:'房费不能为空'})
-      //   return
-      // }
-      // if(Number(guestOrderPo.price)<0){
-      //   this.$message({type:'warning', message:'房费不能小于0'})
-      //   return
-      // }
-      if(guestOrderPo.currPrice==null) {
-        this.$message({type:'warning', message:'当前房租不能为空'})
-        return
-      }
-      if(Number(guestOrderPo.currPrice)<0){
-        this.$message({type:'warning', message:'当前房租不能小于0'})
-        return
-      }
-      if(guestOrderPo.deposit==null){
-        this.$message({type:'warning', message:'押金不能为空'})
-        return
-      }
-      if(Number(guestOrderPo.deposit)<0){
-        this.$message({type:'warning', message:'请输入正确的押金'})
-        return
-      }
-      if(!guestOrderPo.beginDate){
-        this.$message({type:'warning', message:'抵店日期不能为空'})
-        return
-      }
-      if(!guestOrderPo.endDate){
-        this.$message({type:'warning', message:'离店日期不能为空'})
-        return
-      }
-      if(!guestOrderPo.guestPhone){
-        this.$message({type:'warning', message:'请填写手机号'})
-        return
-      }
-      if(!validatePhone(guestOrderPo.guestPhone)){
-        this.$message({type:'warning', message:'手机号不合法'})
-        return
-      }
       var submitData = {
         order: orderPo,
         guestOrder: guestOrderPo
@@ -580,6 +534,61 @@ export default {
       }).catch(error=>{
         this.islock = false;
       })
+    },
+    //表单校验
+    formValidate(){
+      const orderPo = this.form
+      const guestOrderPo = this.$refs.visitorForm.form
+
+      //校验
+      if(!guestOrderPo.channelTypePk){
+        this.$message({type:'warning', message:'客源渠道不能为空'})
+        return false
+      }
+      if(!guestOrderPo.guestName){
+        this.$message({type:'warning', message:'客人姓名不能为空'})
+        return false
+      }
+      if(guestOrderPo.currPrice==null) {
+        this.$message({type:'warning', message:'当前房租不能为空'})
+        return false
+      }
+      if(Number(guestOrderPo.currPrice)<0){
+        this.$message({type:'warning', message:'当前房租不能小于0'})
+        return false
+      }
+      if(guestOrderPo.deposit==null){
+        this.$message({type:'warning', message:'押金不能为空'})
+        return false
+      }
+      if(Number(guestOrderPo.deposit)<0){
+        this.$message({type:'warning', message:'请输入正确的押金'})
+        return false
+      }
+      if(!guestOrderPo.beginDate){
+        this.$message({type:'warning', message:'抵店日期不能为空'})
+        return false
+      }
+      if(!guestOrderPo.endDate){
+        this.$message({type:'warning', message:'离店日期不能为空'})
+        return false
+      }
+      if(!guestOrderPo.guestPhone){
+        this.$message({type:'warning', message:'请填写手机号'})
+        return false
+      }
+      if(!validatePhone(guestOrderPo.guestPhone)){
+        this.$message({type:'warning', message:'手机号不合法'})
+        return false
+      }
+      if(orderPo.isTeam=='Y'){
+        if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
+          this.$message({type:'warning', message: '协议单位不能为空'})
+          return false
+        }
+      }
+
+      return true
     },
     toCheckout() {//跳转退房
        this.$refs.billTagForm.lookupBillList(this.currOrderPk);
@@ -701,9 +710,13 @@ export default {
         this.currConfirmType='edit-guest'
       }
     },
-    confirmClick() {//点击确定
+    confirmClick() {
+      //点击确定  
       if(this.currConfirmType=='edit-guest'){
         //修改客人信息
+         if(!this.formValidate()){
+          return;
+        }
         this.$refs.visitorForm.editGuestInfo()
         //修改主订单信息
         let data = {
@@ -716,10 +729,16 @@ export default {
       }
       if(this.currConfirmType=='add-guest'){
         //添加客人操作
+        if(!this.formValidate()){
+          return;
+        }
         this.$refs.visitorForm.parentAddGuest()
       }
       if(this.currConfirmType=='add-reserve'){
         //添加预定操作
+         if(!this.formValidate()){
+          return;
+        }
         this.$refs.visitorForm.addReserveGuest()
       }
     },

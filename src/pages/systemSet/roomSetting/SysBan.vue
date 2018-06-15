@@ -127,34 +127,22 @@ export default {
     deleteRow(index, rows) {
       rows.splice(index, 1);
     },
-    deleteClick(index, rows) {
+    deleteClick(rows) {
       const self = this
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(row.typePk);
-        delBuilding({typePk:row.typePk}).then(result => {
-          if(result.code == 1){
-            self.storeyName = '';
-            self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          }
-          self.listRoomType();
-        }).catch(error => {
-          this.$message({
-            type: 'danger',
-            message: error
-          });         
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '该楼栋不可删除'
-        });         
+        console.log(rows)
+        delBuilding({buildingPk:rows.buildingPk}).then(result => {
+          self.storeyName = '';
+          self.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          self.listBuilding();
+        });
       })
     },
     saveClick(row){

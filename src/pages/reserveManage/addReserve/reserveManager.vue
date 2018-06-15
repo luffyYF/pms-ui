@@ -19,11 +19,11 @@
                 </el-table>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" type="primary" @click="checkin">入住</el-button>
-                <el-button size="mini" type="primary">批量入住</el-button>
-                <el-button size="mini" type="primary" @click="cancelReserve">取消预订</el-button>
-                <el-button size="mini" type="primary" @click="batchCancelReserve">取消所有预订</el-button>
-                <el-button size="mini" type="primary">延时入住</el-button>
+                <el-button size="mini" type="primary" @click="checkin">批量入住</el-button>
+                <!--<el-button size="mini" type="primary" >全部入住</el-button>-->
+                <el-button size="mini" type="primary" @click="cancelReserve">批量取消预订</el-button>
+                <!--<el-button size="mini" type="primary" @click="batchCancelReserve">取消所有预订</el-button>-->
+                <!--<el-button size="mini" type="primary">延时入住</el-button>-->
                 <el-button size="mini" @click="dialogReservationManag = false">关闭</el-button>
             </span>
         </el-dialog>
@@ -81,7 +81,7 @@ export default {
       this.selectionRows.forEach(guest => {
         guestOrderPks.push(guest.guestOrderPk);
       });
-      checkin({ guestOrderPks: guestOrderPks }).then(res => {
+      checkin({orderPk:this.currOrderPk, guestOrderPks: guestOrderPks }).then(res => {
         this.$message({
           type: "success",
           message: "入住成功!"

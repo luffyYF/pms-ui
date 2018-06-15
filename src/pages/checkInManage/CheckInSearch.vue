@@ -30,6 +30,9 @@
         <el-form-item label="　入住人">
           <el-input v-model="chenkInSearchData.guestName" clearable style="width: 178px;"></el-input>
         </el-form-item>
+        <el-form-item label="　入住人手机号">
+          <el-input v-model="chenkInSearchData.guestPhone" clearable style="width: 178px;"></el-input>
+        </el-form-item>
         <el-form-item label="　组单号">
           <el-input v-model="chenkInSearchData.orderNo" clearable style="width: 178px;"></el-input>
         </el-form-item>
@@ -104,13 +107,13 @@
       </el-table-column> -->
       <el-table-column label="预订人" align="center" width="80" prop="userName" fixed="left">
       </el-table-column>
-      <el-table-column label="入住人" align="center" width="80" prop="memName">
+      <el-table-column label="入住人" align="center" width="80" prop="guestName">
       </el-table-column>
       <el-table-column label="渠道" align="center" width="100" prop="channelTypeName">
       </el-table-column>
       <el-table-column label="入住卡号" align="center" width="100" prop="memberCardNo">
       </el-table-column>
-      <el-table-column label="入住人手机" align="center" width="120" prop="memPhone">
+      <el-table-column label="入住人手机" align="center" width="120" prop="guestPhone">
       </el-table-column>
       <el-table-column label="证件号码" align="center" width="140" prop="certificateNo">
       </el-table-column>
@@ -185,6 +188,7 @@
           roomNumber: '',
           userName: '',  
           guestName: '',  
+          guestPhone:'',
           orderNo: '', 
           beginDate: '', 
           endDate: '',
