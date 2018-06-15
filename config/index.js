@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/pms': {
-        target: "http://localhost:8080/pms",//设置你调用的接口域名和端口号 别忘了加http
+        target: "http://localhost:8082/pms",//设置你调用的接口域名和端口号 别忘了加http
         // target: "http://localhost:8080/pms",//设置你调用的接口域名和端口号 别忘了加http
         // target: "http://www.housefeel.cn/test-pms",
         secure: false,      // 如果是https接口，需要配置这个参数

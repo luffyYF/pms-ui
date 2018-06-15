@@ -30,7 +30,7 @@
       :key="item.userPk"
       :label="item.userName"
       :value="item.userPk"></el-option>
-        </el-select>     
+        </el-select>
       </el-form-item>
       <el-form-item label="班次">
         <el-select v-model="queryObj.shiftPk" placeholder="选择班次">
@@ -55,7 +55,7 @@
       <h4>收银入账明细报表</h4>
       <p>营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span></p>
       <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.userName}}</span></p>
-      <el-table 
+      <el-table
         :header-cell-style="tableStyleObj"
         :cell-style="tableStyleObj"
         :data="admissionBank"
@@ -74,7 +74,7 @@
     </div>
     <!-- 打印填充 iframe-->
     <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
-    
+
   </div>
 </template>
 

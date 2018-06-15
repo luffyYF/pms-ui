@@ -25,7 +25,7 @@
       :key="item.userPk"
       :label="item.userName"
       :value="item.userPk"></el-option>
-        </el-select>     
+        </el-select>
       </el-form-item>
       <el-form-item label="班次">
         <el-select v-model="queryObj.shiftPk" placeholder="选择班次">
@@ -54,10 +54,10 @@
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
         </p>
         <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.userName}}</span></p>
-        <el-table 
-          :header-cell-style="tableStyleObj" 
-          :cell-style="tableStyleObj" 
-          :data="listData" 
+        <el-table
+          :header-cell-style="tableStyleObj"
+          :cell-style="tableStyleObj"
+          :data="listData"
           border
           style="width: 100% margin-top:-2px;"
           :span-method="arraySpanMethod"
@@ -181,7 +181,7 @@ export default {
         return 'warning-row';
       }
       // if (rowIndex === 1) {
-        
+
       // } else if (rowIndex === 3) {
       //   return 'success-row';
       // }
