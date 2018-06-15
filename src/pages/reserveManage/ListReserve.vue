@@ -134,10 +134,6 @@
       </el-table-column>
       <el-table-column label="状态" min-width="120">
         <template slot-scope="scope">
-          <template v-if="formInline.orderStatus=='CANCEL'">
-            <span>取消预订</span><br>
-          </template>
-          <template v-else>
             <template v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >
               <span>NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span><br>
             </template>
@@ -162,7 +158,6 @@
             <template v-if="getOrderStatus(scope.row.guestDtos).obligAtionCount > 0" >
               <span>待付款：{{getOrderStatus(scope.row.guestDtos).obligAtionCount}}</span><br>
             </template>
-          </template>
         </template>
       </el-table-column>
       <!-- <el-table-column label="备注" prop="remark">
