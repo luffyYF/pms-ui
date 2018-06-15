@@ -61,6 +61,7 @@ var demoEvents = [
 ];
 import { PrefixInteger,formatDate } from "@/utils/index";
 import { calendarPrice,editPrice } from "@/api/systemSet/pmsRoomTypePriceController";
+import moment from "moment"
 export default {
   components: {
     "full-calendar": require("vue-fullcalendar")
@@ -86,7 +87,7 @@ export default {
     init(roomTypePk) {
       this.roomTypePk = roomTypePk;
       this.dialogVisible = true;
-      this.calendarPrice(moment().format("YYYY-MM-DD"))
+      this.calendarPrice(moment().format("YYYY-MM-01"))
     },
     // setBeginDate() {
     //   let firstCell = this.$refs.fullcalendarRef.getElementsByClassName(

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <p style="margin-top:0; margin-bottom:5px;">项目：</p>
-    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="mini" @change="handleCheckAllChange">全选</el-checkbox>
+    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="mini" checked="true" @change="handleCheckAllChange">全选</el-checkbox>
     <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange" style="height: 100px;overflow-y: auto;">
       <el-checkbox class="checkboxgrou" size="mini" v-for="item in itemList" :label="item.projectPk" :key="item.projectPk">{{item.projectName}}</el-checkbox>
     </el-checkbox-group>
@@ -147,6 +147,7 @@ export default {
           })
         }
       })
+      this.handleCheckAllChange();
     },
     getList(){
       let self = this
@@ -173,7 +174,6 @@ export default {
       this.isIndeterminate = false;
     },
     handleCheckedItemChange(value) {
-     
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.allItemList.length;
       this.isIndeterminate =

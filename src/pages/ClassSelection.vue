@@ -9,7 +9,7 @@
         <div class="box-list clearfix" v-for="(company,index) in companyShift" :key="index">
             <h3 class="fl">{{company.cityName}}</h3>
             <div class="fl company-list" v-for="(com,index) in company.arr" :key="index">
-                <span @click="selectCompany(com)" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
+                <span @click="selectCompany(com)" class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
             </div>
         </div>
         <div class="box-select clearfix">
@@ -132,6 +132,10 @@ export default {
 </script>
 
 <style scoped>
+.companySpan{
+  display: inline-block;
+
+}
 .activeCompany {
   background: #f60;
   color: #fff !important;
@@ -186,7 +190,7 @@ p {
 }
 .company-list span {
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   color: #f60;
   padding: 3px 6px;
   border-radius: 3px;

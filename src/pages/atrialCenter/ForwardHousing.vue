@@ -104,8 +104,9 @@ export default {
       tableData:[],
       loading:false,
       begenAndEnd:{
-        begin:'',
+        begin:Moment(new Date()).format("YYYY-MM-DD"),
         end:''
+        // 
       }
     };
   },

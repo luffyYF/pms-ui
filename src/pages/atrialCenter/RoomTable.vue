@@ -68,8 +68,6 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
           {name:'出租率',value:'czl'},
         ],
         roomCountList:[],
-
-
         filterText: '',
         pagination: {size: 10, current: 1, total: 0},
         loading: false,

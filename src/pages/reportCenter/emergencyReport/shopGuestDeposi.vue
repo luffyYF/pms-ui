@@ -4,7 +4,7 @@
             <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
             <el-button type="primary" size="mini">PDF预览</el-button>
             <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl" target="_blank">导出EXCEL</a></el-button>
-            <el-button type="primary" size="mini">添加到收藏夹</el-button>
+            <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
             <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
         <div class="table-container" id="print-shopguestdeposi">
@@ -43,7 +43,7 @@
                   {{props.row.price | unit}}
                 </template>
             </el-table-column>
-            <el-table-column prop="beginDate" align="center" label="入住时间" ></el-table-column>
+            <el-table-column width="200" prop="beginDate" align="center" label="入住时间" ></el-table-column>
             <el-table-column prop="endDate" align="center" label="预离时间" ></el-table-column>
             <el-table-column label="收款明细" align="center">
               <el-table-column prop="preLicensing" align="center" label="预授权"></el-table-column>
