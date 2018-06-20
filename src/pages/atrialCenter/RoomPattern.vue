@@ -759,6 +759,9 @@
           remindFlag: 'N',
           createUserName: JSON.parse(localStorage.sessionInfo).userName
         }
+        if(moment().hour()<6){
+          this.disableForm.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+        }
       },
       submitRoomReason(submitType) {//添加房间原因
         let data={}
