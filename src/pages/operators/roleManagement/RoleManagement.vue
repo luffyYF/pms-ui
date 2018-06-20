@@ -82,7 +82,8 @@ import {powerJudge} from '@/utils/permissionsOperation.js'
         listRole().then(res => {
           this.tableData = res.data;
         }).catch(()=>{
-          this.$message({type:'danger', message: '网络异常'})
+          // this.$message({type:'danger', message: '网络异常'})
+          console.log("网络异常");
         })
       },
       addListRole(){
@@ -106,7 +107,8 @@ import {powerJudge} from '@/utils/permissionsOperation.js'
               this.delVisible = false;
             }).catch(()=>{
               this.delVisible = false;
-              this.$message({type:'danger', message: '网络异常'})
+              // this.$message({type:'danger', message: '网络异常'})
+              console.log("网络异常");
             })
           })
           .catch(_ => {});

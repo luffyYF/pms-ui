@@ -71,7 +71,8 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="客源渠道：" required>
-                  <channel-select v-model="form.channelTypePk" @selfirst="(id)=>{this.form.channelTypePk = id}" :disabled="form.guestOrderPk!==undefined"></channel-select>
+                  <!-- <channel-select v-model="form.channelTypePk" @selfirst="(id)=>{this.form.channelTypePk = id}" :disabled="form.guestOrderPk!==undefined"></channel-select> -->
+                  <channel-select v-model="form.channelTypePk" @selfirst="(id)=>{this.form.channelTypePk = id}"></channel-select>
                 </el-form-item>
               </el-col>
             </el-col>
