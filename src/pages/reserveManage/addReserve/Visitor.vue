@@ -145,7 +145,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="抵店日期：" required>
-                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined || currFormType=='room-info'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -767,11 +767,14 @@
         initRoomData(room) {
           this.initType(_=>{
             this.formReset()
+            this.currFormType='room-info'
             this.form.currTitle = '添加客单'
             this.form.roomPk = room.roomPk
             this.form.roomNumber = room.roomNumber
             this.form.roomTypePk = room.roomTypePk
-            this.currFormType='room-info'
+            if(moment().hour()<6){
+              this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+            }
             this.roomTable=[]
             this.currGuestList = []
             this.contractTableData = []
