@@ -741,6 +741,9 @@
           remindFlag: 'N',
           createUserName: JSON.parse(localStorage.sessionInfo).userName
         }
+        if(moment().hour()<6){
+          this.repairForm.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+        }
       },
       showDisable(room) {//转停用房
         this.dialogDisableRoom = true
