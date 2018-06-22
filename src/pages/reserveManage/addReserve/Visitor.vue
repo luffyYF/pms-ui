@@ -128,7 +128,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="房间押金：" required>
-                  <el-input-number v-model="form.deposit" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                  <el-input-number v-model="form.deposit" :controls="false"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -699,7 +699,6 @@
             user: ''
           },
           roomTable:[],
-          guestList: [],
           tempEndDate:null,
           currTableIndex: '',
           listProjectDate: [],
