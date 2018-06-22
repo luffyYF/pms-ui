@@ -91,6 +91,10 @@ export const editOrder = params => {
 export const editOrderMember = params => {
     return request.post('/back/order/editOrderMember', params)
 }
+//设置二维码开门手机号
+export const qrCodePhoneSetting = params => {
+    return request.post('/back/order/qrCodePhoneSetting', params)
+}
 
 //快速预定
 export const quickReserve = params => {
