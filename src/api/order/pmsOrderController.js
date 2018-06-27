@@ -25,6 +25,10 @@ export const rowRoomOrder = params => {
 export const reserveOrder = params => {
     return request.post('/back/order/reserve', params)
 }
+//团队预定
+export const teamReserve = params => {
+    return request.post('/back/order/teamReserve', params)
+}
 
 // 订单接口
 export const continuedRoomOrder = params => {

@@ -214,7 +214,6 @@
           order: this.form,
           guestOrder: visitorForm
         }
-        // this.fullscreenLoading = true;
         if(this.submitLock){
           return
         }else{
