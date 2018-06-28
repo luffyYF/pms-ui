@@ -2,18 +2,18 @@
 <template>
   <div class="guestOrder1002">
     <el-row>
-      <el-col :span="8">
+      <el-col :span="9">
         <p class="visitor-title visitor-table">
-          <span>预订<em class="font-normal">0</em>间</span>
-          <span>在住<em class="font-normal">0</em>间</span>
-          <span>离店<em class="font-normal">0</em>间</span>
+          <span>预订<em class="font-normal">{{gsReserve}}</em>间</span>
+          <span>在住<em class="font-normal">{{gsCheckin}}</em>间</span>
+          <span>离店<em class="font-normal">{{gsLeave}}</em>间</span>
         </p>
         <div class="visitor-tabs">
           <h5 class="info-title">客单</h5>
-          <el-table :data="roomTable" height="176" border style="width: 100%;margin-top: 7px;" @row-click="guestTableClick" :row-class-name="tableRowClassName">
+          <el-table :data="currGuestList" height="176" border style="width: 100%;margin-top: 7px;" @row-click="guestTableClick" :row-class-name="tableRowClassName">
             <el-table-column prop="roomTypeName" label="房类" width="100"></el-table-column>
             <el-table-column prop="roomNumber" label="房号"></el-table-column>
-            <el-table-column prop="orderStatus" label="状态" width="90">
+            <el-table-column prop="orderStatus" label="状态" width="60">
               <template slot-scope="scope">
                 <span v-if="scope.row.pmsCancelFlag=='Y'" style="color:#999999">订单取消</span>
                 <span v-else-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY' || scope.row.orderStatus=='NOSHOW'" style="color:#999999">{{orderStatusMap[scope.row.orderStatus]}}</span>
@@ -31,7 +31,7 @@
                 <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
                   <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="toCheckout">退房</el-button>
-                </template>
+                </template> <br>
               </template>
             </el-table-column>
           </el-table>
@@ -52,7 +52,7 @@
           </el-table>
         </div>
       </el-col>
-      <el-col :span="16" class="visitor-addReservations">
+      <el-col :span="15" class="visitor-addReservations">
         <p class="visitor-title visiitor-add">{{form.currTitle}}</p>
         <el-form ref="form" :model="form" size="mini" label-width="100px">
           <el-col :span="24">
@@ -83,29 +83,11 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <!-- <el-col :span="2"><span class="required-icon icon-distance">*</span></el-col> -->
             </el-col>
-            <!-- <el-col :span="10">
-              <el-col :span="22">
-                <el-form-item label="价格方案：" required>
-                  <el-select v-model="form.priceSchemePk" @change="loadPrice" placeholder="请选择价格方案" :disabled="form.guestOrderPk!==undefined">
-                    <el-option v-for="y in priceSchemeArr" :key="y.schemePk" :label="y.schemeName" :value="y.schemePk"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2"><span class="required-icon icon-distance">*</span></el-col>
-            </el-col>
-            -->
           </el-col>
           <el-col :span="24">
             <el-col :span="10">
               <el-col :span="22">
-                <!-- <el-form-item label="总共房费：" required>
-                    <el-input-number v-model="form.price" style="width: 94px;" :controls="false" :disabled="form.guestOrderPk!==undefined || form.diyPriceFlag=='N'"></el-input-number>
-                    <el-tooltip content="自定义价格" placement="top">
-                      <el-switch v-model="form.diyPriceFlag" active-value="Y" inactive-value="N" @change="loadPrice"></el-switch>
-                    </el-tooltip>
-                </el-form-item> -->
                 <el-form-item label="当前房租：" required>
                     <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
                 </el-form-item>
@@ -116,11 +98,11 @@
                 <el-form-item label="房间数量：" required>
                   <!-- TODO 适应豪斯菲尔预定，暂时禁用  -->
                   <!-- @change="loadPrice" -->
-                  <el-input-number :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest'"></el-input-number>
+                  <el-input-number size="mini" :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="7" v-if="currFormType=='empty' || currFormType=='room-info'">
-                &nbsp;&nbsp;<span style="color:red">可预订数：{{bookableCount}}</span>
+                &nbsp;&nbsp;<span style="color:red">可预订{{bookableCount}}间</span>
               </el-col>
             </el-col>
           </el-col>
@@ -128,7 +110,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="房间押金：" required>
-                  <el-input-number v-model="form.deposit" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                  <el-input-number v-model="form.deposit" :controls="false"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -144,7 +126,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="抵店日期：" required>
-                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined || currFormType=='room-info'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -327,14 +309,17 @@
     </el-row>
 
     <!-- 协议单位 -->
-    <el-dialog class="agreement-body" title="协议单位" :visible.sync="dialogAgreement" width="50%" :append-to-body="true">
+    <!-- <el-dialog class="agreement-body" title="协议单位" :visible.sync="dialogAgreement" width="50%" :append-to-body="true">
       <div class="body-conten">
         <Agreement ref="agreementRef"></Agreement>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogAgreement = false">取 消</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
+
+    <!-- 协议单位 -->
+    <Agreement ref="agreementRef" @sendData="loadAgreement($event)"></Agreement>
 
     <!-- 注册会员 -->
     <el-dialog class="agreement-body" title="注册会员" :visible.sync="registeredMember" width="60%" :before-close="registeredMemberClose" :append-to-body="true">
@@ -594,6 +579,20 @@
       </span>
     </el-dialog>
 
+    <!--设置二维码开门手机号-->
+    <el-dialog class="agreement-body" title="设置二维码开门手机号" :visible.sync="dialogQRCodeSetting" width="30%" :append-to-body="true" :before-close="dialogQRCodeSettingClose">
+      <div class="body-conten">
+        <p>客人姓名：{{qrcodeForm.guestName}}</p>
+        <p>手机号：
+          <el-input size="mini" type="text" v-model="qrcodeForm.qrCodePhone" style="width:166px"></el-input>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogQRCodeSetting = false">取 消</el-button>
+        <el-button size="mini" @click="" type="primary" @click="QRCodeSettingSubmit">确 认</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
     <!-- 预定管理 -->
@@ -605,14 +604,25 @@
     import bus from '@/utils/bus'
     import {orderStatusMap,contractMap, paymentMap, credentialsMap} from '@/utils/orm'
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
-    import {isInteger} from '@/utils/validate'
+    import {isInteger,validatePhone} from '@/utils/validate'
     import {MyToFixed} from '@/utils/number'
     import Agreement from '@/components/Agreement/Agreement'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import {listContract} from "@/api/order/pmsContractControll"
     import {findPriceSchemeDetailPrice} from '@/api/systemSet/priceScheme/priceSchemeController'
-    import {reserveOrder, continuedRoom, rowRoomList, changeRoom, checkin, addReserveGuest, editOrderMember,addGuest, calcMoney} from '@/api/order/pmsOrderController'
+    import {
+      checkin,
+      addGuest,
+      calcMoney,
+      changeRoom,
+      rowRoomList,
+      reserveOrder,
+      continuedRoom,
+      editOrderMember,
+      addReserveGuest,
+      qrCodePhoneSetting
+    } from '@/api/order/pmsOrderController'
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
@@ -622,6 +632,9 @@
       components:{chooseGuest, reserveManager, Agreement},
       data() {
         return {
+          gsReserve:0,
+          gsCheckin:0,
+          gsLeave:0,
           memberFlag: false,//是否是会员标识
           currFormType:'',//当前表单状态： empty（空） guest-info（客单信息） room-info（保存入住）  add-guest（添加客人）
           currGuestList: [],//当前所有客单信息
@@ -634,6 +647,7 @@
           priceSchemeArr: [],
           registForm:{},
           proForm: {},
+          dialogQRCodeSetting:false,
           dialogAgreement:false,
           registeredMember: false,
           hobbySetting: false,
@@ -648,7 +662,7 @@
             count: 1,
             checkinDays:1,
             deposit: 200,
-            price:100,
+            currPrice:100,
             roomNumber: '',
             roomTypePk: '',
             roomPk: undefined,
@@ -677,6 +691,11 @@
             pmsCancelFlag: null,
             diyPriceFlag: 'N'
           },
+          qrcodeForm:{
+            guestOrderPk:'',
+            guestName:'',
+            qrCodePhone:'',
+          },
           roomObj: {
             roomType: '',
             roomNumber: '',
@@ -690,27 +709,18 @@
           },
           datepicker3: [],
           seeCompany: false,
-          tableData3: [{
-            date: '',
-            aname: '',
-            address: ''
-          }],
-          formAGuest: {
-            user: ''
-          },
           roomTable:[],
-          guestList: [],
           tempEndDate:null,
           currTableIndex: '',
           listProjectDate: [],
           listTypeDate: [],
           contractTableData: [], //合约列表
           pickerOptions0: {
-          //限制今天以前的日期不可选择
-          disabledDate(time) {
-            return time.getTime() < moment().subtract(1, 'days') - 8.64e7;
-          }
-      },
+            //限制今天以前的日期不可选择
+            disabledDate(time) {
+              return time.getTime() < moment().subtract(1, 'days') - 8.64e7;
+            },
+          },
           regisType: '',
         }
       },
@@ -766,11 +776,14 @@
         initRoomData(room) {
           this.initType(_=>{
             this.formReset()
+            this.currFormType='room-info'
             this.form.currTitle = '添加客单'
             this.form.roomPk = room.roomPk
             this.form.roomNumber = room.roomNumber
             this.form.roomTypePk = room.roomTypePk
-            this.currFormType='room-info'
+            if(moment().hour()<6){
+              this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+            }
             this.roomTable=[]
             this.currGuestList = []
             this.contractTableData = []
@@ -786,31 +799,29 @@
           this.initType(_=>{
             this.currFormType='guest-info'
             this.currGuestList = guestList
-            // this.form = deepClone(guestList[loderIndex])
             this.formFillGuestInfo(guestList[loderIndex])
             this.currTableIndex = this.form.guestOrderPk
             this.form.currTitle = this.orderStatusMap[this.form.orderStatus]+'客人，客单号：'+this.form.orderGuestNo
             this.tempEndDate = this.form.endDate
-            this.roomTable = []//客单数据
-            guestList.forEach(obj => {
-              let temp = {
-                roomPk: obj.roomPk,
-                orderPk: obj.orderPk,
-                guestOrderPk: obj.guestOrderPk,
-                roomTypeName: obj.roomTypeName,
-                roomNumber: obj.roomNumber,
-                orderStatus: obj.orderStatus,
-                guestName: obj.guestName,
-                count: obj.count,
-                mainFlag: obj.mainFlag,
-                pmsCancelFlag: obj.pmsCancelFlag
-              }
-              this.roomTable.push(temp)
-            })
             listContract({ orderPk: this.form.orderPk }).then(res=>{//加载合约列表
               this.contractTableData = res.data
             })
             this.calcDays()
+
+            this.gsReserve = 0
+            this.gsCheckin = 0
+            this.gsLeave = 0
+            this.currGuestList.forEach(obj=>{
+              if(obj.mainFlag=='Y' && obj.pmsCancelFlag=='N'){
+                if(obj.orderStatus=='RESERVE'){
+                  this.gsReserve++;
+                }else if(obj.orderStatus=='CHECKIN'){
+                  this.gsCheckin++;
+                }else if(obj.orderStatus=='LEAVE' || obj.orderStatus=='LEAVENOPAY'){
+                  this.gsLeave++;
+                }
+              }
+            })
           });
         },
         //添加客人初始化（外部调用）
@@ -846,9 +857,6 @@
           if(this.form.currTitle != '添加客人'){
             return;
           }
-          // if(!this.formValidate()){
-          //   return;
-          // }
           let data = {
             guestOrderPk: this.form.guestOrderPk,
             memberPo: {
@@ -878,43 +886,12 @@
         //添加预定初始化（外部调用）
         cleanAddReserveGuest() {
           this.formReset();
-          // this.memberFlag = false
           this.form.currTitle = '添加预定'
           this.currFormType = 'empty'
-          // this.form.memPk = undefined
-          // this.form.guestOrderPk = undefined
-          // this.form.agreementPk = undefined
-          // this.form.unitName = null
-          // this.form.roomPk = undefined
-          // this.form.roomNumber = null
-          // this.form.count = 1
-          // this.form.memberCarNo = null
-          // this.form.deposit = 200
-          // this.form.currPrice = 0
-          // this.form.isSecret='N'
-          // this.form.certificateType='TWO_IDENTITY'
-          // this.form.certificateNo=null
-          // this.form.nationality='DL'
-          // this.form.guestName='新客人'
-          // this.form.guestGender = 'M'
-          // this.form.nativePlace = null
-          // this.form.email = null
-          // this.form.carNumber = null
-          // this.form.hobbies = null
-          // this.form.detailAddress = null
-          // this.form.remark = null
-          // this.form.bornDate = null
-          // this.form.guestPhone = null
-          // this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          // this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-          // this.form.pmsCancelFlag = 'N'
           this.getBookableCount()
         },
         //添加预定（外部调用）
         addReserveGuest() {
-          // if(!this.formValidate()){
-          //   return;
-          // }
           addReserveGuest(this.form).then(res=>{
             if(res.code==1){
               this.$message({type:'success', message:'添加预定成功'})
@@ -926,15 +903,10 @@
           if(this.form.pmsCancelFlag=='Y'){
             return;
           }
-          // if(!this.formValidate()){
-          //   return;
-          // }
           editOrderMember(this.form).then(res=>{
             this.$message({type:'success', message: '客人信息修改成功'})
             bus.$emit('refreshOrderInfo', this.form.orderPk)
-          }).catch(error=>{
-            //bus.$emit('refreshOrderInfo', this.form.orderPk)
-          })
+          });
         },
         formReset() {//重置表单
           this.form.currTitle = ''
@@ -971,8 +943,6 @@
           this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
           this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
           this.form.pmsCancelFlag = 'N'
-          // this.form.diyPriceFlag = 'N'
-
           this.memberFlag = false
         },
         formFillGuestInfo(guest) {//填充客单信息
@@ -1009,7 +979,6 @@
           this.form.orderGuestNo = guest.orderGuestNo
           this.form.orderPk = guest.orderPk
           this.form.orderStatus = guest.orderStatus
-          // this.form.price = guest.price
           this.form.currPrice = guest.currPrice
           this.form.remark = guest.remark
           this.form.roomNumber = guest.roomNumber
@@ -1160,112 +1129,6 @@
             }
           });
         },
-       
-        // parentClearGuest() {//添加客人前 清空
-        //   if(!this.form.guestOrderPk){
-        //     this.$message({type:'warning', message:'请先选择客单'})
-        //     return;
-        //   }
-        //   if(this.form.orderStatus!='CHECKIN'){
-        //     this.$message({type:'warning', message:'客单入住后才能添加客人'})
-        //     return;
-        //   }
-        //   this.memberFlag = false
-        //   this.currFormType = 'add-guest'
-        //   this.form.memPk = undefined
-        //   this.form.currTitle = '添加客人'
-        //   this.form.memberCarNo = ''
-        //   this.form.guestName = ''
-        //   this.form.guestPhone = ''
-        //   this.form.guestGender = 'M'
-        //   this.form.certificateType = 'TWO_IDENTITY'
-        //   this.form.certificateNo = ''
-        //   this.form.bornDate = null
-        //   this.form.email = ''
-        //   this.form.carNumber = ''
-        //   this.form.hobbies = ''
-        //   this.form.nationality = 'DL'
-        //   this.form.nativePlace = ''
-        //   this.form.detailAddress = ''
-          
-        // },
-        // parentAddGuest() {//添加客人
-        //   if(this.form.currTitle != '添加客人'){
-        //     return;
-        //   }
-        //   if(!this.form.guestName){
-        //     this.$message({type:'warning', message:'请填写客人姓名'})
-        //     return;
-        //   }
-        //   let data = {
-        //     guestOrderPk: this.form.guestOrderPk,
-        //     memberPo: {
-        //       memPk: this.form.memPk,
-        //       memName: this.form.guestName,
-        //       memPhone: this.form.guestPhone,
-        //       memSex: this.form.guestGender,
-        //       certificateType: this.form.certificateType,
-        //       certificateNo: this.form.certificateNo,
-        //       birthday: this.form.bornDate ? this.form.bornDate : null,
-        //       email: this.form.email,
-        //       carNumber: this.form.carNumber,
-        //       hobby: this.form.hobbies,
-        //       nationality: this.form.nationality,
-        //       nativePlace: this.form.nativePlace,
-        //       address: this.form.detailAddress
-        //     }
-        //   }
-        //   addGuest(data).then(res=>{
-        //     if(res.code==1){
-        //       this.$message({type:'success', message:'添加客人成功'})
-        //       // this.form.currTitle = '客单信息'
-        //       bus.$emit('refreshOrderInfo', this.form.orderPk)
-        //     }
-        //   })
-        // },
-        // cleanAddReserveGuest() {//添加预定前 清空
-        //   this.memberFlag = false
-        //   this.form.currTitle = '添加预定'
-        //   this.currFormType = 'empty'
-        //   this.form.memPk = undefined
-        //   this.form.guestOrderPk = undefined
-        //   this.form.agreementPk = undefined
-        //   this.form.unitName = null
-        //   this.form.roomPk = undefined
-        //   this.form.roomNumber = null
-        //   this.form.roomTypePk = null
-        //   this.form.count = 1
-        //   this.form.memberCarNo = null
-        //   this.form.deposit = 200
-        //   // this.form.price = 100
-        //   this.form.currPrice = 0
-        //   // this.form.channelTypePk=null
-        //   this.form.isSecret='N'
-        //   this.form.certificateType='TWO_IDENTITY'
-        //   this.form.certificateNo=null
-        //   this.form.nationality='DL'
-        //   this.form.guestName='新客人'
-        //   this.form.guestGender = 'M'
-        //   this.form.nativePlace = null
-        //   this.form.email = null
-        //   this.form.carNumber = null
-        //   this.form.hobbies = null
-        //   this.form.detailAddress = null
-        //   this.form.remark = null
-        //   this.form.bornDate = null
-        //   this.form.guestPhone = null
-        //   this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-        //   this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss') 
-        //   this.form.pmsCancelFlag = 'N'
-        // },
-        // addReserveGuest() {//添加预定
-        //   addReserveGuest(this.form).then(res=>{
-        //     if(res.code==1){
-        //       this.$message({type:'success', message:'添加预定成功'})
-        //       bus.$emit('refreshOrderInfo', this.form.orderPk)
-        //     }
-        //   })
-        // },
         chooseEmptyGuest() {//打开选择客人
           this.$refs.chooseGuestRef.init(this.form.guestName)
         },
@@ -1318,13 +1181,14 @@
           if(buttonType == 'registMember'){
             this.regisType = buttonType
           }
-          this.dialogAgreement =true
-          setTimeout(()=>{
-            this.$refs.agreementRef.init()
-          },0)
+          // this.dialogAgreement =true
+          // setTimeout(()=>{
+          //   this.$refs.agreementRef.init()
+          // },0)
+          this.$refs.agreementRef.init()
         },
-        backDialogAgreement(po) {//回显协议单位
-          this.dialogAgreement = false
+        loadAgreement(po) {//回显协议单位
+          // this.dialogAgreement = false
           if(this.currFormType!='add-guest'){
             this.form.agreementPk = po.agreementPk
             this.form.unitName = po.unitName
@@ -1363,11 +1227,6 @@
           listType({typeMaster:'ROOM_TYPE'}).then(res=>{
             this.roomTypeArr = res.data.data;
             callback()
-            // //获取价格方案
-            // listPriceScheme().then(res=>{
-            //   this.priceSchemeArr = res.data
-            //   callback()
-            // })
           })
         },
         listTypeType(){
@@ -1390,9 +1249,31 @@
             }
           },1000)
         },
+
+        //设置二维码开门手机号
+        dialogQRCodeSettingOpen(row){
+          this.qrcodeForm.guestOrderPk = row.guestOrderPk
+          this.qrcodeForm.guestName = row.guestName
+          this.qrcodeForm.qrCodePhone = row.qrCodePhone
+          this.dialogQRCodeSetting = true;
+        },
+        dialogQRCodeSettingClose(){
+          this.dialogQRCodeSetting = false;
+          bus.$emit('refreshOrderInfo', this.form.orderPk)
+        },
+        QRCodeSettingSubmit(){
+          if(!validatePhone(this.qrcodeForm.qrCodePhone)){
+            this.$message({type:'warning', message:'手机号不合法'})
+            return false
+          }
+          qrCodePhoneSetting(this.qrcodeForm).then(res=>{
+            this.dialogQRCodeSettingClose()
+            this.$message.success('设置成功')
+          })
+        }
       },
       mounted() {
-        bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })
+        // bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })
       }
 
     }
@@ -1504,6 +1385,14 @@
 .guestOrder1002 .el-table .success-row {
     background:  #f0f9eb;
 }
+.guestOrder1002 .el-input-number span{
+  width:17px !important
+}
+.guestOrder1002 .el-input-number .el-input__inner{
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
+
 .agreement-body>.el-dialog> .el-dialog__header{
   border-bottom: 1px solid #ddd;
   margin-bottom: 10px;

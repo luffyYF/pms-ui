@@ -155,6 +155,7 @@
           this.$message({type:'warning', message: '请填写 预定人'})
           return;
         }
+
         if(!this.form.userPhone){
           this.$message({type:'warning', message: '请填写 预定人手机号'})
           return
@@ -168,10 +169,10 @@
           this.$message({type:'warning', message:'客源渠道不能为空'})
           return
         }
-        if(!visitorForm.guestName){
-          this.$message({type:'warning', message:'客人姓名不能为空'})
-          return
-        }
+        // if(!visitorForm.guestName){
+        //   this.$message({type:'warning', message:'客人姓名不能为空'})
+        //   return
+        // }
         if(visitorForm.currPrice==null) {
           this.$message({type:'warning', message:'当前房租不能为空'})
           return
@@ -196,13 +197,15 @@
           this.$message({type:'warning', message:'离店日期不能为空'})
           return
         }
-        if(!visitorForm.guestPhone){
-          this.$message({type:'warning', message:'请填写手机号'})
-          return
-        }
-        if(!validatePhone(visitorForm.guestPhone)){
-          this.$message({type:'warning', message:'手机号不合法'})
-          return
+        // if(!visitorForm.guestPhone){
+        //   this.$message({type:'warning', message:'请填写手机号'})
+        //   return
+        // }
+        if(visitorForm.guestPhone){
+          if(!validatePhone(visitorForm.guestPhone)){
+            this.$message({type:'warning', message:'手机号不合法'})
+            return
+          }
         }
 
         this.form.guaranteeType = this.form.guaranteeType ? this.form.guaranteeType : null
@@ -211,7 +214,6 @@
           order: this.form,
           guestOrder: visitorForm
         }
-        // this.fullscreenLoading = true;
         if(this.submitLock){
           return
         }else{

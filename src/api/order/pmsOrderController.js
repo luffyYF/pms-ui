@@ -25,6 +25,10 @@ export const rowRoomOrder = params => {
 export const reserveOrder = params => {
     return request.post('/back/order/reserve', params)
 }
+//团队预定
+export const teamReserve = params => {
+    return request.post('/back/order/teamReserve', params)
+}
 
 // 订单接口
 export const continuedRoomOrder = params => {
@@ -90,6 +94,10 @@ export const editOrder = params => {
 //更改订单客人信息
 export const editOrderMember = params => {
     return request.post('/back/order/editOrderMember', params)
+}
+//设置二维码开门手机号
+export const qrCodePhoneSetting = params => {
+    return request.post('/back/order/qrCodePhoneSetting', params)
 }
 
 //快速预定
