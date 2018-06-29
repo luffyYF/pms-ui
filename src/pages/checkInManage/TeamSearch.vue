@@ -2,17 +2,22 @@
   <section>
     <el-col :span="24">
       <el-form :inline="true" ref="form" :model="form" size="mini" label-width="80px"  class="demo-form-inline">
+        <el-form-item label="组单状态">
+          <el-select v-model="form.orderStatus" placeholder="全部状态" clearable>
+            <el-option v-for="(value,key) in orderStatusMap" :key="key" :label="value" :value="key"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="入住房号">
           <el-input v-model="form.roomNumbers" placeholder="请输入入住房号" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item label="虚拟客单">
+        <!-- <el-form-item label="虚拟客单">
           <el-input v-model="form.orderGuestNo" placeholder="请输入虚拟客单" clearable style="width: 178px;"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="组单号">
           <el-input v-model="form.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item label="团队名称">
-          <el-input v-model="form.name" placeholder="请输入团队名称" clearable style="width: 178px;"></el-input>
+        <el-form-item label="团体名称">
+          <el-input v-model="form.name" placeholder="请输入团体名称" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="房间数量">
           <el-input v-model="form.roomNum" placeholder="请输入房间数量" clearable style="width: 178px;"></el-input>
@@ -49,16 +54,21 @@
     <el-table v-loading="loading" 
     :data="tableData" 
     filter-change="handlerFilterChange" border style="width:98%;margin:auto">
-      <el-table-column label="组单" align="center" width="80" prop="orderNo" fixed="left">
+      <el-table-column label="组单" align="center" width="110" prop="orderNo" fixed="left">
       </el-table-column>
       <el-table-column label="团体名称" align="center" width="80" prop="name">
       </el-table-column>
       <el-table-column label="入住房数" align="center" width="80" prop="roomNum">
       </el-table-column>
-      <el-table-column label="入住房号" align="center" width="80" prop="roomNumbers">
+      <el-table-column label="入住房号" align="center" width="200" prop="roomNumbers">
+        <template slot-scope="scope">
+          <span v-for="(v,i) in scope.row.roomNumbers" v-if="v!='' && v!=null ">
+            {{v}}<span v-if="i!=scope.row.roomNumbers.length-1">,</span>
+          </span>
+        </template>
       </el-table-column>
-      <el-table-column label="虚拟客单号" align="center" width="100" prop="orderGuestNo">
-      </el-table-column>
+      <!-- <el-table-column label="虚拟客单号" align="center" width="100" prop="orderGuestNo">
+      </el-table-column> -->
       <el-table-column label="入住时间" align="center" width="180"  prop="beginDate">
       </el-table-column>
       <el-table-column label="结账时间" align="center" width="180" prop="endDate">
@@ -93,6 +103,7 @@
 </template>
 <script>
   import bus from '@/utils/bus'
+  import {orderStatusMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
@@ -112,6 +123,7 @@
           pageNum:1,
           pageSize:10
         },
+        orderStatusMap:orderStatusMap,
         filterText: '',
         pagination: {size: 10, current: 1, total: 0},
         loading: false,

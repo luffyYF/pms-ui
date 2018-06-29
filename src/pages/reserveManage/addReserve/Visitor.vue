@@ -575,7 +575,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="extendClose">取 消</el-button>
-        <el-button size="mini" @click="extendConfirm" type="primary">确 认</el-button>
+        <el-button size="mini" @click="extendConfirm" type="primary" :disabled="submitLock">确 认</el-button>
       </span>
     </el-dialog>
 
@@ -632,6 +632,7 @@
       components:{chooseGuest, reserveManager, Agreement},
       data() {
         return {
+          submitLock:false,
           gsReserve:0,
           gsCheckin:0,
           gsLeave:0,
@@ -1056,6 +1057,7 @@
             this.extendForm.payment='0'
             this.extendForm.settlementAmount=0
             this.dialogExtend = true
+            this.submitLock = false;
           }
           this.calcDays()
           this.getBookableCount()
@@ -1074,6 +1076,11 @@
             this.$message({type:'warning', message:'请输入正确的押金'})
             return
           }
+          if(this.submitLock){
+            return 
+          }else{
+            this.submitLock = true;
+          }
           let data={
             guestOrderPk: this.form.guestOrderPk,
             endDate: this.form.endDate,
@@ -1087,6 +1094,9 @@
             })
             bus.$emit('refreshOrderInfo', this.form.orderPk)
             this.dialogExtend = false
+            this.submitLock = false;
+          }).catch(()=>{
+            this.submitLock = false;
           })
         },
         calcDays() {//计算天数
