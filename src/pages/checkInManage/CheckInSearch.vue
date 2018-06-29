@@ -39,7 +39,7 @@
         <el-form-item label="组单名称">
           <el-input v-model="chenkInSearchData.name" clearable style="width: 178px;"></el-input> 
         </el-form-item>
-        <el-form-item label="组单状态">
+        <el-form-item label="客单状态">
           <el-select v-model="chenkInSearchData.orderStatus" placeholder="全部状态" clearable>
             <el-option v-for="(value,key) in orderStatusMap" :key="key" :label="value" :value="key"></el-option>
           </el-select>

@@ -133,6 +133,7 @@
         </div>
       </div>
     </el-dialog>
+
     <el-dialog class="son-dialog" top="8vh" title="换房" :visible.sync="dialogChangeRoom" width="600px" :append-to-body="true">
       <!--<div class="pattern-dialog-container">-->
         <h4>当前房型：{{roomFilterObj.roomTypeName}}</h4>
@@ -154,7 +155,7 @@
         </el-row>
         <el-table
           ref="changeRoomTable"
-          :data="changeRoomTableData | globalFilter(roomFilterObj.roomNumber  )"
+          :data="changeRoomTableData | globalFilter(roomFilterObj.roomNumber)"
           tooltip-effect="dark"
           style="width: 100%"
           height="300"
@@ -176,6 +177,7 @@
         <el-button size="mini" type="primary" @click="dialogChangeRoom = false">关闭</el-button>
       </span>
     </el-dialog>
+
     <el-dialog class="son-dialog" title="预定排房" :visible.sync="dialogRowRoom" width="50%" :append-to-body="true" :before-close="handleCloseRowRoom">
       <div class="pattern-dialog-container" style="padding: 0px 4px;">
         <el-table
@@ -473,10 +475,10 @@ export default {
     },
     showChangeRoom() {//更换房间
       this.dialogChangeRoom = true
-      // this.roomFilterObj.roomTypePk=this.currGuest.roomTypePk
       // this.listRowRoomList(this.currGuest.roomTypePk)
+      this.roomFilterObj.roomTypePk=this.currGuest.roomTypePk
       this.roomFilterObj.roomTypeName = this.currGuest.roomTypeName
-      this.listRowRoomList()
+      this.listRowRoomList(this.currGuest.roomTypePk)
     },
     listRowRoomList(roomTypePk) { //查找可更换的房间
       let data = {

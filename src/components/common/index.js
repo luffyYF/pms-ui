@@ -57,13 +57,13 @@ Vue.component('channelSelect', {
   mounted () {
     listChannelTypeSelect().then(res => {
       this.channelTyps = res.data;
-      if(!this.selectValue){
-        for(var key in res.data) {
-          this.selectValue = key
-          this.$emit('selfirst', key)
-          break;
-        }
-      }
+      // if(!this.selectValue){
+      //   for(var key in res.data) {
+      //     this.selectValue = key
+      //     this.$emit('selfirst', key)
+      //     break;
+      //   }
+      // }
     });
   }
 })
