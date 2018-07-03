@@ -1,7 +1,13 @@
 // 组订单弹出
 <template>
   <div>
-    <el-dialog class="dialogVisibleClass" top="5vh" :title="dialogVisibleTitle" :visible.sync="dialogVisible" width="1120px" :close-on-click-modal="false" :before-close="dialogVisibleClose">
+    <el-dialog class="dialogVisibleClass" top="5vh" 
+    :title="dialogVisibleTitle" 
+    :visible.sync="dialogVisible" 
+    :close-on-click-modal="false" 
+    :before-close="dialogVisibleClose"
+    width="1120px" >
+    <!-- :append-to-body="true" -->
       <div class="pattern-dialog-container">
         <div class="pattern-dialog-title">
           <h5 class="info-title">预定信息</h5>
@@ -28,7 +34,7 @@
                 </el-form-item>
               </el-col>
               <el-col class="dialog-li">
-                <el-form-item label="是否团体"> 
+                <el-form-item label="是否团体">
                   <el-select v-model="form.isTeam" :disabled="true">
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
@@ -726,8 +732,7 @@ export default {
           payment: this.form.payment,
           remark: this.form.remark
         }
-        editOrder(data).then(res=>{
-        })
+        editOrder(data).then(res=>{})
       }
       if(this.currConfirmType=='add-guest'){
         //添加客人操作

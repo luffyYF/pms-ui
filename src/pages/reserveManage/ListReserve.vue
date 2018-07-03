@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" size="mini" label-width="90px"  class="demo-form-inline">
+    <el-form :inline="true" size="mini" label-width="120px"  class="demo-form-inline">
       <el-col :span="24">
         <el-form-item label="快捷搜索:">
           <el-radio-group v-model="formInline.orderStatus" @change="getListForStatus" size="small">
@@ -12,49 +12,50 @@
           </el-radio-group>
         </el-form-item>
       </el-col>
-      <el-col :span="24">
+      <!-- <el-col :span="24"> -->
         <el-form-item label="预订人:">
-          <el-input v-model="formInline.userName" placeholder="请输入预订人" clearable></el-input>
+          <el-input v-model="formInline.userName" placeholder="请输入预订人" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <!-- <el-form-item label="预订卡号:">
           <el-input v-model="filterOrderNo" placeholder="请输入预订卡号" clearable></el-input>
         </el-form-item> -->
         <el-form-item label="预订手机号:">
-          <el-input v-model="formInline.userPhone" placeholder="预订人手机号" clearable></el-input>
+          <el-input v-model="formInline.userPhone" placeholder="预订人手机号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="入住人:">
-          <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable></el-input>
+          <el-input v-model="formInline.guestName" placeholder="请输入入住人" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item label="入住手机号:">
-          <el-input v-model="formInline.guestPhone" placeholder="入住人手机号" clearable></el-input>
+        <el-form-item label="入住人手机号:">
+          <el-input v-model="formInline.guestPhone" placeholder="请输入入住人手机号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="房间数量:">
-          <el-input v-model="formInline.rentCount" placeholder="请输入房间数量" clearable></el-input>
+          <el-input v-model="formInline.rentCount" placeholder="请输入房间数量" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item label="入住时间:">
+        <el-form-item label="抵店日期:">
           <el-date-picker
             v-model="formInline.beginDate"
             align="right"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择入住时间"
-            :picker-options="startTimeOptions">
+            :picker-options="startTimeOptions" style="width: 178px;">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="预离时间:">
+        <el-form-item label="离店日期:">
           <el-date-picker
             v-model="formInline.endDate"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择结账时间"
-            :picker-options="endTimeOptions">
+            :picker-options="endTimeOptions"
+            style="width: 178px;">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="　　渠道">
-          <channel-select v-model="formInline.channelTypePk"/>
+          <channel-select v-model="formInline.channelTypePk" style="width: 178px;"/>
         </el-form-item>
         <el-form-item label="房型:">
-          <el-select v-model="formInline.roomTypePk" placeholder="全部房型" clearable>
+          <el-select v-model="formInline.roomTypePk" placeholder="全部房型" clearable style="width: 178px;">
             <el-option
               v-for="(item,index) in roomTypeOptions"
               :key="index"
@@ -63,13 +64,26 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="　　房号">
+          <el-input v-model="formInline.roomNumber" placeholder="请输入房间号" clearable style="width: 178px;"></el-input>
+        </el-form-item>
+        <el-form-item label="入住类型:">
+          <el-select v-model="formInline.checkInType" placeholder="全部入住类型" clearable style="width: 178px;">
+            <el-option
+              v-for="(item,index) in checkInTypeMap"
+              :key="index"
+              :label="item"
+              :value="index">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="组单号:">
-          <el-input v-model="formInline.orderNo" placeholder="请输入组单号" clearable></el-input>
+          <el-input v-model="formInline.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
         </el-form-item>
-      </el-col>
+      <!-- </el-col> -->
     </el-form>
     <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border max-height="628">
       <el-table-column label="预订单" prop="orderNo" width="120">
@@ -186,7 +200,7 @@
 </template>
 <script>
   import bus from '@/utils/bus'
-  import {orderStatusMap} from '@/utils/orm'
+  import {orderStatusMap, checkInTypeMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
@@ -199,6 +213,7 @@
     data () {
       return {
         orderStatusMap:orderStatusMap,
+        checkInTypeMap:checkInTypeMap,
         // orderNo:'',
         channelArr: [],
         total: 0,
@@ -218,9 +233,9 @@
         saleOptions: [],
         value: '',
         startTimeOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
+          // disabledDate(time) {
+          //   return time.getTime() > Date.now();
+          // },
           shortcuts: [{
             text: '今天',
             onClick(picker) {
@@ -272,6 +287,7 @@
         formInline: {
           roomTypePk: '',
           orderStatus: 'RESERVE',
+          roomNumber:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -327,7 +343,7 @@
         self.agreementOptions = [];
         self.industryOptions = [];
         self.saleOptions = [];
-        self.roomTypeOptions.push({typeName: '全部房型', typePk: ''});
+        // self.roomTypeOptions.push({typeName: '全部房型', typePk: ''});
         listType({typeMasters: 'ROOM_TYPE,CHANNEL,AGREEMENT,INDUSTRY,SALE'}).then(result => {
           const listTypeData = result.data.data;
           for (let index = 0; index < listTypeData.length; index++) {

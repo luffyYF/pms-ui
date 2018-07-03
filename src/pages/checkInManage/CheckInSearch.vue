@@ -1,7 +1,7 @@
 <template>
   <section>
     <el-col :span="24">
-      <el-form ref="chenkInSearchData" :inline="true" :model="chenkInSearchData" size="mini" label-width="80px"  class="demo-form-inline">
+      <el-form ref="chenkInSearchData" :inline="true" :model="chenkInSearchData" size="mini" label-width="110px"  class="demo-form-inline">
         <el-row>
           <!-- <el-form-item label="快捷搜索">
             <el-radio-group v-model="chenkInSearchData.quickSearch" size="small">
@@ -22,38 +22,32 @@
           </el-select>
         </el-form-item>
         <el-form-item label="　　房号">
-          <el-input v-model="chenkInSearchData.roomNumber" clearable style="width: 178px;"></el-input>
+          <el-input v-model="chenkInSearchData.roomNumber" placeholder="请输入房间号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="　预订人">
-          <el-input v-model="chenkInSearchData.userName" clearable style="width: 178px;"></el-input>
+          <el-input v-model="chenkInSearchData.userName" placeholder="请输入预定人姓名" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="　入住人">
-          <el-input v-model="chenkInSearchData.guestName" clearable style="width: 178px;"></el-input>
+          <el-input v-model="chenkInSearchData.guestName" placeholder="请输入入住人姓名" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="　入住人手机号">
-          <el-input v-model="chenkInSearchData.guestPhone" clearable style="width: 178px;"></el-input>
+          <el-input v-model="chenkInSearchData.guestPhone" placeholder="请输入入住人手机号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="　组单号">
-          <el-input v-model="chenkInSearchData.orderNo" clearable style="width: 178px;"></el-input>
+          <el-input v-model="chenkInSearchData.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="组单名称">
-          <el-input v-model="chenkInSearchData.name" clearable style="width: 178px;"></el-input> 
+          <el-input v-model="chenkInSearchData.name" placeholder="请输入组单名称" clearable style="width: 178px;"></el-input> 
         </el-form-item>
         <el-form-item label="客单状态">
           <el-select v-model="chenkInSearchData.orderStatus" placeholder="全部状态" clearable>
             <el-option v-for="(value,key) in orderStatusMap" :key="key" :label="value" :value="key"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="价格方案">
-          <el-select v-model="chenkInSearchData.price" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option v-for="(price,index) in priceList.tableList" :key="index" :label="price.schemeName" :value="price.schemePk"></el-option>
-          </el-select>
-        </el-form-item> -->
         <!-- <el-form-item label="房间数量">
           <el-input v-model="filterText" clearable></el-input>
         </el-form-item> -->
-        <el-form-item label="开始时间"> 
+        <el-form-item label="抵店日期"> 
           <el-date-picker
             v-model="chenkInSearchData.beginDate"
             align="right"
@@ -63,7 +57,7 @@
             :picker-options="startTimeOptions">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="结束时间">
+        <el-form-item label="离店日期">
           <el-date-picker
             v-model="chenkInSearchData.endDate"
             align="right"
@@ -75,6 +69,16 @@
         </el-form-item>
         <el-form-item label="　　渠道">
           <channel-select v-model="chenkInSearchData.channelTypePk"/>
+        </el-form-item>
+        <el-form-item label="入住类型:">
+          <el-select v-model="chenkInSearchData.checkInType" placeholder="全部入住类型" clearable>
+            <el-option
+              v-for="(item,index) in checkInTypeMap"
+              :key="index"
+              :label="item"
+              :value="index">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:15px">搜索订单</el-button>
@@ -111,8 +115,8 @@
       </el-table-column>
       <el-table-column label="渠道" align="center" width="100" prop="channelTypeName">
       </el-table-column>
-      <el-table-column label="入住卡号" align="center" width="100" prop="memberCardNo">
-      </el-table-column>
+      <!-- <el-table-column label="入住卡号" align="center" width="100" prop="memberCardNo">
+      </el-table-column> -->
       <el-table-column label="入住人手机" align="center" width="120" prop="guestPhone">
       </el-table-column>
       <el-table-column label="证件号码" align="center" width="140" prop="certificateNo">
@@ -123,14 +127,14 @@
       </el-table-column>
       <el-table-column label="房价" align="center" width="80"  prop="price">
       </el-table-column>
-      <el-table-column label="已交押金" align="center" width="80" prop="virtualTicketNumber">
-      </el-table-column>
+      <!-- <el-table-column label="已交押金" align="center" width="80" prop="virtualTicketNumber">
+      </el-table-column> -->
       <el-table-column label="消费总额" align="center" width="80" prop="consumerPrice">
       </el-table-column>
       <el-table-column label="余额" align="center" width="80" prop="settlementPrice">
       </el-table-column>
-      <el-table-column label="预授权金额" align="center" width="100" prop="groupPayTheAmount">
-      </el-table-column>
+      <!-- <el-table-column label="预授权金额" align="center" width="100" prop="groupPayTheAmount">
+      </el-table-column> -->
       <el-table-column label="抵店日期" align="center" width="180" prop="beginDate"> 
       </el-table-column>
       <el-table-column label="离店时间" align="center" width="180" prop="endDate">
@@ -157,13 +161,12 @@
 
     <!-- 订单弹出 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
-    
   </section>
 
 </template>
 <script>
   import bus from '@/utils/bus'
-  import {orderStatusMap} from '@/utils/orm'
+  import {orderStatusMap,checkInTypeMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
@@ -175,6 +178,7 @@
     data () {
       return {
         orderStatusMap:orderStatusMap,
+        checkInTypeMap:checkInTypeMap,
         dialogVisible:false,
         roomTypeOptions: [],
         channelOptions: [],
@@ -183,6 +187,7 @@
         saleOptions: [],
         chenkInSearchData:{
           // quickSearch: '在住',
+          checkInType:'',
           roomTypePk: '',
           channelTypePk:'',
           roomNumber: '',
@@ -211,9 +216,9 @@
         tableData: [],
         value: '',
         startTimeOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
+          // disabledDate(time) {
+          //   return time.getTime() > Date.now();
+          // },
           shortcuts: [{
             text: '今天',
             onClick(picker) {
@@ -236,9 +241,9 @@
           }]
         },
         endTimeOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
+          // disabledDate(time) {
+          //   return time.getTime() > Date.now();
+          // },
           shortcuts: [{
             text: '今天',
             onClick(picker) {
@@ -275,9 +280,9 @@
     methods: {
       showOrderInfo(row) {//查看订单
         // this.dialogVisible = true
-        setTimeout(() => {
+        // setTimeout(() => {
           this.$refs.checkinDialogRef.initOrderInfo(row.orderPk, 'visitor', row.guestOrderPk)
-        },1)
+        // },1)
       },
       handleClose(done) {
         this.$confirm('确认关闭？')

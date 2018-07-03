@@ -1,6 +1,6 @@
 //客单
 <template>
-  <div class="guestOrder1002">
+  <div class="visitorGuestOrder">
     <el-row>
       <el-col :span="9">
         <p class="visitor-title visitor-table">
@@ -1178,17 +1178,17 @@
         reserveManager() {//打开预定管理
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
-        editGuestInfo() {//修改客人信息
-          if(this.form.pmsCancelFlag=='Y'){
-            return;
-          }
-          editOrderMember(this.form).then(res=>{
-            this.$message({type:'success', message: '客人信息修改成功'})
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
-          }).catch(error=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
-          })
-        },
+        // editGuestInfo() {//修改客人信息
+        //   if(this.form.pmsCancelFlag=='Y'){
+        //     return;
+        //   }
+        //   editOrderMember(this.form).then(res=>{
+        //     this.$message({type:'success', message: '客人信息修改成功'})
+        //     bus.$emit('refreshOrderInfo', this.form.orderPk)
+        //   }).catch(error=>{
+        //     bus.$emit('refreshOrderInfo', this.form.orderPk)
+        //   })
+        // },
         toDialogAgreement(buttonType) {//打开选择协议单位
           if(buttonType == 'registMember'){
             this.regisType = buttonType
@@ -1274,9 +1274,11 @@
           bus.$emit('refreshOrderInfo', this.form.orderPk)
         },
         QRCodeSettingSubmit(){
-          if(!validatePhone(this.qrcodeForm.qrCodePhone)){
-            this.$message({type:'warning', message:'手机号不合法'})
-            return false
+          if(this.qrcodeForm.qrCodePhone){
+            if(!validatePhone(this.qrcodeForm.qrCodePhone)){
+              this.$message({type:'warning', message:'手机号不合法'})
+              return false
+            }
           }
           qrCodePhoneSetting(this.qrcodeForm).then(res=>{
             this.dialogQRCodeSettingClose()
@@ -1394,46 +1396,45 @@
 }
 </style>
 <style>
-.guestOrder1002 .el-table .success-row {
+.visitorGuestOrder .el-table .success-row {
     background:  #f0f9eb;
 }
-.guestOrder1002 .el-input-number span{
+.visitorGuestOrder .el-input-number span{
   width:17px !important
 }
-.guestOrder1002 .el-input-number .el-input__inner{
+.visitorGuestOrder .el-input-number .el-input__inner{
   padding-left: 2px !important;
   padding-right: 2px !important;
 }
-
-.agreement-body>.el-dialog> .el-dialog__header{
+.visitorGuestOrder .agreement-body>.el-dialog> .el-dialog__header{
   border-bottom: 1px solid #ddd;
   margin-bottom: 10px;
 }
-.agreement-body>.el-dialog>.el-dialog__body{
+.visitorGuestOrder .agreement-body>.el-dialog>.el-dialog__body{
   padding: 0 15px;
 }
-.guestOrder1002 .el-input-number .el-input__inne{
+.visitorGuestOrder .el-input-number .el-input__inne{
   text-align:left !important;
 }
-.el-form-item--mini .el-form-item__content, .el-form-item--mini .el-form-item__label{
+.visitorGuestOrder .el-form-item--mini .el-form-item__content, .el-form-item--mini .el-form-item__label{
   line-height: 20px !important;
   font-size: 13px;
 }
-.guestOrder1002 .el-input--mini .el-input__inner {
+.visitorGuestOrder .el-input--mini .el-input__inner {
     height: 20px !important;
     line-height: 20px;
 }
-.guestOrder1002 .el-input--mini .el-input__icon {
+.visitorGuestOrder .el-input--mini .el-input__icon {
     line-height: 20px;
 }
-.guestOrder1002 .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+.visitorGuestOrder .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
   margin-bottom: 4px;
 }
-.guestOrder1002 .visitor-tabs, .visitor-contract{
+.visitorGuestOrder .visitor-tabs, .visitor-contract{
   margin-bottom: 5px;
   margin-top: 20px;
 }
-.guestOrder1002 .visitor-tabs{
+.visitorGuestOrder .visitor-tabs{
   margin-top: 16px;
 }
 #app .el-dialog{
@@ -1456,28 +1457,28 @@
 #app .patternDialog .el-dialog__body{
   padding: 0;
 }
-.input_width_style{
+.visitorGuestOrder .input_width_style{
   width: calc(95.83333% - 9px) !important;
 }
-.el-dialog__header {
+.visitorGuestOrder .el-dialog__header {
     padding: 10px 20px 10px;
 }
-.el-input__inner,.el-textarea__inner{
+.visitorGuestOrder .el-input__inner,.el-textarea__inner{
   border-radius: 2px;
 }
-.info-title{
+.visitorGuestOrder .info-title{
   padding: 0 5px;
 }
-.guestOrder1002 .el-table td, .el-table th{
+.visitorGuestOrder .el-table td, .el-table th{
   padding: 2px 0;
   font-size: 13px;
 }
-.guestOrder1002 .el-input-number--mini {
+.visitorGuestOrder .el-input-number--mini {
     width: 100%;
     line-height: 20px;
 }
-.el-input--mini .el-input__inner {
-    height: 25px !important;
+.visitorGuestOrder .el-input--mini .el-input__inner {
+    /* height: 25px !important; */
     line-height: 25px;
 }
 </style>
