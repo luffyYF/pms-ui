@@ -299,7 +299,8 @@ import {addRole,updateRole} from '@/api/operators/pmsRoleController'
               }).catch(()=>{
                 self.delVisible = false;
                 self.dialogVisible = false;
-                self.$message({type:'danger', message: '网络异常'})
+                // self.$message({type:'danger', message: '网络异常'})
+                console.log("网络异常");
               })
             }else{
               self.$message({
@@ -347,7 +348,8 @@ import {addRole,updateRole} from '@/api/operators/pmsRoleController'
             }).catch(()=>{
               self.delVisible = false;
               self.dialogVisible = false;
-              self.$message({type:'danger', message: '网络异常'})
+              // self.$message({type:'danger', message: '网络异常'})
+              console.log("网络异常");
             })
           }else{
             self.$message({

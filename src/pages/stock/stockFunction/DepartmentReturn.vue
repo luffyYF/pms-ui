@@ -340,7 +340,8 @@ export default {
           this.resetForm2();
         }
       }).catch(()=>{
-        this.$message({type:'warning', message: '网络异常'})
+        // this.$message({type:'warning', message: '网络异常'})
+        console.log("网络异常");
       })
     }
   },

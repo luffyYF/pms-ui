@@ -665,18 +665,19 @@
           checkInType: this.selectForm.checkInType,
         }
         currentRoomList(data).then(res1=>{
-          let tempdata = res1.data
+          // let tempdata = res1.data
+          this.roomList = res1.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
-            for(let i = 0; i<tempdata.length; i++){
-              let roomTypePk = tempdata[i].roomTypePk
-              this.roomType.forEach(type => {
-                if(roomTypePk==type.typePk){
-                  tempdata[i].roomTypeName=type.typeName
-                }
-              })
-            }
-            this.roomList = tempdata
+            // for(let i = 0; i<tempdata.length; i++){
+            //   let roomTypePk = tempdata[i].roomTypePk
+            //   this.roomType.forEach(type => {
+            //     if(roomTypePk==type.typePk){
+            //       tempdata[i].roomTypeName=type.typeName
+            //     }
+            //   })
+            // }
+            // this.roomList = tempdata
           })
         })
       },

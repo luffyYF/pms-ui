@@ -1,7 +1,7 @@
 // 价格变更记录
 <template>
   <div>
-    <el-dialog class="pattern-dialog" title="房价变更记录" :visible.sync="dialogPriceChange" width="80%" :append-to-body="true" :before-close="handleClose">
+    <el-dialog class="pattern-dialog" title="房价变更记录" :visible.sync="dialogPriceChange" width="900px" :append-to-body="true" :before-close="handleClose">
       <div class="pattern-dialog-container dialog-table-content">
         <el-col :span="24" style="margin:10px 0;">
           房号筛选：
@@ -12,18 +12,18 @@
         </el-col>
         <el-col :span="24">
           <el-table :data="tableData" border style="width: 100%">
-            <el-table-column prop="status" label="状态">
+            <el-table-column prop="status" label="状态" width="80">
               <template slot-scope="scope">
                 <span>{{contractMap[scope.row.status]}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="srcRoomNumber" label="房号" width="180"></el-table-column>
-            <el-table-column prop="roomPrice" label="房价"></el-table-column>
-            <el-table-column prop="date" label="营业日期"></el-table-column>
-            <el-table-column prop="createTime" label="操作时间"></el-table-column>
+            <el-table-column prop="srcRoomNumber" label="房号" width="100"></el-table-column>
+            <el-table-column prop="roomPrice" label="房价" width="100"></el-table-column>
+            <el-table-column prop="date" label="营业日期" width="110"></el-table-column>
+            <el-table-column prop="createTime" label="操作时间" width="180"></el-table-column>
             <el-table-column prop="createUserName" label="操作员"></el-table-column>
             <el-table-column prop="channelTypeName" label="渠道"></el-table-column>
-            <el-table-column prop="schemeName" label="方案"></el-table-column>
+            <!-- <el-table-column prop="schemeName" label="方案"></el-table-column> -->
           </el-table>
         </el-col>
       </div>

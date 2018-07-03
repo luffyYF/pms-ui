@@ -691,6 +691,7 @@ export default {
     loadAgreement(data){
       this.visitorForm.agreementPk=data.agreementPk
       this.visitorForm.unitName=data.unitName
+      this.form.name=data.unitName
     },
     loadGuest(guest) {
       //回显客人
