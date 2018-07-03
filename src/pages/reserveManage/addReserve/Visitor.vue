@@ -32,6 +32,7 @@
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
                   <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="toCheckout">退房</el-button>
                 </template> <br>
+                <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -590,7 +591,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogQRCodeSetting = false">取 消</el-button>
-        <el-button size="mini" @click="" type="primary" @click="QRCodeSettingSubmit">确 认</el-button>
+        <el-button size="mini" type="primary" @click="QRCodeSettingSubmit">确 认</el-button>
       </span>
     </el-dialog>
 
