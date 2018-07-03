@@ -182,9 +182,11 @@ import store from "@/store";
 import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import {getToken, removeToken, removeRefreshToken} from '@/utils/auth'
+import "@/utils/sockjs.min.js"
+import "@/utils/stomp.min.js"
 export default {
   created() {
-    this.newOrder();
+    // this.newOrder();
     var test = window.localStorage.getItem("current_logon_company");
     this.activeCompany = JSON.parse(test);
     if (
@@ -202,7 +204,8 @@ export default {
       routes: store.getters.permission_routers,
       collapsed: false,
       screenWidth: document.body.clientWidth,
-      activeCompany: {}
+      activeCompany: {},
+      stompClient: null
     };
   },
   methods: {
@@ -246,6 +249,7 @@ export default {
           store
             .dispatch("LogOut")
             .then(res => {
+              this.stompClient.disconnect();
               // 拉取user_info
               this.$router.push("/login");
               window.localStorage.setItem("current_logon_company", "");
@@ -266,6 +270,107 @@ export default {
     },
     toSelectClass() {
       this.$router.push("./classSelection");
+    },
+    connection() {
+      var self = this;
+      var socket = new SockJS('http://localhost:8098/gs-guide-websocket');
+      self.stompClient = Stomp.over(socket);
+      self.stompClient.connect({name: localStorage.getItem("userPk")}, function (frame) {
+        console.log('Connected: ' + frame);
+        console.log(JSON.parse(localStorage.sessionInfo).companyPk);
+        self.stompClient.subscribe('/topic/message/'+JSON.parse(localStorage.sessionInfo).companyPk, function (greeting) {
+          self.newOrders();
+        });
+        self.stompClient.subscribe('/topic/message', function (greeting) {
+          if(JSON.parse(greeting.body).type == "notification") {
+            self.notifiModel(JSON.parse(greeting.body));
+          }
+        });
+      },function () {
+        setTimeout(function(){
+            connection();
+        },2000);
+      });
+    },
+    newOrders() {
+      var self = this;
+      var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+      if (Notification) {
+          Notification.requestPermission(function (status) {
+              if (status != "granted") {
+                  return;
+              } else {
+                  var tag = "sds" + Math.random();
+                  // Notification.body = msg;
+                  //notifyObj属于Notification构造方法的实例对象
+                  var notifyObj = new Notification(
+                      '新订单(PMS)',
+                      {
+                          dir: 'auto',
+                          lang: 'zh-CN',
+                          tag: tag,//实例化的notification的id
+                          icon: '../../static/img/logo(2).png',  //icon的值显示通知图片的URL
+                          body: '豪斯菲尔来新订单了'
+                      }
+                  );
+                  notifyObj.onclick = function () {
+                      //如果通知消息被点击,通知窗口将被激活
+                      window.focus();
+                      self.$router.push("/reserveManage/listReserve");
+                      notifyObj.close();
+                      // alert(11);
+                  };
+                  notifyObj.onerror = function () {
+                      console.log("桌面消息出错！！！请联系管理员");
+                  };
+                  notifyObj.onclose = function () {
+                  };
+              }
+          });
+      } else {
+          console.log("您的浏览器不支持桌面消息!");
+      }
+      var audio = document.getElementById("audio");
+      if(audio){
+        audio.play();
+      }
+    },
+    notifiModel(message) {
+      var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+      if (Notification) {
+          Notification.requestPermission(function (status) {
+              if (status != "granted") {
+                  return;
+              } else {
+                  var tag = "sds" + Math.random();
+                  // Notification.body = msg;
+                  //notifyObj属于Notification构造方法的实例对象
+                  var notifyObj = new Notification(
+                      message.title+"(PMS)",
+                      {
+                          dir: 'auto',
+                          lang: 'zh-CN',
+                          tag: tag,//实例化的notification的id
+                          icon: '../../static/img/logo(2).png',  //icon的值显示通知图片的URL
+                          body: message.content
+                      }
+                  );
+                  notifyObj.onclick = function () {
+                      //如果通知消息被点击,通知窗口将被激活
+                      window.focus();
+                      notifyObj.close();
+                      // alert(11);
+                  };
+                  notifyObj.onerror = function () {
+                      console.log("桌面消息出错！！！请联系管理员");
+                  };
+                  notifyObj.onclose = function () {
+                  };
+              }
+          });
+      } else {
+          console.log("您的浏览器不支持桌面消息!");
+      }
     }
   },
   mounted() {
@@ -276,6 +381,7 @@ export default {
         this.screenWidth = window.screenWidth;
       })();
     };
+    this.connection();
   },
   watch: {
     screenWidth(val) {
