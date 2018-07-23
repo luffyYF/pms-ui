@@ -273,7 +273,7 @@ export default {
     },
     connection() {
       var self = this;
-      var socket = new SockJS('http://localhost:8098/gs-guide-websocket');
+      var socket = new SockJS('https://www.housefeel.cn:8888/gs-guide-websocket');
       self.stompClient = Stomp.over(socket);
       self.stompClient.connect({name: localStorage.getItem("userPk")}, function (frame) {
         console.log('Connected: ' + frame);
