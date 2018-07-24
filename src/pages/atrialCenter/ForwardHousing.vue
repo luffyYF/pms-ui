@@ -12,26 +12,8 @@
     </el-row>
     <!--条件查询-->
     <div class="block">
-      <el-form :inline="true" size="mini" :model="selectDate" class="demo-form-inline">
-        <date-picker v-model="begenAndEnd"></date-picker>
-        <!-- <el-form-item label="开始时间:">
-          <el-date-picker
-            v-model="selectDate.beginDate"
-            type="date"
-            placeholder="选择日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="结束时间：">
-          <el-date-picker
-            v-model="selectDate.endDate"
-            type="date"
-            placeholder="选择日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd">
-          </el-date-picker>
-        </el-form-item> -->
+      <el-form :inline="true" size="mini" class="demo-form-inline">
+        <date-picker v-model="beginAndEnd"></date-picker>
         <el-form-item>
           <el-button type="primary"  size="mini" icon="el-icon-search" @click="search">查询</el-button>
         </el-form-item>
@@ -92,10 +74,6 @@ export default {
   components: { DatePicker, RoomOrderTable },
   data() {
     return {
-      selectDate:{
-        beginDate:Moment(new Date()).format("YYYY-MM-DD"),
-        endDate:Moment(new Date()).add(13, 'days').format("YYYY-MM-DD")
-      },
       houseList:[],
       tempColumnKey:'',
       screenWidth: document.body.clientWidth,
@@ -103,10 +81,9 @@ export default {
       tableColumn: [],
       tableData:[],
       loading:false,
-      begenAndEnd:{
-        begin:Moment(new Date()).format("YYYY-MM-DD"),
-        end:''
-        // 
+      beginAndEnd:{
+        begin:null,
+        end:null
       }
     };
   },
@@ -143,7 +120,6 @@ export default {
         data.forEach(item =>{
           var dayNum = item[column.property] ==null?0:item[column.property];
           var RoomNum = item.totalRoomNum==null?0:item.totalRoomNum;
-          console.log(RoomNum)
           day += dayNum;
           room += RoomNum;
         }); 
@@ -154,12 +130,10 @@ export default {
     search(){
       // 点击查询按钮
       this.loading = true;
-      frowardRoomList({begin:this.selectDate.beginDate,end:this.selectDate.endDate}).then(res =>{
-        console.log(res)
+      frowardRoomList({begin:this.beginAndEnd.begin,end:this.beginAndEnd.end}).then(res =>{
         this.loading = false;
         if(res.code == 1) {
           this.houseList = res.data;
-          console.log(this.houseList)
         }
       }).catch(()=>{
         this.loading = false;
@@ -182,12 +156,6 @@ export default {
       this.screenWidth = val;
       this.tableStyle = "width:" + (this.screenWidth - 20) + "px";
     },
-    begenAndEnd: function () {
-      if (this.begenAndEnd) {
-        this.selectDate.beginDate =this.begenAndEnd.begin;
-        this.selectDate.endDate = this.begenAndEnd.end;
-      }
-    }
   }
 };
 </script>

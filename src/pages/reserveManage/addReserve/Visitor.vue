@@ -784,9 +784,9 @@
             this.form.roomPk = room.roomPk
             this.form.roomNumber = room.roomNumber
             this.form.roomTypePk = room.roomTypePk
-            if(moment().hour()<6){
-              this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-            }
+            // if(moment().hour()<6){
+            //   this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+            // }
             this.roomTable=[]
             this.currGuestList = []
             this.contractTableData = []
@@ -943,8 +943,14 @@
           this.form.mealTicketNoon = 0
           this.form.mealTicketNight = 0
           this.form.bornDate = null
-          this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
+          if(moment().hour()<6){
+            this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+          }else{
+            this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
+          }
+          this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+          // this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
+          // this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
           this.form.pmsCancelFlag = 'N'
           this.memberFlag = false
         },

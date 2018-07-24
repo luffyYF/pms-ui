@@ -776,6 +776,10 @@
             this.$message({type:'warning', message: '请选择原因'})
             return;
           }
+          if(this.repairForm.remark==null || this.repairForm.remark==undefined || this.repairForm.remark==''){
+            this.$message({type:'warning', message: '请填写说明'})
+            return;
+          }
           data.roomPk= this.repairForm.roomPk
           data.roomNumber=this.repairForm.roomNumber
           data.roomTypePk= this.repairForm.roomTypePk
@@ -796,6 +800,10 @@
           }
           if(!this.disableForm.reasonTypePk){
             this.$message({type:'warning', message: '请选择原因'})
+            return;
+          }
+          if(this.disableForm.remark==null || this.disableForm.remark==undefined || this.disableForm.remark==''){
+            this.$message({type:'warning', message: '请填写说明'})
             return;
           }
           data.roomPk= this.disableForm.roomPk

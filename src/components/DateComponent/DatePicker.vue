@@ -15,18 +15,19 @@
 </template>
 
 <script>
+import Moment from 'Moment'
   export default {
     props: ['value'],
-    watch: {
-      value: function () {
-        if (this.value) {
-          this.filterDate = [this.value.begin, this.value.end]
-        }
-      }
-    },
+    // watch: {
+    //   value: function () {
+    //     if (this.value) {
+    //       this.filterDate = [this.value.begin, this.value.end]
+    //     }
+    //   }
+    // },
     data: function () {
       return {
-        filterDate: [],
+        filterDate: '',
         pickerOptions: {
           shortcuts: [{
             text: '今天',
@@ -129,13 +130,19 @@
     methods: {
       handlerChange (value) {
         console.log(value)
-        this.$emit('input', {begin: value[0], end: value[1]})
+        // this.$emit('input', {begin: value[0], end: value[1]})
+        if(value){
+          this.$emit('input', {begin: value[0], end: value[1]})
+        }else{
+          this.filterDate = ''
+          this.$emit('input', {begin: null, end: null})
+        }
       }
     },
     mounted () {
-      if (this.value) {
-        this.filterDate = [this.value.begin, this.value.end]
-      }
+      // if (this.value) {
+      //   this.filterDate = [this.value.begin, this.value.end]
+      // }
     }
   }
 </script>

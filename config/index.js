@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/pms': {
-        target: "http://localhost:8082/pms",//设置你调用的接口域名和端口号 别忘了加http
+        target: "http://localhost:8080/pms",//设置你调用的接口域名和端口号 别忘了加http
         // target: "http://localhost:8080/pms",//设置你调用的接口域名和端口号 别忘了加http
         // target: "http://www.housefeel.cn/test-pms",
         secure: false,      // 如果是https接口，需要配置这个参数
@@ -36,7 +36,7 @@ module.exports = {
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
     // host: '10.40.36.9', // can be overwritten by process.env.HOST
-    port: 8089, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
