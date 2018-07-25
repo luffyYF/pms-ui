@@ -153,7 +153,7 @@ export default {
         countCheckoutBill({ orderPk: orderPk }).then(res => {
           this.countCheckoutDate = res.data;
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
-          if(this.countCheckoutDate.payType==='Y'){
+          if(this.countCheckoutDate.payType==='Y' && this.countCheckoutDate.cashPledge>0){
             this.onlineVisible = true
             this.billForm.onlineFlag = true;
             this.billForm.onlineMoney=this.countCheckoutDate.cashPledge
