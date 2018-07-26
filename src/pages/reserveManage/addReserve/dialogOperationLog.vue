@@ -29,7 +29,8 @@
 </template>
 <script>
 import {resultMap} from '@/utils/orm'
-import {listLog }from '@/api/operators/pmsLogController'
+import {listLog} from '@/api/order/pmsOrderController'
+// import {listLog }from '@/api/operators/pmsLogController'
 export default {
   data() {
     return {
@@ -44,7 +45,7 @@ export default {
      * @augments orderPk 主订单主键 */
     init(orderPk) {
       this.dialogOperationLog = true;
-      listLog({pk: orderPk}).then(res=>{
+      listLog({orderPk: orderPk}).then(res=>{
         this.tableData = res.data
       })
     },

@@ -109,3 +109,7 @@ export const quickReserve = params => {
 export const calcMoney = params => {
     return request.get('/back/order/calcMoney', {params: params})
 }
+//预定时，动态计算总房费
+export const listLog = params => {
+    return request.get('/back/order/listLog', {params: params})
+}
