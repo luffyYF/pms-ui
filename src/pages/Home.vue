@@ -186,7 +186,6 @@ import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
 export default {
   created() {
-    // this.newOrder();
     var test = window.localStorage.getItem("current_logon_company");
     this.activeCompany = JSON.parse(test);
     if (
@@ -381,7 +380,10 @@ export default {
         this.screenWidth = window.screenWidth;
       })();
     };
-    this.connection();
+    //scoket 刷新
+    // this.connection();
+    //定时器刷新
+    this.newOrder();
   },
   watch: {
     screenWidth(val) {
