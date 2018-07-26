@@ -41,7 +41,7 @@
         </el-input>
       </el-form-item>
       <el-form-item style="margin-left:10px;">
-        <el-button type="primary" @click="search">搜索日志</el-button>
+        <el-button type="primary" @click="search(1)">搜索日志</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -92,6 +92,16 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination
+        style="float: right"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="1"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
   </div>
 </template>
 
@@ -103,6 +113,7 @@ import {listLog,listBehavior} from '@/api/operators/pmsLogController'
     data() {
       return {
         loading:false,
+        total:0,
         form: {
           beginTime:'',
           endTime:'',
@@ -173,11 +184,15 @@ import {listLog,listBehavior} from '@/api/operators/pmsLogController'
           }
           this.options = arr;
 
-          this.search();
+          this.search(1);
         })
       },
+      handleSizeChange(){},
+      handleCurrentChange(currPage){
+        this.search(currPage);
+      },
       //搜索
-      search(){
+      search(currPage){
         var data = {
           beginTime:'',
           endTime:'',
@@ -185,7 +200,9 @@ import {listLog,listBehavior} from '@/api/operators/pmsLogController'
           pk:this.form.pk,
           behavior:this.form.behavior,
           ip:this.form.ip,
-          details:this.form.details
+          details:this.form.details,
+          pageNum:currPage,
+          pageSize:10
         };
         if(this.orderDate && this.orderDate.length>0){
           data.beginTime = this.orderDate[0];
@@ -195,8 +212,8 @@ import {listLog,listBehavior} from '@/api/operators/pmsLogController'
         console.log(data)
         listLog(data).then(res=>{
           this.loading = false;
-          this.tableData = res.data;
-          console.log(this.tableData)
+          this.tableData = res.data.data;
+          this.total = res.data.total
         }).catch(()=>{
           this.loading = false;
         })
@@ -212,7 +229,7 @@ import {listLog,listBehavior} from '@/api/operators/pmsLogController'
           pk:''
         };
         this.orderDate = [];
-        this.search();
+        this.search(1);
       },
       toJson(str) {
         try{
