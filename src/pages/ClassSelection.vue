@@ -9,7 +9,7 @@
         <div class="box-list clearfix" v-for="(company,index) in companyShift" :key="index">
             <h3 class="fl">{{company.cityName}}</h3>
             <div class="fl company-list" v-for="(com,index) in company.arr" :key="index">
-                <span @click="selectCompany(com)" class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
+                <span @click="selectCompany(com)"  class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
             </div>
         </div>
         <div class="box-select clearfix">
@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import { getCompanyShift, selectCompanyShift } from "../api/login";
+import { getCompanyShift, selectCompanyShift,getUserInfo } from "@/api/login";
+import {logout,getUpmsUserInfo} from '@/api/upmsApi'
+import Cookies from 'js-cookie'
 import store from "@/store";
 import Moment from "Moment";
 export default {
@@ -41,36 +43,71 @@ export default {
       activeShift: ""
     };
   },
+  mounted(){
+    this.clearLocalInfo();
+  },
   methods: {
-    goBack() {
-      store
-        .dispatch("LogOut")
-        .then(res => {
-          // 拉取user_info
-          this.$router.push("/login");
-           window.localStorage.setItem('current_logon_company','');
-        })
-        .catch(() => {
-          store.dispatch("FedLogOut").then(() => {
-            this.$router.push("/login");
-            window.localStorage.setItem('current_logon_company','');            
-          });
-        });
+    //清除用户缓存
+    clearLocalInfo(){
+      Cookies.set('select_company_pk','')
+      Cookies.set('select_shift_pk','')
+      localStorage.setItem('current_logon_company','');
+      localStorage.setItem('pms_userinfo', '')
     },
+    goBack() {
+      // store
+      //   .dispatch("LogOut")
+      //   .then(res => {
+      //     // 拉取user_info
+      //     this.$router.push("/login");
+      //      window.localStorage.setItem('current_logon_company','');
+      //   })
+      //   .catch(() => {
+      //     store.dispatch("FedLogOut").then(() => {
+      //       this.$router.push("/login");
+      //       window.localStorage.setItem('current_logon_company','');            
+      //     });
+      //   });
+      logout().then(res=>{}).finally(()=>{
+        this.clearLocalInfo();
+        localStorage.setItem('token','');
+        this.$router.push("/login");
+      })
+    },
+    //设置公司主键和班次到cookies跳转首页
     toHome(shift) {
-      this.activeShift = shift.shiftPk;
-      var params = {
-        companyPk: this.activeCompany.companyPk,
-        shiftPk: this.activeShift
-      };
-      
-      selectCompanyShift(params).then(res => {
-        if (res.code == 1) {
+      getUserInfo().then(res => {
+        // let userInfo = res.data;
+        // getUpmsUserInfo().then(res2=>{
+        //   let upmsUserInfo = res2.data
+        //   let temp = {
+        //     userName:userInfo.userName,
+        //     userPk:userInfo.userPk,
+        //     companyPk:userInfo.companyPk,
+        //     upmsUserName:upmsUserInfo.upmsUserName,//权限用户登录账号
+        //     permissionValues:upmsUserInfo.permissionValues
+        //   }
+          
+        // })
+        // console.log(res.data)
+        this.activeShift = shift.shiftPk;
+        Cookies.set('select_company_pk',this.activeCompany.companyPk)
+        Cookies.set('select_shift_pk',this.activeShift)
+        localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
+        localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
+        this.$router.push({ path: this.getRPath("/",0) });
+      })
 
-          window.localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
-          this.$router.push({ path: "/atrialCenter" });
-        }
-      });
+      // var params = {
+      //   companyPk: this.activeCompany.companyPk,
+      //   shiftPk: this.activeShift
+      // };
+      // selectCompanyShift(params).then(res => {
+      //   if (res.code == 1) {
+      //     window.localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
+      //     this.$router.push({ path: "/atrialCenter" });
+      //   }
+      // });
     },
     getCompanyShiftList() {
       this.companyShift = [];
@@ -86,14 +123,14 @@ export default {
             }
           }
           for(var i = 0; i<this.companyShift.length; i++) {
-              for(var j = 0; j < res.data.length; j++) {
-                  if(this.companyShift[i].cityName == res.data[j].cityName) {
-                    this.companyShift[i].arr.push(res.data[j])  
-                  }
+            for(var j = 0; j < res.data.length; j++) {
+              if(this.companyShift[i].cityName == res.data[j].cityName) {
+                this.companyShift[i].arr.push(res.data[j])  
               }
+            }
           }
           var spm = window.localStorage.getItem('current_logon_company');
-          console.log(spm)
+          // console.log(spm)
           if(spm == '' || spm==null || spm=='undefiend') {
             if(this.companyShift.length > 0) {
                 this.activeCompany = this.companyShift[0].arr[0];

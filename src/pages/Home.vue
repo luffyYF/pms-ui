@@ -5,7 +5,7 @@
       <div class="left" @click="toSelectClass" style="cursor: pointer;">{{activeCompany.companyName}}</div>
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
-        <span @click="logout" >[退出系统]</span>
+        <span @click="logout">[退出系统]</span>
       </div>
     </el-col>
     <!--头部2-->
@@ -13,7 +13,7 @@
       <div class="left"><img src="../assets/image/home_logo.png" /></div>
       <!--<div class="right">-->
       <div class="right">
-        <router-link to="/atrialCenter" v-power:id="'11'">
+        <router-link :to="getRPath('/atrialCenter',1)" v-power:id="'11'" v-if="hasPerm('pms:dir:roomCenter')">
           <div class="nav-li">
             <div class="nav-icon atrial-center-icon"></div>
             <div class="nav-txt">房态中心</div>
@@ -25,19 +25,21 @@
             <div class="nav-txt">微信开门</div>
           </div>
         </router-link> -->
-        <router-link to="/reserveManage" v-power:id="'13'">
+
+        <!-- getRPath控制路由  hasPerm控制显示 -->
+        <router-link :to="getRPath('/reserveManage', 1)" v-power:id="'13'" v-if="hasPerm('pms:dir:reserveManage')">
           <div class="nav-li">
             <div class="nav-icon reserve-manage-icon"></div>
             <div class="nav-txt">预订管理</div>
           </div>
         </router-link>
-        <router-link to="/checkInManage" v-power:id="'14'">
+        <router-link :to="getRPath('/checkInManage',1)" v-power:id="'14'" v-if="hasPerm('pms:dir:checkinManage')">
           <div class="nav-li">
             <div class="nav-icon check-manage-icon"></div>
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <router-link to="/customerRelation" v-power:id="'15'">
+        <router-link :to="getRPath('/customerRelation',1)" v-power:id="'15'" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
             <div class="nav-txt">客户关系</div>
@@ -49,7 +51,7 @@
             <div class="nav-txt">短信营销</div>
           </div>
         </router-link> -->
-        <router-link to="/reportCenter" v-power:id="'17'">
+        <router-link to="/reportCenter" v-power:id="'17'" v-if="hasPerm('pms:dir:reportCenter')">
           <div class="nav-li">
             <div class="nav-icon report-center-icon"></div>
             <div class="nav-txt">报表中心</div>
@@ -61,7 +63,7 @@
             <div class="nav-txt">财务稽核</div>
           </div>
         </router-link> -->
-        <router-link to="/dumbHouse" v-if="screenWidth > 1080" v-power:id="'19'">
+        <router-link to="/dumbHouse" v-if="screenWidth > 1080 && hasPerm('pms:dir:dumbRoomAccount')" v-power:id="'19'">
           <div class="nav-li">
             <div class="nav-icon dumb-house-icon"></div>
             <div class="nav-txt">哑房账</div>
@@ -79,21 +81,21 @@
             <div class="nav-txt">库存</div>
           </div>
         </router-link> -->
-        <router-link to="/conferenceRoom" v-if="screenWidth > 1320" v-power:id="'22'">
+        <router-link to="/conferenceRoom" v-if="screenWidth > 1320 && hasPerm('pms:dir:meetingRoom')" v-power:id="'22'">
           <div class="nav-li">
             <div class="nav-icon conference-room-icon"></div>
             <div class="nav-txt">会议室</div>
           </div>
         </router-link>
         <!-- <router-link to="/operators" v-if="screenWidth > 1390" v-power:id="'23'"> -->
-        <router-link to="/operators" v-power:id="'23'">
+        <router-link :to="getRPath('/operators', 1)" v-power:id="'23'" v-if="hasPerm('pms:dir:operatorManage')">
           <div class="nav-li">
             <div class="nav-icon operators-icon"></div>
             <div class="nav-txt">操作员管理</div>
           </div>
         </router-link>
         <!-- <router-link to="/systemSet" v-if="screenWidth > 1470" v-power:id="'24'"> -->
-        <router-link to="/systemSet"  v-power:id="'24'">
+        <router-link :to="getRPath('/systemSet', 1)" v-power:id="'24'" v-if="hasPerm('pms:dir:systemSet')">
           <div class="nav-li">
             <div class="nav-icon system-set-icon"></div>
             <div class="nav-txt">系统设置</div>
@@ -168,7 +170,7 @@
       </div>
     </el-col>
     <!-- tab标签切换页面显示 -->
-    <el-col class="house-content" :span="24" >
+    <el-col class="house-content" :span="24">
       <transition name="el-fade-in-linear">
         <router-view></router-view>
       </transition>
@@ -179,15 +181,21 @@
 
 <script>
 import store from "@/store";
+import Cookies from 'js-cookie'
 import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import {getToken, removeToken, removeRefreshToken} from '@/utils/auth'
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
+// import {logout,refreshTokenUpms }from '@/api/login'
+import {logout,refreshTokenUpms }from '@/api/upmsApi'
 export default {
   created() {
     var test = window.localStorage.getItem("current_logon_company");
-    this.activeCompany = JSON.parse(test);
+    if(test){
+      this.activeCompany = JSON.parse(test);
+    }
+      
     if (
       this.activeCompany.companyName == "" ||
       this.activeCompany.companyName == null ||
@@ -195,12 +203,13 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
-    console.log(this.activeCompany);
+    
+    // console.log(this.activeCompany);
   },
   data() {
     return {
       contInterval:null,
-      routes: store.getters.permission_routers,
+      // routes: store.getters.permission_routers,
       collapsed: false,
       screenWidth: document.body.clientWidth,
       activeCompany: {},
@@ -214,8 +223,8 @@ export default {
     handleSelect(key, keyPath) {},
     newOrder(){
       var self = this;
-      setInterval(()=>{
-        if(getToken()){
+      setInterval(()=>{ 
+        if(window.localStorage.getItem('token')){
           timerCheckNew().then((data)=>{
             if(data.data>0){
               if(self.contInterval != null){
@@ -245,21 +254,29 @@ export default {
         type: "warning"
       })
         .then(() => {
-          store
-            .dispatch("LogOut")
-            .then(res => {
-              this.stompClient.disconnect();
-              // 拉取user_info
-              this.$router.push("/login");
-              window.localStorage.setItem("current_logon_company", "");
-            })
-            .catch(() => {
-              store.dispatch("FedLogOut").then(() => {
-                this.$message.error("验证失败,请重新登录");
-                this.$router.push("/login");
-                window.localStorage.setItem("current_logon_company", "");
-              });
-            });
+          // store
+          //   .dispatch("LogOut")
+          //   .then(res => {
+          //     this.stompClient.disconnect();
+          //     // 拉取user_info
+          //     this.$router.push("/login");
+          //     window.localStorage.setItem("current_logon_company", "");
+          //   })
+          //   .catch(() => {
+          //     store.dispatch("FedLogOut").then(() => {
+          //       this.$message.error("验证失败,请重新登录");
+          //       this.$router.push("/login");
+          //       window.localStorage.setItem("current_logon_company", "");
+          //     });
+          //   });
+          logout().then(res=>{}).finally(()=>{
+            Cookies.set('select_company_pk','')
+            Cookies.set('select_shift_pk','')
+            localStorage.setItem('current_logon_company','');
+            localStorage.setItem('pms_userinfo', '')
+            localStorage.setItem('token','');
+            this.$router.push("/login");
+          })
         })
         .catch(() => {});
     },
@@ -268,7 +285,8 @@ export default {
       this.collapsed = !this.collapsed;
     },
     toSelectClass() {
-      this.$router.push("./classSelection");
+      // window.location.href="/classSelection";
+      this.$router.push("/classSelection");
     },
     connection() {
       var self = this;
@@ -276,8 +294,8 @@ export default {
       self.stompClient = Stomp.over(socket);
       self.stompClient.connect({name: localStorage.getItem("userPk")}, function (frame) {
         console.log('Connected: ' + frame);
-        console.log(JSON.parse(localStorage.sessionInfo).companyPk);
-        self.stompClient.subscribe('/topic/message/'+JSON.parse(localStorage.sessionInfo).companyPk, function (greeting) {
+        console.log(JSON.parse(localStorage.getItem('pms_userinfo')).companyPk);
+        self.stompClient.subscribe('/topic/message/'+JSON.parse(localStorage.getItem('pms_userinfo')).companyPk, function (greeting) {
           self.newOrders();
         });
         self.stompClient.subscribe('/topic/message', function (greeting) {
@@ -370,6 +388,20 @@ export default {
       } else {
           console.log("您的浏览器不支持桌面消息!");
       }
+    },
+    //刷新TOKEN
+    refreshToken(){
+      setInterval(()=>{
+        if(window.localStorage.getItem('token')){
+          refreshTokenUpms().then(res=>{
+            let token = res.data.token
+            if(token!=null && token!='' && token!="-1"){
+              window.localStorage.setItem('token', token);
+              console.log('token刷新成功');
+            }
+          });
+        }
+      },60000);
     }
   },
   mounted() {
@@ -383,7 +415,8 @@ export default {
     //scoket 刷新
     // this.connection();
     //定时器刷新
-    this.newOrder();
+    // this.newOrder();//记得打开
+    this.refreshToken();
   },
   watch: {
     screenWidth(val) {
@@ -396,7 +429,7 @@ export default {
 <style lang="scss" scoped rel="stylesheet/scss" type="text/css">
 @import "../assets/scss/main.scss";
 .right .router-link-exact-active.router-link-active {
-  background:rgba(225,102,0,0.6)
+  background: rgba(225, 102, 0, 0.6);
 }
 .router_nav_popover a {
   display: inline-block;
@@ -601,7 +634,7 @@ export default {
   padding: 18px;
 }
 
-.primary-tool{
+.primary-tool {
   padding: 10px 0;
   background-color: #ffffff;
   border-bottom: 1px solid #eceaea;

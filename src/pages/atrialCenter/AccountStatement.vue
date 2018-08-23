@@ -13,7 +13,7 @@
        <h3>{{activeCompany.companyName}}</h3>
       <h4>催账报表</h4>
       <div class="table-box">
-        <p>打印日期：<span class="head-item">{{sDate}}</span>打印时间：<span class="head-item">{{sTime}}</span>酒店日期：<span class="head-item">{{userInfo.userName}}</span></p>
+        <p>打印日期：<span class="head-item">{{sDate}}</span>打印时间：<span class="head-item">{{sTime}}</span>酒店日期：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
         <p>注：余额 = 已交押金-消费总额。</p>
         <el-table 
           :header-cell-style="tableStyleObj" 
@@ -92,7 +92,7 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
-    this.userInfo = JSON.parse(localStorage.sessionInfo);
+    this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
     this.init()
   },
   filters: {

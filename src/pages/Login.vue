@@ -5,8 +5,8 @@
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-position="right" label-width="0px"
                 class="demo-ruleForm login-container">
           <h3 class="title">后台登录</h3>
-          <el-form-item prop="loginName">
-            <el-input type="text" class="login_input_box" v-model="loginForm.loginName" auto-complete="off" placeholder="请输入账号" clearable></el-input>
+          <el-form-item prop="userName">
+            <el-input type="text" class="login_input_box" v-model="loginForm.userName" auto-complete="off" placeholder="请输入账号" clearable></el-input>
           </el-form-item>
           <el-form-item prop="password">
             <el-input :type="pwdType" class="login_input_box" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码" clearable></el-input>
@@ -24,18 +24,20 @@
 
 <script>
 import "../../static/img/background.jpg";
+// import {loginByUsername} from '@/api/login';
+import {loginByUsername} from '@/api/upmsApi';
 export default {
   data() {
     return {
       loading: false,
       loginForm: {
-        // loginName: "super",
+        // userName: "super",
         // password: "123456"
-        loginName: "",
+        userName: "",
         password: ""
       },
       rules: {
-        loginName: [
+        userName: [
           { required: true, message: "请输入账号", trigger: "blur" },
           { min: 5, message: "账号不能小于5位", trigger: "blur" }
         ],
@@ -63,17 +65,24 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          this.$store
-            .dispatch("LoginByUsername", this.loginForm)
-            .then(res => {
-              console.log("-----------------");
-              console.log(res);
-              // this.$router.push({path: '/atrialCenter'})
-              this.$router.push({ path: "/classSelection" });
-            })
-            .finally(() => {
-              this.loading = false;
-            });
+          loginByUsername(this.loginForm).then(res=>{
+            window.localStorage.setItem('token', res.token)
+            this.$router.push({ path: "/classSelection" });
+            this.loading = false;
+          },error=>{
+            this.loading = false;
+          })
+          // this.$store
+          //   .dispatch("LoginByUsername", this.loginForm)
+          //   .then(res => {
+          //     console.log("-----------------");
+          //     console.log(res);
+          //     window.localStorage.setItem('token', res.data.token)
+          //     this.$router.push({ path: "/classSelection" });
+          //   })
+          //   .finally(() => {
+          //     this.loading = false;
+          //   });
         } else {
           return false;
         }

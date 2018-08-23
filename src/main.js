@@ -16,10 +16,13 @@ import 'swiper/dist/css/swiper.css'
 import './utils/timer'
 import fullCalendar from 'vue-fullcalendar'
 import './directive'
+import {hasPermission, getRPath} from "@/utils/hasPermission";
 // import './mock' // simulation data
 
 // import 'babel-polyfill'
-
+//全局的常量
+Vue.prototype.hasPerm = hasPermission
+Vue.prototype.getRPath = getRPath
 Vue.use(VueAwesomeSwiper, {})
 
 // 开启debug模式

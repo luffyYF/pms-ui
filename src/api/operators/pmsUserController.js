@@ -29,14 +29,21 @@ export const pmsUserList = params => {
 export const pmsUserUpdate = params => {
     return request.post('/back/pmsUser/update',params)
 }
-
+//添加操作员
+export const addOperater = params => {
+    return request.post('/back/pmsUser/oper/addOperater',params)
+}
 //删除操作员
 export const pmsUserDelOperator = params => {
-    return request.post('/back/pmsUser/delOperater',params)
+    return request.post('/back/pmsUser/oper/delOperater',params)
+}
+//添加操作员时，选择员工下拉列表
+export const pmsOperListSelect = params => {
+    return request.get('/back/pmsUser/oper/listSelect',{params:params})
 }
 //查找操作员列表
 export const pmsUserListOperator = params => {
-    return request.get('/back/pmsUser/listOperater',{params:params})
+    return request.get('/back/pmsUser/oper/listOperater',{params:params})
 }
 //操作员重置密码
 export const pmsUserResetOperPwd = params => {

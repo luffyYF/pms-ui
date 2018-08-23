@@ -25,6 +25,8 @@ import AtrialCenterTab from '@/pages/atrialCenter/tab.vue'
 import WxOpenTab from '@/pages/wxOpen/tab.vue'
 import ReserveManageTag from '@/pages/reserveManage/tab.vue'
 import CheckInManageTab from '@/pages/checkInManage/tab.vue'
+import CheckInSearch from '@/pages/checkInManage/CheckInSearch.vue'
+import TeamSearch from '@/pages/checkInManage/TeamSearch.vue'
 import CustomerRelationTag from '@/pages/customerRelation/tab.vue'
 import SmsMarketingTag from '@/pages/smsMarketing/tab.vue'
 import ReportCenterTag from '@/pages/reportCenter/tab.vue'
@@ -101,6 +103,17 @@ import LinenLossReport from '@/pages/reportCenter/linenReport/LinenLossReport.vu
 import WxPaymentBalance from '@/pages/reportCenter/wxPaymentReport/WxPaymentBalance.vue'
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
 
+//系统设置
+import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
+import ClassManagement from '@/pages/systemSet/ClassManagement'
+import MembershipRelated from '@/pages/systemSet/MembershipRelated/tab'
+import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
+import BellSpecialRoom from '@/pages/systemSet/BellSpecialRoom/tab'
+import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
+import ChannelManagement from '@/pages/systemSet/ChannelManagement'
+import AccountEntry from '@/pages/systemSet/AccountEntry/tab'
+import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
+
 Vue.use(Router)
 /**
  * 项目启动就有权限
@@ -111,22 +124,22 @@ export const constantRouterMap = [
   {path: '/login', hidden: true, component: Login, name: '登录'},
   {path: '/404', hidden: true, component: NotFound, name: '404页面'},
   {path: '/classSelection', hidden: true,component: ClassSelection, name: '班次选择'},
-  {
-    path: '/',
-    component: Home,
-    name: 'demo',
-    meta: {icon: 'fa-home', noCache: true},
-    hidden: false,
-    children: [
-      {path: '/tinymce', component: tinymce, name: '富文本编辑器'},
-      {path: '/form', component: FormPage, name: '表单'},
-      {path: '/data', component: DataPage, name: '数据列表'},
-      {path: '/echarts', component: EchartsPage, name: 'echarts统计图'},
-      {path: '/map', component: AMapDomePage, name: '高德地图'},
-      {path: '/tree', component: TreePage, name: '树结构数据'},
-      {path: '/address', component: AddressPage, name: '地址管理'}
-    ]
-  },
+  // {
+  //   path: '/',
+  //   component: Home,
+  //   name: 'demo',
+  //   meta: {icon: 'fa-home', noCache: true},
+  //   hidden: false,
+  //   children: [
+  //     {path: '/tinymce', component: tinymce, name: '富文本编辑器'},
+  //     {path: '/form', component: FormPage, name: '表单'},
+  //     {path: '/data', component: DataPage, name: '数据列表'},
+  //     {path: '/echarts', component: EchartsPage, name: 'echarts统计图'},
+  //     {path: '/map', component: AMapDomePage, name: '高德地图'},
+  //     {path: '/tree', component: TreePage, name: '树结构数据'},
+  //     {path: '/address', component: AddressPage, name: '地址管理'}
+  //   ]
+  // },
   {
     path: '/',
     component: Home,
@@ -137,45 +150,58 @@ export const constantRouterMap = [
       // {path: '/index', component: IndexPage, name: '首页1'},
       // {path: '/index', component: AtrialCenterTab, name: '首页1'},
       {
-        path: 'atrialCenter',
+        path: '/atrialCenter',
+        perm: 'pms:dir:roomCenter',
         component: AtrialCenterTab,
         name: '房态图',
         meta: {icon: 'fa-home', noCache: true},
         hidden: false,
         children: [
-          {path: '/', component: RoomPattern, label: '房态图'},
-          {path: '/atrialCenter/RoomTable', component: RoomTable, label: '房态表'},
-          {path: '/atrialCenter/ForwardHousing', component: ForwardHousing, label: '远期房态'},
-          {path: '/atrialCenter/HousekeepingList', component: HousekeepingList, label: '问题房态列表'},
-          {path: '/atrialCenter/GoodsManageTag', component: GoodsManageTag, label: '物品管理'},
-          {path: '/atrialCenter/AccountStatement', component: AccountStatement, label: '催账报表'},
+          {path: '/atrialCenter/RoomPattern',perm:'pms:menu:roomPattern', component: RoomPattern, label: '房态图'},
+          {path: '/atrialCenter/RoomTable', perm:'pms:menu:roomStatusTable', component: RoomTable, label: '房态表'},
+          {path: '/atrialCenter/ForwardHousing', perm:'pms:menu:roomForwordStatus', component: ForwardHousing, label: '远期房态'},
+          {path: '/atrialCenter/HousekeepingList', perm:'pms:menu:reasonRoom', component: HousekeepingList, label: '问题房态列表'},
+          {path: '/atrialCenter/GoodsManageTag', perm:'pms:menu:goodsManage', component: GoodsManageTag, label: '物品管理'},
+          {path: '/atrialCenter/AccountStatement', perm:'pms:menu:accountStatement', component: AccountStatement, label: '催账报表'},
           {path: '/atrialCenter/JointRealManage', component: JointRealManage, label: '联房管理'},
-          {path: '/reportCenter/ShiftReport', component: ShiftTab, label: '交班报表'},
-          {path: '/reportCenter/EmergencyReport', component: EmergencyReport, label: '应急报表'},
+          {path: '/reportCenter/ShiftReport',perm:'pms:menu:shiftReport', component: ShiftTab, label: '交班报表'},
+          {path: '/reportCenter/EmergencyReport', perm:'pms:menu:emergencyReport', component: EmergencyReport, label: '应急报表'},
         ]
       },
-      {path: '/checkInManage', component: CheckInManageTab, name: '入住管理', hidden: false},
-      {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
       {
         path: '/reserveManage',
+        perm:'pms:dir:reserveManage',
         component: ReserveManageTag,
         name: '预定管理',
         hidden: false,
         children: [
-          {path: '/', component: AddReserve, label: '散客预定'},
-          {path: '/reserveManage/groupReserve', component: GroupReserve, label: '团队预定'},
-          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
+          {path: '/reserveManage/addReserve', perm:'pms:menu:addReserve', component: AddReserve, label: '新增预定'},
+          {path: '/reserveManage/groupReserve', perm:'pms:menu:groupReserve', component: GroupReserve, label: '团队预定'},
+          {path: '/reserveManage/listReserve', perm:'pms:menu:listReserve', component: ListReserve, label: '订单列表'}
         ]
       },
+      { 
+        path: '/checkInManage', 
+        perm:'pms:dir:checkinManage', 
+        component: CheckInManageTab, 
+        name: '入住管理', 
+        hidden: false,
+        children:[
+          {path: '/checkInManage/checkInSearch', perm:'pms:menu:checkInSearch', component: CheckInSearch, label: '入住查询'},
+          {path: '/checkInManage/teamSearch', perm:'pms:menu:teamSearch', component: TeamSearch, label: '团队查询'},
+        ]
+      },
+      {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
       {
         path: '/customerRelation',
+        perm:'pms:dir:customerRelationship',
         component: CustomerRelationTag,
         name: '客户关系',
         hidden: false,
         children: [
-          {path: '/', component: MemberManage, label: '会员管理'},
-          {path: '/customerRelation/guestManage', component: GuestManage, label: '客人管理'},
-          {path: '/customerRelation/protocolManage', component: ProtocolManage, label: '协议管理'},
+          {path: '/customerRelation/memberManage', perm:'pms:menu:memberManage', component: MemberManage, label: '会员管理'},
+          {path: '/customerRelation/guestManage', perm:'pms:menu:guestManage', component: GuestManage, label: '客人管理'},
+          {path: '/customerRelation/protocolManage', perm:'pms:menu:protocolManage', component: ProtocolManage, label: '协议管理'},
           {path: '/customerRelation/virtualOrder', component: VirtualOrder, label: '虚拟账单'},
           {path: '/customerRelation/invoice', component: Invoice, label: '发票'},
           {path: '/customerRelation/passengerInformationUploading', component: PassengerInformationUploading, label: '旅客信息上传'}
@@ -184,6 +210,7 @@ export const constantRouterMap = [
       {path: '/smsMarketing', component: SmsMarketingTag, name: '短息营销', hidden: false},
       {
         path: '/reportCenter',
+        perm:'pms:dir:reportCenter',
         component: ReportCenterTag,
         name: '报表中心',
         alias: 'ReportCenterTag',
@@ -227,25 +254,43 @@ export const constantRouterMap = [
           {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表', pointer: '500403'}
         ]
       },
-      {path: '/dumbHouse', component: DumbHouseTag, name: '哑房账', hidden: false},
+      {path: '/dumbHouse', perm:'pms:dir:dumbRoomAccount', component: DumbHouseTag, name: '哑房账', hidden: false},
       {path: '/commodityDept', component: CommodityDeptTag, name: '商品部', hidden: false},
       {path: '/stock', component: StockTag, name: '库存', hidden: false},
       {path: '/conferenceRoom', component: ConferenceRoomTag, name: '会议室', hidden: false},
       {
         path: '/operators',
+        perm:'pms:dir:operatorManage',
         component: OperatorsTag,
         name: '操作员管理',
         hidden: false,
         children: [
-          {path: '/', component: Operators, label: '操作员管理'},
-          {path: '/operators/modifyThePassword', component: ModifyThePassword, label: '修改密码'},
-          {path: '/operators/logBrowsing', component: LogBrowsing, label: '日志浏览'},
-          {path: '/operators/roleManagement', component: RoleManagement, label: '角色管理'},
-          {path: '/operators/employeeManagement', component: EmployeeManagement, label: '员工管理'},
-          {path: '/operators/nightTrialRecord', component: NightTrialRecord, label: '夜审记录查询'}
+          // {path: '/operators/operManager', perm:'pms:menu:operManager', component: Operators, label: '操作员管理'},
+          {path: '/operators/modifyThePassword', perm:'pms:menu:modifyPassword', component: ModifyThePassword, label: '修改密码'},
+          {path: '/operators/logBrowsing', perm:'pms:menu:logBrowser', component: LogBrowsing, label: '日志浏览'},
+          // {path: '/operators/roleManagement', perm:'pms:menu:roleManager', component: RoleManagement, label: '角色管理'},
+          {path: '/operators/employeeManagement', perm:'pms:menu:workManager', component: EmployeeManagement, label: '员工管理'},
+          {path: '/operators/nightTrialRecord', perm:'pms:menu:nightAuditRecord', component: NightTrialRecord, label: '夜审记录查询'}
         ]
       },
-      {path: '/systemSet', component: SystemSetTag, name: '系统设置', hidden: false},
+      {
+        path: '/systemSet',
+        perm:'pms:dir:systemSet',
+        component: SystemSetTag, 
+        name: '系统设置', 
+        hidden: false,
+        children: [
+          {path: '/systemSet/paramsSetting', perm:'pms:systemSet:paramsSetting', component:SystemParameter , label: '系统参数设置'},
+          {path: '/systemSet/shiftManage', perm:'pms:systemSet:shiftManage', component: ClassManagement, label: '班次管理'},
+          {path: '/systemSet/userSetting', perm:'pms:systemSet:userSetting', component: MembershipRelated, label: '会员相关设置'},
+          {path: '/systemSet/roomSetting', perm:'pms:systemSet:roomSetting', component: RoomSetting , label: '客房设置'},
+          {path: '/systemSet/clockSpecial', perm:'pms:systemSet:clockSpecial', component: BellSpecialRoom, label: '钟点特殊房'},
+          {path: '/systemSet/settleSetting', perm:'pms:systemSet:consItemSetting', component: ConsumerProjects, label: '消费项目设置'},
+          {path: '/systemSet/channelManage', perm:'pms:systemSet:channelManage', component: ChannelManagement, label: '渠道管理'},
+          {path: '/systemSet/projectSetting', perm:'pms:systemSet:projectSetting', component: AccountEntry, label: '入账项目显示设置'},
+          {path: '/systemSet/priceSetting', perm:'pms:systemSet:priceSetting', component: PriceSetting, label: '价格设置'},
+        ]
+      },
       {path: '/linen', component: LinenTag, name: '布草', hidden: false}
     ]
   }

@@ -1,24 +1,18 @@
 import request from '../utils/requestJson'
+import requestUpms from '../utils/requestJsonUpms'
 
-/**
- * 请求登录
- * @param params
- * @returns {Promise.<TResult>}
- */
-export const loginByUsername = params => {
-  return request.post('/login', params)
-}
+
+// export const loginByUsername = params => {
+//   return request.post('/login', params)
+// }
 
 export const getUserInfo = params => {
   return request.get('/userInfo', params)
 }
 
+//废
 export const refreshToken = params => {
   return request.get('/sso/refreshToken', {params: params})
-}
-
-export const logout = () => {
-  return request.get('logout')
 }
 
 //查找公司(分店)和班次班次

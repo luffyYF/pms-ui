@@ -76,7 +76,6 @@ export default {
         this.loading = false;
         if(res.code == 1) {
           this.tableData = res.data;
-          console.log(this.tableData)
           for(var i = 0; i< this.tableData.length; i++) {
             this.tableData[i].dumbShow = true;
             this.tableData[i].guestShow = true;

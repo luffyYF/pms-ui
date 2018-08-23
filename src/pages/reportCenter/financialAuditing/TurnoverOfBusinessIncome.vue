@@ -43,7 +43,7 @@
               </template>
             </el-table-column>		
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.userName}}</span></p>
+          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
           <p class="note_p">注：宾客账=借方总计-结算【当宾客账为负数时，代表结算大于消费，即多收客人的押金】</p>
           <p class="note_p1">自动房费：夜核房费、公寓租金</p>
           <p class="note_p1">房费调整：全日租、半日租、钟点房费、特殊房费、房费调整</p>
@@ -95,7 +95,7 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
-    this.userInfo = JSON.parse(localStorage.sessionInfo);
+    this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
     this.reportBusinessIncome();
   },
   methods: {

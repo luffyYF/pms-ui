@@ -5,5 +5,7 @@ const prodEnv = require('./prod.env')
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   API_ROOT: '"/pms"',
-  IMAGE_ROOT: '"/fs"'
+  IMAGE_ROOT: '"/fs"',
+  UPMS_ROOT:'"http://localhost:8080"',
+  SERVER_FLAG:false,//是否是正式服标识 true是正式服 false本地测试
 })

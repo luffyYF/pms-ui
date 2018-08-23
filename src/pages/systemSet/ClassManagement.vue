@@ -71,6 +71,9 @@ import {listShift,addShift,updateShift,delShift} from '@/api/utils/pmsShiftContr
         tableData: [],
       }
     },
+    mounted(){
+      this.init();
+    },
     methods: {
       init() {
         this.list()

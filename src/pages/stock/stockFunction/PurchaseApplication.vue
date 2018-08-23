@@ -144,7 +144,7 @@ export default {
       form: {//货单表单
         stockOrderNo:'CG'+Moment(new Date()).format("YYYYMMDDhhmmss"),
         createTime:Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-        createUserName:JSON.parse(localStorage.sessionInfo).userName,
+        createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName,
         stockOrderType:'APPLY',
         voucherNo:'',
         depotPk:'',

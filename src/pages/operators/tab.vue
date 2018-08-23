@@ -6,22 +6,22 @@
       ref="reserveMenu"
       :router=true
       class="el-menu-vertical-demo">
-      <el-menu-item index="/operators" v-if="powerJudge('2301')">
+      <!-- <el-menu-item index="/operators/operManager" v-if="hasPerm('pms:menu:operManager')">
         <span slot="title">操作员管理</span>
-      </el-menu-item>
-      <el-menu-item index="/operators/modifyThePassword" v-if="powerJudge('2302')">
+      </el-menu-item> -->
+      <el-menu-item index="/operators/modifyThePassword" v-if="hasPerm('pms:menu:modifyPassword')">
         <span slot="title">修改密码</span>
       </el-menu-item>
-      <el-menu-item index="/operators/logBrowsing" v-if="powerJudge('2303')">
+      <el-menu-item index="/operators/logBrowsing" v-if="hasPerm('pms:menu:logBrowser')">
         <span slot="title">日志浏览</span>
       </el-menu-item>
-      <el-menu-item index="/operators/roleManagement" v-if="powerJudge('2304')">
+      <!-- <el-menu-item index="/operators/roleManagement" v-if="hasPerm('pms:menu:roleManager')">
         <span slot="title">角色管理</span>
-      </el-menu-item>
-      <el-menu-item index="/operators/employeeManagement" v-if="powerJudge('2305')">
+      </el-menu-item> -->
+      <el-menu-item index="/operators/employeeManagement" v-if="hasPerm('pms:menu:workManager')">
         <span slot="title">员工管理</span>
       </el-menu-item>
-      <el-menu-item index="/operators/nightTrialRecord" v-if="powerJudge('2307')">
+      <el-menu-item index="/operators/nightTrialRecord" v-if="hasPerm('pms:menu:nightAuditRecord')">
         <span slot="title">夜审记录查询</span>
       </el-menu-item>
     </el-menu>

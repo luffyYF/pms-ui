@@ -1,25 +1,25 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="房态类型管理" name="sysAtrialType" v-if="powerJudge('240401')">
+      <!-- <el-tab-pane label="房态类型管理" name="sysAtrialType" v-if="powerJudge('240401')">
         <sys-atrial-type ref="sysAtrialType"/>
-      </el-tab-pane>
-      <el-tab-pane label="楼层房间管理" name="floorRoom" v-if="powerJudge('240402')">
+      </el-tab-pane> -->
+      <el-tab-pane label="楼层房间管理" name="floorRoom" v-if="hasPerm('pms:roomSetting:floorAndRoom')">
         <sys-floor-room ref="floorRoom"/>
       </el-tab-pane>
-      <el-tab-pane label="房间类型管理" name="typeOfRoom" v-if="powerJudge('240403')">
+      <el-tab-pane label="房间类型管理" name="typeOfRoom" v-if="hasPerm('pms:roomSetting:roomType')">
         <sys-type-of-room ref="typeOfRoom"/>
       </el-tab-pane>
-      <el-tab-pane label="租赁物品管理" name="leasehold" v-if="powerJudge('240404')">
+      <el-tab-pane label="租赁物品管理" name="leasehold" v-if="hasPerm('pms:roomSetting:leasehold')">
         <sys-leasehold ref="leasehold"/>
       </el-tab-pane>
-      <el-tab-pane label="客房赔偿设置" name="sysRoomCompensation" v-if="powerJudge('240405')">
+      <el-tab-pane label="客房赔偿设置" name="sysRoomCompensation" v-if="hasPerm('pms:roomSetting:compensation')">
         <sys-room-compensation ref='sysRoomCompensation'/>
       </el-tab-pane>
-      <el-tab-pane label="楼栋管理" name="sysBan" v-if="powerJudge('240406')">
+      <el-tab-pane label="楼栋管理" name="sysBan" v-if="hasPerm('pms:roomSetting:buildingSetting')">
         <sys-ban ref="sysBan"/>
       </el-tab-pane>
-      <el-tab-pane label="维修停用原因设置" name="sysRepairReason" v-if="powerJudge('240407')">
+      <el-tab-pane label="维修停用原因设置" name="sysRepairReason" v-if="hasPerm('pms:roomSetting:reasonSetting')">
         <sys-repair-reason ref="sysRepairReason"/>
       </el-tab-pane>
     </el-tabs>
@@ -84,8 +84,6 @@
       powerJudge(id){
         return powerJudge(id);
       }
-
-
     }
   }
 </script>

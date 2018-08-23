@@ -3,34 +3,19 @@ import {Message, MessageBox} from 'element-ui'
 import store from '@/store'
 import {getToken, removeToken, removeRefreshToken} from './auth'
 import router from '@/router'
-import Cookies from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
   // api的base_url
-  baseURL: process.env.API_ROOT,
+  baseURL: process.env.UPMS_ROOT,
   // 请求超时时间
   timeout: 10000
 })
 
 // request拦截器
 service.interceptors.request.use(config => {
-  // Do something before request is sent
-  // if (store.getters.token) {
-  //   config.headers['X-Token'] = getToken() // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
-  // } else if (config.url != '/login') {
-  //   router.push({ path: '/login' })
-  // }
-  //身份验证携带请求头
   let token = window.localStorage.getItem('token');
   config.headers['Authorization']='Bearer '+token
-
-  //当前选择的公司主键和班次主键
-  let companyPk = Cookies.get('select_company_pk');
-  let shiftPk = Cookies.get('select_shift_pk');
-  config.headers['CompanyPk']=companyPk==null?'':companyPk;
-  config.headers['ShiftPk']=shiftPk==null?'':shiftPk;
-
   return config;
 }, error => {
   // Do something with request error

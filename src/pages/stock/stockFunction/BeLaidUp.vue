@@ -193,7 +193,7 @@ export default {
         voucherNo: "",  
         brokerage: "", 
         personInCharge: "", 
-        createUserName: JSON.parse(localStorage.sessionInfo).userName, 
+        createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName, 
         createTime: Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
       },
       form2: {

@@ -74,7 +74,6 @@ export default {
         this.loading = false;
         if(res.code == 1) {
           this.tableData = res.data;
-          console.log(this.tableData)
           for(var i = 0; i< this.tableData.length; i++) {
             this.tableData[i].dumbShow = true;
             this.tableData[i].guestShow = true;
@@ -89,7 +88,7 @@ export default {
     save(row){
       row.guestShow?row.guestRoomFlag = 'Y':row.guestRoomFlag = 'N';
       row.dumbShow?row.dumbRoomFlag = 'Y':row.dumbRoomFlag = 'N';
-      console.log(row)
+      // console.log(row)
       updateConsumerOrSettlement(row).then(res => {
         if(res.code == 1) {
           this.$message.success('保存成功')

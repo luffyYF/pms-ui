@@ -6,13 +6,13 @@
       ref="reserveMenu"
       :router=true
       class="el-menu-vertical-demo">
-      <el-menu-item index="/reserveManage" v-if="powerJudge('1302')">
+      <el-menu-item index="/reserveManage/addReserve" v-if="hasPerm('pms:menu:addReserve')">
         <span slot="title">新增预定</span>
       </el-menu-item>
-      <el-menu-item index="/reserveManage/groupReserve" v-if="powerJudge('1301')">
+      <el-menu-item index="/reserveManage/groupReserve" v-if="hasPerm('pms:menu:groupReserve')">
         <span slot="title">团队预定</span>
       </el-menu-item>
-      <el-menu-item index="/reserveManage/listReserve" v-if="powerJudge('1305')">
+      <el-menu-item index="/reserveManage/listReserve" v-if="hasPerm('pms:menu:listReserve')">
         <span slot="title">订单列表</span>
       </el-menu-item>
     </el-menu>

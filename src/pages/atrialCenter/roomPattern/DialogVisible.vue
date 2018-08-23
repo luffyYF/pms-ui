@@ -435,7 +435,7 @@ export default {
         }else{
           this.currConfirmType = 'edit-guest'
         }
-        
+          
         //设置下标
         if(guestOrderPk!=null && guestOrderPk!=undefined && guestOrderPk!=''){
           res.data.guestList.forEach((guest,index)=>{

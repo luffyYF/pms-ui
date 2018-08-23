@@ -59,7 +59,7 @@
           checkoutDate:null,
           checkoutUserPk:null,
           checkoutUserName:null,
-          createUserName:JSON.parse(localStorage.sessionInfo).userName,
+          createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName,
           businessDate:Moment(new Date()).format("YYYY-MM-DD"),
           remark:'',
           createTime:Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),

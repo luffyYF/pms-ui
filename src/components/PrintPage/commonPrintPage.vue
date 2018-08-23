@@ -93,7 +93,7 @@ export default {
      * @augments data 数据
      * */
     printBill(data, beginDate, endDate) {
-      this.oprUserName = JSON.parse(localStorage.sessionInfo).userName
+      this.oprUserName = JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName
       this.oprCompanyName = JSON.parse(localStorage.current_logon_company).companyName
       this.dialogBillPrint = true;
       this.beginDate = moment(beginDate).format('YYYY-MM-DD HH:mm');

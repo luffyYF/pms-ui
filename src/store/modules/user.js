@@ -1,146 +1,124 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import {getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken} from '@/utils/auth'
+// import {getInfo, login, logout} from '@/api/login'
+// import {getToken, removeToken, setToken} from '@/utils/auth'
+// // import {default as api} from '../../utils/api'
+// import { getUserInfo } from "@/api/login";
+// import {getUpmsUserInfo} from '@/api/upmsApi'
 
-const user = {
-  state: {
-    user: '',
-    status: '',
-    code: '',
-    token: getToken(),
-    name: '',
-    avatar: '',
-    joinFlag: '',
-    roles: [],
-    setting: {
-      articlePlatform: []
-    }
-  },
+// import store from '../../store'
+// import router from '../../router'
 
-  mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
-    SET_TOKEN: (state, token) => {
-      state.token = token
-    },
-    SET_SETTING: (state, setting) => {
-      state.setting = setting
-    },
-    SET_STATUS: (state, status) => {
-      state.status = status
-    },
-    SET_NAME: (state, name) => {
-      state.name = name
-    },
-    SET_JOIN_FLAG: (state, joinFlag) => {
-      state.joinFlag = joinFlag
-    },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
-    },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
-    }
-  },
+// const user = {
+//   state: {
+//     nickname: "",
+//     userId: "",
+//     avatar: 'https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028',
+//     role: '',
+//     menus: [],
+//     permissions: [],
+//   },
+//   mutations: {
+//     SET_USER: (state, userInfo) => {
+//       state.nickname = userInfo.nickname;
+//       state.userId = userInfo.userId;
+//       state.role = userInfo.roleName;
+//       state.menus = userInfo.menuList;
+//       state.permissions = userInfo.permissionList;
+//     },
+//     RESET_USER: (state) => {
+//       state.nickname = "";
+//       state.userId = "";
+//       state.role = '';
+//       state.menus = [];
+//       state.permissions = [];
+//     }
+//   },
+//   actions: {
+//     // 登录
+//     Login({commit, state}, loginForm) {
+//       return new Promise((resolve, reject) => {
+//         api({
+//           url: "login/auth",
+//           method: "post",
+//           data: loginForm
+//         }).then(data => {
+//           if (data.result === "success") {
+//             //cookie中保存前端登录状态
+//             setToken();
+//           }
+//           resolve(data);
+//         }).catch(err => {
+//           reject(err)
+//         })
+//       })
+//     },
+//     // 获取用户信息
+//     GetInfo({commit, state}) {
+//       return new Promise((resolve, reject) => {
+//         getUserInfo().then(res => {
+//           let userInfo = res.data;
+//           getUpmsUserInfo().then(res2=>{
+//             let upmsUserInfo = res2.data
+//             let temp = {
+//               userName:userInfo.upmsUserName,
+//               userPk:userInfo.userPk,
+//               companyPk:userInfo.companyPk,
+//               upmsUserName:upmsUserInfo.upmsUserName,//权限用户登录账号
+//               permissionValues:upmsUserInfo.permissionValues
+//             }
+//             localStorage.setItem('pms_userinfo', JSON.stringify(temp))
+//              //储存用户信息
+//             commit('SET_USER', data.userPermission);
+//             //生成路由
+//             let userPermission = data.userPermission ;
+//             store.dispatch('GenerateRoutes', userPermission).then(() => {
+//               //生成该用户的新路由json操作完毕之后,调用vue-router的动态新增路由方法,将新路由添加
+//               router.addRoutes(store.getters.addRouters)
+//             })
+//             resolve(data)
+//           })
+//         })
 
-  actions: {
-    // 用户名登录
-    LoginByUsername ({ commit }, userInfo) {
-      const loginName = userInfo.loginName.trim()
-      return new Promise((resolve, reject) => {
-        loginByUsername({loginName: loginName, password: userInfo.password}).then(response => {
-          const data = response.data
-          if (response.code === 1) {
-            commit('SET_TOKEN', data)
-            setToken(data)
-            var loginObj = {loginName: loginName, password: userInfo.password};
-            window.localStorage.setItem('LOGIN_INFO',JSON.stringify(loginObj));
-          }
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-
-    // 获取用户信息
-    GetUserInfo ({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(res => {
-          // 由于mockjs 不支持自定义状态码只能这样hack
-          // if (!response.data) {
-          //   reject('error')
-          // }
-          let data = res.data;
-          commit('SET_ROLES', data.power)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_JOIN_FLAG', data.joinFlag)
-          localStorage.sessionInfo = JSON.stringify(data);
-          resolve(data)
-        }).catch(error => {
-          console.error(error)
-          reject(error)
-        })
-      })
-    },
-
-    // 第三方验证登录
-    // LoginByThirdparty({ commit, state }, code) {
-    //   return new Promise((resolve, reject) => {
-    //     commit('SET_CODE', code)
-    //     loginByThirdparty(state.status, state.email, state.code).then(response => {
-    //       commit('SET_TOKEN', response.data.token)
-    //       setToken(response.data.token)
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
-
-    // 登出
-    LogOut ({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          removeRefreshToken()
-          resolve()
-           window.localStorage.setItem('LOGIN_INFO','');
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-
-    // 前端 登出
-    FedLogOut ({ commit }) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        removeRefreshToken()
-        resolve()
-      })
-    },
-
-    // 动态修改权限
-    ChangeRole ({ commit }, role) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', role)
-        setToken(role)
-        getUserInfo(role).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve()
-        })
-      })
-    }
-  }
-}
-
-export default user
+//         getUserInfo().then(data => {
+//           //储存用户信息
+//           commit('SET_USER', data.userPermission);
+//           //cookie保存登录状态,仅靠vuex保存的话,页面刷新就会丢失登录状态
+//           setToken();
+//           //生成路由
+//           let userPermission = data.userPermission ;
+//           store.dispatch('GenerateRoutes', userPermission).then(() => {
+//             //生成该用户的新路由json操作完毕之后,调用vue-router的动态新增路由方法,将新路由添加
+//             router.addRoutes(store.getters.addRouters)
+//           })
+//           resolve(data)
+//         }).catch(error => {
+//           reject(error)
+//         })
+//       })
+//     },
+//     // 登出
+//     LogOut({commit}) {
+//       return new Promise((resolve) => {
+//         api({
+//           url: "login/logout",
+//           method: "post"
+//         }).then(data => {
+//           commit('RESET_USER')
+//           removeToken()
+//           resolve(data);
+//         }).catch(() => {
+//           commit('RESET_USER')
+//           removeToken()
+//         })
+//       })
+//     },
+//     // 前端 登出
+//     FedLogOut({commit}) {
+//       return new Promise(resolve => {
+//         commit('RESET_USER')
+//         removeToken()
+//         resolve()
+//       })
+//     }
+//   }
+// }
+// export default user

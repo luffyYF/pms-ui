@@ -116,6 +116,9 @@ import {listProject,delProject,updateProject,addProject} from '@/api/systemSet/p
         selectType: ''
       }
     },
+    mounted(){
+      this.init();
+    },
     methods: {
       init() {
         this.list()

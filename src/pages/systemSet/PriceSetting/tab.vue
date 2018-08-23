@@ -39,6 +39,9 @@
         loading:false,
       }
     },
+    mounted(){
+      this.init();
+    },
     methods: {
       init() {
         this.listRoomType()

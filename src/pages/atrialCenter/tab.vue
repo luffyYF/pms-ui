@@ -6,31 +6,31 @@
       ref="reserveMenu"
       :router=true
       class="el-menu-vertical-demo">
-      <el-menu-item index="/atrialCenter" v-if="powerJudge('1101')">
+      <el-menu-item index="/atrialCenter/RoomPattern" v-if="hasPerm('pms:menu:roomPattern')">
         <span slot="title">房态图</span>
       </el-menu-item>
-      <el-menu-item index="/atrialCenter/RoomTable" v-if="powerJudge('1102')">
+      <el-menu-item index="/atrialCenter/RoomTable" v-if="hasPerm('pms:menu:roomStatusTable')">
         <span slot="title">房态表</span>
       </el-menu-item>
-      <el-menu-item index="/atrialCenter/ForwardHousing" v-if="powerJudge('1103')">
+      <el-menu-item index="/atrialCenter/ForwardHousing" v-if="hasPerm('pms:menu:roomForwordStatus')">
         <span slot="title">远期房态</span>
       </el-menu-item>
-      <el-menu-item index="/atrialCenter/HousekeepingList" v-if="powerJudge('1104')">
+      <el-menu-item index="/atrialCenter/HousekeepingList" v-if="hasPerm('pms:menu:reasonRoom')">
         <span slot="title">问题房态列表</span>
       </el-menu-item>
-      <el-menu-item index="/atrialCenter/GoodsManageTag" v-if="powerJudge('1105')">
+      <el-menu-item index="/atrialCenter/GoodsManageTag" v-if="hasPerm('pms:menu:goodsManage')">
         <span slot="title">物品管理</span>
       </el-menu-item>
-      <el-menu-item index="/atrialCenter/AccountStatement" v-if="powerJudge('1106')">
+      <el-menu-item index="/atrialCenter/AccountStatement" v-if="hasPerm('pms:menu:accountStatement')">
         <span slot="title">催账报表</span>
       </el-menu-item>
       <!-- <el-menu-item index="/atrialCenter/JointRealManage" v-if="powerJudge('1107')">
         <span slot="title">联房管理</span>
       </el-menu-item> -->
-      <el-menu-item index="/reportCenter/ShiftReport" v-if="powerJudge('1108')">
+      <el-menu-item index="/reportCenter/ShiftReport" v-if="hasPerm('pms:menu:shiftReport')">
         <span slot="title">交班报表</span>
       </el-menu-item>
-      <el-menu-item index="/reportCenter/EmergencyReport" v-if="powerJudge('1109')">
+      <el-menu-item index="/reportCenter/EmergencyReport" v-if="hasPerm('pms:menu:emergencyReport')">
         <span slot="title">应急报表</span>
       </el-menu-item>
     </el-menu>

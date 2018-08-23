@@ -26,13 +26,13 @@
       ref="customeMenu"
       :router=true
       class="el-menu-vertical-demo">
-      <el-menu-item index="/customerRelation" v-if="powerJudge('1501')">
+      <el-menu-item index="/customerRelation/memberManage" v-if="hasPerm('pms:menu:memberManage')">
         <span slot="title">会员管理</span>
       </el-menu-item>
-      <el-menu-item index="/customerRelation/guestManage" v-if="powerJudge('1502')">
+      <el-menu-item index="/customerRelation/guestManage" v-if="hasPerm('pms:menu:guestManage')">
         <span slot="title">客人管理</span>
       </el-menu-item>
-      <el-menu-item index="/customerRelation/protocolManage" v-if="powerJudge('1503')">
+      <el-menu-item index="/customerRelation/protocolManage" v-if="hasPerm('pms:menu:protocolManage')">
         <span slot="title">协议管理</span>
       </el-menu-item>
       <!-- <el-menu-item index="/customerRelation/virtualOrder" v-if="powerJudge('1504')">
