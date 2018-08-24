@@ -415,7 +415,7 @@ export default {
     //scoket 刷新
     // this.connection();
     //定时器刷新
-    // this.newOrder();//记得打开
+    this.newOrder();
     this.refreshToken();
   },
   watch: {
