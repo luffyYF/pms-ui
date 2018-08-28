@@ -78,7 +78,7 @@
   </div>
 </template>
 <script>
-import Moment from "Moment";
+import Moment from "moment";
 export default {
   data() {
     return {

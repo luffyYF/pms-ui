@@ -44,7 +44,7 @@
 <script>
   import {listProject } from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
   import {addDumbHouse} from '@/api/dumbHouse/pmsDumbHouseController'
-  import Moment from 'Moment'
+  import Moment from 'moment'
   export default {
     data () {
       return {

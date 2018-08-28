@@ -227,7 +227,7 @@
   import {listByGrid,updateDumbHouse,listLog} from '@/api/dumbHouse/pmsDumbHouseController'
   import {listProject } from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
   import BillTag from "../reserveManage/addReserve/bill"
-  import Moment from 'Moment'
+  import Moment from 'moment'
   import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     props: ['dumbHouse'],

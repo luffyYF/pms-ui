@@ -112,7 +112,7 @@
 </template>
 
 <script>
-  import Moment from 'Moment'
+  import Moment from 'moment'
   import {
     listGoodsDepot,
     listGoods,

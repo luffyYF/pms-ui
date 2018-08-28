@@ -69,7 +69,7 @@ import DatePicker from '@/components/DateComponent/DatePicker';
 // import DatePicker from "./../../components/DateComponent/DatePicker.vue"
 import RoomOrderTable from "./RoomOrderTable.vue"
 import { frowardRoomList, frowardRoomDetail } from "@/api/atrialCenter/roomForwardStatus";
-import Moment from 'Moment'
+import Moment from 'moment'
 export default {
   components: { DatePicker, RoomOrderTable },
   data() {

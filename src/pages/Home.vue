@@ -390,7 +390,7 @@ export default {
       }
     },
     //刷新TOKEN
-    refreshToken(){
+    refreshToken(time){
       setInterval(()=>{
         if(window.localStorage.getItem('token')){
           refreshTokenUpms().then(res=>{
@@ -401,7 +401,7 @@ export default {
             }
           });
         }
-      },60000);
+      },time);
     }
   },
   mounted() {
@@ -414,9 +414,10 @@ export default {
     };
     //scoket 刷新
     // this.connection();
-    //定时器刷新
+    //定时检测新订单
     this.newOrder();
-    this.refreshToken();
+    //定时5分钟刷新一次token
+    this.refreshToken(300000);
   },
   watch: {
     screenWidth(val) {

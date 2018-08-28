@@ -68,7 +68,7 @@
 <script>
 import {listRecharge,addRecharge,updateRecharge,delRecharge} from '@/api/systemSet/member/pmsMemberRechargeController'
 import DatePicker from '@/components/DateComponent/DatePicker'
-import Moment from 'Moment'
+import Moment from 'moment'
   export default {
     components:{DatePicker},
     data() {

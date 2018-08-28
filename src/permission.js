@@ -19,10 +19,6 @@ import {getRPath} from "@/utils/hasPermission";
 //   return roles.some(role => permissionRoles.indexOf(role) >= 0)
 // }
 
-// 不重定向白名单
-// const whiteList = ['/login', '/authredirect']
-const whiteList = ['/login', '/404']
-
 /**
  * 获取url参数
  * @param {*} name 参数名称
@@ -30,6 +26,10 @@ const whiteList = ['/login', '/404']
 function getUrlParam(name){
   return decodeURIComponent((new RegExp('[?|&]'+name+'='+'([^&;]+?)(&|#|;|$)').exec(location.href)||[,""])[1].replace(/\+/g,'%20'))||null;
 }
+
+// 不重定向白名单
+// const whiteList = ['/login', '/authredirect']
+const whiteList = ['/login', '/404']
 
 router.beforeEach((to, from, next) => {
   // 开启Progress
@@ -51,17 +51,6 @@ router.beforeEach((to, from, next) => {
     let token = window.localStorage.getItem('token');
     if(token){
       if(to.path=='/'){
-        // debugger;
-        // if(Cookies.get('select_company_pk') 
-        //   && Cookies.get('select_shift_pk')
-        //   && localStorage.getItem('current_logon_company')
-        //   && localStorage.getItem('pms_userinfo')){
-        //   //去首页
-        //   next(getRPath('/',0))
-        // }else{
-        //   //重新选择分点班次
-        //   next('/classSelection');
-        // }
         //重新选择分点班次
         next('/classSelection');
       }else{

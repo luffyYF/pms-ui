@@ -533,7 +533,7 @@
 // ];
 import bus from '@/utils/bus'
 import {addDumbAndBill,mtgRoomGroupOrderList,listDumbHouse,updateBook,batchOperateDq ,listMtgRoom,listBookDqByRoomPkAndDate,addBookAndDq,listBookDqByDate,listBookDqByRoomPkAndBookPk} from '@/api/conferenceRoom/mtgRoomController'
-import Moment from 'Moment'
+import Moment from 'moment'
 export default {
   components: {
     "full-calendar": require("vue-fullcalendar")

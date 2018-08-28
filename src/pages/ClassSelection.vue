@@ -25,11 +25,11 @@
 </template>
 
 <script>
-import { getCompanyShift, selectCompanyShift,getUserInfo } from "@/api/login";
-import {logout,getUpmsUserInfo} from '@/api/upmsApi'
+import { getCompanyShift, selectCompanyShift, getUserInfo } from "@/api/login";
+import { logout } from '@/api/upmsApi'
 import Cookies from 'js-cookie'
 import store from "@/store";
-import Moment from "Moment";
+import Moment from "moment";
 export default {
   created() {
     // this.selectShift();
