@@ -6,7 +6,6 @@ import {Message} from 'element-ui'
 import store from './store/index'
 import {getToken} from './utils/auth'
 import Cookies from 'js-cookie'
-import {getRPath} from "@/utils/hasPermission";
 // Progress 进度条
 // Progress 进度条样式
 // 验权
@@ -38,20 +37,28 @@ router.beforeEach((to, from, next) => {
     next()
   }else{
     //begin本地调试，设置token缓存
-    if(!process.env.SERVER_FLAG){
-      let url_token = getUrlParam('token');
-      if(url_token){
-        localStorage.setItem('token', url_token)
-        window.location.href="/";
-        return;
-      }
+    // if(!process.env.SERVER_FLAG){
+    // }
+    let url_token = getUrlParam('token');
+    if(url_token){
+      localStorage.setItem('token', url_token)
+      window.location.href=location.href.substring(0,location.href.indexOf('?'))
+      return;
     }
     //end
     
     let token = window.localStorage.getItem('token');
     if(token){
-      if(to.path=='/'){
-        //重新选择分点班次
+      // if(to.path=='/'){
+      //   //重新选择分点班次
+      //   // next('/classSelection');
+      //   next()
+      // }else{
+       
+      // }
+      // console.log('aaaax',localStorage.getItem('pms_userinfo'))
+      if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !Cookies.get('select_company_pk') || !Cookies.get('select_shift_pk'))){
+        //没有选择
         next('/classSelection');
       }else{
         next()

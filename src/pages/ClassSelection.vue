@@ -95,7 +95,8 @@ export default {
         Cookies.set('select_shift_pk',this.activeShift)
         localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
         localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
-        this.$router.push({ path: this.getRPath("/",0) });
+        // this.$router.push({ path: this.getRPath("/",0) });
+        this.$router.push('/')
       })
 
       // var params = {

@@ -3,7 +3,7 @@
     <el-menu
       :default-active="activeMenu"
       mode="horizontal"
-      ref="reserveMenu"
+      ref="menuRef"
       :router=true
       class="el-menu-vertical-demo">
       <!-- <el-menu-item index="/operators/operManager" v-if="hasPerm('pms:menu:operManager')">
@@ -44,7 +44,10 @@
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
-      this.activeMenu = this.$route.path;
+      // this.activeMenu = this.$route.path;
+      let routerPath = this.$refs.menuRef.$children[0].$options.propsData.index;
+      this.activeMenu = routerPath
+      this.$router.push(routerPath);
     },
     methods: {
       handleClick (tab, event) {

@@ -53,7 +53,10 @@
       }
     },
     mounted(){
-      this.activeMenu = this.$route.path;
+      //选中第一个显示的菜单
+      let routerPath = this.$refs.reserveMenu.$children[0].$options.propsData.index;
+      this.activeMenu = routerPath
+      this.$router.push(routerPath);
     },
     methods: {
       handleClick () {

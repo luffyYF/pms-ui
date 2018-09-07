@@ -12,8 +12,9 @@
     <el-col :span="24" class="header2">
       <div class="left"><img src="../assets/image/home_logo.png" /></div>
       <!--<div class="right">-->
-      <div class="right">
-        <router-link :to="getRPath('/atrialCenter',1)" v-power:id="'11'" v-if="hasPerm('pms:dir:roomCenter')">
+      <div class="right" ref="dirRef">
+        <!-- getRPath('/atrialCenter',1) -->
+        <router-link to="/atrialCenter" v-power:id="'11'" v-if="hasPerm('pms:dir:roomCenter')">
           <div class="nav-li">
             <div class="nav-icon atrial-center-icon"></div>
             <div class="nav-txt">房态中心</div>
@@ -27,19 +28,20 @@
         </router-link> -->
 
         <!-- getRPath控制路由  hasPerm控制显示 -->
-        <router-link :to="getRPath('/reserveManage', 1)" v-power:id="'13'" v-if="hasPerm('pms:dir:reserveManage')">
+        <!-- getRPath('/reserveManage', 1) -->
+        <router-link to="/reserveManage" v-power:id="'13'" v-if="hasPerm('pms:dir:reserveManage')">
           <div class="nav-li">
             <div class="nav-icon reserve-manage-icon"></div>
             <div class="nav-txt">预订管理</div>
           </div>
         </router-link>
-        <router-link :to="getRPath('/checkInManage',1)" v-power:id="'14'" v-if="hasPerm('pms:dir:checkinManage')">
+        <router-link to="/checkInManage" v-power:id="'14'" v-if="hasPerm('pms:dir:checkinManage')">
           <div class="nav-li">
             <div class="nav-icon check-manage-icon"></div>
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <router-link :to="getRPath('/customerRelation',1)" v-power:id="'15'" v-if="hasPerm('pms:dir:customerRelationship')">
+        <router-link to="/customerRelation" v-power:id="'15'" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
             <div class="nav-txt">客户关系</div>
@@ -88,14 +90,14 @@
           </div>
         </router-link>
         <!-- <router-link to="/operators" v-if="screenWidth > 1390" v-power:id="'23'"> -->
-        <router-link :to="getRPath('/operators', 1)" v-power:id="'23'" v-if="hasPerm('pms:dir:operatorManage')">
+        <router-link to="/operators" v-power:id="'23'" v-if="hasPerm('pms:dir:operatorManage')">
           <div class="nav-li">
             <div class="nav-icon operators-icon"></div>
             <div class="nav-txt">操作员管理</div>
           </div>
         </router-link>
         <!-- <router-link to="/systemSet" v-if="screenWidth > 1470" v-power:id="'24'"> -->
-        <router-link :to="getRPath('/systemSet', 1)" v-power:id="'24'" v-if="hasPerm('pms:dir:systemSet')">
+        <router-link to="/systemSet" v-power:id="'24'" v-if="hasPerm('pms:dir:systemSet')">
           <div class="nav-li">
             <div class="nav-icon system-set-icon"></div>
             <div class="nav-txt">系统设置</div>
@@ -213,7 +215,7 @@ export default {
       collapsed: false,
       screenWidth: document.body.clientWidth,
       activeCompany: {},
-      stompClient: null
+      stompClient: null,
     };
   },
   methods: {
@@ -402,10 +404,9 @@ export default {
           });
         }
       },time);
-    }
+    },
   },
   mounted() {
-    
     window.onresize = () => {
       return (() => {
         window.screenWidth = document.body.clientWidth;
@@ -418,6 +419,10 @@ export default {
     this.newOrder();
     //定时5分钟刷新一次token
     this.refreshToken(300000);
+
+    //选中第一个显示的目录
+    let herf= this.$refs.dirRef.getElementsByTagName('a')[0].getAttribute('href')
+    this.$router.push(herf.substring(1))
   },
   watch: {
     screenWidth(val) {

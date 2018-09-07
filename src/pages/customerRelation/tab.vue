@@ -88,7 +88,11 @@
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
-      this.activeMenu = this.$refs.customeMenu.$children[0].index;
+      // this.activeMenu = this.$refs.customeMenu.$children[0].index;
+      // console.log(this.activeMenu)
+      let routerPath = this.$refs.customeMenu.$children[0].$options.propsData.index;
+      this.activeMenu = routerPath
+      this.$router.push(routerPath);
     },
   }
 </script>

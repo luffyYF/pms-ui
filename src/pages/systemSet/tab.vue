@@ -39,7 +39,7 @@
     <el-menu
       :default-active="activeMenu"
       mode="horizontal"
-      ref="reserveMenu"
+      ref="menuRef"
       :router=true
       class="el-menu-vertical-demo">
       <el-menu-item index="/systemSet/paramsSetting" v-if="hasPerm('pms:systemSet:paramsSetting')">
@@ -116,7 +116,10 @@
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
-      this.activeMenu = this.$route.path;
+      // this.activeMenu = this.$route.path;
+      let routerPath = this.$refs.menuRef.$children[0].$options.propsData.index;
+      this.activeMenu = routerPath
+      this.$router.push(routerPath);
       // this.activeName = this.$refs.checkTabs.panes[0].name
     },
     methods: {
