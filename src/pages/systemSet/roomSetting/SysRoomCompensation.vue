@@ -139,7 +139,7 @@
             "projectPk": '',
             "projectPrice": '',
             "sortNum": 0,
-            "typeCode": 'ALL',
+            "typeCode": 'ROOM_PC',
             "typeMaster": this.typeMaster,
             "typePk": this.selectRoomType
           })

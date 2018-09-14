@@ -194,7 +194,6 @@ import {listProject,delProject,updateProject,addProject} from '@/api/systemSet/p
             "projectPrice": 0,
             "sortNum": 0,
             "typeCode": 'CJ',
-            "typeMaster": this.typeMaster,
             "typePk": this.selectType
           })
         }
