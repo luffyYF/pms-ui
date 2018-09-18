@@ -416,7 +416,7 @@ export default {
     //scoket 刷新
     // this.connection();
     //定时检测新订单
-    this.newOrder();
+    // this.newOrder();
     //定时5分钟刷新一次token
     this.refreshToken(300000);
 

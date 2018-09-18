@@ -34,7 +34,8 @@ export default {
         // userName: "super",
         // password: "123456"
         userName: "",
-        password: ""
+        password: "",
+        systemId: '473891058107809792',//系统主键固定值
       },
       rules: {
         userName: [
