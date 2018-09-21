@@ -101,6 +101,11 @@ import CompanyDetail from '@/pages/reportCenter/commissionReport/CompanyDetail.v
 import BoardroomList from '@/pages/reportCenter/boardroomReport/BoardroomList.vue'
 import LinenLossReport from '@/pages/reportCenter/linenReport/LinenLossReport.vue'
 import WxPaymentBalance from '@/pages/reportCenter/wxPaymentReport/WxPaymentBalance.vue'
+import TurnoverOfDaily from '@/pages/reportCenter/turnoverReport/TurnoverOfDaily.vue'
+import TurnoverOfMonth from '@/pages/reportCenter/turnoverReport/TurnoverOfMonth.vue'
+import TurnoverDailyDetail from '@/pages/reportCenter/turnoverReport/TurnoverDailyDetail.vue'
+import LeaseRateDaily from '@/pages/reportCenter/turnoverReport/LeaseRateDaily.vue'
+import LeaseRateMonth from '@/pages/reportCenter/turnoverReport/LeaseRateMonth.vue'
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
 
 //系统设置
@@ -242,7 +247,12 @@ export const constantRouterMap = [
           {path: '/reportCenter/companyDetail', component: CompanyDetail, label: '协议单位佣金明细报表', pointer: '501001'},
           {path: '/reportCenter/boardroomList', component: BoardroomList, label: '会议室报表', pointer: '501101'},
           {path: '/reportCenter/linenLossReport', component: LinenLossReport, label: '布草损耗明细报表', pointer: '501301'},
-          {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询', pointer: '501503'}
+          {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询', pointer: '501503'},
+          {path: '/reportCenter/turnoverDaily', component: TurnoverOfDaily, label: '营业日报', pointer: '501504'},
+          {path: '/reportCenter/TurnoverMonth', component: TurnoverOfMonth, label: '营业月报', pointer: '501505'},
+          {path: '/reportCenter/TurnoverDailyDetail', component: TurnoverDailyDetail, label: '营业明细日报', pointer: '501505'},
+          {path: '/reportCenter/leaseRateDaily', component: LeaseRateDaily, label: '入住率日报', pointer: '501506'},
+          {path: '/reportCenter/leaseRateMonth', component: LeaseRateMonth, label: '入住率月报', pointer: '501507'},
         ]
       },
       {

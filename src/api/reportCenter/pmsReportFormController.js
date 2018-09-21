@@ -219,3 +219,28 @@ export const reportCuiZhangBaoBiao = params => {
 export const reportJingLiRiBao = params => {
     return request.get('/pms/report/jingLiRiBao',{params:params})
 }
+
+/**
+ * 营业日报
+ */
+export const turnoverDaily = params =>{
+    return request.get('/dailyReport/turnover/daily',{params:params})
+}
+/**
+ * 营业月报
+ */
+export const turnoverMoth = params =>{
+    return request.get('/dailyReport/turnover/month',{params:params})
+}
+/**
+ * 入住率日报
+ */
+export const leaseRateDaily = params =>{
+    return request.get('/dailyReport/leaseRate/daily',{params:params})
+}
+/**
+ * 入住率月报
+ */
+export const leaseRateMonth = params =>{
+    return request.get('/dailyReport/leaseRate/month',{params:params})
+}

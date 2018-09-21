@@ -1,34 +1,34 @@
 // 常用报表----------------------------------
 export const commonReport = [{
   label: '管理层',
-  pointer: '500536',
+  pointer: 'pms:reportCenter:managerFloor',
   hidden: true,
   children: [{
       label: '每日日报',
       path: '/reportCenter/dailyReport',
-      pointer: '500536'
+      pointer: 'pms:reportCenter:dailyReptor'
     },
     {
       label: '经理日报',
       path: '/reportCenter/roomDailyReport',
-      pointer: '500536'
+      pointer: 'pms:reportCenter:dailyManage'
     }
   ]
 }, {
   label: '前台交接班和查账',
-  pointer: '501203',
+  pointer: 'pms:reportCenter:foreground',
   children: [{
       label: '收银员收款报表',
       path: '/reportCenter/receiptsReport',
-      pointer: '501203'
+      pointer: 'pms:reportCenter:receiptReport'
     },{
       label: '收银入账明细报表',
       path: '/reportCenter/admissionAccount',
-      pointer: '500404'
+      pointer: 'pms:reportCenter:detailReport'
     },{
       label: '收银入账汇总报表',
       path: '/reportCenter/accountSummaryReport',
-      pointer: '500404'
+      pointer: 'pms:reportCenter:gatherReport'
     }
   ]
 },
@@ -51,7 +51,7 @@ export const commonReport = [{
   },*/
 {
   label: '财务稽核',
-  pointer: '500205',
+  pointer: 'pms:reportCenter:financial',
   children: [
   // {
   //   label: '历史换房报表',
@@ -86,8 +86,18 @@ export const commonReport = [{
   {
     label: '营业收入报表',
     path: '/reportCenter/turnoverOfBusinessIncome',
-    pointer: '500416'
+    pointer: 'pms:reportCenter:businessIncome'
   }]
+},{
+  label:'经营报表',
+  pointer:'pms:reportCenter:operStatement',
+  children:[
+    {label:'营业日报',path:'/reportCenter/turnoverDaily',pointer:'pms:reportCenter:turnoverDaily'},
+    {label:'营业月报',path:'/reportCenter/TurnoverMonth',pointer:'pms:reportCenter:turnoverMonth'},
+    //TODO  {label:'营业明细日报',path:'/reportCenter/TurnoverDailyDetail',pointer:'pms:reportCenter:turnoverdd'},
+    {label:'入住率日报',path:'/reportCenter/leaseRateDaily',pointer:'pms:reportCenter:leaseRateDaily'},
+    {label:'入住率月报',path:'/reportCenter/leaseRateMonth',pointer:'pms:reportCenter:leaseRateMonth'},
+  ]
 }
 // , {
 //   label: '其他常用报表',

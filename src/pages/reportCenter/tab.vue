@@ -40,7 +40,7 @@
     },
     created() {
       this.jurisdictionOne(commonReport);
-      this.jurisdictionTwo(reportCenter)
+      // this.jurisdictionTwo(reportCenter)
     },
     methods: {
       //权限
@@ -48,7 +48,7 @@
         if (commonReport) {
           for(let i = 0; i < commonReport.length; i++) {
             var pointer = commonReport[i].pointer;
-            if (!this.powerJudge(pointer)) {
+            if (!this.hasPerm(pointer)) {
               commonReport.splice(i--, 1)
               continue
             }
@@ -56,18 +56,18 @@
           }
         }
       },
-      jurisdictionTwo (reportCenter) {
-        if (reportCenter) {
-          for(let i = 0; i < reportCenter.length; i++) {
-            var pointer = reportCenter[i].pointer;
-            if (!this.powerJudge(pointer)) {
-              reportCenter.splice(i--, 1)
-              continue
-            }
-            this.jurisdictionTwo(reportCenter[i].children)
-          }
-        }
-      },
+      // jurisdictionTwo (reportCenter) {
+      //   if (reportCenter) {
+      //     for(let i = 0; i < reportCenter.length; i++) {
+      //       var pointer = reportCenter[i].pointer;
+      //       if (!this.powerJudge(pointer)) {
+      //         reportCenter.splice(i--, 1)
+      //         continue
+      //       }
+      //       this.jurisdictionTwo(reportCenter[i].children)
+      //     }
+      //   }
+      // },
       decomposeRouter(){
         var routerList = this.$router.options.routes;
         var subjectRouter = [];
