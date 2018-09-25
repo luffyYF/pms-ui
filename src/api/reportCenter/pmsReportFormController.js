@@ -244,3 +244,16 @@ export const leaseRateDaily = params =>{
 export const leaseRateMonth = params =>{
     return request.get('/dailyReport/leaseRate/month',{params:params})
 }
+/**
+ * 营业日报详细
+ */
+export const turnoverDailyDetail = params =>{
+    return request.get('/dailyReport/turnover/dailyChannelDetail',{params:params})
+}
+/**
+ * 营业月报详细
+ */
+export const turnoverMonthDetail = params =>{
+    return request.get('/dailyReport/turnover/monthChannelDetail',{params:params})
+}
+

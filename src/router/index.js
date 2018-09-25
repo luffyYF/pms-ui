@@ -104,6 +104,7 @@ import WxPaymentBalance from '@/pages/reportCenter/wxPaymentReport/WxPaymentBala
 import TurnoverOfDaily from '@/pages/reportCenter/turnoverReport/TurnoverOfDaily.vue'
 import TurnoverOfMonth from '@/pages/reportCenter/turnoverReport/TurnoverOfMonth.vue'
 import TurnoverDailyDetail from '@/pages/reportCenter/turnoverReport/TurnoverDailyDetail.vue'
+import TurnoverMonthDetail from '@/pages/reportCenter/turnoverReport/TurnoverMonthDetail.vue'
 import LeaseRateDaily from '@/pages/reportCenter/turnoverReport/LeaseRateDaily.vue'
 import LeaseRateMonth from '@/pages/reportCenter/turnoverReport/LeaseRateMonth.vue'
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
@@ -156,57 +157,53 @@ export const constantRouterMap = [
       // {path: '/index', component: AtrialCenterTab, name: '首页1'},
       {
         path: '/atrialCenter',
-        perm: 'pms:dir:roomCenter',
         component: AtrialCenterTab,
         name: '房态图',
         meta: {icon: 'fa-home', noCache: true},
         hidden: false,
         children: [
-          {path: '/atrialCenter/RoomPattern',perm:'pms:menu:roomPattern', component: RoomPattern, label: '房态图'},
-          {path: '/atrialCenter/RoomTable', perm:'pms:menu:roomStatusTable', component: RoomTable, label: '房态表'},
-          {path: '/atrialCenter/ForwardHousing', perm:'pms:menu:roomForwordStatus', component: ForwardHousing, label: '远期房态'},
-          {path: '/atrialCenter/HousekeepingList', perm:'pms:menu:reasonRoom', component: HousekeepingList, label: '问题房态列表'},
-          {path: '/atrialCenter/GoodsManageTag', perm:'pms:menu:goodsManage', component: GoodsManageTag, label: '物品管理'},
-          {path: '/atrialCenter/AccountStatement', perm:'pms:menu:accountStatement', component: AccountStatement, label: '催账报表'},
+          {path: '/atrialCenter/RoomPattern', component: RoomPattern, label: '房态图'},
+          {path: '/atrialCenter/RoomTable', component: RoomTable, label: '房态表'},
+          {path: '/atrialCenter/ForwardHousing',component: ForwardHousing, label: '远期房态'},
+          {path: '/atrialCenter/HousekeepingList', component: HousekeepingList, label: '问题房态列表'},
+          {path: '/atrialCenter/GoodsManageTag', component: GoodsManageTag, label: '物品管理'},
+          {path: '/atrialCenter/AccountStatement',  component: AccountStatement, label: '催账报表'},
           {path: '/atrialCenter/JointRealManage', component: JointRealManage, label: '联房管理'},
-          {path: '/reportCenter/ShiftReport',perm:'pms:menu:shiftReport', component: ShiftTab, label: '交班报表'},
-          {path: '/reportCenter/EmergencyReport', perm:'pms:menu:emergencyReport', component: EmergencyReport, label: '应急报表'},
+          {path: '/reportCenter/ShiftReport', component: ShiftTab, label: '交班报表'},
+          {path: '/reportCenter/EmergencyReport', component: EmergencyReport, label: '应急报表'},
         ]
       },
       {
         path: '/reserveManage',
-        perm:'pms:dir:reserveManage',
         component: ReserveManageTag,
         name: '预定管理',
         hidden: false,
         children: [
-          {path: '/reserveManage/addReserve', perm:'pms:menu:addReserve', component: AddReserve, label: '新增预定'},
-          {path: '/reserveManage/groupReserve', perm:'pms:menu:groupReserve', component: GroupReserve, label: '团队预定'},
-          {path: '/reserveManage/listReserve', perm:'pms:menu:listReserve', component: ListReserve, label: '订单列表'}
+          {path: '/reserveManage/addReserve', component: AddReserve, label: '新增预定'},
+          {path: '/reserveManage/groupReserve',  component: GroupReserve, label: '团队预定'},
+          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
         ]
       },
       { 
         path: '/checkInManage', 
-        perm:'pms:dir:checkinManage', 
         component: CheckInManageTab, 
         name: '入住管理', 
         hidden: false,
         children:[
-          {path: '/checkInManage/checkInSearch', perm:'pms:menu:checkInSearch', component: CheckInSearch, label: '入住查询'},
-          {path: '/checkInManage/teamSearch', perm:'pms:menu:teamSearch', component: TeamSearch, label: '团队查询'},
+          {path: '/checkInManage/checkInSearch',  component: CheckInSearch, label: '入住查询'},
+          {path: '/checkInManage/teamSearch',  component: TeamSearch, label: '团队查询'},
         ]
       },
       {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
       {
         path: '/customerRelation',
-        perm:'pms:dir:customerRelationship',
         component: CustomerRelationTag,
         name: '客户关系',
         hidden: false,
         children: [
-          {path: '/customerRelation/memberManage', perm:'pms:menu:memberManage', component: MemberManage, label: '会员管理'},
-          {path: '/customerRelation/guestManage', perm:'pms:menu:guestManage', component: GuestManage, label: '客人管理'},
-          {path: '/customerRelation/protocolManage', perm:'pms:menu:protocolManage', component: ProtocolManage, label: '协议管理'},
+          {path: '/customerRelation/memberManage',  component: MemberManage, label: '会员管理'},
+          {path: '/customerRelation/guestManage', component: GuestManage, label: '客人管理'},
+          {path: '/customerRelation/protocolManage',component: ProtocolManage, label: '协议管理'},
           {path: '/customerRelation/virtualOrder', component: VirtualOrder, label: '虚拟账单'},
           {path: '/customerRelation/invoice', component: Invoice, label: '发票'},
           {path: '/customerRelation/passengerInformationUploading', component: PassengerInformationUploading, label: '旅客信息上传'}
@@ -215,44 +212,44 @@ export const constantRouterMap = [
       {path: '/smsMarketing', component: SmsMarketingTag, name: '短息营销', hidden: false},
       {
         path: '/reportCenter',
-        perm:'pms:dir:reportCenter',
         component: ReportCenterTag,
         name: '报表中心',
         alias: 'ReportCenterTag',
         hidden: false,
         children: [
           {path: '/reportCenter', component: ReportDefaultPage, label: '默认页'},
-          {path: '/reportCenter/receiptsReport', component: ReceiptsReportPage, label: '收银员收款报表', pointer: '501203'},
-          {path: '/reportCenter/admissionAccount', component: AdmissionAccountPage, label: '收银入账明细报表', pointer: '500404'},
-          {path: '/reportCenter/accountSummaryReport', component: AccountSummaryReportPage, label: '收银入账汇总报表', pointer: '500404'},
-          {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表', pointer: '500536'},
-          {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况', pointer: '500536'},
-          {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源', pointer: '500540'},
-          {path: '/reportCenter/historicalRoomExchange', component: HistoricalRoomExchange, label: '历史换房报表', pointer: '500205'},
-          {path: '/reportCenter/offsetDetail', component: OffsetDetail, label: '冲减明细报表', pointer: '500403'},
-          {path: '/reportCenter/rentContract', component: RentContract, label: '房租合约报表', pointer: '500407'},
-          {path: '/reportCenter/hourRoomCancel', component: HourRoomCancel, label: '日租钟点取消报表', pointer: '500414'},
-          {path: '/reportCenter/historyStore', component: HistoryStore, label: '历史离店报表', pointer: '500208'},
-          {path: '/reportCenter/turnoverOfBusinessIncome', component: TurnoverOfBusinessIncome, label: '历史离店报表', pointer: '500208'},
-          {path: '/reportCenter/goodsConsumeList', component: GoodsConsumeList, label: '商品部商品消费明细表', pointer: '500526'},
-          {path: '/reportCenter/bookingAnalysisReport', component: BookingAnalysisReportPage, label: '预订分析报表', pointer: '500101'},
-          {path: '/reportCenter/historyExchangeHouses', component: HistoryExchangeHouses, label: '历史换房报表', pointer: '500101'},
-          {path: '/reportCenter/historyGuestsBalance', component: HistoryGuestsBalance, label: '历史在店宾客余额及押金报表', pointer: '500303'},
-          {path: '/reportCenter/memberRechargeBill', component: MemberRechargeBill, label: '会员充值发票报表', pointer: '500419'},
-          {path: '/reportCenter/memberBenefit', component: MemberBenefit, label: '会员发展效益表', pointer: '500523'},
-          {path: '/reportCenter/integralDetailList', component: IntegralDetailList, label: '会员积分明细报表', pointer: '500610'},
-          {path: '/reportCenter/regionTouristsList', component: RegionTouristsList, label: '地域客源统计报表', pointer: '500708'},
-          {path: '/reportCenter/memberCardList', component: MemberCardList, label: '会员发卡报表', pointer: '500803'},
-          {path: '/reportCenter/warehouseBalanceList', component: WarehouseBalanceList, label: '仓库结存统计报表', pointer: '500901'},
-          {path: '/reportCenter/companyDetail', component: CompanyDetail, label: '协议单位佣金明细报表', pointer: '501001'},
-          {path: '/reportCenter/boardroomList', component: BoardroomList, label: '会议室报表', pointer: '501101'},
-          {path: '/reportCenter/linenLossReport', component: LinenLossReport, label: '布草损耗明细报表', pointer: '501301'},
-          {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询', pointer: '501503'},
-          {path: '/reportCenter/turnoverDaily', component: TurnoverOfDaily, label: '营业日报', pointer: '501504'},
-          {path: '/reportCenter/TurnoverMonth', component: TurnoverOfMonth, label: '营业月报', pointer: '501505'},
-          {path: '/reportCenter/TurnoverDailyDetail', component: TurnoverDailyDetail, label: '营业明细日报', pointer: '501505'},
-          {path: '/reportCenter/leaseRateDaily', component: LeaseRateDaily, label: '入住率日报', pointer: '501506'},
-          {path: '/reportCenter/leaseRateMonth', component: LeaseRateMonth, label: '入住率月报', pointer: '501507'},
+          {path: '/reportCenter/receiptsReport', component: ReceiptsReportPage, label: '收银员收款报表'},
+          {path: '/reportCenter/admissionAccount', component: AdmissionAccountPage, label: '收银入账明细报表'},
+          {path: '/reportCenter/accountSummaryReport', component: AccountSummaryReportPage, label: '收银入账汇总报表'},
+          {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表'},
+          {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况'},
+          {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源'},
+          {path: '/reportCenter/historicalRoomExchange', component: HistoricalRoomExchange, label: '历史换房报表'},
+          {path: '/reportCenter/offsetDetail', component: OffsetDetail, label: '冲减明细报表'},
+          {path: '/reportCenter/rentContract', component: RentContract, label: '房租合约报表'},
+          {path: '/reportCenter/hourRoomCancel', component: HourRoomCancel, label: '日租钟点取消报表'},
+          {path: '/reportCenter/historyStore', component: HistoryStore, label: '历史离店报表'},
+          {path: '/reportCenter/turnoverOfBusinessIncome', component: TurnoverOfBusinessIncome, label: '历史离店报表'},
+          {path: '/reportCenter/goodsConsumeList', component: GoodsConsumeList, label: '商品部商品消费明细表'},
+          {path: '/reportCenter/bookingAnalysisReport', component: BookingAnalysisReportPage, label: '预订分析报表'},
+          {path: '/reportCenter/historyExchangeHouses', component: HistoryExchangeHouses, label: '历史换房报表'},
+          {path: '/reportCenter/historyGuestsBalance', component: HistoryGuestsBalance, label: '历史在店宾客余额及押金报表'},
+          {path: '/reportCenter/memberRechargeBill', component: MemberRechargeBill, label: '会员充值发票报表'},
+          {path: '/reportCenter/memberBenefit', component: MemberBenefit, label: '会员发展效益表'},
+          {path: '/reportCenter/integralDetailList', component: IntegralDetailList, label: '会员积分明细报表'},
+          {path: '/reportCenter/regionTouristsList', component: RegionTouristsList, label: '地域客源统计报表'},
+          {path: '/reportCenter/memberCardList', component: MemberCardList, label: '会员发卡报表'},
+          {path: '/reportCenter/warehouseBalanceList', component: WarehouseBalanceList, label: '仓库结存统计报表'},
+          {path: '/reportCenter/companyDetail', component: CompanyDetail, label: '协议单位佣金明细报表'},
+          {path: '/reportCenter/boardroomList', component: BoardroomList, label: '会议室报表'},
+          {path: '/reportCenter/linenLossReport', component: LinenLossReport, label: '布草损耗明细报表'},
+          {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询'},
+          {path: '/reportCenter/turnoverDaily', component: TurnoverOfDaily, label: '营业日报'},
+          {path: '/reportCenter/TurnoverMonth', component: TurnoverOfMonth, label: '营业月报'},
+          {path: '/reportCenter/TurnoverDailyDetail', component: TurnoverDailyDetail, label: '营业明细日报'},
+          {path: '/reportCenter/TurnoverMonthDetail', component: TurnoverMonthDetail, label: '营业明细月报'},
+          {path: '/reportCenter/leaseRateDaily', component: LeaseRateDaily, label: '入住率日报'},
+          {path: '/reportCenter/leaseRateMonth', component: LeaseRateMonth, label: '入住率月报'},
         ]
       },
       {
@@ -261,7 +258,7 @@ export const constantRouterMap = [
         name: '财务稽核', 
         hidden: false,
         children: [
-          {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表', pointer: '500403'}
+          {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
         ]
       },
       {path: '/dumbHouse', perm:'pms:dir:dumbRoomAccount', component: DumbHouseTag, name: '哑房账', hidden: false},
@@ -275,12 +272,12 @@ export const constantRouterMap = [
         name: '操作员管理',
         hidden: false,
         children: [
-          // {path: '/operators/operManager', perm:'pms:menu:operManager', component: Operators, label: '操作员管理'},
-          {path: '/operators/modifyThePassword', perm:'pms:menu:modifyPassword', component: ModifyThePassword, label: '修改密码'},
-          {path: '/operators/logBrowsing', perm:'pms:menu:logBrowser', component: LogBrowsing, label: '日志浏览'},
-          // {path: '/operators/roleManagement', perm:'pms:menu:roleManager', component: RoleManagement, label: '角色管理'},
-          {path: '/operators/employeeManagement', perm:'pms:menu:workManager', component: EmployeeManagement, label: '员工管理'},
-          {path: '/operators/nightTrialRecord', perm:'pms:menu:nightAuditRecord', component: NightTrialRecord, label: '夜审记录查询'}
+          // {path: '/operators/operManager' component: Operators, label: '操作员管理'},
+          {path: '/operators/modifyThePassword', component: ModifyThePassword, label: '修改密码'},
+          {path: '/operators/logBrowsing',  component: LogBrowsing, label: '日志浏览'},
+          // {path: '/operators/roleManagement', component: RoleManagement, label: '角色管理'},
+          {path: '/operators/employeeManagement', component: EmployeeManagement, label: '员工管理'},
+          {path: '/operators/nightTrialRecord', component: NightTrialRecord, label: '夜审记录查询'}
         ]
       },
       {
@@ -290,15 +287,15 @@ export const constantRouterMap = [
         name: '系统设置', 
         hidden: false,
         children: [
-          {path: '/systemSet/paramsSetting', perm:'pms:systemSet:paramsSetting', component:SystemParameter , label: '系统参数设置'},
-          {path: '/systemSet/shiftManage', perm:'pms:systemSet:shiftManage', component: ClassManagement, label: '班次管理'},
-          {path: '/systemSet/userSetting', perm:'pms:systemSet:userSetting', component: MembershipRelated, label: '会员相关设置'},
-          {path: '/systemSet/roomSetting', perm:'pms:systemSet:roomSetting', component: RoomSetting , label: '客房设置'},
-          {path: '/systemSet/clockSpecial', perm:'pms:systemSet:clockSpecial', component: BellSpecialRoom, label: '钟点特殊房'},
-          {path: '/systemSet/settleSetting', perm:'pms:systemSet:consItemSetting', component: ConsumerProjects, label: '消费项目设置'},
-          {path: '/systemSet/channelManage', perm:'pms:systemSet:channelManage', component: ChannelManagement, label: '渠道管理'},
-          {path: '/systemSet/projectSetting', perm:'pms:systemSet:projectSetting', component: AccountEntry, label: '入账项目显示设置'},
-          {path: '/systemSet/priceSetting', perm:'pms:systemSet:priceSetting', component: PriceSetting, label: '价格设置'},
+          {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
+          {path: '/systemSet/shiftManage', component: ClassManagement, label: '班次管理'},
+          {path: '/systemSet/userSetting',  component: MembershipRelated, label: '会员相关设置'},
+          {path: '/systemSet/roomSetting', component: RoomSetting , label: '客房设置'},
+          {path: '/systemSet/clockSpecial',  component: BellSpecialRoom, label: '钟点特殊房'},
+          {path: '/systemSet/settleSetting',  component: ConsumerProjects, label: '消费项目设置'},
+          {path: '/systemSet/channelManage', component: ChannelManagement, label: '渠道管理'},
+          {path: '/systemSet/projectSetting', component: AccountEntry, label: '入账项目显示设置'},
+          {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},
         ]
       },
       {path: '/linen', component: LinenTag, name: '布草', hidden: false}

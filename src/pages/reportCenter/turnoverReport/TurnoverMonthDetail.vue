@@ -2,7 +2,7 @@
   <div>
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
-        营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini" @change="reportBusinessIncome"></el-date-picker>
+        营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM" type="month" placeholder="选择月份" size="mini" @change="reportBusinessIncome"></el-date-picker>
         <div style="margin-top:10px;">
           <el-button type="primary" size="mini" @click="reportBusinessIncome()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
@@ -15,7 +15,7 @@
     <el-col :span="24" id="print-turnoverofbusinessincome">
       <div class="tabs">
         <div class="tavs-title">
-          <h3>各营业点收入日报表</h3>
+          <h3>各营业点收入月报表</h3>
         </div>
         <div class="tabs-contetn">
           <el-table
@@ -40,13 +40,13 @@
                 </el-table>
               </template>
             </el-table-column>
-            <el-table-column prop="totalTurnover" label="当日营业额"></el-table-column>
-            <el-table-column prop="afterTaxes" label="当日税后收入"></el-table-column>
-            <el-table-column prop="avgRoomPrice" label="当日平均房价"></el-table-column>
+            <el-table-column prop="totalTurnover" label="当月营业额"></el-table-column>
+            <el-table-column prop="afterTaxes" label="当月税后收入"></el-table-column>
+            <el-table-column prop="avgRoomPrice" label="当月平均房价"></el-table-column>
           </el-table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
-          <p class="note_p">注：当日税后收入 = 当日营业额/(1+6%)</p>
-          <p class="note_p1">当日平均房价=当日营业额/当日入住房间数</p>
+          <p class="note_p">注：当月税后收入 = 当月营业额/(1+6%)</p>
+          <p class="note_p1">当月平均房价=当月营业额/当月入住房间数</p>
           <p class="note_p2"></p>
         </div>
       </div>
@@ -57,12 +57,12 @@
 </template>
 <script>
 import common from "@/api/common"
-import {turnoverDaily,turnoverDailyDetail} from '@/api/reportCenter/pmsReportFormController'
+import {turnoverMoth,turnoverMonthDetail} from '@/api/reportCenter/pmsReportFormController'
 import moment from "moment"
 export default {
   data() {
     return {
-      datepicker: moment().format("YYYY-MM-DD"),
+      datepicker: moment().format("YYYY-MM"),
       datepickerTime:  moment().format("YYYY-MM-DD HH:mm:ss"),
       value: '',
       tableData: [],
@@ -89,7 +89,7 @@ export default {
   methods: {
     reportBusinessIncome(){
       const datepicker = this.datepicker;
-      turnoverDaily({businessDate:datepicker}).then(res => {
+      turnoverMoth({month:datepicker}).then(res => {
         this.tableData = res.data
         this.subTableData = {}
         this.subHeads = {}
@@ -129,10 +129,10 @@ export default {
     },
     expandChange(row, expandedRows){
       let data= {
-        businessDate:this.datepicker,
+        month:this.datepicker,
         companyPk:row.companyPk
       }
-      turnoverDailyDetail(data).then(res=>{
+      turnoverMonthDetail(data).then(res=>{
         // this.$set(this.subTableData,'43497ebc-ec16-4b82-89c5-a95e6a52d519',[{'channel0':'哈哈哈大','channel1':'牛逼'}])
         // this.$set(this.subHeads,row.companyPk,res.data.headers)
         this.subHeads[row.companyPk]=res.data.headers
