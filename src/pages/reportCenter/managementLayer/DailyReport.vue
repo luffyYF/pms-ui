@@ -6,7 +6,8 @@
         营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini" @change="dailyReport"></el-date-picker>
         <el-button type="primary" size="mini" @click="dailyReport()">网页预览</el-button>
         <el-button type="primary" size="mini">PDF预览</el-button>
-        <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'date='+datepicker" target="_blank">导出EXCEL</a></el-button>
+        <!-- <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'date='+datepicker" target="_blank">导出EXCEL</a></el-button> -->
+        <el-button type="primary" size="mini" @click="downloadExcel">导出EXCEL</el-button>
         <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
         <el-button type="primary" size="mini" @click="print">打印预览</el-button>
       </div>
@@ -49,7 +50,9 @@
 <script>
 import common from "@/api/common"
 import {dailyMgReport} from '@/api/reportCenter'
+import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
+
 export default {
   data() {
     return {
@@ -61,8 +64,9 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      },baseUrl:common.baseUrl,
-      ziurl:"/pms/report/mg/dailyExcel?"
+      },
+      // baseUrl:common.baseUrl,
+      // ziurl:"/pms/report/mg/dailyExcel?"
     }
   },
   created(){
@@ -86,6 +90,11 @@ export default {
         console.log(res.data)
         this.tableData = res.data;
       });
+    },
+    //导出EXCEL
+    downloadExcel(){
+      let url = '/pms/report/mg/dailyExcel?date='+this.datepicker
+      downloadExcel(url, '管理层日报表');
     },
     //打印预览
     print(){

@@ -6,7 +6,8 @@
         <div style="margin-top:10px;">
           <el-button type="primary" size="mini" @click="reportBusinessIncome()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
-          <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'businessDate='+datepicker" target="_blank">导出EXCEL</a></el-button>
+          <!-- <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'businessDate='+datepicker" target="_blank">导出EXCEL</a></el-button> -->
+          <el-button type="primary" size="mini" @click="downloadExcel">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -63,6 +64,7 @@
 <script>
 import common from "@/api/common"
 import {reportBusinessIncome} from '@/api/reportCenter/pmsReportFormController'
+import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
 export default {
   data() {
@@ -81,8 +83,8 @@ export default {
         padding: '8px',
         'text-align':'center'
       },
-      baseUrl:common.baseUrl,
-      ziurl:"/pms/report/businessIncomeExcel?"
+      // baseUrl:common.baseUrl,
+      // ziurl:"/pms/report/businessIncomeExcel?"
     }
   },
   created(){
@@ -106,6 +108,11 @@ export default {
         console.log(res.data)
         this.tableData = res.data
       })
+    },
+    //导出EXCEL
+    downloadExcel(){
+      let url = '/pms/report/businessIncomeExcel?businessDate='+this.datepicker
+      downloadExcel(url, '营业收入报表');
     },
     //打印预览
     print(){

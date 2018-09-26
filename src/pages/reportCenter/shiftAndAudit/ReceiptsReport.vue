@@ -30,7 +30,8 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+begenAndEnd.begin+'&end='+begenAndEnd.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk" class="exportLink" target="_blank">导出EXCEL</a></el-button>
+        <!-- <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+begenAndEnd.begin+'&end='+begenAndEnd.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk" class="exportLink" target="_blank">导出EXCEL</a></el-button> -->
+        <el-button type="primary" @click="downloadExcel">导出EXCEL</el-button>
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
@@ -80,7 +81,9 @@ import DatePicker from '@/components/DateComponent/DatePicker';
 import {roomStatus,reportShouYinYuanShouKuan} from "@/api/reportCenter/pmsReportFormController"
 import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
+import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
+
 export default {
   components: {DatePicker},
   data() {
@@ -106,8 +109,8 @@ export default {
         //   { required: true, message: "请选择时间", trigger: "change" }
         // ]
       },
-      baseUrl:common.baseUrl
-      ,ziurl:"/pms/report/uploadShouYinYuanShouKuanExcel?"
+      // baseUrl:common.baseUrl
+      // ,ziurl:"/pms/report/uploadShouYinYuanShouKuanExcel?"
     };
   },
   watch:{
@@ -193,6 +196,11 @@ export default {
         }
       });
       return sums;
+    },
+    //导出EXCEL
+    downloadExcel(){
+      let url = '/pms/report/uploadShouYinYuanShouKuanExcel?begin='+this.begenAndEnd.begin+'&end='+this.begenAndEnd.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk
+      downloadExcel(url, '收银员收款报表');
     },
     //打印预览
     print(){

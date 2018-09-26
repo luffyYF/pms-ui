@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <p style="margin-top:0; margin-bottom:5px;">项目：</p>
-    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="mini" checked="true" @change="handleCheckAllChange">全选</el-checkbox>
+    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="mini" :checked="true" @change="handleCheckAllChange">全选</el-checkbox>
     <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange" style="height: 100px;overflow-y: auto;">
       <el-checkbox class="checkboxgrou" size="mini" v-for="item in itemList" :label="item.projectPk" :key="item.projectPk">{{item.projectName}}</el-checkbox>
     </el-checkbox-group>
@@ -45,7 +45,8 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+queryObj.begin+'&end='+queryObj.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk+'&projectPks='+checkedItem" class="exportLink" target="_blank">导出EXCEL</a></el-button>
+        <!-- <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+queryObj.begin+'&end='+queryObj.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk+'&projectPks='+checkedItem.join(',')" class="exportLink" target="_blank">导出EXCEL</a></el-button> -->
+        <el-button type="primary" @click="downloadExcel">导出EXCEL</el-button>
         <!-- <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button> -->
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
@@ -79,11 +80,12 @@
 </template>
 
 <script>
-import common from "@/api/common"
 import {roomStatus,reportShouYinYuanRuZhangMingXi} from "@/api/reportCenter/pmsReportFormController"
 import {listProject} from "@/api/systemSet/pmsProjectController"
 import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
+import downloadExcel from '@/components/download/downloadExcel'
+import common from "@/api/common"
 import moment from "moment"
 
 export default {
@@ -105,8 +107,9 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      },baseUrl:common.baseUrl
-      ,ziurl:"/pms/report/shouYinYuanRuZhangMingXiExcel?"
+      },
+      // baseUrl:common.baseUrl,
+      // ziurl:"/pms/report/shouYinYuanRuZhangMingXiExcel?"
     };
   },
   created() {
@@ -125,27 +128,19 @@ export default {
   methods: {
     init(){
       let self = this
-      this.getList()
       selectShift().then((data)=>{
-        if(data.code == 1){
-          self.selectShiftData = data.data
-        }
+        self.selectShiftData = data.data
       })
       listCashierOperator().then((data)=>{
-        if(data.code == 1){
-          self.listCashierOperatorData = data.data
-        }
+        self.listCashierOperatorData = data.data
       })
-      listProject({
-        projectMaster:"CONSUMER"
-      }).then((data)=>{
-        if(data.code == 1){
-          self.itemList = data.data
-          self.itemList.forEach((data)=>{
-            self.allItemList.push(data.projectPk)
-            self.checkedItem.push(data.projectPk)
-          })
-        }
+      listProject({projectMaster:"CONSUMER"}).then(data=>{
+        self.itemList = data.data
+        self.itemList.forEach((data)=>{
+          self.allItemList.push(data.projectPk)
+          self.checkedItem.push(data.projectPk)
+        })
+        this.getList()
       })
       this.handleCheckAllChange();
     },
@@ -161,7 +156,7 @@ export default {
           self.queryObj.userName = data.userName
         }
       });
-      this.queryObj.projectPks =JSON.stringify(this.checkedItem);
+      this.queryObj.projectPks = this.checkedItem.join(',');
       // console.log(this.checkedItem.length);
       reportShouYinYuanRuZhangMingXi(this.queryObj).then((data)=>{
         if(data.code == 1){
@@ -178,6 +173,11 @@ export default {
       this.checkAll = checkedCount === this.allItemList.length;
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.allItemList.length;
+    },
+    //导出EXCEL
+    downloadExcel(){
+      let url = '/pms/report/shouYinYuanRuZhangMingXiExcel?begin='+this.queryObj.begin+'&end='+this.queryObj.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk+'&projectPks='+this.checkedItem.join(",")
+      downloadExcel(url, '收银入账明细报表');
     },
     //打印预览
     print(){

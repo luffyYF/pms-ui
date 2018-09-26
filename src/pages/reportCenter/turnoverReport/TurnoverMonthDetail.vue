@@ -6,7 +6,7 @@
         <div style="margin-top:10px;">
           <el-button type="primary" size="mini" @click="reportBusinessIncome()">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
-          <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'businessDate='+datepicker" target="_blank">导出EXCEL</a></el-button>
+          <el-button type="primary" size="mini" :disabled="true">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
@@ -78,8 +78,6 @@ export default {
         padding: '8px',
         'text-align':'center'
       },
-      baseUrl:common.baseUrl,
-      ziurl:"/pms/report/businessIncomeExcel?",
       userInfo: JSON.parse(localStorage.getItem('pms_userinfo')),
     }
   },
