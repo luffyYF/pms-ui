@@ -82,23 +82,23 @@
 
 <script>
   import {getIndexStatistics} from '../api/index'
-
   export default {
     data () {
       return {
         indexData: {}
       }
     },
+    mounted () {
+      // this.statisticsData()
+    },
     methods: {
       statisticsData () {
         getIndexStatistics().then(res => {
           this.indexData = new IndexData(res.data)
         })
-      }
+      },
     },
-    mounted () {
-      // this.statisticsData()
-    }
+    
   }
 
   class IndexData {

@@ -45,5 +45,8 @@ export const modifyPwd = params => {
   return requestUpms.post('/backend/users/modifyPwd',params)
 }
 
-
+//校验token是否有效
+export const validateToken = params => {
+  return requestUpms.get('/validateToken',{params:params})
+}
 

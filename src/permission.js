@@ -27,7 +27,6 @@ function getUrlParam(name){
 }
 
 // 不重定向白名单
-// const whiteList = ['/login', '/authredirect']
 const whiteList = ['/login', '/404']
 
 router.beforeEach((to, from, next) => {
@@ -36,27 +35,19 @@ router.beforeEach((to, from, next) => {
   if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
     next()
   }else{
-    //begin本地调试，设置token缓存
-    // if(!process.env.SERVER_FLAG){
-    // }
+    //begin 从URL中获取TOKEN
     let url_token = getUrlParam('token');
     if(url_token){
-      localStorage.setItem('token', url_token)
-      window.location.href=location.href.substring(0,location.href.indexOf('?'))
+      localStorage.setItem('pms_token', url_token)
+      // window.location.href=location.href.substring(0,location.href.indexOf('?')) 
+      history.pushState({}, "PMS", location.href.substring(0,location.href.indexOf('?')));
+      next('/classSelection')
       return;
     }
     //end
     
-    let token = window.localStorage.getItem('token');
+    let token = window.localStorage.getItem('pms_token');
     if(token){
-      // if(to.path=='/'){
-      //   //重新选择分点班次
-      //   // next('/classSelection');
-      //   next()
-      // }else{
-       
-      // }
-      // console.log('aaaax',localStorage.getItem('pms_userinfo'))
       if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !Cookies.get('select_company_pk') || !Cookies.get('select_shift_pk'))){
         //没有选择
         next('/classSelection');

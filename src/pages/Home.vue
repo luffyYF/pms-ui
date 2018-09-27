@@ -190,7 +190,9 @@ import {getToken, removeToken, removeRefreshToken} from '@/utils/auth'
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
 // import {logout,refreshTokenUpms }from '@/api/login'
-import {logout,refreshTokenUpms }from '@/api/upmsApi'
+import {logout,refreshTokenUpms,validateToken }from '@/api/upmsApi'
+
+
 export default {
   created() {
     var test = window.localStorage.getItem("current_logon_company");
@@ -206,6 +208,7 @@ export default {
       this.activeCompany.companyName == "";
     }
     
+    this.validateToken();
     // console.log(this.activeCompany);
   },
   data() {
@@ -226,7 +229,7 @@ export default {
     newOrder(){
       var self = this;
       setInterval(()=>{ 
-        if(window.localStorage.getItem('token')){
+        if(window.localStorage.getItem('pms_token')){
           timerCheckNew().then((data)=>{
             if(data.data>0){
               if(self.contInterval != null){
@@ -276,7 +279,7 @@ export default {
             Cookies.set('select_shift_pk','')
             localStorage.setItem('current_logon_company','');
             localStorage.setItem('pms_userinfo', '')
-            localStorage.setItem('token','');
+            localStorage.setItem('pms_token','');
             this.$router.push("/login");
           })
         })
@@ -394,17 +397,24 @@ export default {
     //刷新TOKEN
     refreshToken(time){
       setInterval(()=>{
-        if(window.localStorage.getItem('token')){
+        if(window.localStorage.getItem('pms_token')){
           refreshTokenUpms().then(res=>{
             let token = res.data.token
             if(token!=null && token!='' && token!="-1"){
-              window.localStorage.setItem('token', token);
+              window.localStorage.setItem('pms_token', token);
               console.log('token刷新成功');
             }
           });
         }
       },time);
     },
+    //验证TOKEN是否有效
+    validateToken(){
+      validateToken({token:localStorage.getItem('pms_token')}).then().catch(error=>{
+        //token无效，跳转登录页
+        this.$router.push('/login')
+      })
+    }
   },
   mounted() {
     window.onresize = () => {

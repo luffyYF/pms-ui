@@ -70,7 +70,7 @@ export default {
       //   });
       logout().then(res=>{}).finally(()=>{
         this.clearLocalInfo();
-        localStorage.setItem('token','');
+        localStorage.setItem('pms_token','');
         this.$router.push("/login");
       })
     },
