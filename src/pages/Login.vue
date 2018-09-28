@@ -6,10 +6,10 @@
                 class="demo-ruleForm login-container">
           <h3 class="title">后台登录</h3>
           <el-form-item prop="userName">
-            <el-input type="text" class="login_input_box" v-model="loginForm.userName" auto-complete="off" placeholder="请输入账号" clearable></el-input>
+            <el-input type="text" class="login_input_box" v-model="loginForm.userName" @keyup.enter.native="handleLogin" auto-complete="off" placeholder="请输入账号" clearable></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input :type="pwdType" class="login_input_box" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码" clearable></el-input>
+            <el-input :type="pwdType" class="login_input_box" v-model="loginForm.password" @keyup.enter.native="handleLogin" auto-complete="off" placeholder="请输入密码" clearable></el-input>
           </el-form-item>
           <el-form-item style="width:100%;">
             <el-button type="primary" style="width:100%;margin-top: 10px;" @click.native.prevent="handleLogin" :loading="loading">登录
