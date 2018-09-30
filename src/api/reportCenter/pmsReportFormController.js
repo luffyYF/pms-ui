@@ -256,4 +256,11 @@ export const turnoverDailyDetail = params =>{
 export const turnoverMonthDetail = params =>{
     return request.get('/dailyReport/turnover/monthChannelDetail',{params:params})
 }
+/**
+ * 营业数据详细
+ */
+export const businessDeatil = params =>{
+    return request.get('/pms/report/businessDeatil',{params:params})
+}
+
 

@@ -62,7 +62,7 @@ import moment from "moment"
 export default {
   data() {
     return {
-      datepicker: moment().format("YYYY-MM-DD"),
+      datepicker: moment().subtract(1,'days').format("YYYY-MM-DD"),
       datepickerTime:  moment().format("YYYY-MM-DD HH:mm:ss"),
       value: '',
       tableData: [],
