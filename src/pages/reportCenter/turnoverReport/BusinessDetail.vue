@@ -1,11 +1,16 @@
 // 营业明细
 <template>
-  <div class="container">
-    <p style="margin-top:0; margin-bottom:5px;">项目：</p>
-    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="mini" :checked="true" @change="handleCheckAllChange">全选</el-checkbox>
-    <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange" style="height: 100px;overflow-y: auto;">
-      <el-checkbox class="checkboxgrou" size="mini" v-for="item in itemList" :label="item.projectPk" :key="item.projectPk">{{item.projectName}}</el-checkbox>
-    </el-checkbox-group>
+  <div class="container-business-detail">
+    <!-- <p style="margin-top:0; margin-bottom:5px;">项目：</p> -->
+    <el-collapse style="border:none">
+      <el-collapse-item title="项目选择" name="4">
+        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" size="mini" :checked="true" @change="handleCheckAllChange">全选</el-checkbox>
+        <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange" style="height: 100px;overflow-y: auto;">
+          <el-checkbox class="checkboxgrou" size="mini" v-for="item in itemList" :label="item.projectPk" :key="item.projectPk">{{item.projectName}}</el-checkbox>
+        </el-checkbox-group>
+      </el-collapse-item>
+    </el-collapse>
+
     <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
       <el-form-item label="开始营业日：">
         <el-date-picker
@@ -205,10 +210,10 @@ export default {
 
 <style scoped>
 .exportLink{
-      color: white;
-      text-decoration: none;
+  color: white;
+  text-decoration: none;
 }
-.container {
+.container-business-detail {
   height: 100%;
 }
 .el-checkbox {
@@ -231,5 +236,18 @@ export default {
 <style>
 .checkboxgrou span.el-checkbox__label{
   width: 100px;
+}
+.container-business-detail .el-collapse-item__header{
+ border-bottom-width: 0px; 
+}
+.container-business-detail .el-icon-arrow-right {
+  float: left;
+}
+.container-business-detail .el-table th.gutter{
+  display: table-cell!important;
+}
+
+.container-business-detail .el-table colgroup.gutter{
+  display: table-cell!important;
 }
 </style>

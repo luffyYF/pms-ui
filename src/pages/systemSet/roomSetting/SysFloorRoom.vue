@@ -88,7 +88,7 @@
         <el-form-item label="房号：" required>
           <el-input v-model="addFrom.roomNumber" placeholder="请输入房号" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="房间类型：">
+        <el-form-item label="房间类型：" required>
           <el-select v-model="addFrom.roomTypePk" placeholder="请选择房间类型">
             <el-option 
               v-for="item in listTypeData"
@@ -107,9 +107,14 @@
           <el-input v-model="addFrom.telPhoneLine" placeholder="请输入电话外线" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="房间锁号：">
-          <el-input v-model="addFrom.roomLockNumber" auto-complete="off" placeholder="请选择房间锁号" style="width:300px;"></el-input>
+          <el-input v-model="addFrom.roomLockNumber" auto-complete="off" placeholder="请输入房间锁号" style="width:300px;"></el-input>
           <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
         </el-form-item>
+        <el-form-item label="RFL锁号">
+          <el-input v-model="addFrom.rflLockNo" auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
+          <span style="color:red">*注：8位数字</span>
+        </el-form-item>
+
         <el-form-item label="概况：">
           <el-input
             type="textarea"
@@ -167,6 +172,10 @@
         <el-form-item label="房间锁号：">
           <el-input v-model="selectRoom.roomLockNumber" auto-complete="off" placeholder="请选择房间锁号" style="width:300px;"></el-input>
           <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
+        </el-form-item>
+        <el-form-item label="RFL锁号">
+          <el-input v-model="selectRoom.rflLockNo" auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
+          <span style="color:red">*注：8位数字</span>
         </el-form-item>
         <el-form-item label="概况：">
           <el-input
@@ -313,7 +322,8 @@ export default {
         "intelligentFlag": "N",
         "intelligentBanNo":null,
         "intelligentFloorNo":null,
-        "intelligentRoomNo":null
+        "intelligentRoomNo":null,
+        "rflLockNo":null
       }
     };
   },

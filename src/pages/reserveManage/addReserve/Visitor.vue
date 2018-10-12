@@ -32,6 +32,7 @@
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
                   <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="toCheckout">退房</el-button>
                 </template> <br>
+                <el-button size="mini" type="text" v-if="scope.row.roomNumber" @click="makeCard(scope.row)">门卡</el-button> <br>
                 <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>
               </template>
             </el-table-column>
@@ -597,20 +598,22 @@
 
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
+    
     <!-- 预定管理 -->
     <reserveManager ref="reserveManagerRef"></reserveManager>
+
+    <!-- 制卡窗口 -->
+    <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
   </div>
 </template>
 
 <script>
     import bus from '@/utils/bus'
+    import moment from 'moment'
     import {orderStatusMap,contractMap, paymentMap, credentialsMap} from '@/utils/orm'
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
     import {isInteger,validatePhone} from '@/utils/validate'
     import {MyToFixed} from '@/utils/number'
-    import Agreement from '@/components/Agreement/Agreement'
-    import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
-    import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import {listContract} from "@/api/order/pmsContractControll"
     import {findPriceSchemeDetailPrice} from '@/api/systemSet/priceScheme/priceSchemeController'
     import {
@@ -628,10 +631,16 @@
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
-    import moment from 'moment'
+
+    //组件
+    import Agreement from '@/components/Agreement/Agreement'
+    import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
+    import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
+    import DialogMakeCard from './dialogMakeCard'
+
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, Agreement},
+      components:{chooseGuest, reserveManager, Agreement,DialogMakeCard},
       data() {
         return {
           submitLock:false,
@@ -1290,7 +1299,13 @@
             this.dialogQRCodeSettingClose()
             this.$message.success('设置成功')
           })
+        },
+
+        //制卡
+        makeCard(room){
+          this.$refs.dialogMakeCardRef.showDialog(room.roomPk,room.endDate,room.orderGuestNo,room.roomNumber,room.guestName);
         }
+
       },
       mounted() {
         // bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })

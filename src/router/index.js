@@ -67,6 +67,7 @@ import PassengerInformationUploading from '@/pages/customerRelation/passengerInf
 import Operators from '@/pages/operators/Operators.vue'
 import ModifyThePassword from '@/pages/operators/ModifyThePassword.vue'
 import LogBrowsing from '@/pages/operators/LogBrowsing.vue'
+import LogRflRecord from '@/pages/operators/LogRflRecord.vue'
 import RoleManagement from '@/pages/operators/roleManagement/RoleManagement.vue'
 import EmployeeManagement from '@/pages/operators/EmployeeManagement.vue'
 import MACBindingSettings from '@/pages/operators/MACBindingSettings.vue'
@@ -277,6 +278,7 @@ export const constantRouterMap = [
           // {path: '/operators/operManager' component: Operators, label: '操作员管理'},
           {path: '/operators/modifyThePassword', component: ModifyThePassword, label: '修改密码'},
           {path: '/operators/logBrowsing',  component: LogBrowsing, label: '日志浏览'},
+          {path: '/operators/logRflRecord',  component: LogRflRecord, label: '制卡日志'},
           // {path: '/operators/roleManagement', component: RoleManagement, label: '角色管理'},
           {path: '/operators/employeeManagement', component: EmployeeManagement, label: '员工管理'},
           {path: '/operators/nightTrialRecord', component: NightTrialRecord, label: '夜审记录查询'}

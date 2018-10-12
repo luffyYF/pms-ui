@@ -50,3 +50,12 @@ export const delRoom = params => {
   return request.post('/back/room/del', params)
 }
 
+/**
+ * 获取rfl相关的房间信息（用于宏安兴制卡）
+ * @param roomPk 房间主键
+ */
+export const getRflRoomInfo = params => {
+  return request.get('/back/room/getRflRoomInfo', {params:params})
+}
+
+

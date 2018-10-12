@@ -15,6 +15,9 @@
       <el-menu-item index="/operators/logBrowsing" v-if="hasPerm('pms:menu:logBrowser')">
         <span slot="title">日志浏览</span>
       </el-menu-item>
+      <el-menu-item index="/operators/logRflRecord">
+        <span slot="title">制卡日志</span>
+      </el-menu-item>
       <!-- <el-menu-item index="/operators/roleManagement" v-if="hasPerm('pms:menu:roleManager')">
         <span slot="title">角色管理</span>
       </el-menu-item> -->

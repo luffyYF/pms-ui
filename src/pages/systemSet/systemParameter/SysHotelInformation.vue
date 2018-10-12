@@ -28,6 +28,9 @@
         <el-form-item label="酒店城市：" prop="cityName">
           <el-input v-model="companyObj.cityName"></el-input>
         </el-form-item>
+        <el-form-item label="RFL酒店标识" prop="rflCoid">
+          <el-input v-model="companyObj.rflCoid" placeholder="请输入7位数字的酒店标识"></el-input>
+        </el-form-item>
         <el-form-item label="酒店介绍：">
           <el-input type="textarea"
             autosizea
@@ -125,6 +128,13 @@ export default {
         content = "酒店电话不能为空";
       } else if (this.companyObj.cityName == "") {
         content = "酒店所在城市不能为空";
+      } else if(this.companyObj.rflCoid){
+        if(isNaN(this.companyObj.rflCoid)){
+          content = "只能输入数字";
+        }
+        if(this.companyObj.rflCoid.length>10){
+          content = "不能超过10位";
+        }
       }
 
       if (content != "") {
