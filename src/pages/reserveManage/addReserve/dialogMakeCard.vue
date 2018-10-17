@@ -130,7 +130,7 @@ export default {
     destoryCard(){
       this.loadFun();
       let params = base64.Base64.encode('cardErase,'+this.form.rflCoid);
-      window.open("Webshell://"+params, "_self");
+        ("Webshell://"+params, "_self");
     },
     checkDdl() {
       this.loadFun();

@@ -129,10 +129,7 @@
                         <el-radio-group v-model="visitorForm.checkInType" :disabled="true">
                           <el-radio label="0">普通</el-radio>
                           <el-radio label="1">钟点房</el-radio>
-                          <el-radio label="2">特殊房</el-radio>
-                          <el-radio label="3">自用房</el-radio>
-                          <el-radio label="4">免费房</el-radio>
-                          <el-radio label="5">公寓房</el-radio>
+                          <el-radio label="4">接待房</el-radio>
                         </el-radio-group>
                       </el-form-item>
                     </el-col>

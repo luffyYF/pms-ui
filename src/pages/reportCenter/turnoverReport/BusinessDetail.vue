@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import {businessDeatil} from "@/api/reportCenter/pmsReportFormController"
+import {businessDeatil,businessDetailExcel} from "@/api/reportCenter/pmsReportFormController"
 import {listProject} from "@/api/systemSet/pmsProjectController"
 import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
@@ -193,8 +193,8 @@ export default {
     },
     //导出EXCEL
     downloadExcel(){
-      let url = '/pms/report/shouYinYuanRuZhangMingXiExcel?begin='+this.queryObj.begin+'&end='+this.queryObj.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk+'&projectPks='+this.checkedItem.join(",")
-      downloadExcel(url, '收银入账明细报表');
+      let url = '/pms/report/businessDetailExcel?begin='+this.queryObj.begin+'&end='+this.queryObj.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk+'&projectPks='+this.checkedItem.join(",")
+      downloadExcel(url, '营业数据明细');
     },
     //打印预览
     print(){

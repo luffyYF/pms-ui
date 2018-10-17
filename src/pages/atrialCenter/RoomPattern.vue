@@ -47,14 +47,14 @@
                     <el-checkbox label="DISABLE_ROOM"><span class="bg-icon disable_room"></span>停用房</el-checkbox>
                   </div>
                 </div>
-                <div class="checkbox-li">
+                <!-- <div class="checkbox-li">
                   <div class="half50">
                     <el-checkbox label="SELF_USE"><span class="bg-icon selfuse"></span>自用房</el-checkbox>
                   </div>
-                </div>
+                </div> -->
                 <div class="checkbox-li">
                   <div class="half50">
-                    <el-checkbox label="FREE_ROOM"><span class="bg-icon freeroom"></span>免费房</el-checkbox>
+                    <el-checkbox label="FREE_ROOM"><span class="bg-icon freeroom"></span>接待房</el-checkbox>
                   </div>
                 </div>
                 <div class="checkbox-li">
@@ -143,14 +143,12 @@
                 <div class="half50"><span class="bg-icon disable_room"></span>停用房</div>
               </div>
               <div class="real-state-li">
-                <div class="half50"><span class="bg-icon selfuse"></span>自用房</div>
-                <div class="half50"><span class="bg-icon freeroom"></span>免费房</div>
-              </div>
-              <div class="real-state-li">
+                <!-- <div class="half50"><span class="bg-icon selfuse"></span>自用房</div> -->
                 <div class="half50"><span class="bg-icon reserve_today"></span>今日预抵</div>
-                <div class="half50"><span class="bg-icon relation"></span>关联</div>
+                <div class="half50"><span class="bg-icon freeroom"></span>接待房</div>
               </div>
               <div class="real-state-li">
+                <div class="half50"><span class="bg-icon relation"></span>关联</div>
                 <div class="half50"><span class="bg-icon room_team"></span>团队</div>
               </div>
             </div>
