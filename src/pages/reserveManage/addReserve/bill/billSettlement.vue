@@ -246,7 +246,8 @@ export default {
         let data = {
           billPk:this.billPks,
           payment:this.billForm.payment,
-          remark: this.billForm.remark
+          remark: this.billForm.remark,
+          guestOrderPk:this.billForm.guestOrderPk
         }
         this.islock = true;
         checkoutPart(data).then(res=>{
