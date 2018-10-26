@@ -98,7 +98,7 @@
           </el-select>
         </el-form-item> 
         <el-form-item label="房间朝向：">
-          <el-input v-model="addFrom.roomOrientation" placeholder="请输入房号" auto-complete="off"></el-input>
+          <el-input v-model="addFrom.roomOrientation" placeholder="请输入房间朝向" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话分机：">
           <el-input v-model="addFrom.telPhone" placeholder="请输入电话分机" auto-complete="off"></el-input>
@@ -106,15 +106,10 @@
         <el-form-item label="电话外线：">
           <el-input v-model="addFrom.telPhoneLine" placeholder="请输入电话外线" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="房间锁号：">
+        <!-- <el-form-item label="房间锁号：">
           <el-input v-model="addFrom.roomLockNumber" auto-complete="off" placeholder="请输入房间锁号" style="width:300px;"></el-input>
           <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
-        </el-form-item>
-        <el-form-item label="RFL锁号">
-          <el-input v-model="addFrom.rflLockNo" auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
-          <span style="color:red">*注：8位数字</span>
-        </el-form-item>
-
+        </el-form-item> -->
         <el-form-item label="概况：">
           <el-input
             type="textarea"
@@ -135,6 +130,14 @@
         </el-form-item>
         <el-form-item label="房间编号：" v-if="addFrom.intelligentFlag=='Y'" required>
           <el-input v-model="addFrom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item style="display:block;margin-left:32px;">
+          <el-checkbox label="配置RFL门锁" v-model="addFrom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
+        </el-form-item>
+        <el-form-item label="RFL锁号：" v-if="addFrom.rflFlag=='Y'">
+          <el-input v-model="addFrom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
+          <span style="color:red">*注：8位数字</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,7 +164,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="房间朝向：">
-          <el-input v-model="selectRoom.roomOrientation" placeholder="请输入房号" auto-complete="off"></el-input>
+          <el-input v-model="selectRoom.roomOrientation" placeholder="请输入房间朝向" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话分机：">
           <el-input v-model="selectRoom.telPhone" placeholder="请输入电话分机" auto-complete="off"></el-input>
@@ -169,14 +172,10 @@
         <el-form-item label="电话外线：">
           <el-input v-model="selectRoom.telPhoneLine" placeholder="请输入电话外线" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="房间锁号：">
+        <!-- <el-form-item label="房间锁号：">
           <el-input v-model="selectRoom.roomLockNumber" auto-complete="off" placeholder="请选择房间锁号" style="width:300px;"></el-input>
           <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
-        </el-form-item>
-        <el-form-item label="RFL锁号">
-          <el-input v-model="selectRoom.rflLockNo" auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
-          <span style="color:red">*注：8位数字</span>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="概况：">
           <el-input
             type="textarea"
@@ -198,6 +197,15 @@
         <el-form-item label="房间编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
           <el-input v-model="selectRoom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
         </el-form-item>
+
+        <el-form-item style="display:block;margin-left:32px;">
+          <el-checkbox label="配置RFL门锁" v-model="selectRoom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
+        </el-form-item>
+        <el-form-item label="RFL锁号：" v-if="selectRoom.rflFlag=='Y'">
+          <el-input v-model="selectRoom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
+          <span style="color:red">*注：8位数字</span>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateRoomDialog = false" size="mini">取 消</el-button>
@@ -291,7 +299,7 @@ export default {
         "remark": "",
         "roomCharacteristic": "",
         "roomImg": "",
-        "roomLockNumber": "",
+        // "roomLockNumber": "",
         "roomName": "",
         "roomNumber": "",
         "roomOrientation": "",
@@ -308,7 +316,7 @@ export default {
         "remark": "",
         "roomCharacteristic": "",
         "roomImg": "",
-        "roomLockNumber": "",
+        // "roomLockNumber": "",
         "roomName": "",
         "roomNumber": "",
         "roomOrientation": "",
@@ -320,6 +328,7 @@ export default {
         "telPhone": "",
         "telPhoneLine": "",
         "intelligentFlag": "N",
+        "rflFlag": "N",
         "intelligentBanNo":null,
         "intelligentFloorNo":null,
         "intelligentRoomNo":null,
@@ -334,9 +343,6 @@ export default {
     init(){
       this.listStorey()
       this.listType()
-    },
-    checked47(){
-      
     },
     numSort: function (a,b) {
       return a.count-b.count;
@@ -417,7 +423,7 @@ export default {
           type: 'warning'
         });
       }else{
-        this.addFrom={intelligentFlag:'N'}
+        this.addFrom={intelligentFlag:'N',rflFlag:'N'}
         this.addRoomDialog = true
       }
     },

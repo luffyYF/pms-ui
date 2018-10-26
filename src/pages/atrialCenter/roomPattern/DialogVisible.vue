@@ -112,7 +112,7 @@
                     <!-- <el-button size="mini" @click="dialogHoldHisCard = true">持他卡入住</el-button> -->
                     <el-button size="mini" @click="saveCheckin" :disabled="islock">保存入住</el-button>
                   </template>
-                  <template v-else>
+                  <template v-else-if="currOrderInfo.order.auditStatus==null || currOrderInfo.order.auditStatus==1">
                     <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='RESERVE' || this.currGuest.orderStatus=='OBLIGATION'">添加客人</el-button>
                     <el-popover ref="occupancySort" placement="top">
                       <el-button type="primary" size="mini">复制入住</el-button>
@@ -429,6 +429,13 @@ export default {
         }
         this.reserveTime = new Date(res.data.order.createTime)
         this.dialogVisibleTitle = '组单号：'+this.form.orderNo 
+        if(this.currOrderInfo.order.auditStatus==0){
+          this.dialogVisibleTitle += " (审批中...)";
+        }else if(this.currOrderInfo.order.auditStatus==1){
+          this.dialogVisibleTitle += " (审批通过)";
+        }else if(this.currOrderInfo.order.auditStatus==2){
+          this.dialogVisibleTitle += " (审批拒绝)";
+        }
         //设置页面类型
         if(res.data.order.pmsCancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
           this.currConfirmType = 'leave-info'
