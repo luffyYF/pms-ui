@@ -87,6 +87,12 @@
     </el-form>
     <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border max-height="628">
       <el-table-column label="预订单" prop="orderNo" width="120">
+        <template slot-scope="scope">
+          <span>{{scope.row.orderNo}}</span><br>
+          <span v-if="scope.row.auditStatus==0">(审批中...)</span>
+          <span v-if="scope.row.auditStatus==1">(审批通过)</span>
+          <span v-if="scope.row.auditStatus==2">(审批拒绝)</span>
+        </template>
       </el-table-column>
       <el-table-column label="操作员" prop="createUserName">
       </el-table-column>
