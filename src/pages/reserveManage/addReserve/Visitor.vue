@@ -75,7 +75,7 @@
               <el-col :span="22">
                 <el-form-item label="客源渠道：" required>
                   <!-- <channel-select v-model="form.channelTypePk" @selfirst="(id)=>{this.form.channelTypePk = id}" :disabled="form.guestOrderPk!==undefined"></channel-select> -->
-                  <channel-select v-model="form.channelTypePk" @selfirst="(id)=>{this.form.channelTypePk = id}"></channel-select>
+                  <channel-select ref="channelRef" v-model="form.channelTypePk" ></channel-select>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -779,6 +779,7 @@
             this.contractTableData = []
             this.loadPrice()
             this.getBookableCount()
+            this.$refs.channelRef.load(true);
           })
         },
 
@@ -801,6 +802,7 @@
             this.contractTableData = []
             this.loadPrice()
             this.getBookableCount()
+            this.$refs.channelRef.load(true);
           })
         },
         /**
@@ -834,6 +836,8 @@
                 }
               }
             })
+            this.$refs.channelRef.load(false);
+            
           });
         },
         //添加客人初始化（外部调用）

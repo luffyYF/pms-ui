@@ -68,7 +68,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="　　渠道">
-          <channel-select v-model="chenkInSearchData.channelTypePk"/>
+          <channel-select ref="channelRef" v-model="chenkInSearchData.channelTypePk"/>
         </el-form-item>
         <el-form-item label="入住类型:">
           <el-select v-model="chenkInSearchData.checkInType" placeholder="全部入住类型" clearable>
@@ -273,6 +273,7 @@
       this.getList();
       this.listMastersType();
       this.selectPriceList();
+      this.$refs.channelRef.load(false);
     },
     watch: {
       filterText: function (value) {}

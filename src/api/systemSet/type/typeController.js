@@ -50,6 +50,11 @@ export const listChannelTypeSelect = params => {
     return request.get('/back/type/channel/select',{params:params});
 }
 
+//查找渠道列表
+export const listChannel = params => {
+    return request.get('/back/type/channel/list',{params:params});
+}
+
 //修改渠道类型
 export const updateChannelType = params => {
     return request.post('/back/type/channel/update',params);

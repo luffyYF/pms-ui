@@ -105,6 +105,7 @@
           this.initSearchForm()
           this.initGuestSelect(orderPk)
           this.findOrderInfo(orderPk)
+          this.$refs.channelRef.load(false);
         },
         findOrderInfo(orderPk){
           findOrder({orderPk: orderPk}).then(res=>{

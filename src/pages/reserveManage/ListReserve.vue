@@ -52,7 +52,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="　　渠道">
-          <channel-select v-model="formInline.channelTypePk" style="width: 178px;"/>
+          <channel-select ref="channelRef" v-model="formInline.channelTypePk" style="width: 178px;"/>
         </el-form-item>
         <el-form-item label="房型:">
           <el-select v-model="formInline.roomTypePk" placeholder="全部房型" clearable style="width: 178px;">
@@ -508,6 +508,7 @@
     mounted () {
       bus.$on('closeOrder', () => { this.closeOrderDialog() })
       this.init()
+      this.$refs.channelRef.load(false);
     }
   }
 </script>

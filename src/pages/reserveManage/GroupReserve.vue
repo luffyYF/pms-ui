@@ -137,7 +137,7 @@
                       <el-col :span="10">
                         <el-col :span="22">
                           <el-form-item label="客源渠道：" required>
-                            <channel-select v-model="visitorForm.channelTypePk" @selfirst="(id)=>{this.visitorForm.channelTypePk = id}"></channel-select>
+                            <channel-select ref="channelRef" v-model="visitorForm.channelTypePk"></channel-select>
                           </el-form-item>
                         </el-col>
                       </el-col>
@@ -656,6 +656,7 @@ export default {
         this.visitorForm.roomTypeName = this.roomTypeArr[0].typeName
         this.loadPrice();
         this.getBookableCount();
+        this.$refs.channelRef.load(true);
       });
     },
     selectRoomTypeEvent(val) {

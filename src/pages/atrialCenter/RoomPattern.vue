@@ -87,7 +87,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <channel-select class="selectWidth" v-model="selectForm.channel"/>
+                  <channel-select ref="channelRef" class="selectWidth" v-model="selectForm.channel"/>
                   <!-- <el-select class="selectWidth" v-model="selectForm.channel" placeholder="请选择渠道">
                     <el-option label="全部渠道" value=""></el-option>
                     <el-option v-for="y in channelArr" :label="y.typeName" :value="y.typePk" :key="y.typePk"></el-option>
@@ -569,7 +569,6 @@
     findRoomReason
   } from '@/api/roomStatus/pmsRoomStatusController'
   import {listType} from '@/api/utils/pmsTypeController'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {DialogCheckinVisible},
     data() {
@@ -663,20 +662,11 @@
           checkInType: this.selectForm.checkInType,
         }
         currentRoomList(data).then(res1=>{
-          // let tempdata = res1.data
           this.roomList = res1.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
-            // for(let i = 0; i<tempdata.length; i++){
-            //   let roomTypePk = tempdata[i].roomTypePk
-            //   this.roomType.forEach(type => {
-            //     if(roomTypePk==type.typePk){
-            //       tempdata[i].roomTypeName=type.typeName
-            //     }
-            //   })
-            // }
-            // this.roomList = tempdata
           })
+          this.$refs.channelRef.load(false);
         })
       },
       handleClose(done) { //11
@@ -686,9 +676,6 @@
             this.init()
           })
           .catch(_ => {});
-      },
-      powerJudge(id){
-        return powerJudge(id);
       },
       onSubmit() { //11
         console.log('submit!');

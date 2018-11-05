@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {listChannelTypeSelect} from '../../api/systemSet/type/typeController'
+import {listChannel} from '@/api/systemSet/type/typeController'
 
 // 分页组件
 Vue.component('pagination', {
@@ -29,10 +29,10 @@ Vue.component('pagination', {
 Vue.component('channelSelect', {
   template: `<el-select v-model="selectValue" @change="handleChange" :disabled="disabled" clearable placeholder="请选择渠道">
               <el-option
-                v-for="(value,key) in channelTyps"
-                :key="key"
-                :label="value"
-                :value="key">
+                v-for="(value,index) in channelTyps"
+                :key="index"
+                :label="value.typeName"
+                :value="value.typePk">
               </el-option>
             </el-select>`,
   name: 'ChannelSelect',
@@ -52,11 +52,29 @@ Vue.component('channelSelect', {
     // 切换每页条数
     handleChange (val) {
       this.$emit('input', val)
-    }
+    },
+    /**
+     * 初始化加载数据
+     * @param {*} flag true过滤掉已停用的  false全部状态
+     */
+    load(flag){
+      if(flag==true){
+        this.channelTyps = [];
+        listChannel().then(res => {
+          res.data.forEach(ele => {
+            if(ele.usingFlag=='Y'){
+              this.channelTyps.push(ele)
+            }
+          });
+        });
+      }else{
+        listChannel().then(res => {
+          this.channelTyps = res.data;
+        });
+      }
+    },
   },
-  mounted () {
-    listChannelTypeSelect().then(res => {
-      this.channelTyps = res.data;
-    });
-  }
+  // mounted () {
+  //  this.load(false);
+  // }
 })
