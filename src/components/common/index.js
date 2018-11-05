@@ -46,7 +46,7 @@ Vue.component('channelSelect', {
   watch: {
     value: function (val) {
       this.selectValue = val;
-    }
+    },
   },
   methods: {
     // 切换每页条数
@@ -57,13 +57,6 @@ Vue.component('channelSelect', {
   mounted () {
     listChannelTypeSelect().then(res => {
       this.channelTyps = res.data;
-      // if(!this.selectValue){
-      //   for(var key in res.data) {
-      //     this.selectValue = key
-      //     this.$emit('selfirst', key)
-      //     break;
-      //   }
-      // }
     });
   }
 })

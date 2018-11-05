@@ -50,3 +50,7 @@ export const validateToken = params => {
   return requestUpms.get('/validateToken',{params:params})
 }
 
+//查找系统渠道
+export const listSysChannel = params => {
+  return requestUpms.get('/api/sysChannel/list', {params: params})
+}

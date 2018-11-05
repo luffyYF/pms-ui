@@ -54,3 +54,13 @@ export const listChannelTypeSelect = params => {
 export const updateChannelType = params => {
     return request.post('/back/type/channel/update',params);
 }
+
+//修改渠道类型
+export const updateChannelRate = params => {
+    return request.post('/back/type/channel/updateRate',params);
+}
+
+//修改渠道启用/停用
+export const updateChannelUsing = params => {
+    return request.post('/back/type/channel/updateUsing',params);
+}

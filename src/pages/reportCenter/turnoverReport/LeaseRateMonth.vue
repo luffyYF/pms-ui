@@ -11,6 +11,8 @@
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
       </div>
+      <span style="color:red">注：数据统计截止到昨天</span>
+      
     </el-col>
     <el-col :span="24" id="print-turnoverofbusinessincome">
       <div class="tabs">

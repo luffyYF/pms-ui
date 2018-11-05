@@ -1,45 +1,68 @@
+// 渠道管理
 <template>
   <div class="template-bg">
     <div class="conter-bg">
-      <div class="channel-item" v-for="item in tableData" :key="item.id">
-        <el-dropdown trigger="click">
-          <span class="el-dropdown-link channel-item-colortip" :style="{'background-color':item.activeBgColor}"></span>
-          <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item v-for="cTtem in colorList" :key="cTtem.id">
-              <span class="channel-item-colortip dropdown-color" :style="{'background-color':cTtem.activeBgColor}"></span>
-              {{cTtem.name}}
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-          {{item.typeName}}
-        <div class="channel-item-icon">
-          {{item.typeName}}
-        </div>
-        
-        <span v-if="item.defaultFlag != 'Y'" class="remove-channel" @click="deleteClick(item)"><i class="el-icon-remove" style="color:red;font-size:22px;"></i></span>
-      </div>
-      <div class="channel-item" style="border-color:#0074E4;" @click="addChannel">
-        添加渠道
-        <div class="channel-item-icon" style="background:white;">
-          <i class="el-icon-circle-plus" style="color:red;font-size:22px;"></i>
-        </div>
-      </div>
-      <div class="channel-item add-channel" v-show="showAddChannel">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline" style="margin-top:20px;" size="mini">
-          <el-form-item>
-            <el-input v-model="formInline.typeName"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="saveClick">保存</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+      <el-button type="primary" size="mini" @click="showChannelDialog">添加渠道</el-button>
+      <el-table
+        size="mini" 
+        border 
+        highlight-current-row
+        :data="tableData"
+        height="500"
+        v-loading="loading"
+        style="margin:10px auto;">
+        <!-- <el-table-column prop="icon" label="图标" align="center" width="100"></el-table-column> -->
+        <el-table-column prop="typeName" label="渠道名称" align="center"></el-table-column>
+        <el-table-column prop="commissionRate" label="佣金率%" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.editFlag==false">{{scope.row.commissionRate}}</span>
+            <el-button v-if="scope.row.editFlag==false" type="text" class="el-icon-edit" @click="columEditClick(scope.row)"></el-button>
+            <el-input-number v-if="scope.row.editFlag==true" v-model="scope.row.tempCommissionRate" :controls="false" :min="0" size="mini"></el-input-number>
+
+            <el-button v-if="scope.row.editFlag==true" type="primary" size="mini" @click="raleEditSaveClick(scope.row)">保存</el-button>
+            <el-button v-if="scope.row.editFlag==true" size="mini" @click="raleEditCancelClick(scope.row)">取消</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="usingFlag" label="启用/停用" align="center">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.usingFlag" active-value="Y" inactive-value="N" @change="statusChange(scope.row)"></el-switch>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
+     <el-dialog
+      title="添加渠道"
+      :visible.sync="dialogVisible"
+      width="400px"
+      center>
+      <el-form ref="form" :model="form" label-width="100px" size="mini" class="form-channel">
+        <el-form-item label="系统渠道" required>
+          <el-select v-model="form.systemChannelId" placeholder="请选择系统渠道">
+            <el-option :label="v.channelName" :value="v.channelId" v-for="(v,i) in systemChannels" :key="i"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="佣金率%">
+          <el-input-number v-model="form.commissionRate" :controls="false" :min="0"></el-input-number>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="addChannel" size="mini" :loading="loading2">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {listChannelType,delChannelType,updateChannelType,addChannelype} from '../../api/systemSet/type/typeController'
+import {
+  listChannelType,
+  updateChannelType,
+  addChannelype,
+  updateChannelRate,
+  updateChannelUsing
+} from '../../api/systemSet/type/typeController'
+import {listSysChannel} from '@/api/upmsApi'
 
 export default {
   data() {
@@ -60,7 +83,17 @@ export default {
         { name: "薄荷蓝", activeBgColor: "rgb(22, 182, 204)" },
         { name: "古兰色", activeBgColor: "rgb(3, 102, 195)" },
         { name: "紫罗兰", activeBgColor: "rgb(176, 84, 159)" }
-      ]
+      ],
+      loading:false,
+      loading2:false,
+      systemChannels:[],
+      form:{
+        systemChannelId:'',
+        commissionRate: 0,
+        typeName:'',
+        icon:'',
+      },
+      dialogVisible:false,
     };
   },
   mounted(){
@@ -70,50 +103,18 @@ export default {
     init() {
       this.listRoomType()
     },
-    saveClick() {
-      const self = this
-      addChannelype(self.formInline).then(result => {
-        if(result.code == 1){
-          self.formInline.typeName = ''
-          self.$message({
-            message: '添加成功',
-            type: 'success'
-          });
-        }
-        this.showAddChannel = false
-        self.listRoomType()
-      })
-    },
-    deleteClick(row) {
-      const self = this
-      this.$confirm('此操作将永久删除该渠道是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        delChannelType({typePk:row.typePk}).then(result => {
-          if(result.code == 1){
-            self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          }
-          self.listRoomType();
+    listRoomType(){
+      listChannelType().then(result => {
+        this.tableData = result.data
+        this.tableData.forEach(row=>{
+          /*
+            定义初始化列表字段
+          */
+          this.$set(row,'editFlag',false)
+          this.$set(row,'tempCommissionRate',0)
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });         
-      })
-    },
-    listRoomType(){
-      const self = this
-      listChannelType({typeMaster: this.typeMaster}).then(result => {
-        self.tableData = result.data
-        console.log(self.tableData)
-      }).catch(() => {
-        self.loading = false
+        this.loading = false
       })
     },
     handleCommand(index, command) {
@@ -121,8 +122,59 @@ export default {
       console.log(command);
     },
     onSubmit() {},
-    addChannel() {
-      this.showAddChannel = !this.showAddChannel;
+    columEditClick(row){
+      this.$set(row,'editFlag',true)
+      this.$set(row,'tempCommissionRate',row.commissionRate)
+    },
+    raleEditCancelClick(row){
+      this.$set(row,'editFlag',false)
+    },
+    raleEditSaveClick(row){
+      this.$set(row,'commissionRate',row.tempCommissionRate)
+      let data={
+        typePk:row.typePk,
+        commissionRate: row.commissionRate
+      }
+      updateChannelRate(data).then(res=>{
+        this.$message.success('佣金已更改');
+        this.$set(row,'editFlag', false)
+      })
+    },
+    statusChange(row){
+      let data = {
+        typePk:row.typePk,
+        usingFlag: row.usingFlag
+      }
+      updateChannelUsing(data).then(res=>{
+        this.$message.success('操作成功');
+      })
+    },
+    showChannelDialog(){
+      this.systemChannels = [];
+      listSysChannel().then(res=>{
+        this.systemChannels = res.data;
+        this.form = {}
+        this.dialogVisible = true;
+      })
+    },
+    addChannel(){
+      this.loading2 = true;
+      let cid = this.form.systemChannelId
+      this.systemChannels.forEach(channel=>{
+        if(cid==channel.channelId){
+          this.form.typeName = channel.channelName
+          this.form.icon = channel.icon
+        }
+      })
+      
+      addChannelype(this.form).then(result => {
+        this.$message({ message: '添加成功', type: 'success'});
+        this.loading2 = false
+        this.dialogVisible = false;
+        this.listRoomType();
+      })
+      .catch(error=>{this.loading2 = false})
+      .finally(()=>{this.loading2 = false});
     }
   }
 };
@@ -213,3 +265,8 @@ export default {
 }
 </style>
 
+<style>
+.form-channel .el-input__inner{
+  width:166px;
+}
+</style>

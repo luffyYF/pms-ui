@@ -11,6 +11,8 @@
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
       </div>
+      <span style="color:red">注：数据统计截止到昨天</span>
+      
     </el-col>
     <el-col :span="24" id="print-turnoverofbusinessincome">
       <div class="tabs">
@@ -42,6 +44,7 @@
             </el-table-column>
             <el-table-column prop="totalTurnover" label="当日营业额"></el-table-column>
             <el-table-column prop="afterTaxes" label="当日税后收入"></el-table-column>
+            <el-table-column prop="totalCommission" label="当日佣金"></el-table-column>
             <el-table-column prop="avgRoomPrice" label="当日平均房价"></el-table-column>
           </el-table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>

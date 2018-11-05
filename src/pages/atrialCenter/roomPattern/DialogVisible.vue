@@ -779,6 +779,8 @@ export default {
     }
   },
   mounted() {
+    console.log(222)
+
     bus.$on('toCheckout', () => { this.toBillTab() })
     bus.$on('togmcount', () => { this.goodsManageCount() })
     bus.$on('refreshOrderInfo', (orderPk) => { this.initOrderInfo(orderPk, 'visitor') })

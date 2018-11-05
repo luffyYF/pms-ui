@@ -102,8 +102,6 @@ import CompanyDetail from '@/pages/reportCenter/commissionReport/CompanyDetail.v
 import BoardroomList from '@/pages/reportCenter/boardroomReport/BoardroomList.vue'
 import LinenLossReport from '@/pages/reportCenter/linenReport/LinenLossReport.vue'
 import WxPaymentBalance from '@/pages/reportCenter/wxPaymentReport/WxPaymentBalance.vue'
-import TurnoverOfDaily from '@/pages/reportCenter/turnoverReport/TurnoverOfDaily.vue'
-import TurnoverOfMonth from '@/pages/reportCenter/turnoverReport/TurnoverOfMonth.vue'
 import TurnoverDailyDetail from '@/pages/reportCenter/turnoverReport/TurnoverDailyDetail.vue'
 import TurnoverMonthDetail from '@/pages/reportCenter/turnoverReport/TurnoverMonthDetail.vue'
 import LeaseRateDaily from '@/pages/reportCenter/turnoverReport/LeaseRateDaily.vue'
@@ -246,10 +244,8 @@ export const constantRouterMap = [
           {path: '/reportCenter/boardroomList', component: BoardroomList, label: '会议室报表'},
           {path: '/reportCenter/linenLossReport', component: LinenLossReport, label: '布草损耗明细报表'},
           {path: '/reportCenter/wxPaymentBalance', component: WxPaymentBalance, label: '微信支付对账明细查询'},
-          {path: '/reportCenter/turnoverDaily', component: TurnoverOfDaily, label: '营业日报'},
-          {path: '/reportCenter/TurnoverMonth', component: TurnoverOfMonth, label: '营业月报'},
-          {path: '/reportCenter/TurnoverDailyDetail', component: TurnoverDailyDetail, label: '营业明细日报'},
-          {path: '/reportCenter/TurnoverMonthDetail', component: TurnoverMonthDetail, label: '营业明细月报'},
+          {path: '/reportCenter/TurnoverDailyDetail', component: TurnoverDailyDetail, label: '营业收入日报'},
+          {path: '/reportCenter/TurnoverMonthDetail', component: TurnoverMonthDetail, label: '营业收入月报'},
           {path: '/reportCenter/leaseRateDaily', component: LeaseRateDaily, label: '入住率日报'},
           {path: '/reportCenter/leaseRateMonth', component: LeaseRateMonth, label: '入住率月报'},
           {path: '/reportCenter/businessDetail', component: BusinessDetail, label: '入住率月报'},

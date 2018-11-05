@@ -32,3 +32,4 @@ export const delSystem = params => {
 export const listUpmsLog = params => {
   return request.get('/upms/log/list', {params: params})
 }
+

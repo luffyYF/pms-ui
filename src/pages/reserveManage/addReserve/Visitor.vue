@@ -638,7 +638,6 @@
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
-
     export default {
       props: ['parentForm'],
       components:{chooseGuest, reserveManager, Agreement,DialogMakeCard},

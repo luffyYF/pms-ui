@@ -4,6 +4,9 @@
         <el-form-item label="酒店编码：">
           <el-input v-model="companyObj.companyCode" disabled></el-input>
         </el-form-item>
+        <el-form-item label="营业状态">
+          <el-input v-model="companyObj.businessStatusDesc" disabled></el-input>
+        </el-form-item>
         <el-form-item label="酒店名称：" prop="companyName">
           <el-input v-model="companyObj.companyName"></el-input>
         </el-form-item>
@@ -102,7 +105,11 @@ export default {
       getCompanyInfot().then(res => {
         if (res.code == 1) {
           this.companyObj = res.data;
-          console.log(this.companyObj);
+          if(this.companyObj.businessStatus==1){
+            this.companyObj.businessStatusDesc = '营业中'
+          }else if(this.companyObj.businessStatus==0){
+            this.companyObj.businessStatusDesc = '已停业'
+          }
         }
       });
     },

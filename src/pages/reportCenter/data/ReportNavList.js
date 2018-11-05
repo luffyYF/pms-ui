@@ -92,10 +92,8 @@ export const commonReport = [{
   label:'经营报表',
   pointer:'pms:reportCenter:operStatement',
   children:[
-    {label:'营业收入日报',path:'/reportCenter/turnoverDaily',pointer:'pms:reportCenter:turnoverDaily'},
-    {label:'营业收入月报',path:'/reportCenter/TurnoverMonth',pointer:'pms:reportCenter:turnoverMonth'},
-    {label:'营业收入日报明细',path:'/reportCenter/TurnoverDailyDetail',pointer:'pms:reportCenter:tdd'},
-    {label:'营业收入明细月报',path:'/reportCenter/TurnoverMonthDetail',pointer:'pms:reportCenter:tmd'},
+    {label:'营业收入日报',path:'/reportCenter/TurnoverDailyDetail',pointer:'pms:reportCenter:tdd'},
+    {label:'营业收入月报',path:'/reportCenter/TurnoverMonthDetail',pointer:'pms:reportCenter:tmd'},
     {label:'入住率日报',path:'/reportCenter/leaseRateDaily',pointer:'pms:reportCenter:leaseRateDaily'},
     {label:'入住率月报',path:'/reportCenter/leaseRateMonth',pointer:'pms:reportCenter:leaseRateMonth'},
     {label:'营业数据明细',path:'/reportCenter/businessDetail',pointer:'pms:reportCenter:businessDetail'},

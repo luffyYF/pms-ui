@@ -1,4 +1,4 @@
-// 营业明细
+// 营业数据明细
 <template>
   <div class="container-business-detail">
     <!-- <p style="margin-top:0; margin-bottom:5px;">项目：</p> -->
@@ -10,7 +10,6 @@
         </el-checkbox-group>
       </el-collapse-item>
     </el-collapse>
-
     <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
       <el-form-item label="开始营业日：">
         <el-date-picker
@@ -57,6 +56,10 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
+    <div>
+      <span style="color:red">注：营业日期查询包含结束日期</span>
+    </div>
+
     <div class="table-container" id="print-admissionaccount">
       <h3>{{activeCompany.companyName}}</h3>
       <h4>营业数据明细报表</h4>

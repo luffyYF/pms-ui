@@ -51,6 +51,10 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
+
+    <div>
+      <span style="color:red">注：营业日期查询包含结束日期</span>
+    </div>
     <div class="table-container" id="print-admissionaccount">
       <h3>{{activeCompany.companyName}}</h3>
       <h4>收银入账明细报表</h4>
