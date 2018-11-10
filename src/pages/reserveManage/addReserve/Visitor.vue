@@ -31,9 +31,10 @@
                 <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
                   <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="toCheckout">退房</el-button>
-                </template> <br>
-                <el-button size="mini" type="text" v-if="scope.row.roomNumber" @click="makeCard(scope.row)">门卡</el-button> <br>
-                <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>
+                  <br>
+                </template> 
+                <el-button size="mini" type="text" v-if="scope.row.roomNumber && scope.row.rflLockNo" @click="makeCard(scope.row)">门卡<br></el-button> 
+                <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN' && scope.row.intelligentFlag=='Y'" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -45,6 +46,7 @@
             <el-table-column prop="date" label="日期" width="100"></el-table-column>
             <el-table-column prop="personCount" label="人数" width="50"></el-table-column>
             <el-table-column prop="rentPrice" label="房租"></el-table-column>
+            <el-table-column prop="promotionPrice" label="促销价"></el-table-column>
             <el-table-column prop="status" label="状态">
               <template slot-scope="scope">
                  <span>{{contractMap[scope.row.status]}}</span>
@@ -92,8 +94,8 @@
           <el-col :span="24">
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="当前房租：" required>
-                    <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                <el-form-item label="当天房租：" required>
+                  <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -110,6 +112,17 @@
               </el-col>
             </el-col>
           </el-col>
+
+          <el-col :span="24">
+            <el-col :span="10">
+              <el-col :span="22">
+                <el-form-item label="当天促销：" required>
+                  <el-input-number v-model="form.currPromotionPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-col>
+          </el-col>
+
           <el-col :span="24">
             <el-col :span="10">
               <el-col :span="22">
@@ -675,6 +688,7 @@
             checkinDays:1,
             deposit: 200,
             currPrice:100,
+            currPromotionPrice:0,
             roomNumber: '',
             roomTypePk: '',
             roomPk: undefined,
@@ -934,6 +948,7 @@
           this.form.checkinDays = 1
           this.form.deposit = 200
           this.form.currPrice = 0
+          this.form.currPromotionPrice = 0
           this.form.roomNumber = null
           this.form.roomTypePk = this.roomTypeArr[0].typePk
           this.form.roomPk = undefined
@@ -1002,6 +1017,7 @@
           this.form.orderPk = guest.orderPk
           this.form.orderStatus = guest.orderStatus
           this.form.currPrice = guest.currPrice
+          this.form.currPromotionPrice = guest.currPromotionPrice
           this.form.remark = guest.remark
           this.form.roomNumber = guest.roomNumber
           this.form.roomPk = guest.roomPk

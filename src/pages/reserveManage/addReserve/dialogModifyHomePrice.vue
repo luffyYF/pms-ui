@@ -1,4 +1,4 @@
-// 修改房价
+// 修改合约价
 <template>
   <div>
     <el-dialog class="son-dialog" title="修改房价" :visible.sync="dialogModifyHomePrice" width="60%" :append-to-body="true" :before-close="handleClose">
@@ -8,10 +8,11 @@
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column prop="roomNumber" label="房号"></el-table-column>
+            <el-table-column prop="rentPrice" label="房租（元）"></el-table-column>
+            <el-table-column prop="promotionPrice" label="促销价（元）"></el-table-column>
+            <el-table-column prop="date" label="日期"></el-table-column>
             <el-table-column prop="roomTypeName" label="房型"></el-table-column>
             <el-table-column prop="personNames" label="姓名"></el-table-column>
-            <el-table-column prop="date" label="日期"></el-table-column>
-            <el-table-column prop="rentPrice" label="房租"></el-table-column>
             <el-table-column prop="status" label="状态">
               <template slot-scope="scope">
                 <span>{{contractMap[scope.row.status]}}</span>
@@ -77,8 +78,13 @@
                                             <el-option label="房价调整" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item> -->
-                  <el-form-item label="房价">
-                    <el-input v-model="modifyForm.rentPrice"></el-input>
+                  <el-form-item label="房租">
+                    <!-- <el-input v-model="modifyForm.rentPrice"></el-input> -->
+                    <el-input-number v-model="modifyForm.rentPrice" :controls="false" :min="0"></el-input-number>
+                  </el-form-item>
+                  <el-form-item label="促销价">
+                    <!-- <el-input v-model="modifyForm.promotionPrice"></el-input> -->
+                    <el-input-number v-model="modifyForm.promotionPrice" :controls="false" :min="0"></el-input-number>
                   </el-form-item>
                   <el-form-item label="备注">
                     <el-input v-model="modifyForm.remark"></el-input>
@@ -103,7 +109,7 @@
 import bus from "@/utils/bus";
 import { contractMap } from "@/utils/orm";
 import {
-  guestSelect,
+  // guestSelect,
   addContract,
   listContract,
   cancelContract,
@@ -122,6 +128,7 @@ export default {
         channelTypeName: null,
         date: null,
         rentPrice: null,
+        promotionPrice: null,
         remark: null
       },
       addForm: {
@@ -130,7 +137,7 @@ export default {
         date: null,
         rentPrice: null
       },
-      guestSelectArr: [],
+      // guestSelectArr: [],
       selectionRows: [] //已勾选的数据
     };
   },
@@ -145,9 +152,9 @@ export default {
       this.currGuestOrderPk = guestOrderPk;
       this.initAddForm();
       this.initModifyForm();
-      guestSelect({ orderPk: orderPk, type: 1 }).then(res => {
-        this.guestSelectArr = res.data;
-      });
+      // guestSelect({ orderPk: orderPk, type: 1 }).then(res => {
+      //   this.guestSelectArr = res.data;
+      // });
       this.initTable();
     },
     /**
@@ -172,24 +179,25 @@ export default {
     initModifyForm() {
       this.modifyForm.channelTypeName = null;
       this.modifyForm.date = null;
-      this.modifyForm.rentPrice = null;
+      this.modifyForm.rentPrice = 0;
+      this.modifyForm.promotionPrice = 0;
       this.modifyForm.remark = null;
     },
 
-    changeGuestSelect(guestOrderPk) {
-      //选择客单改变
-      this.guestSelectArr.forEach(guestSel => {
-        if (guestSel.guestOrderPk == guestOrderPk) {
-          this.initAddForm();
-          this.addForm.guestOrderPk = guestSel.guestOrderPk;
-          this.addForm.rentPrice = guestSel.price;
-          this.addForm.date = guestSel.beginDate.substring(0, 10);
-          this.addForm.channelTypeName = guestSel.channelTypeName;
-          //   this.addForm.roomPk = guestSel.roomPk;
-          //   this.addForm.roomNumber = guestSel.roomNumber;
-        }
-      });
-    },
+    // changeGuestSelect(guestOrderPk) {
+    //   //选择客单改变
+    //   this.guestSelectArr.forEach(guestSel => {
+    //     if (guestSel.guestOrderPk == guestOrderPk) {
+    //       this.initAddForm();
+    //       this.addForm.guestOrderPk = guestSel.guestOrderPk;
+    //       this.addForm.rentPrice = guestSel.price;
+    //       this.addForm.date = guestSel.beginDate.substring(0, 10);
+    //       this.addForm.channelTypeName = guestSel.channelTypeName;
+    //       //   this.addForm.roomPk = guestSel.roomPk;
+    //       //   this.addForm.roomNumber = guestSel.roomNumber;
+    //     }
+    //   });
+    // },
     changeCheck(val) {
       //勾选触发
       this.selectionRows = val;
@@ -199,7 +207,9 @@ export default {
       this.modifyForm.channelTypeName = row.channelTypeName;
       this.modifyForm.date = row.date;
       this.modifyForm.rentPrice = row.rentPrice;
+      this.modifyForm.promotionPrice = row.promotionPrice;
       this.modifyForm.remark = row.remark;
+
     },
     addContract() {
       //添加合约
@@ -244,7 +254,7 @@ export default {
         this.$message({ type: "warning", message: "请先勾选合约" });
         return;
       }
-      this.$confirm("确定修改房租为￥" + this.modifyForm.rentPrice + "?", "提示", {
+      this.$confirm("确定修改吗？房租："+this.modifyForm.rentPrice+"，促销价："+this.modifyForm.promotionPrice, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -254,6 +264,7 @@ export default {
           let obj = {
             contractPk: row.contractPk,
             rentPrice: Number(this.modifyForm.rentPrice),
+            promotionPrice: Number(this.modifyForm.promotionPrice),
             remark: this.modifyForm.remark
           };
           data.push(obj);

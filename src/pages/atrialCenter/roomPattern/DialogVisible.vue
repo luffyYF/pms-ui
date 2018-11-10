@@ -395,6 +395,7 @@ export default {
       this.disabledBill = true
       this.reserveTime = new Date()
       this.currConfirmType = 'add-checkin'
+      this.currOrderPk = null;
 
       //回显房间数据到客单组件
       setTimeout(() => {
@@ -678,8 +679,9 @@ export default {
       //   this.initOrderBill(this.currOrderPk)
       // }else if(this.activeName=='visitor'){
       // }
-      this.initOrderInfo(this.currOrderPk, this.activeName)
-      
+      if(this.currOrderPk){
+        this.initOrderInfo(this.currOrderPk, this.activeName)
+      }
     },
     dialogVisibleClose() {
       this.dialogVisible = false

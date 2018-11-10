@@ -31,7 +31,7 @@
         </el-table>
         </div>
       </el-col>
-      <el-col :span="16" :offset="1">
+      <el-col :span="18" :offset="1">
         <div class="bg-reserve book-info">
           <h5 class="info-title">【{{selectStorey.storeyName}}】房间属性</h5>
           <el-form label-width="20px" :inline="true" size="mini">
@@ -50,20 +50,35 @@
             </el-table-column>
             <el-table-column prop="roomTypePk" label="房型" align="center">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.roomTypePk" disabled size="mini" class="colic" placeholder="请选择状态">
+                <!-- <el-select v-model="scope.row.roomTypePk" disabled size="mini" class="colic" placeholder="请选择状态">
                   <el-option 
                     v-for="item in listTypeData"
                     :key="item.typePk"
                     :label="item.typeName"
                     :value="item.typePk"></el-option>
-                </el-select>
+                </el-select> -->
+                <span>{{listTypeDataView[scope.row.roomTypePk].typeName}}</span>
                 <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
               </template>
             </el-table-column>
-            <el-table-column prop="telPhone" label="电话分机" align="center">
+            <el-table-column prop="intelligentFlag" label="艾美信智能锁" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.intelligentFlag=='Y'">已安装</span>
+                <span v-else="scope.row.intelligentFlag=='N'">未安装</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="intelligentBanNo" label="艾美信 楼栋编号" align="center">
+            </el-table-column>
+            <el-table-column prop="intelligentFloorNo" label="艾美信 楼层编号" align="center">
+            </el-table-column>
+            <el-table-column prop="intelligentRoomNo" label="艾美信 房间编号" align="center">
+            </el-table-column>
+            <el-table-column prop="rflLockNo" label="RFL 锁号" align="center">
+            </el-table-column>
+            <!-- <el-table-column prop="telPhone" label="电话分机" align="center">
             </el-table-column>
             <el-table-column prop="telPhoneLine" label="电话外线" align="center">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="remark" label="备注" align="center">
             </el-table-column>
             <el-table-column
@@ -120,7 +135,7 @@
           </el-input>
         </el-form-item>
         <el-form-item style="display:block;margin-left:32px;">
-            <el-checkbox label="配置智能锁" v-model="addFrom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
+            <el-checkbox label="艾美信" v-model="addFrom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
         <el-form-item label="楼栋编号：" v-if="addFrom.intelligentFlag=='Y'" required>
           <el-input v-model="addFrom.intelligentBanNo" placeholder="请输入楼栋编号：" auto-complete="off"></el-input>
@@ -133,7 +148,7 @@
         </el-form-item>
 
         <el-form-item style="display:block;margin-left:32px;">
-          <el-checkbox label="配置RFL门锁" v-model="addFrom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
+          <el-checkbox label="RFL门卡" v-model="addFrom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
         <el-form-item label="RFL锁号：" v-if="addFrom.rflFlag=='Y'">
           <el-input v-model="addFrom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
@@ -186,7 +201,7 @@
           </el-input>
         </el-form-item>
         <el-form-item style="display:block;margin-left:32px;">
-          <el-checkbox label="配置智能锁" v-model="selectRoom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
+          <el-checkbox label="艾美信" v-model="selectRoom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
         <el-form-item label="楼栋编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
           <el-input v-model="selectRoom.intelligentBanNo" placeholder="请输入楼栋编号：" auto-complete="off"></el-input>
@@ -199,7 +214,7 @@
         </el-form-item>
 
         <el-form-item style="display:block;margin-left:32px;">
-          <el-checkbox label="配置RFL门锁" v-model="selectRoom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
+          <el-checkbox label="RFL门卡" v-model="selectRoom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
         <el-form-item label="RFL锁号：" v-if="selectRoom.rflFlag=='Y'">
           <el-input v-model="selectRoom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
@@ -289,6 +304,7 @@ export default {
       previewData:{},
       previewRoomes:[],
       listTypeData: [],
+      listTypeDataView: {},
       rules: {
         storeyPk: [{ required: true, message: ''}],
         roomTypePk: [{ required: true, message: ''}],
@@ -349,9 +365,12 @@ export default {
     },
     listType(){
       const self = this
+      self.listTypeDataView = {}
       listType({typeMaster: 'ROOM_TYPE'}).then(result => {
         self.listTypeData = result.data.data
-        console.log(self.listTypeData)
+        self.listTypeData.forEach((value,key)=>{
+          self.listTypeDataView[value.typePk] = value;
+        })
       })
     },
     listStorey(){
@@ -423,6 +442,7 @@ export default {
           type: 'warning'
         });
       }else{
+        
         this.addFrom={intelligentFlag:'N',rflFlag:'N'}
         this.addRoomDialog = true
       }
@@ -470,7 +490,6 @@ export default {
           }
           previewRooms(self.previewData).then(result => {
             if(result.code == 1){
-              console.log(result)
               for (let index = 0; index < result.data.length; index++) {
                 const element = result.data[index];
                 self.previewRoomes.push({
@@ -482,7 +501,6 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -497,6 +515,9 @@ export default {
       const self = this
       delete this.selectRoom.createTime;
       delete this.selectRoom.updateTime;
+      if(this.selectRoom.rflFlag=='N'){
+        this.selectRoom.rflLockNo = ''
+      }
       updateRoom(this.selectRoom).then(result => {
         if(result.code == 1){
           self.$message({

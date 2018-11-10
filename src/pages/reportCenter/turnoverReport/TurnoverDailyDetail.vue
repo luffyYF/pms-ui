@@ -11,8 +11,12 @@
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
       </div>
-      <span style="color:red">注：数据统计截止到昨天</span>
-      
+      <div class="tip">
+        <p>注：数据统计截止到昨天</p>
+        <p>应收金额 = 总营业额 - 佣金 - 优惠、促销价</p>
+        <p>实际收入 = 应收金额 / ( 1 + 0.06 )</p>
+        <p>平均房价 = 实际收入 / 已租房数量</p>
+      </div>
     </el-col>
     <el-col :span="24" id="print-turnoverofbusinessincome">
       <div class="tabs">
@@ -29,7 +33,7 @@
             @expand-change="expandChange"
             border
             style="width: 100%; margin-top: 5px">
-            <el-table-column prop="companyName" label="营业点"></el-table-column>
+            <el-table-column prop="companyName" label="营业点" width="300"></el-table-column>
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-table
@@ -42,14 +46,14 @@
                 </el-table>
               </template>
             </el-table-column>
-            <el-table-column prop="totalTurnover" label="当日营业额"></el-table-column>
-            <el-table-column prop="afterTaxes" label="当日税后收入"></el-table-column>
-            <el-table-column prop="totalCommission" label="当日佣金"></el-table-column>
-            <el-table-column prop="avgRoomPrice" label="当日平均房价"></el-table-column>
+            <el-table-column prop="totalTurnover" label="营业额" ></el-table-column>
+            <el-table-column prop="totalCommission" label="佣金"></el-table-column>
+            <el-table-column prop="totalPromotion" label="优惠/促销价"></el-table-column>
+            <el-table-column prop="receivablePrice" label="应收金额"></el-table-column>
+            <el-table-column prop="afterTaxes" label="实际收入"></el-table-column>
+            <el-table-column prop="avgRoomPrice" label="平均房价"></el-table-column>
           </el-table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
-          <p class="note_p">注：当日税后收入 = 当日营业额/(1+6%)</p>
-          <p class="note_p1">当日平均房价=当日营业额/当日入住房间数</p>
           <p class="note_p2"></p>
         </div>
       </div>
@@ -153,6 +157,16 @@ export default {
 }
 </script>
 <style scoped>
+.tip{
+  color: red;
+  margin-top: 10px;
+}
+.tip p{
+  margin:0px;
+}
+.tip :nth-child(n+2){
+  padding-left:28px;
+}
 .exportLink{
   color: white;
   text-decoration: none;

@@ -15,11 +15,11 @@
             <el-tree :data="reportCenter" @node-click="handleNodeCommonReport"></el-tree>
           </div> -->
         </el-col>
-        <el-col :span="19" style="height:100%">
+        <div style="height:100%">
           <el-main style="height:100%">
             <router-view></router-view>
           </el-main>
-        </el-col>
+        </div>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -56,18 +56,6 @@
           }
         }
       },
-      // jurisdictionTwo (reportCenter) {
-      //   if (reportCenter) {
-      //     for(let i = 0; i < reportCenter.length; i++) {
-      //       var pointer = reportCenter[i].pointer;
-      //       if (!this.powerJudge(pointer)) {
-      //         reportCenter.splice(i--, 1)
-      //         continue
-      //       }
-      //       this.jurisdictionTwo(reportCenter[i].children)
-      //     }
-      //   }
-      // },
       decomposeRouter(){
         var routerList = this.$router.options.routes;
         var subjectRouter = [];
@@ -125,6 +113,9 @@
 .report-center .titl{
   height: 25px;
   line-height: 25px;
+}
+.reportCenter-navmenu{
+  width: 226px;
 }
 </style>
 

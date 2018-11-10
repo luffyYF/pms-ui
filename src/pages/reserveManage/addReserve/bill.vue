@@ -194,7 +194,7 @@
           <el-form-item label="渠道类型" required v-if="formAddBill.payment=='5'">
             <!-- <el-select v-model="formAddBill.channelTypePk" placeholder="请选择渠道类型" style="width:100%">
             </el-select> -->
-            <channel-select ref="channelRef" v-model="formAddBill.channelTypePk" style="width:100%"></channel-select>   
+            <channel-select ref="channelRef" v-model="formAddBill.channelTypePk" style="width:100%"></channel-select>
           </el-form-item>
           <el-form-item label="金额" required>
             <el-input v-model="formAddBill.consumptionAmount"></el-input>
