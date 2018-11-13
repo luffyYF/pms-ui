@@ -263,5 +263,12 @@ export const businessDeatil = params =>{
     return request.get('/pms/report/businessDeatil',{params:params})
 }
 
+/**
+ * 夜审房费前核对报表
+ */
+export const narpCheck = params =>{
+    return request.get('/pms/report/nightAuditRentPriceCheck',{params:params})
+}
+
 
 

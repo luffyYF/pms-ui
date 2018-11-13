@@ -91,8 +91,8 @@ export const credentialsMap = {
 export const checkInTypeMap = {
   0:  "普通",
   1:  "钟点房",
-  2:  "特殊房",
-  3:  "自用房",
-  4:  "免费房",
-  5:  "公寓房"
+  // 2:  "特殊房",
+  // 3:  "自用房",
+  4:  "接待房",
+  // 5:  "公寓房"
 }

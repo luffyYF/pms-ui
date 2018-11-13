@@ -74,11 +74,14 @@ import MACBindingSettings from '@/pages/operators/MACBindingSettings.vue'
 import NightTrialRecord from '@/pages/operators/NightTrialRecord.vue'
 import MobileClientAccessAuthorization from '@/pages/operators/MobileClientAccessAuthorization.vue'
 
-//报表
-import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
+//前台交接班和查账
 import ReceiptsReportPage from '@/pages/reportCenter/shiftAndAudit/ReceiptsReport.vue'
 import AdmissionAccountPage from '@/pages/reportCenter/shiftAndAudit/AdmissionAccount.vue'
 import AccountSummaryReportPage from '@/pages/reportCenter/shiftAndAudit/AccountSummaryReport.vue'
+import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAuditRentPriceCheck.vue'
+
+//报表
+import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
 import ManagSalesGuests from '@/pages/reportCenter/managementSales/SalesGuests.vue'
@@ -221,6 +224,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/receiptsReport', component: ReceiptsReportPage, label: '收银员收款报表'},
           {path: '/reportCenter/admissionAccount', component: AdmissionAccountPage, label: '收银入账明细报表'},
           {path: '/reportCenter/accountSummaryReport', component: AccountSummaryReportPage, label: '收银入账汇总报表'},
+          {path: '/reportCenter/narpCheck', component: NightAuditRentPriceCheck, label: '夜审房费前核对报表'},
           {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表'},
           {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况'},
           {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源'},

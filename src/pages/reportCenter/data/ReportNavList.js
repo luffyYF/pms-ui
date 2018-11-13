@@ -29,6 +29,10 @@ export const commonReport = [{
       label: '收银入账汇总报表',
       path: '/reportCenter/accountSummaryReport',
       pointer: 'pms:reportCenter:gatherReport'
+    },{
+      label: '夜审房费前核对报表',
+      path: '/reportCenter/narpCheck',
+      pointer: 'pms:reportCenter:yeshenqianhedui'
     }
   ]
 },

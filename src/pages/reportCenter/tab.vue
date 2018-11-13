@@ -48,7 +48,7 @@
         if (commonReport) {
           for(let i = 0; i < commonReport.length; i++) {
             var pointer = commonReport[i].pointer;
-            if (!this.hasPerm(pointer)) {
+            if (pointer && !this.hasPerm(pointer)) {
               commonReport.splice(i--, 1)
               continue
             }
