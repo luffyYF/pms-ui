@@ -31,7 +31,11 @@ service.interceptors.response.use(
      */
     const res = response.data
     if (res.code !== 1) {
-      Message({message: res.sub_msg, type: 'error', duration: 5 * 1000})
+      if(res.sub_msg){
+        Message({message: res.sub_msg, type: 'error', duration: 5 * 1000})
+      }else{
+        Message({message: res.msg, type: 'error', duration: 5 * 1000})
+      }
       return Promise.reject('error')
     } else {
       return response.data

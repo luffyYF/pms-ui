@@ -8,7 +8,10 @@
           <el-form-item label="货单编号">
             <el-input readonly v-model="form.stockOrderNo"></el-input>
           </el-form-item>
-          <el-form-item label="填单日期">
+          <el-form-item label="申请人人">
+            <el-input readonly v-model="form.createUserName"></el-input>
+          </el-form-item>
+          <el-form-item label="申请日期">
             <div class="block">
               <el-date-picker
                 v-model="form.createTime"
@@ -18,10 +21,10 @@
               </el-date-picker>
             </div>
           </el-form-item>
-          <el-form-item label="凭证号">
+          <!-- <el-form-item label="凭证号">
             <el-input v-model="form.voucherNo"></el-input>
-          </el-form-item>
-          <el-form-item label="申请仓库">
+          </el-form-item> -->
+          <!-- <el-form-item label="申请仓库">
             <el-select :disabled="changeFlag" v-model="form.depotPk" placeholder="请选择">
               <el-option
                 v-for="item in options"
@@ -30,13 +33,11 @@
                 :value="item.depotPk">
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="填单人">
-            <el-input readonly v-model="form.createUserName"></el-input>
-          </el-form-item>
-          <el-form-item label="负责人">
+          </el-form-item> -->
+          
+          <!-- <el-form-item label="负责人">
             <el-input v-model="form.personInCharge"></el-input>
-          </el-form-item>
+          </el-form-item> -->
         </div>
       </div>
     </el-form>
@@ -46,9 +47,9 @@
         <el-form ref="form2" :inline="true" :model="form2" size="mini" label-width="80px">
           <!-- input -->
           <div class="bg-reserve">
-            <h5 class="info-title">商品信息</h5>
+            <h5 class="info-title">货物信息</h5>
             <div class="info-li">
-              <el-form-item label="商品编号">
+              <el-form-item label="货物编号">
                 <!-- <el-input v-model="form2.goodsCode" @change="searchGoods" placeholder="商品编号/简拼/商品名称"></el-input> -->
                 <el-select @change="chooseGoods" v-model="form2.goodsCode" placeholder="编号 - 名称 - 简拼 - 价格">
                   <el-option
@@ -59,7 +60,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="商品名称">
+              <el-form-item label="货物名称">
                 <el-input readonly v-model="form2.goodsName"></el-input>
               </el-form-item>
               <el-form-item label="类型">
@@ -86,7 +87,7 @@
         </el-form>
       </el-col>
       <el-col :span="16" class="bg-reserve book-info">
-        <h5 class="info-title">采购商品列表</h5>
+        <h5 class="info-title">申领列表</h5>
         <el-table size="mini" 
           border 
           :data="stockDetailList"
@@ -172,7 +173,7 @@ export default {
     };
   },
   mounted(){
-    this.init();
+    // this.init();
   },
   methods: {
     init(){

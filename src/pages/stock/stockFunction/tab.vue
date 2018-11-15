@@ -2,59 +2,65 @@
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
       <el-tab-pane label="采购申请" name="one" v-if="powerJudge('210101')">
-        <purchase-application/>
+        <application/>
       </el-tab-pane>
-      <el-tab-pane label="直拨" name="two" v-if="powerJudge('210102')">
+      <el-tab-pane label="申请记录" name="two">
+        <application-list/>
+      </el-tab-pane>
+      <!-- <el-tab-pane label="直拨" name="two" v-if="powerJudge('210102')">
         <direct-dial/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="入库" name="three" v-if="powerJudge('210103')">
         <be-laid-up/>
       </el-tab-pane>
-      <el-tab-pane label="出库" name="four" v-if="powerJudge('210104')">
+      <!-- <el-tab-pane label="出库" name="four" v-if="powerJudge('210104')">
         <the-library/>
-      </el-tab-pane>
-      <el-tab-pane label="部门退货" name="five" v-if="powerJudge('210105')">
+      </el-tab-pane> -->
+      <!-- <el-tab-pane label="部门退货" name="five" v-if="powerJudge('210105')">
         <department-return/>
       </el-tab-pane>
       <el-tab-pane label="退库" name="six" v-if="powerJudge('210106')">
         <refund/>
+      </el-tab-pane> -->
+      <el-tab-pane label="库存" name="seven" v-if="powerJudge('210107')">
+        <stock-list ref="stockListRef"/>
       </el-tab-pane>
-      <el-tab-pane label="库存统计" name="seven" v-if="powerJudge('210107')">
-        <inventory-statistics/>
-      </el-tab-pane>
-      <el-tab-pane label="库存盘点" name="eight" v-if="powerJudge('210108')">
+      <!-- <el-tab-pane label="库存盘点" name="eight" v-if="powerJudge('210108')">
         <inventory-inventory/>
-      </el-tab-pane>
-      <el-tab-pane label="部门库存盘点" name="nine" v-if="powerJudge('210109')">
+      </el-tab-pane> -->
+      <!-- <el-tab-pane label="部门库存盘点" name="nine" v-if="powerJudge('210109')">
         <department-inventory-inventory/>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
 
 <script>
-  import PurchaseApplication from './PurchaseApplication'
+  import Application from './Application'
   import DirectDial from './DirectDial'
   import BeLaidUp from './BeLaidUp'
   import TheLibrary from './TheLibrary'
   import DepartmentReturn from './DepartmentReturn'
   import Refund from './Refund'
-  import InventoryStatistics from './InventoryStatistics'
+  import StockList from './StockList'
   import InventoryInventory from './InventoryInventory'
   import DepartmentInventoryInventory from './DepartmentInventoryInventory'
+  import ApplicationList from './ApplicationList'
+  
   import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
-      PurchaseApplication,
+      Application,
       DirectDial,
       BeLaidUp,
       TheLibrary,
       DepartmentReturn,
       Refund,
-      InventoryStatistics,
+      StockList,
       InventoryInventory,
-      DepartmentInventoryInventory
+      DepartmentInventoryInventory,
+      ApplicationList
     },
     data () {
       return {
@@ -67,6 +73,9 @@
     },
     methods: {
       handleClick (tab, event) {
+        if(tab.name=='seven'){
+          this.$refs.stockListRef.init();
+        }
         console.log(tab, event)
       },
       powerJudge(id){

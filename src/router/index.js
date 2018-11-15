@@ -13,11 +13,11 @@ import EchartsPage from '@/pages/demo/Echarts.vue'
 import AMapDomePage from '@/pages/demo/AMapDome.vue'
 import TreePage from '@/pages/demo/TreeDome.vue'
 import AddressPage from '@/pages/demo/AddressPage.vue'
-import UmpsSystemManage from '@/pages/upms/UmpsSystemManage.vue'
-import UmpsLogManage from '@/pages/upms/UmpsLogManage.vue'
-import UmpsUserManage from '@/pages/upms/UmpsUserManage.vue'
-import UmpsRoleManage from '@/pages/upms/UmpsRoleManage.vue'
-import UmpsPermissionManage from '@/pages/upms/UmpsPermissionManage.vue'
+// import UmpsSystemManage from '@/pages/upms/UmpsSystemManage.vue'
+// import UmpsLogManage from '@/pages/upms/UmpsLogManage.vue'
+// import UmpsUserManage from '@/pages/upms/UmpsUserManage.vue'
+// import UmpsRoleManage from '@/pages/upms/UmpsRoleManage.vue'
+// import UmpsPermissionManage from '@/pages/upms/UmpsPermissionManage.vue'
 
 //一级菜单
 import ClassSelection from '@/pages/ClassSelection.vue'
@@ -80,7 +80,7 @@ import AdmissionAccountPage from '@/pages/reportCenter/shiftAndAudit/AdmissionAc
 import AccountSummaryReportPage from '@/pages/reportCenter/shiftAndAudit/AccountSummaryReport.vue'
 import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAuditRentPriceCheck.vue'
 
-//报表
+//报表中心
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
@@ -111,6 +111,11 @@ import LeaseRateDaily from '@/pages/reportCenter/turnoverReport/LeaseRateDaily.v
 import LeaseRateMonth from '@/pages/reportCenter/turnoverReport/LeaseRateMonth.vue'
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
 import BusinessDetail from '@/pages/reportCenter/turnoverReport/BusinessDetail.vue'
+
+//库存
+import StockTab from '@/pages/stock/tab';
+import StockFunction from "@/pages/stock/stockFunction/tab";
+import StockSetUp from "@/pages/stock/stockSetUp/tab";
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
@@ -256,6 +261,17 @@ export const constantRouterMap = [
         ]
       },
       {
+        path: '/stock',
+        component: StockTab,
+        name: '库存',
+        hidden: false,
+        children: [
+          {path: '/stock/stockopr', component: StockFunction, label: '库存功能'},
+          {path: '/stock/setting',  component: StockSetUp, label: '库存相关设置'},
+        ]
+      },
+
+      {
         path: '/financialAudit', 
         component: FinancialAuditTag, 
         name: '财务稽核', 
@@ -264,7 +280,7 @@ export const constantRouterMap = [
           {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
         ]
       },
-      {path: '/dumbHouse', perm:'pms:dir:dumbRoomAccount', component: DumbHouseTag, name: '哑房账', hidden: false},
+      {path: '/dumbHouse', component: DumbHouseTag, name: '哑房账', hidden: false},
       {path: '/commodityDept', component: CommodityDeptTag, name: '商品部', hidden: false},
       {path: '/stock', component: StockTag, name: '库存', hidden: false},
       {path: '/conferenceRoom', component: ConferenceRoomTag, name: '会议室', hidden: false},
@@ -311,23 +327,23 @@ export default new Router({
   routes: constantRouterMap
 })
 
-/**
- * 异步加载权限
- * @type {*[]}
- */
-export const asyncRouterMap = [
-  {
-    path: '/',
-    name: '操作日志',
-    component: Home,
-    meta: {icon: 'fa-tasks', noCache: true},
-    children: [
-      {path: '/upmsSystem', component: UmpsSystemManage, name: '系统管理', hidden: true},
-      {path: '/upmsLog', component: UmpsLogManage, name: '操作日志'},
-      {path: '/upmsPermission', component: UmpsPermissionManage, name: '权限管理', hidden: true},
-      {path: '/upmsUser', component: UmpsUserManage, name: '用户管理', hidden: true},
-      {path: '/upmsRole', component: UmpsRoleManage, name: '角色管理', hidden: true}
-    ]
-  },
-  {path: '*', hidden: true, redirect: {path: '/404'}}
-]
+// /**
+//  * 异步加载权限
+//  * @type {*[]}
+//  */
+// export const asyncRouterMap = [
+//   {
+//     path: '/',
+//     name: '操作日志',
+//     component: Home,
+//     meta: {icon: 'fa-tasks', noCache: true},
+//     children: [
+//       {path: '/upmsSystem', component: UmpsSystemManage, name: '系统管理', hidden: true},
+//       {path: '/upmsLog', component: UmpsLogManage, name: '操作日志'},
+//       {path: '/upmsPermission', component: UmpsPermissionManage, name: '权限管理', hidden: true},
+//       {path: '/upmsUser', component: UmpsUserManage, name: '用户管理', hidden: true},
+//       {path: '/upmsRole', component: UmpsRoleManage, name: '角色管理', hidden: true}
+//     ]
+//   },
+//   {path: '*', hidden: true, redirect: {path: '/404'}}
+// ]

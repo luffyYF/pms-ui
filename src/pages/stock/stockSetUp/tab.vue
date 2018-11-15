@@ -2,9 +2,9 @@
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
       <el-tab-pane label="仓库设置" name="one" v-if="powerJudge('210201')">
-        <warehouse-setting/>
+        <storage-setting ref="StorageSettingRef"/>
       </el-tab-pane>
-      <el-tab-pane label="商品类型设置" name="two" v-if="powerJudge('210202')">
+      <!-- <el-tab-pane label="商品类型设置" name="two" v-if="powerJudge('210202')">
         <commodity-type-setting/>
       </el-tab-pane>
       <el-tab-pane label="商品设置" name="three" v-if="powerJudge('210203')">
@@ -12,13 +12,13 @@
       </el-tab-pane>
       <el-tab-pane label="供应商设置" name="four" v-if="powerJudge('210204')">
         <vendor-setting/>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
 
 <script>
-  import WarehouseSetting from './WarehouseSetting'
+  import StorageSetting from './StorageSetting'
   import CommodityTypeSetting from './CommodityTypeSetting'
   import CommoditySetting from './CommoditySetting'
   import VendorSetting from './VendorSetting'
@@ -26,7 +26,7 @@
   
   export default {
     components: {
-      WarehouseSetting,
+      StorageSetting,
       CommodityTypeSetting,
       CommoditySetting,
       VendorSetting
@@ -42,7 +42,9 @@
     },
     methods: {
       handleClick (tab, event) {
-        console.log(tab, event)
+        if(tab.name=='one'){
+          this.$refs.StorageSettingRef.listStorage();
+        }
       },
       powerJudge(id){
         return powerJudge(id);

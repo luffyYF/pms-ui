@@ -273,7 +273,9 @@
       this.getList();
       this.listMastersType();
       this.selectPriceList();
-      this.$refs.channelRef.load(false);
+      this.$nextTick(()=>{
+        this.$refs.channelRef.load(false);
+      })
     },
     watch: {
       filterText: function (value) {}
