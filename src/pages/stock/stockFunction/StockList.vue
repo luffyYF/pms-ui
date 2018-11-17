@@ -3,7 +3,7 @@
   <div>
     <el-form ref="form" size="mini" :model="form" label-width="80px">
       <el-form-item label="所在仓库">
-        <el-checkbox-group v-model="form.storageId">
+        <el-checkbox-group v-model="form.storageIds">
           <el-checkbox v-for="item in storageOptions" :label="item.storageId" :key="item.storageId">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -115,7 +115,7 @@ export default {
   data() {
     return {
       form: {
-        storageId: null,
+        storageIds: [],
         typeIds: [],
         inventoryNo: null,
         nameOrShortName:null,
@@ -131,27 +131,34 @@ export default {
       total:0,
     };
   },
-  created() {
-    this.init();
-  },
+  // created() {
+  //   this.init();
+  // },
   mounted() {},
   methods: {
     init() {
       //加载仓库列表
       getStorageList({ companyPk: this.currCompanyPk }).then(res => {
         this.storageOptions = res.data;
+        //加载库存列表
+        // this.form.storageIds=[this.storageOptions[0].storageId]
+        this.stockList();
       });
       //加载货物类型
       typeCascaderList().then(res => {
         this.cascaderList = res.data;
       });
-      //加载库存列表
-      this.stockList();
+      
     },
     stockList() {
       var data = {
         pageNum:this.pageNum,
         pageSize:this.pageSize,
+        storageIds: this.form.storageIds.join(','),
+        typeIds: this.form.typeIds.join(','),
+        inventoryNo: this.form.inventoryNo,
+        nameOrShortName: this.form.nameOrShortName,
+        companyPk:this.currCompanyPk,
       };
       stockList(data).then(res => {
         this.tableData = res.data.list;
@@ -159,7 +166,6 @@ export default {
       });
     },
     searchList(formList) {
-      console.log(formList);
       this.stockList();
     },
     //分页相关

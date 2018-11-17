@@ -6,9 +6,9 @@
         <h5 class="info-title">货单信息</h5>
         <div class="info-li">
           <el-form-item label="货单编号">
-            <el-input readonly v-model="form.stockOrderNo"></el-input>
+            <el-input readonly v-model="form.applyNo"></el-input>
           </el-form-item>
-          <el-form-item label="申请人人">
+          <el-form-item label="操作人">
             <el-input readonly v-model="form.createUserName"></el-input>
           </el-form-item>
           <el-form-item label="申请日期">
@@ -21,23 +21,6 @@
               </el-date-picker>
             </div>
           </el-form-item>
-          <!-- <el-form-item label="凭证号">
-            <el-input v-model="form.voucherNo"></el-input>
-          </el-form-item> -->
-          <!-- <el-form-item label="申请仓库">
-            <el-select :disabled="changeFlag" v-model="form.depotPk" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.depotPk"
-                :label="item.depotName"
-                :value="item.depotPk">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-          
-          <!-- <el-form-item label="负责人">
-            <el-input v-model="form.personInCharge"></el-input>
-          </el-form-item> -->
         </div>
       </div>
     </el-form>
@@ -50,27 +33,35 @@
             <h5 class="info-title">货物信息</h5>
             <div class="info-li">
               <el-form-item label="货物编号">
-                <!-- <el-input v-model="form2.goodsCode" @change="searchGoods" placeholder="商品编号/简拼/商品名称"></el-input> -->
-                <el-select @change="chooseGoods" v-model="form2.goodsCode" placeholder="编号 - 名称 - 简拼 - 价格">
+                <el-select
+                  @change="chooseInventory"
+                  v-model="form2.inventoryId"
+                  filterable
+                  clearable
+                  remote
+                  reserve-keyword
+                  placeholder="编号 - 名称 - 简拼 - 价格"
+                  :remote-method="remoteMethod"
+                  :loading="loading">
                   <el-option
-                    v-for="item in goodsList"
-                    :key="item.goodsCode"
-                    :label="item.goodsCode+' - '+item.goodsName+' - '+item.jianpin+' - ￥'+(item.goodsPrice?item.goodsPrice:0)"
-                    :value="item.goodsCode">
+                    v-for="item in inventorySelectList"
+                    :key="item.inventoryId"
+                    :label="item.inventoryNo+' - '+item.name+' - '+item.shortName+' - ￥'+(item.price?item.price:0)"
+                    :value="item.inventoryId">
                   </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="货物名称">
-                <el-input readonly v-model="form2.goodsName"></el-input>
+                <el-input readonly v-model="form2.inventoryName"></el-input>
               </el-form-item>
               <el-form-item label="类型">
-                <el-input readonly v-model="form2.goodsType"></el-input>
+                <el-input readonly v-model="form2.typeName"></el-input>
               </el-form-item>
-              <el-form-item label="进价">
-                <el-input readonly v-model="form2.costPrice"></el-input>
+              <el-form-item label="单价">
+                <el-input readonly v-model="form2.price"></el-input>
               </el-form-item>
               <el-form-item label="申请数量">
-                <el-input  @change="changeGoodsStock" v-model="form2.goodsStock" type="number" min="0"></el-input>
+                <el-input  @change="changeAmout" v-model="form2.amount" type="number" min="0"></el-input>
               </el-form-item>
               <el-form-item label="总价">
                 <el-input readonly v-model="form2.totalPrice"></el-input>
@@ -93,17 +84,19 @@
           :data="stockDetailList"
           height="300"
           style="width: 98.5%; margin:10px;">
-          <el-table-column prop="goodsCode" label="编号" align="center">
+          <el-table-column prop="inventoryNo" label="编号" align="center">
           </el-table-column>
-          <el-table-column prop="goodsName" label="名称" align="center">
+          <el-table-column prop="inventoryName" label="名称" align="center">
           </el-table-column>
-          <el-table-column prop="jianpin" label="简拼" align="center">
+          <el-table-column prop="shortName" label="简拼" align="center">
           </el-table-column>
-          <el-table-column prop="goodsType" label="类型" align="center">
+          <el-table-column prop="typeName" label="类型" align="center">
           </el-table-column>
-          <el-table-column prop="goodsUnit" label="单位" align="center">
+          <el-table-column prop="unit" label="单位" align="center">
           </el-table-column>
-          <el-table-column prop="goodsStock" label="数量" align="center">
+          <el-table-column prop="spec" label="规格" align="center">
+          </el-table-column>
+          <el-table-column prop="amount" label="数量" align="center">
           </el-table-column>
           <el-table-column
             fixed="right"
@@ -131,118 +124,131 @@
 
 <script>
 import Moment from 'moment'
-import {
-  listGoodsDepot,
-  listGoods,
-  listGoodsType,
-  saveGoodsStockOrder,
-  getGoodsByGoodsCode
-  } from '@/api/stock/pmsStockFunction/stockOrderController'
+// import {
+//   listGoodsDepot,
+//   listGoods,
+//   listGoodsType,
+//   saveGoodsStockOrder,
+//   getGoodsByGoodsCode
+//   } from '@/api/stock/pmsStockFunction/stockOrderController'
+import Cookies from 'js-cookie'
+import {getApplySequence,toApply, inventorySelectList} from '@/api/upmsStorage'
 export default {
   components: {  },
   data() {
     return {
+      loading:false,
       form: {//货单表单
-        stockOrderNo:'CG'+Moment(new Date()).format("YYYYMMDDhhmmss"),
-        createTime:Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-        createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName,
-        stockOrderType:'APPLY',
-        voucherNo:'',
-        depotPk:'',
-        personInCharge:'',
+        applyNo:null,
+        companyPk:Cookies.get('select_company_pk'),
+        createTime:null,
+        createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName,
       },
       form2: {//货单详单表单
-        goodsCode: "",
-        goodsName: "",
-        goodsType: "",
-        costPrice: 0,
-        goodsStock: 0,
+        inventoryId:null,
+        inventoryNo: null,
+        icon:null,
+        inventoryName: null,
+        typeId:null,
+        typeName: null,
+        spec:null,
+        price: 0,
+        amount: 0,
         totalPrice: 0,
-        remark: "",
-        goodsUnit: "",
-        jianpin: "",
-        source: "总部下拨",
-        event: 0,
-        entryExitSign: 3,
+        remark: null,
+        unit: null,
+        shortName: null,
       },
       stockDetailList:[],//详单对象集合
       options:[],//仓库列表,
-      goodsList:[],//商品列表,
+      inventorySelectList:[],//商品列表,
       goodsTypeList:[],//商品类型列表,
       changeFlag:false
     };
   },
-  mounted(){
-    // this.init();
-  },
   methods: {
     init(){
-      //加载仓库列表
-      listGoodsDepot().then(res => {
-        if(res.code==1){
-          this.options = res.data;
-          //默认选中第一个仓库
-          this.form.depotPk = this.options[0].depotPk;
-        }
-      }).catch(error=>{
-        this.$message({type:'warning', message: error})
+      this.form.createTime = Moment().format("YYYY-MM-DD HH:mm:ss"),
+      getApplySequence().then(res=>{
+        this.form.applyNo= res.data
       })
-      //加载商品列表
-      listGoods().then(res => {
-        if(res.code==1){
-          this.goodsList = res.data;
-          // 默认选中第一个
-          // this.form2.goodsCode = this.goodsList[0].goodsCode;
-        }
-      }).catch(error=>{
-        this.$message({type:'warning', message: error})
-      })
-      //加载商品类型列表
-      listGoodsType().then(res => {
-        if(res.code==1){
-          this.goodsTypeList = res.data;
-        }
-      }).catch(error=>{
-        this.$message({type:'warning', message: error})
-      })
+
+      //TODO 需要改动的
+      // //加载仓库列表
+      // listGoodsDepot().then(res => {
+      //   if(res.code==1){
+      //     this.options = res.data;
+      //     //默认选中第一个仓库
+      //     this.form.depotPk = this.options[0].depotPk;
+      //   }
+      // }).catch(error=>{
+      //   this.$message({type:'warning', message: error})
+      // })
+      // //加载商品列表
+      // listGoods().then(res => {
+      //   if(res.code==1){
+      //     this.inventorySelectList = res.data;
+      //     // 默认选中第一个
+      //     // this.form2.inventoryNo = this.inventorySelectList[0].inventoryNo;
+      //   }
+      // }).catch(error=>{
+      //   this.$message({type:'warning', message: error})
+      // })
+      // //加载商品类型列表
+      // listGoodsType().then(res => {
+      //   if(res.code==1){
+      //     this.goodsTypeList = res.data;
+      //   }
+      // }).catch(error=>{
+      //   this.$message({type:'warning', message: error})
+      // })
     },
     //选择商品
-    chooseGoods(item){
-      var goodsType = '';
-      for (let index = 0; index < this.goodsList.length; index++) {
-        const element = this.goodsList[index];
-        if(element.goodsCode==this.form2.goodsCode){
-          for (let index = 0; index < this.goodsTypeList.length; index++) {
-            const ele = this.goodsTypeList[index];
-            if(ele.typePk==element.typePk){
-              goodsType = ele.typeName;
-            }
-          }
-
-          this.form2.goodsCode = element.goodsCode;
-          this.form2.goodsName = element.goodsName;
-          this.form2.goodsType = goodsType;
-          this.form2.costPrice = element.goodsPrice?element.goodsPrice:0;
-          this.form2.goodsUnit = element.goodsUnit;
-          this.form2.jianpin = element.jianpin;
+    chooseInventory(inventoryId){
+      console.log('选择',inventoryId);
+      this.inventorySelectList.forEach((v,i)=>{
+        if(v.inventoryId==inventoryId){
+          this.form2.inventoryId=v.inventoryId;
+          this.form2.inventoryNo=v.inventoryNo;
+          this.form2.icon=v.icon;
+          this.form2.inventoryName=v.name;
+          this.form2.typeId=v.typeId;
+          this.form2.typeName=v.typeName;
+          this.form2.spec=v.spec;
+          this.form2.price=v.price;
+          this.form2.amount=v.amount;
+          this.form2.totalPrice=v.totalPrice;
+          this.form2.remark=v.remark;
+          this.form2.unit=v.unit;
+          this.form2.shortName=v.shortName;
         }
-      }
+      })
     },
     //改变申请数量
-    changeGoodsStock(value){
-      this.form2.totalPrice = Number(this.form2.costPrice)*Number(value);
+    changeAmout(value){
+      this.form2.totalPrice = Number(this.form2.price)*Number(value);
     },
     //存入列表
     saveGoods(){
-      if(!this.form2.goodsCode){
-        this.$message({type:'warning', message: '请选择商品'})
+      if(!this.form2.inventoryId){
+        this.$message({type:'warning', message: '请选择货物'})
         return;
       }
-      if(this.form2.goodsStock<1){
+      if(!this.form2.amount || this.form2.amount<1){
         this.$message({type:'warning', message: '请输入申请数量'})
         return;
       }
-      this.stockDetailList.push(this.form2);
+      //判断是否重复，重复则累加数量
+      let has = false;
+      this.stockDetailList.forEach((v,i)=>{
+        if(v.inventoryId==this.form2.inventoryId){
+          v.amount = Number(v.amount) + Number(this.form2.amount);
+          has = true;
+        }
+      })
+      if(!has){
+        this.stockDetailList.push(this.form2);
+      }
       this.changeFlag = true;
       this.resetForm2();
     },
@@ -255,40 +261,61 @@ export default {
     },
     resetForm2(){
       this.form2 = {
-        goodsCode: "",
-        goodsName: "",
-        goodsType: "",
-        costPrice: 0,
-        goodsStock: 0,
+        inventoryId:null,
+        inventoryNo: null,
+        icon:null,
+        inventoryName: null,
+        typeId:null,
+        typeName: null,
+        spec:null,
+        price: 0,
+        amount: 0,
         totalPrice: 0,
-        remark: "",
-        goodsUnit: "",
-        jianpin: "",
-        source: "总部下拨",
-        event: 0,
-        entryExitSign: 3,
+        remark: null,
+        unit: null,
+        shortName: null,
       }
     },
     saveInfo(){
       if(this.stockDetailList.length<=0){
-        this.$message({type:'warning', message: '请添加商品'})
+        this.$message({type:'warning', message: '请添加货物'})
         return;
       }
       var data = {
-        stockOrderPo:this.form,
-        stockOrderDetailList:this.stockDetailList
+        ckApplyForm:this.form,
+        ckApplyDetials:this.stockDetailList
       };
-      console.log(data);
-      saveGoodsStockOrder(data).then(res => {
-        if(res.code==1){
-          this.$message({type:'success', message: '保存成功'})
-          this.clearTable();
-          this.resetForm2();
-        }
+      toApply(data).then(res => {
+        this.$message({type:'success', message: '保存成功'})
+        this.clearTable();
+        this.resetForm2();
+        this.init();
       }).catch(()=>{
         // this.$message({type:'warning', message: '网络异常'})
         console.log("网络异常");
       })
+    },
+    remoteMethod(query) {
+      this.loading = true;
+      this.inventorySelectList = [];
+      inventorySelectList({name:query}).then(res=>{
+        this.loading = false;
+        this.inventorySelectList = res.data
+      }).finally(()=>{
+        this.loading = false;
+      })
+      // if (query !== '') {
+      //   this.loading = true;
+      //   setTimeout(() => {
+      //     this.loading = false;
+      //     this.options4 = this.list.filter(item => {
+      //       return item.label.toLowerCase()
+      //         .indexOf(query.toLowerCase()) > -1;
+      //     });
+      //   }, 200);
+      // } else {
+      //   this.options4 = [];
+      // }
     }
   },
 };

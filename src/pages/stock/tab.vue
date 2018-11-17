@@ -11,10 +11,10 @@
   </div> -->
   <div class="height-programme-one">
     <el-menu :default-active="activeMenu" mode="horizontal" ref="reserveMenu" :router=true class="el-menu-vertical-demo">
-      <el-menu-item index="/stock/stockopr">
+      <el-menu-item index="/stock/stockopr" v-if="hasPerm('pms:stock:stockOpr')">
         <span slot="title">库存功能</span>
       </el-menu-item>
-      <el-menu-item index="/stock/setting">
+      <el-menu-item index="/stock/setting"  v-if="hasPerm('pms:stock:stockSetting')">
         <span slot="title">库存相关设置</span>
       </el-menu-item>
     </el-menu>

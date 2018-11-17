@@ -1,17 +1,17 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="采购申请" name="one" v-if="powerJudge('210101')">
-        <application/>
+      <el-tab-pane label="物品申领" name="one">
+        <application ref="applicationRef"/>
       </el-tab-pane>
-      <el-tab-pane label="申请记录" name="two">
-        <application-list/>
+      <el-tab-pane label="申领记录" name="two">
+        <application-list ref="applicationListRef" v-on:to-inventory-in="toInventoryIn"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="直拨" name="two" v-if="powerJudge('210102')">
         <direct-dial/>
       </el-tab-pane> -->
-      <el-tab-pane label="入库" name="three" v-if="powerJudge('210103')">
-        <be-laid-up/>
+      <el-tab-pane label="入库" name="three" :disabled="true">
+        <inventory-in ref="inventoryInRef"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="出库" name="four" v-if="powerJudge('210104')">
         <the-library/>
@@ -22,12 +22,12 @@
       <el-tab-pane label="退库" name="six" v-if="powerJudge('210106')">
         <refund/>
       </el-tab-pane> -->
-      <el-tab-pane label="库存" name="seven" v-if="powerJudge('210107')">
+      <el-tab-pane label="库存" name="seven">
         <stock-list ref="stockListRef"/>
       </el-tab-pane>
-      <!-- <el-tab-pane label="库存盘点" name="eight" v-if="powerJudge('210108')">
-        <inventory-inventory/>
-      </el-tab-pane> -->
+      <el-tab-pane label="库存盘点" name="eight" >
+        <take-stock/>
+      </el-tab-pane>
       <!-- <el-tab-pane label="部门库存盘点" name="nine" v-if="powerJudge('210109')">
         <department-inventory-inventory/>
       </el-tab-pane> -->
@@ -38,7 +38,7 @@
 <script>
   import Application from './Application'
   import DirectDial from './DirectDial'
-  import BeLaidUp from './BeLaidUp'
+  import InventoryIn from './InventoryIn'
   import TheLibrary from './TheLibrary'
   import DepartmentReturn from './DepartmentReturn'
   import Refund from './Refund'
@@ -46,21 +46,21 @@
   import InventoryInventory from './InventoryInventory'
   import DepartmentInventoryInventory from './DepartmentInventoryInventory'
   import ApplicationList from './ApplicationList'
-  
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  import TakeStock from './TakeStock'
   
   export default {
     components: {
       Application,
       DirectDial,
-      BeLaidUp,
+      InventoryIn,
       TheLibrary,
       DepartmentReturn,
       Refund,
       StockList,
       InventoryInventory,
       DepartmentInventoryInventory,
-      ApplicationList
+      ApplicationList,
+      TakeStock
     },
     data () {
       return {
@@ -70,18 +70,25 @@
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
       this.activeName = this.$refs.checkTabs.panes[0].name
+      this.$refs.applicationRef.init();
     },
     methods: {
       handleClick (tab, event) {
-        if(tab.name=='seven'){
+        if(tab.name=='one'){
+          this.$refs.applicationRef.init();
+        }else if(tab.name=='two'){
+          this.$refs.applicationListRef.init();
+        }else if(tab.name=='three'){
+          this.$refs.inventoryInRef.init();
+        }else if(tab.name=='seven'){
           this.$refs.stockListRef.init();
         }
-        console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
+      //跳转入库TAB
+      toInventoryIn(outId){
+        this.$refs.inventoryInRef.init(outId);
+        this.activeName = 'three';
       }
-
     }
   }
 </script>

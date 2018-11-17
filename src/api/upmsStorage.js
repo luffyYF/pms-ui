@@ -52,4 +52,78 @@ export const stockList = params => {
   return requestUpms.get('/backend/ckStock/list',{params:params})
 }
 
+/**
+ * 获取申领序列
+ * @param params
+ */
+export const getApplySequence = params => {
+  return requestUpms.get('/seq/applySequence',{params:params})
+}
+/**
+ * 获取入库序列
+ * @param params
+ */
+export const getInSequence = params => {
+  return requestUpms.get('/seq/inSequence',{params:params})
+}
 
+
+/**
+ * 发起申领
+ * @param params
+ */
+export const toApply = params => {
+  return requestUpms.post('/backend/ckApplyForm/toApply', params)
+}
+/**
+ * 查找神申领列表
+ */
+export const applyList = params => {
+  return requestUpms.get('/backend/ckApplyForm/list', {params:params})
+}
+/**
+ * 查找神申领详细列表
+ */
+export const applyDetailList = params => {
+  return requestUpms.get('/backend/ckApplyForm/detailList', {params:params})
+}
+
+/**
+ * 查找货物下拉列表
+ * @param params
+ */
+export const inventorySelectList = params => {
+  return requestUpms.get('/backend/ckInventory/selectList',{params:params})
+}
+
+/**
+ * 查找出货信息
+ * @param params
+ */
+export const outInventoryInfo = params => {
+  return requestUpms.get('/backend/ckApplyForm/outInventoryInfo',{params:params})
+}
+
+/**
+ * 确认收货
+ * @param params
+ */
+export const outConfirm = params => {
+  return requestUpms.get('/backend/ckApplyForm/outConfirm/'+params)
+}
+
+/**
+ * 查找出库详细信息
+ * @param params
+ */
+export const findOutInfo = params => {
+  return requestUpms.get('/backend/ckInventoryIn/outInfo',{params:params})
+}
+
+/**
+ * 入库操作
+ * @param params
+ */
+export const inventoryIn = params => {
+  return requestUpms.post('/backend/ckInventoryIn/inventoryIn', params)
+}

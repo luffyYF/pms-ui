@@ -96,3 +96,25 @@ export const checkInTypeMap = {
   4:  "接待房",
   // 5:  "公寓房"
 }
+
+// 申领单审批状态
+export const approvalStatusMap = {
+  0: '审批中',
+  1: '审批通过',
+  2: '审批拒绝',
+  3: '取消申请'
+}
+
+// 申领单出库状态
+export const outStatusMap = {
+  0: '未出库',
+  1: '部分出库',
+  2: '全部出库',
+}
+
+// 入库状态
+export const inStatusMap = {
+  0: '未入库',
+  1: '部分入库',
+  2: '已入库',
+}

@@ -77,12 +77,12 @@
             <div class="nav-txt">商品部</div>
           </div>
         </router-link> -->
-        <!-- <router-link to="/stock" v-if="screenWidth > 1230" v-power:id="'21'">
+        <router-link to="/stock" v-if="screenWidth > 1230 && hasPerm('pms:dir:stock')">
           <div class="nav-li">
             <div class="nav-icon stock-icon"></div>
             <div class="nav-txt">库存</div>
           </div>
-        </router-link> -->
+        </router-link>
         <router-link to="/conferenceRoom" v-if="screenWidth > 1320 && hasPerm('pms:dir:meetingRoom')" v-power:id="'22'">
           <div class="nav-li">
             <div class="nav-icon conference-room-icon"></div>
