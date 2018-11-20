@@ -66,7 +66,13 @@ export const getApplySequence = params => {
 export const getInSequence = params => {
   return requestUpms.get('/seq/inSequence',{params:params})
 }
-
+/**
+ * 获取盘库序列
+ * @param params
+ */
+export const getPkSequence = params => {
+  return requestUpms.get('/seq/pkSequence',{params:params})
+}
 
 /**
  * 发起申领
@@ -126,4 +132,28 @@ export const findOutInfo = params => {
  */
 export const inventoryIn = params => {
   return requestUpms.post('/backend/ckInventoryIn/inventoryIn', params)
+}
+
+/*
+库存盘点
+*/
+// 预览盘点数据
+export const viewTakeStockDetail = params => {
+  return requestUpms.get('/backend/ckTakeStock/viewTakeStockDetail', { params: params })
+}
+// 添加数据盘点单
+export const saveTakeStock = params => {
+  return requestUpms.post('/backend/ckTakeStock/saveTakeStock', params)
+}
+// 取消盘点单
+export const cancelOrCompleteTakeStock = params => {
+  return requestUpms.post('/backend/ckTakeStock/cancelOrCompleteTakeStock',params)
+}
+// 查看盘点记录列表
+export const getTakeStockList = params => {
+  return requestUpms.get('/backend/ckTakeStock/getTakeStockList', { params: params })
+}
+//根据盘点id 查询盘点详情
+export const getTakeStockDetail = params => {
+  return requestUpms.get('/backend/ckTakeStock/getTakeStockDetail', { params: params })
 }

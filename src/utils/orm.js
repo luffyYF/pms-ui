@@ -118,3 +118,11 @@ export const inStatusMap = {
   1: '部分入库',
   2: '已入库',
 }
+
+//盘库状态
+export const takeStockStatusMap = {
+  '-1': '已取消',
+  '0': '已创建',
+  '1': '已预审',
+  '2': '已入库',
+}

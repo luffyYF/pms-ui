@@ -26,7 +26,10 @@
         <stock-list ref="stockListRef"/>
       </el-tab-pane>
       <el-tab-pane label="库存盘点" name="eight" >
-        <take-stock/>
+        <take-stock ref="takeStokeRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="盘点记录" name="night" >
+        <take-stock-list ref="takeStokeListRef"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="部门库存盘点" name="nine" v-if="powerJudge('210109')">
         <department-inventory-inventory/>
@@ -47,6 +50,7 @@
   import DepartmentInventoryInventory from './DepartmentInventoryInventory'
   import ApplicationList from './ApplicationList'
   import TakeStock from './TakeStock'
+  import TakeStockList from './TakeStockList'
   
   export default {
     components: {
@@ -60,7 +64,8 @@
       InventoryInventory,
       DepartmentInventoryInventory,
       ApplicationList,
-      TakeStock
+      TakeStock,
+      TakeStockList
     },
     data () {
       return {
@@ -82,6 +87,10 @@
           this.$refs.inventoryInRef.init();
         }else if(tab.name=='seven'){
           this.$refs.stockListRef.init();
+        }else if(tab.name=='eight'){
+          this.$refs.takeStokeRef.init();
+        }else if(tab.name=='night'){
+          this.$refs.takeStokeListRef.init();
         }
       },
       //跳转入库TAB
