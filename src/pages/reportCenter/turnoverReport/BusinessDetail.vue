@@ -61,16 +61,19 @@
     </div>
 
     <div class="table-container" id="print-admissionaccount">
-      <h3>{{activeCompany.companyName}}</h3>
-      <h4>营业数据明细报表</h4>
-      <p>营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span></p>
-      <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
+      <h3 style="text-align:center">营业数据明细报表</h3>
+      <!-- <h4></h4> -->
+      <p style="text-align:center">分店：{{activeCompany.companyName}}&nbsp;&nbsp;&nbsp;&nbsp;
+        营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
+        收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;
+        班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}}</span>
+      </p>
+      <!-- <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p> -->
       <el-table
         :header-cell-style="tableStyleObj"
         :cell-style="tableStyleObj"
         :data="admissionBank"
         border 
-        height="500"
         style="width: 100%">
         <el-table-column prop="roomNumber" align="center" label="房号"></el-table-column>
         <el-table-column prop="beginDate" align="center" width="130" label="抵店日期"></el-table-column>
@@ -89,7 +92,9 @@
         </el-table-column>
         <el-table-column prop="remark" align="center" label="备注"></el-table-column>
       </el-table>
-      <div style="height:50px"></div>
+      <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+      <p class="note_p2"></p>
+      <!-- <div style="height:50px"></div> -->
     </div>
     <!-- 打印填充 iframe-->
     <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
@@ -110,6 +115,7 @@ import {paymentMap} from '@/utils/orm'
 export default {
   data() {
     return {
+      datepickerTime:  moment().format("YYYY-MM-DD HH:mm:ss"),
       checkAll: false,
       checkedItem: [],
       allItemList: [],
@@ -223,18 +229,21 @@ export default {
   margin-top: 5px;
   margin-left: 30px;
 }
-.table-container {
+/* .table-container {
   padding: 20px;
   text-align: center;
   height: calc(100% - 320px);
   overflow-y: auto;
   border-top: 3px solid #eee;
-}
+} */
 .head-item {
   display: inline-block;
   padding: 0 15px;
 }
-
+.note_p2{
+  padding-left:28px;
+  margin-bottom:65px
+}
 </style>
 <style>
 .checkboxgrou span.el-checkbox__label{

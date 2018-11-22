@@ -11,7 +11,7 @@
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
       </div>
-      <div class="tip">
+      <div class="tips">
         <p>注：数据统计截止到昨天</p>
         <p>应收金额 = 总营业额 - 佣金 - 优惠、促销价</p>
         <p>实际收入 = 应收金额 / ( 1 + 0.06 )</p>
@@ -156,14 +156,14 @@ export default {
 }
 </script>
 <style scoped>
-.tip{
+.tips{
   color: red;
   margin-top: 10px;
 }
-.tip p{
+.tips p{
   margin:0px;
 }
-.tip :nth-child(n+2){
+.tips :nth-child(n+2){
   padding-left:28px;
 }
 .exportLink{

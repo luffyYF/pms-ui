@@ -11,7 +11,10 @@
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
       </div>
-      <span style="color:red">注：数据统计截止到昨天</span>
+      <div class="tips">
+        <p>注：数据统计截止到昨天</p>
+        <p>当月开房率 = 当月合计/当月可上线房</p>
+      </div>
       
     </el-col>
     <el-col :span="24" id="print-turnoverofbusinessincome">
@@ -33,7 +36,6 @@
             <el-table-column v-for="(y,i) in headers"  :prop="y.code" :label="y.desc" :key="i" ></el-table-column>
           </el-table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
-          <p class="note_p">注：当月开房率 = 当月合计/当月可上线房</p>
           <p class="note_p2"></p>
         </div>
       </div>
@@ -122,6 +124,16 @@ export default {
 }
 </script>
 <style scoped>
+.tips{
+  color: red;
+  margin-top: 10px;
+}
+.tips p{
+  margin:0px;
+}
+.tips :nth-child(n+2){
+  padding-left:28px;
+}
 .exportLink{
   color: white;
   text-decoration: none;
