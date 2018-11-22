@@ -103,6 +103,12 @@
             <div class="nav-txt">系统设置</div>
           </div>
         </router-link>
+        <router-link to="/financialAudit" v-if="screenWidth < 1010" v-power:id="'18'">
+          <div class="nav-li">
+            <div class="nav-icon financial-audit-icon"></div>
+            <div class="nav-txt">财务稽核</div>
+          </div>
+        </router-link>
         <!-- <router-link to="/linen" v-if="screenWidth > 1500" v-power:id="'25'">
           <div class="nav-li">
             <div class="nav-icon linen-icon"></div>

@@ -69,3 +69,7 @@ export const updateChannelRate = params => {
 export const updateChannelUsing = params => {
     return request.post('/back/type/channel/updateUsing',params);
 }
+//修改渠道排序
+export const updateChannelSortNum = params => {
+    return request.post('/back/type/channel/updateSort',params);
+}

@@ -908,11 +908,11 @@
             }
           }
           addGuest(data).then(res=>{
-            if(res.code==1){
-              this.$message({type:'success', message:'添加客人成功'})
-              // this.form.currTitle = '客单信息'
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            }
+            this.$message({type:'success', message:'添加客人成功'})
+            // this.form.currTitle = '客单信息'
+            bus.$emit('refreshOrderInfo', this.form.orderPk)
+          }).finally(()=>{
+            bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
         //添加预定初始化（外部调用）
@@ -925,20 +925,22 @@
         //添加预定（外部调用）
         addReserveGuest() {
           addReserveGuest(this.form).then(res=>{
-            if(res.code==1){
-              this.$message({type:'success', message:'添加预定成功'})
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            }
+            this.$message({type:'success', message:'添加预定成功'})
+            bus.$emit('refreshOrderInfo', this.form.orderPk)
+          }).finally(()=>{
+            bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
-        editGuestInfo() {//修改客人信息（外部调用）
+        editGuestInfo() {//修改客人信息（外部调用）a
           if(this.form.pmsCancelFlag=='Y'){
             return;
           }
           editOrderMember(this.form).then(res=>{
             this.$message({type:'success', message: '客人信息修改成功'})
             bus.$emit('refreshOrderInfo', this.form.orderPk)
-          });
+          }).finally(()=>{
+            bus.$emit('refreshOrderInfo', this.form.orderPk)
+          })
         },
         formReset() {//重置表单
           this.form.currTitle = ''

@@ -127,7 +127,7 @@
                     <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
                     <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
                     <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION'">换房</el-button>
-                    <el-button size="mini" @click="confirmClick" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
+                    <el-button size="mini" @click="confirmClick" :loading="loading"  :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
                   </template>
                 </div>
               </el-tab-pane>
@@ -301,6 +301,7 @@ export default {
   },
   data() {
     return {
+      loading:false,
       /**
        * 页面操作类型
        * edit-guest : 修改客人信息
@@ -409,6 +410,7 @@ export default {
      */
     initOrderInfo(orderPk, activeName, guestOrderPk) {
       this.dialogVisible = true
+      this.loading = false;
       this.currOrderPk = orderPk;
       this.activeName = activeName
       this.disabledBill = false
@@ -734,6 +736,7 @@ export default {
          if(!this.formValidate()){
           return;
         }
+        this.loading = true;
         this.$refs.visitorForm.editGuestInfo()
         //修改主订单信息
         let data = {
@@ -741,6 +744,7 @@ export default {
           payment: this.form.payment,
           remark: this.form.remark
         }
+
         editOrder(data).then(res=>{})
       }
       if(this.currConfirmType=='add-guest'){
@@ -748,6 +752,7 @@ export default {
         if(!this.formValidate()){
           return;
         }
+        this.loading = true;
         this.$refs.visitorForm.parentAddGuest()
       }
       if(this.currConfirmType=='add-reserve'){
@@ -755,6 +760,7 @@ export default {
          if(!this.formValidate()){
           return;
         }
+        this.loading = true;
         this.$refs.visitorForm.addReserveGuest()
       }
     },

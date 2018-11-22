@@ -4,12 +4,14 @@
     <el-dialog title="盘点单详细" :visible.sync="dialogVisible" width="800px">
       <div class="forminfo">
         <el-row>
-          <el-col :span="8">盘点单号：{{stock.stockNo}} </el-col>
-          <el-col :span="8">状态：
-            <span v-if="stock.status = 2">已完成</span>
+          <el-col :span="7">盘点单号：{{stock.stockNo}} </el-col>
+          <el-col :span="5">仓库：{{stock.storageName}} </el-col>
+          <el-col :span="4">状态：
+            <!-- <span v-if="stock.status = 2">已完成</span>
             <span v-else-if="stock.status = 1">已预审</span>
             <span v-else-if="stock.status = 0">已创建</span>
-            <span v-else-if="stock.status = 0">已取消</span>
+            <span v-else-if="stock.status = -1">已取消</span> -->
+            <span>{{takeStockStatusMap[stock.status]}}</span>
           </el-col>
           <el-col :span="8">盘点时间：{{stock.updateTime}} </el-col>
         </el-row>
@@ -22,36 +24,38 @@
         <el-table-column prop="unit" label="单位" align="left" show-overflow-tooltip/>
         <el-table-column prop="amount" label="库存数量" align="left" show-overflow-tooltip/>
         <el-table-column label="盘点数量" align="left" show-overflow-tooltip>
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <span v-if="stock == null || stock.status != 0">{{scope.row.stockNum}}</span>
             <el-input type="number" v-if="stock != null && stock.status == 0" min="0" @change="amountChange(scope.row)" v-model="scope.row.stockNum" style="width: 100%;" size="small" />
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="price" label="成本价" align="left" show-overflow-tooltip/>
         <el-table-column prop="yingKuiNum" label="盈亏数量" align="left" show-overflow-tooltip/>
         <el-table-column prop="yingKuiSum" label="盈亏金额" align="left" show-overflow-tooltip/>
         <el-table-column prop="remark" label="备注" align="left" show-overflow-tooltip>
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <span v-if="stock == null || stock.status != 0">{{scope.row.remark}}</span>
             <el-input v-if="stock != null && stock.status == 0" v-model="scope.row.remark" style="width: 100%" size="small" />
-          </template>
+          </template> -->
         </el-table-column>
       </el-table>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-        <el-button @click="toPrint" size="mini">打 印</el-button>
+        <el-button type="primary" @click="toPrint" size="mini">打 印</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import {takeStockStatusMap} from '@/utils/orm'
 import { getTakeStockDetail } from "@/api/upmsStorage";
 
 export default {
   data() {
     return {
+      takeStockStatusMap:takeStockStatusMap,
       dialogVisible: false,
       loading: false,
       stock: {},
@@ -72,7 +76,10 @@ export default {
       }
     },
     toPrint(){
-      window.open("http://localhost:8083/#/pmsTakeStockDetail?stockId="+this.stockId);
+      window.open("http://localhost:8083/#/pmsTakeStockDetail?stockId="+this.stockId
+      +"&storageName="+this.stock.storageName
+      +"&statusName="+this.takeStockStatusMap[this.stock.status]
+      +"&companyName="+this.stock.companyName);
     }
   }
 };

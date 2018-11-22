@@ -3,6 +3,7 @@
   <div class="template-bg">
     <div class="conter-bg">
       <el-button type="primary" size="mini" @click="showChannelDialog">添加渠道</el-button>
+      <el-button type="primary" size="mini" @click="init" icon="el-icon-search">查询</el-button>
       <el-table
         size="mini" 
         border 
@@ -28,6 +29,17 @@
             <el-switch v-model="scope.row.usingFlag" active-value="Y" inactive-value="N" @change="statusChange(scope.row)"></el-switch>
           </template>
         </el-table-column>
+        <el-table-column prop="sortNum" label="排序" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.editFlag2==false">{{scope.row.sortNum}}</span>
+            <el-button v-if="scope.row.editFlag2==false" type="text" class="el-icon-edit" @click="columEditSort(scope.row)"></el-button>
+            <el-input-number v-if="scope.row.editFlag2==true" v-model="scope.row.tempSortNum" :controls="false" :min="0" size="mini"></el-input-number>
+
+            <el-button v-if="scope.row.editFlag2==true" type="primary" size="mini" @click="sortEditSaveClick(scope.row)">保存</el-button>
+            <el-button v-if="scope.row.editFlag2==true" size="mini" @click="sortEditCancelClick(scope.row)">取消</el-button>
+          </template>
+        </el-table-column>
+
       </el-table>
     </div>
      <el-dialog
@@ -60,7 +72,8 @@ import {
   updateChannelType,
   addChannelype,
   updateChannelRate,
-  updateChannelUsing
+  updateChannelUsing,
+  updateChannelSortNum
 } from '../../api/systemSet/type/typeController'
 import {listSysChannel} from '@/api/upmsApi'
 
@@ -111,6 +124,7 @@ export default {
             定义初始化列表字段
           */
           this.$set(row,'editFlag',false)
+          this.$set(row,'editFlag2',false)
           this.$set(row,'tempCommissionRate',0)
         })
       }).catch(() => {
@@ -140,6 +154,25 @@ export default {
         this.$set(row,'editFlag', false)
       })
     },
+    columEditSort(row){
+      this.$set(row,'editFlag2',true)
+      this.$set(row,'tempSortNum',row.sortNum)
+    },
+    sortEditSaveClick(row){
+      this.$set(row,'sortNum',row.tempSortNum)
+      let data={
+        typePk:row.typePk,
+        sortNum: row.sortNum
+      }
+      updateChannelSortNum(data).then(res=>{
+        this.$message.success('排序已更改');
+        this.$set(row,'editFlag2', false)
+      })
+    },
+    sortEditCancelClick(row){
+      this.$set(row,'editFlag2',false)
+    },
+    
     statusChange(row){
       let data = {
         typePk:row.typePk,
