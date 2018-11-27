@@ -148,7 +148,7 @@ export default {
     //打印预览
     print(){
       let bodyhtml = document.getElementById("print-turnoverofbusinessincome").innerHTML;
-      var f = document.getElementById("printIframe");
+      let f = document.getElementById("printIframe");
       f.contentDocument.write(bodyhtml);
       f.contentDocument.close();
       f.contentWindow.print();

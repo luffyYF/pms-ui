@@ -2,108 +2,254 @@
 <template>
   <div>
     <el-col :span="24" class="title">
-      <div class="demo-input-suffix">
-        开始日期：<el-date-picker v-model="datepicker"
-                type="daterange"
-                value-format="yyyy-MM-dd"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期" 
-                @change="historyRoomExchangeDate" size="mini">
-            </el-date-picker>
-        原房号：<el-input v-model="srcRoomNumber" size="mini" style="width:120px"></el-input>
-          <el-button type="primary" size="mini" icon="el-icon-search" @click="search">查询</el-button>
+      <div class="finan-search-form">
+        入住日期：
+        <el-date-picker v-model="searchForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="search" size="mini">
+        </el-date-picker>
+        订单状态：
+        <el-select v-model="searchForm.status" multiple placeholder="请选择" size="mini" w>
+          <el-option label="退房未结" value="7"></el-option>
+          <el-option label="结账离店" value="4"></el-option>
+        </el-select>
+        <el-button type="primary" size="mini" icon="el-icon-search" @click="search">查询</el-button>
       </div>
     </el-col>
     <el-col :span="24">
       <div class="tabs">
         <div class="tavs-title">
-          <h3>退房未结订单对账结账</h3>
+          <h3>订单对账确认收账</h3>
         </div>
         <div class="tabs-contetn">
           <!-- <p style="margin: 0px">酒店日期：<span>2018-03-09</span></p> -->
-          <el-table v-loading="loading" :data="tableData" border height="200" style="width: 100%; margin-top: 5px">
-            <el-table-column prop="guestName" label="客人姓名"></el-table-column>
-            <el-table-column prop="srcRoomNumber" label="原房号"></el-table-column>
-            <el-table-column prop="srcRoomTypeName" label="原房型"></el-table-column>
-            <el-table-column prop="srcRoomPrice" label="原房价"></el-table-column>
-            <el-table-column prop="targetRoomNumber" label="目的房号"></el-table-column>
-            <el-table-column prop="targetRoomTypeName" label="目的房型"></el-table-column>
-            <el-table-column prop="targetRoomPrice" label="目的房价"></el-table-column>
-            <el-table-column prop="changeRoomType" label="换房类型"></el-table-column>
-            <el-table-column prop="checkInDate" label="入住时间"></el-table-column>
-            <el-table-column prop="orderNo" label="组单号"></el-table-column>
-            <el-table-column prop="createUserName" label="操作员"></el-table-column>
-            <el-table-column prop="authPerson" label="授权人"></el-table-column>
+          <el-table 
+          :data="orderTable" 
+          @selection-change="handleSelectionChange"
+          @expand-change="expandChange"
+          v-loading="loading" 
+          height="400"
+          border style="width: 100%; margin-top: 5px" 
+          size="mini">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+
+            <el-table-column type="expand">
+              <template slot-scope="scope">
+                <el-table :data="subTableData[scope.row.orderPk]" border size="mini">
+                  <el-table-column prop="billCode" label="入账编号"></el-table-column>
+                  <el-table-column prop="roomNumber" label="房号"></el-table-column>
+                  <el-table-column prop="memName" label="客人姓名"></el-table-column>
+                  <el-table-column prop="businessDate" label="营业日期"></el-table-column>
+                  <el-table-column prop="projectName" label="项目"></el-table-column>
+                  <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
+                  <el-table-column prop="settlementAmount" label="结算金额"></el-table-column>
+                </el-table>
+              </template>
+            </el-table-column>
+            <el-table-column prop="beginDate" label="入住日期">
+              <template slot-scope="scope">
+                <span>{{moment(scope.row.beginDate).format('YYYY-MM-DD')}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="orderNo" label="订单编号"></el-table-column>
+            <el-table-column prop="userName" label="预定人"></el-table-column>
+            <el-table-column prop="userPhone" label="预定人手机号"></el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
+            <el-table-column prop="totalConsume" label="消费金额"></el-table-column>
+            <el-table-column prop="totalFree" label="房费"></el-table-column>
+            <el-table-column prop="totalOtherConsume" label="其他消费"></el-table-column>
+            <el-table-column prop="totalCommission" label="佣金"></el-table-column>
+            <el-table-column prop="totalPromotion" label="优惠"></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	深圳前海豪菲尔</span></p>
-          <p style="height:20px;color:red">	注：此报表在2017年-11月升级后，新操作的换房数据才会显示房型、换房类型。</p>
+          <div class="sum-opr">
+            <p class="sum-opr-item">
+              消费总额：<span>¥ {{settleData.settleConsume}}</span>
+            </p>
+            <p class="sum-opr-item">
+              房费总额：<span>¥ {{settleData.settleFree}}</span>
+            </p>
+            <p class="sum-opr-item">
+              佣金总额：<span>¥ {{settleData.settleCommission}}</span>
+            </p>
+            <p class="sum-opr-item">
+              优惠总额：<span>¥ {{settleData.settlePromotion}}</span>
+            </p>
+            <p class="r-sum-opr-item">
+              <el-button type="primary" size="mini">确认收账</el-button>
+            </p>
+          </div>
+          <el-pagination style="margin: 10px 20px;" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[10, 20, 30, 40]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="total">
+          </el-pagination>
         </div>
       </div>
     </el-col>
   </div>
 </template>
 <script>
-import {formatDate, copyObj} from '@/utils/index'
-import {historyRoomExchange} from '@/api/reportCenter'
-import {billChecking} from '@/api/financial/FinancialAuditController'
+import moment from "moment";
+import { formatDate, copyObj } from "@/utils/index";
+import { historyRoomExchange } from "@/api/reportCenter";
+import {
+  billChecking,
+  billList
+} from "@/api/financial/FinancialAuditController";
 export default {
   data() {
     return {
-      datepicker: '',
-      srcRoomNumber: '',
-      datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-      tableData: [],
-      loading: false
-    }
+      searchForm: {
+        datepicker: [
+          moment()
+            .subtract(1, "M")
+            .format("YYYY-MM-DD"),
+          moment().format("YYYY-MM-DD")
+        ],
+        status: ["4", "7"],
+        pageNum: 1,
+        pageSize: 10
+      },
+      total: 0,
+      orderTable: [],
+      loading: false,
+      moment: moment,
+      multipleSelection: [],
+      subTableData: {},
+      settleData:{
+        settleConsume: 0,//消费总额
+        settleFree: 0,//房费总额
+        settleCommission: 0,//佣金总额
+        settlePromotion: 0,//优惠总额
+      }
+    };
   },
-  created(){
-    this.historyRoomExchangeDate();
+  mounted() {
+    this.search();
   },
   methods: {
-    search(){
-      console.log(this.datepicker);
-      let data = {
-        begin:this.datepicker[0],
-        end:this.datepicker[1],
-        status:[4,7],
-        pageNum:1,
-        pageSize:10
+    search() {
+      if (!this.searchForm.datepicker) {
+        this.$message.warning("请选择入住日期");
+        return;
       }
-      billChecking(data).then(res=>{
-        console.log("结果",res.data)
+      if (!this.searchForm.status || this.searchForm.status.length <= 0) {
+        this.$message.warning("请选择订单状态");
+        return;
+      }
+      
+      let data = {
+        begin: this.searchForm.datepicker[0],
+        end: this.searchForm.datepicker[1],
+        status: this.searchForm.status.toString(),
+        pageNum: this.searchForm.pageNum,
+        pageSize: this.searchForm.pageSize
+      };
+      this.subTableData={}
+      this.loading = true;
+      billChecking(data).then(res => {
+        this.total = Number(res.data.totalCount);
+        this.orderTable = res.data.list;
+        //初始化子账单table
+        this.orderTable.forEach(item=>{
+          this.$set(this.subTableData, item.orderPk, [])
+          // this.subTableData[item.orderPk] = []
+        })
+      }).finally(()=>{
+        this.loading = false;
+      });
+    },
+    // 分页相关
+    handleSizeChange(val) {
+      this.searchForm.pageSize = val;
+      this.search();
+    },
+    // 分页相关
+    handleCurrentChange(val) {
+      this.searchForm.pageNum = val;
+      this.search();
+    },
+    //列表选择
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+
+      this.settleData.settleConsume = 0;
+      this.settleData.settleFree = 0;
+      this.settleData.settleCommission = 0;
+      this.settleData.settlePromotion = 0;
+
+      let temp1 = 0;
+      let temp2 = 0;
+      let temp3 = 0;
+      let temp4 = 0;
+      console.log(this.multipleSelection);
+      this.multipleSelection.forEach(item=>{
+        temp1 += Number(item.totalConsume)
+        temp2 += Number(item.totalFree)
+        temp3 += Number(item.totalCommission)
+        temp4 += Number(item.totalPromotion)
+      })
+
+      this.settleData.settleConsume = temp1.toFixed(2);
+      this.settleData.settleFree = temp2.toFixed(2);
+      this.settleData.settleCommission = temp3.toFixed(2);
+      this.settleData.settlePromotion = temp4.toFixed(2);
+
+    },
+    // 列表展开，加载账单
+    expandChange(row, expandedRows) {
+      if(this.subTableData[row.orderPk].length>0){
+        return;
+      }
+      billList({orderPk:row.orderPk}).then(res=>{
+        this.$set(this.subTableData,row.orderPk,res.data)
       })
     },
-    historyRoomExchangeDate(){
-      this.loading = true
-      historyRoomExchange().then(res => {
-        this.loading = false
-        this.tableData = res.data;
-      })
-    }
   }
-}
+};
 </script>
 <style scoped>
-.title{
+.title {
   border-bottom: 2px solid #ddd;
   padding-bottom: 15px;
 }
-.tavs-title{
+.tavs-title {
   text-align: center;
 }
-.left{
+.left {
   float: left;
 }
-.right{
+.right {
   float: right;
 }
-.tabsAdd{
+.tabsAdd {
   border: 1px solid #ddd;
   margin: 0;
   border-top: 0;
   padding: 5px 10px;
+}
+.sum-opr{
+  overflow: hidden;
+  border-bottom: 1px solid #e6e6e6;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  margin-top: 0px;
+  padding: 0 14px;
+  background: #f7f7f7;
+}
+.sum-opr .sum-opr-item{
+  float: left;
+  font-size: 16px;
+  margin-right: 35px;
+}
+.sum-opr .sum-opr-item span{
+  color: #e41700;
+  font-size: 18px;
+  font-weight: bold;
+}
+.sum-opr .r-sum-opr-item{
+  float: right;
+}
+</style>
+<style>
+.finan-search-form .el-input--mini {
+  width: 200px;
 }
 </style>
 

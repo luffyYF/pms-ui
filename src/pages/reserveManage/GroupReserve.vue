@@ -174,6 +174,15 @@
                     <el-col :span="24">
                       <el-col :span="10">
                         <el-col :span="22">
+                          <el-form-item label="当天促销：" required>
+                            <el-input-number v-model="visitorForm.currPromotionPrice" :controls="false"></el-input-number>
+                          </el-form-item>
+                        </el-col>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="24">
+                      <el-col :span="10">
+                        <el-col :span="22">
                           <el-form-item label="房间押金：" required>
                             <el-input-number v-model="visitorForm.deposit" :controls="false"></el-input-number>
                           </el-form-item>
@@ -472,6 +481,7 @@ export default {
         beginDate: null,
         endDate: null,
         pmsCancelFlag: null,
+        currPromotionPrice:0
       },
       memberFlag: false, // 是否是会员标识 TODO
       guestList: [],
@@ -598,6 +608,10 @@ export default {
         this.$message({ type: "warning", message: "请选择协议单位" });
         return;
       }
+      if(this.visitorForm.currPromotionPrice==null){
+        this.$message({ type: "warning", message: "优惠价不能为空" });
+        return
+      }
       let count = this.visitorForm.count
       this.visitorForm.count = 1
       for(let i=0;i<count;i++){
@@ -649,6 +663,7 @@ export default {
       this.visitorForm.beginDate = moment().format("YYYY-MM-DD HH:mm:ss")
       this.visitorForm.endDate = moment().add(1, 'd').format("YYYY-MM-DD HH:mm:ss")
       this.visitorForm.pmsCancelFlag = 'N'
+      this.visitorForm.currPromotionPrice = 0;
       this.memberFlag = false
       listType({ typeMaster: "ROOM_TYPE" }).then(res => {
         this.roomTypeArr = res.data.data;
