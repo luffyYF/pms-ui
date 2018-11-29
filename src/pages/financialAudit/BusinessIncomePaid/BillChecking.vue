@@ -20,6 +20,7 @@
           <h3>订单对账确认收账</h3>
         </div>
         <div class="tabs-contetn">
+          <!-- <p style="margin: 0px">酒店日期：<span>2018-03-09</span></p> -->
           <el-table 
           :data="orderTable" 
           @selection-change="handleSelectionChange"
@@ -33,26 +34,13 @@
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-table :data="subTableData[scope.row.orderPk]" border size="mini">
-                  <el-table-column prop="billCode" label="账单编号"></el-table-column>
+                  <el-table-column prop="billCode" label="入账编号"></el-table-column>
                   <el-table-column prop="roomNumber" label="房号"></el-table-column>
                   <el-table-column prop="memName" label="客人姓名"></el-table-column>
                   <el-table-column prop="businessDate" label="营业日期"></el-table-column>
                   <el-table-column prop="projectName" label="项目"></el-table-column>
-                  <el-table-column prop="sysPrice" label="系统价格"></el-table-column>
-                  <el-table-column prop="inputPrice" label="录入价格">
-                    <template slot-scope="billScope">
-                      <span>{{billScope.row.inputPrice}}</span>
-                      <el-button type="text" icon="el-icon-edit" @click="editInput(scope.row, billScope.row)"></el-button>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="diffPrice" label="差价">
-                    <template slot-scope="scope">
-                      <span :class="{'price-big':scope.row.diffPrice>0,'price-small':scope.row.diffPrice<0}">{{scope.row.diffPrice}}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="postilRemark" label="备注"></el-table-column>
-                  <!-- <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
-                  <el-table-column prop="settlementAmount" label="结算金额"></el-table-column> -->
+                  <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
+                  <el-table-column prop="settlementAmount" label="结算金额"></el-table-column>
                 </el-table>
               </template>
             </el-table-column>
@@ -65,13 +53,21 @@
             <el-table-column prop="userName" label="预定人"></el-table-column>
             <el-table-column prop="userPhone" label="预定人手机号"></el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
+            <el-table-column prop="totalConsume" label="消费金额"></el-table-column>
             <el-table-column prop="totalFree" label="房费"></el-table-column>
+            <el-table-column prop="totalOtherConsume" label="其他消费"></el-table-column>
             <el-table-column prop="totalCommission" label="佣金"></el-table-column>
-            <el-table-column prop="totalPromotion" label="平台优惠/促销"></el-table-column>
+            <el-table-column prop="totalPromotion" label="优惠"></el-table-column>
           </el-table>
           <div class="sum-opr">
             <p class="sum-opr-item">
+              消费总额：<span>¥ {{settleData.settleConsume}}</span>
+            </p>
+            <p class="sum-opr-item">
               房费总额：<span>¥ {{settleData.settleRoomConsume}}</span>
+            </p>
+            <p class="sum-opr-item">
+              其他消费总额：<span>¥ {{settleData.settleOtherConsume}}</span>
             </p>
             <p class="sum-opr-item">
               佣金总额：<span>¥ {{settleData.settleCommission}}</span>
@@ -89,28 +85,6 @@
         </div>
       </div>
     </el-col>
-
-    <el-dialog title="价格批注" :visible.sync="dialogVisiblePostil" width="300px" class="postil-dialog">
-      <el-form ref="postilForm" :model="postilForm" label-width="85px" size="mini">
-        <el-form-item label="系统价格：">
-          <span>{{postilForm.sysPrice}}</span>
-        </el-form-item>
-        
-        <el-form-item label="录入价格：">
-          <el-input v-model="postilForm.inputPrice"></el-input>
-        </el-form-item>
-        <el-form-item label="差价：">
-          <span :class="{'price-big':postilForm.diffPrice>0,'price-small':postilForm.diffPrice<0}">{{postilForm.diffPrice}}</span>
-        </el-form-item>
-        <el-form-item label="备注：">
-          <el-input type="textarea" v-model="postilForm.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="savePostil" size="mini" :loading="postilLoading">确 认</el-button>
-        <el-button @click="dialogVisiblePostil = false" size="mini">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -120,8 +94,7 @@ import { historyRoomExchange } from "@/api/reportCenter";
 import {
   billChecking,
   billList,
-  saveBillChecking,
-  saveBillPostil
+  saveBillChecking
 } from "@/api/financial/FinancialAuditController";
 export default {
   data() {
@@ -137,28 +110,19 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
-      dialogVisiblePostil:false,
       total: 0,
       orderTable: [],
       loading: false,
       clickLoading: false,
-      postilLoading: false,
       moment: moment,
       multipleSelection: [],
       subTableData: {},
       settleData:{
+        settleConsume: 0,//消费总额
         settleRoomConsume: 0,//房费总额
         settleCommission: 0,//佣金总额
         settlePromotion: 0,//优惠总额
-      },
-      postilForm:{
-        sysPrice: 0,
-        diffPrice: 0, 
-        inputPrice: null,
-        remark:null,
-        billPk:null,
-        orderPk: null,
-        orderNo: null,
+        settleOtherConsume: 0,//优惠总额
       },
       createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName
     };
@@ -186,13 +150,13 @@ export default {
       };
       this.subTableData={}
       this.loading = true;
-      //查找收账订单列表
       billChecking(data).then(res => {
         this.total = Number(res.data.totalCount);
         this.orderTable = res.data.list;
         //初始化子账单table
         this.orderTable.forEach(item=>{
           this.$set(this.subTableData, item.orderPk, [])
+          // this.subTableData[item.orderPk] = []
         })
       }).finally(()=>{
         this.loading = false;
@@ -212,24 +176,29 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
 
+      this.settleData.settleConsume = 0;
       this.settleData.settleRoomConsume = 0;
       this.settleData.settleCommission = 0;
       this.settleData.settlePromotion = 0;
 
-      // let temp1 = 0;
+      let temp1 = 0;
       let temp2 = 0;
       let temp3 = 0;
       let temp4 = 0;
-      // let temp5 = 0;
+      let temp5 = 0;
       this.multipleSelection.forEach(item=>{
+        temp1 += Number(item.totalConsume)
         temp2 += Number(item.totalFree)
         temp3 += Number(item.totalCommission)
         temp4 += Number(item.totalPromotion)
+        temp5 += Number(item.totalOtherConsume)
       })
 
+      this.settleData.settleConsume = temp1.toFixed(2);
       this.settleData.settleRoomConsume = temp2.toFixed(2);
       this.settleData.settleCommission = temp3.toFixed(2);
       this.settleData.settlePromotion = temp4.toFixed(2);
+      this.settleData.settleOtherConsume = temp5.toFixed(2);
 
     },
     // 列表展开，加载账单
@@ -237,24 +206,11 @@ export default {
       if(this.subTableData[row.orderPk].length>0) {
         return;
       }
-      this.billList(row.orderPk);
-    },
-    billList(orderPk){
-      billList({orderPk:orderPk}).then(res=>{
-        this.$set(this.subTableData,orderPk,res.data)
-        //消费金额和结算金额合并为系统价格
-        this.subTableData[orderPk].forEach(element => {
-          this.$set(element, 'sysPrice', 0)
-          if(Math.abs(element.consumptionAmount)>0){
-            this.$set(element, 'sysPrice', Math.abs(element.consumptionAmount))
-          }else if(Math.abs(element.settlementAmount)>0){
-            this.$set(element, 'sysPrice',Math.abs(element.settlementAmount))
-          }
-        });
+      billList({orderPk:row.orderPk}).then(res=>{
+        this.$set(this.subTableData,row.orderPk,res.data)
       })
     },
 
-    //保存收账
     saveBillChecking(){
       if(this.multipleSelection.length<=0){
         this.$message.warning('至少选择一条')
@@ -266,7 +222,9 @@ export default {
           orderPk: item.orderPk,
           orderNo: item.orderNo,
           userName: item.userName,
+          totalConsume: item.totalConsume,
           totalRoomConsume: item.totalFree,
+          totalOtherConsume: item.totalOtherConsume,
           totalCommission: item.totalCommission,
           totalPromotion: item.totalPromotion
         });
@@ -274,100 +232,32 @@ export default {
       let data = {
         check:{
           createUserName: this.createUserName,
+          totalConsume:this.settleData.settleConsume,
           totalRoomConsume:this.settleData.settleRoomConsume,
           totalCommission:this.settleData.settleCommission,
           totalPromotion:this.settleData.settlePromotion,
+          totalOtherConsume:this.settleData.settleOtherConsume,
 
+          diffConsume:0,
           diffRoomConsume:0,
           diffCommission:0,
           diffPromotion:0,
+          diffOtherConsume:0,
         },
         checkDetails:temparr
       }
-      const h = this.$createElement;
-      this.$msgbox({
-        title: '确认收账？',
-        message: h('p', null, [
-          h('p', null, '本次结账金额如下'),
-          h('p', null, '房费总额：'+data.check.totalRoomConsume),
-          h('p', null, '佣金总额：'+data.check.totalCommission),
-          h('p', null, '优惠总额：'+data.check.totalPromotion),
-          // h('span', null, '内容可以是 '),
-          // h('i', { style: 'color: teal' }, 'VNode')
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true;
-            instance.confirmButtonText = '执行中...';
-            saveBillChecking(data).then(res=>{
-              done();
-              instance.confirmButtonLoading = false;
-              this.$message.success('确认收账成功');
-              this.search();
-            }).finally(()=>{
-              instance.confirmButtonLoading = false;
-            })
-          } else {
-              // instance.confirmButtonLoading = false;
-            done();
-          }
-        }
-      }).then(action => {
-          // this.$message.success('确认收账成功');
-      });
-    },
-
-    //输入价格
-    editInput(orderRow, billRow){
-      this.dialogVisiblePostil  = true;
-      this.postilForm.sysPrice = billRow.sysPrice
-      this.postilForm.diffPrice = billRow.diffPrice
-      this.postilForm.inputPrice = billRow.inputPrice
-      this.postilForm.remark = billRow.postilRemark
-      this.postilForm.billPk = billRow.billPk
-      this.postilForm.orderNo = orderRow.orderNo
-      this.postilForm.orderPk = orderRow.orderPk
-    },
-    savePostil(){
-      this.postilLoading = true;
-      saveBillPostil(this.postilForm).then(res=>{
-        this.$message.success('更改成功');
-        this.dialogVisiblePostil = false;
-        this.billList(this.postilForm.orderPk);
+      this.clickLoading=true;
+      saveBillChecking(data).then(res=>{
+        this.$message.success('确认收账成功');
+        this.search();
       }).finally(()=>{
-        this.postilLoading = false;
+        this.clickLoading=false;
       })
-    }
-  },
-
-  computed: {
-    inputPrice() {
-      return this.postilForm.inputPrice
-    }
-  },
-  watch: {
-    //监听输入金额的变化
-    inputPrice(newValue, oldValue) {
-      if(newValue==null || newValue==undefined || newValue==''){
-        this.postilForm.diffPrice = 0
-        return;
-      }
-      this.postilForm.diffPrice =  Number(newValue) - this.postilForm.sysPrice;
     }
   }
 };
 </script>
 <style scoped>
-.price-big{
-  color:green;
-}
-.price-small{
-  color:red;
-}
-
 .title {
   border-bottom: 2px solid #ddd;
   padding-bottom: 15px;
@@ -411,9 +301,6 @@ export default {
 }
 </style>
 <style>
-.postil-dialog .el-dialog__body{
-  padding: 0px 20px !important;
-}
 .finan-search-form .el-input--mini {
   width: 200px;
 }

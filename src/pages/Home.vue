@@ -14,7 +14,7 @@
       <!--<div class="right">-->
       <div class="right" ref="dirRef">
         <!-- getRPath('/atrialCenter',1) -->
-        <router-link to="/atrialCenter" v-power:id="'11'" v-if="hasPerm('pms:dir:roomCenter')">
+        <router-link to="/atrialCenter" v-if="hasPerm('pms:dir:roomCenter')">
           <div class="nav-li">
             <div class="nav-icon atrial-center-icon"></div>
             <div class="nav-txt">房态中心</div>
@@ -29,19 +29,19 @@
 
         <!-- getRPath控制路由  hasPerm控制显示 -->
         <!-- getRPath('/reserveManage', 1) -->
-        <router-link to="/reserveManage" v-power:id="'13'" v-if="hasPerm('pms:dir:reserveManage')">
+        <router-link to="/reserveManage" v-if="hasPerm('pms:dir:reserveManage')">
           <div class="nav-li">
             <div class="nav-icon reserve-manage-icon"></div>
             <div class="nav-txt">预订管理</div>
           </div>
         </router-link>
-        <router-link to="/checkInManage" v-power:id="'14'" v-if="hasPerm('pms:dir:checkinManage')">
+        <router-link to="/checkInManage" v-if="hasPerm('pms:dir:checkinManage')">
           <div class="nav-li">
             <div class="nav-icon check-manage-icon"></div>
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <router-link to="/customerRelation" v-power:id="'15'" v-if="hasPerm('pms:dir:customerRelationship')">
+        <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
             <div class="nav-txt">客户关系</div>
@@ -53,19 +53,19 @@
             <div class="nav-txt">短信营销</div>
           </div>
         </router-link> -->
-        <router-link to="/reportCenter" v-power:id="'17'" v-if="hasPerm('pms:dir:reportCenter')">
+        <router-link to="/reportCenter" v-if="hasPerm('pms:dir:reportCenter')">
           <div class="nav-li">
             <div class="nav-icon report-center-icon"></div>
             <div class="nav-txt">报表中心</div>
           </div>
         </router-link>
-        <!-- <router-link to="/financialAudit" v-if="screenWidth > 1010" >
+        <router-link to="/financialAudit" v-if="screenWidth > 1010 && hasPerm('pms:dir:finance')" >
           <div class="nav-li">
             <div class="nav-icon financial-audit-icon"></div>
             <div class="nav-txt">财务稽核</div>
           </div>
-        </router-link> -->
-        <router-link to="/dumbHouse" v-if="screenWidth > 1080 && hasPerm('pms:dir:dumbRoomAccount')" v-power:id="'19'">
+        </router-link>
+        <router-link to="/dumbHouse" v-if="screenWidth > 1080 && hasPerm('pms:dir:dumbRoomAccount')" >
           <div class="nav-li">
             <div class="nav-icon dumb-house-icon"></div>
             <div class="nav-txt">哑房账</div>
@@ -83,21 +83,21 @@
             <div class="nav-txt">库存</div>
           </div>
         </router-link>
-        <router-link to="/conferenceRoom" v-if="screenWidth > 1320 && hasPerm('pms:dir:meetingRoom')" v-power:id="'22'">
+        <router-link to="/conferenceRoom" v-if="screenWidth > 1320 && hasPerm('pms:dir:meetingRoom')" >
           <div class="nav-li">
             <div class="nav-icon conference-room-icon"></div>
             <div class="nav-txt">会议室</div>
           </div>
         </router-link>
         <!-- <router-link to="/operators" v-if="screenWidth > 1390" v-power:id="'23'"> -->
-        <router-link to="/operators" v-power:id="'23'" v-if="hasPerm('pms:dir:operatorManage')">
+        <router-link to="/operators" v-if="hasPerm('pms:dir:operatorManage')">
           <div class="nav-li">
             <div class="nav-icon operators-icon"></div>
             <div class="nav-txt">操作员管理</div>
           </div>
         </router-link>
         <!-- <router-link to="/systemSet" v-if="screenWidth > 1470" v-power:id="'24'"> -->
-        <router-link to="/systemSet" v-power:id="'24'" v-if="hasPerm('pms:dir:systemSet')">
+        <router-link to="/systemSet" v-if="hasPerm('pms:dir:systemSet')">
           <div class="nav-li">
             <div class="nav-icon system-set-icon"></div>
             <div class="nav-txt">系统设置</div>
@@ -116,12 +116,6 @@
           placement="bottom-start" 
           width="140" 
           trigger="hover">
-          <router-link to="/financialAudit" v-if="screenWidth < 1010" v-power:id="'18'">
-            <div class="nav-li">
-              <div class="nav-icon financial-audit-icon"></div>
-              <div class="nav-txt">财务稽核</div>
-            </div>
-          </router-link>
           <router-link to="/dumbHouse" v-if="screenWidth < 1080 " v-power:id="'19'">
             <div class="nav-li">
               <div class="nav-icon dumb-house-icon"></div>
@@ -134,28 +128,10 @@
                 <div class="nav-txt">商品部</div>
               </div>
             </router-link>
-            <router-link to="/stock" v-if="screenWidth < 1230" v-power:id="'21'">
-              <div class="nav-li">
-                <div class="nav-icon stock-icon" ></div>
-                <div class="nav-txt">库存</div>
-              </div>
-            </router-link>
             <router-link to="/conferenceRoom" v-if="screenWidth < 1320" v-power:id="'22'">
               <div class="nav-li">
                 <div class="nav-icon conference-room-icon"></div>
                 <div class="nav-txt">会议室</div>
-              </div>
-            </router-link>
-            <router-link to="/operators" v-if="screenWidth < 1390" v-power:id="'23'">
-              <div class="nav-li">
-                <div class="nav-icon operators-icon"></div>
-                <div class="nav-txt">操作员管理</div>
-              </div>
-            </router-link>
-            <router-link to="/systemSet" v-if="screenWidth < 1470" v-power:id="'24'">
-              <div class="nav-li">
-                <div class="nav-icon system-set-icon"></div>
-                <div class="nav-txt">系统设置</div>
               </div>
             </router-link>
             <router-link to="/linen" v-if="screenWidth < 1500" v-power:id="'25'">
