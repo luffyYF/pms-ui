@@ -421,7 +421,7 @@ export default {
 
 <style lang="scss" scoped rel="stylesheet/scss" type="text/css">
 @import "../assets/scss/main.scss";
-.right .router-link-exact-active.router-link-active {
+.right .router-link-active {
   background: rgba(225, 102, 0, 0.6);
 }
 .router_nav_popover a {
