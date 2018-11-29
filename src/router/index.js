@@ -130,6 +130,8 @@ import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
 // 财务稽核
 import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
 import BillChecking from '@/pages/financialAudit/BillChecking'
+import BillCheckingLog from '@/pages/financialAudit/billCheckingLog/BillCheckingLog'
+import BillPostilLog from '@/pages/financialAudit/billPostilLog'
 
 Vue.use(Router)
 /**
@@ -280,7 +282,9 @@ export const constantRouterMap = [
         name: '财务稽核', 
         hidden: false,
         children: [
-          {path: '/financialAudit/billChecking', component: BillChecking, label: '订单对账'}
+          {path: '/financialAudit/billChecking', component: BillChecking, label: '订单对账'},
+          {path: '/financialAudit/billCheckingLog', component: BillCheckingLog, label: '对账记录'},
+          {path: '/financialAudit/billPostilLog', component: BillPostilLog, label: '账单批注记录'}
           // {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
         ]
       },

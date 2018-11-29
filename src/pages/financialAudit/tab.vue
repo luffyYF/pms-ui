@@ -20,9 +20,15 @@
         <business-income-paid/>
       </el-tab-pane>
     </el-tabs> -->
-    <el-menu :default-active="activeMenu" mode="horizontal" ref="reserveMenu" :router="true" class="el-menu-vertical-demo">
-      <el-menu-item index="/financialAudit/billChecking">
+    <el-menu ref="financialMenu" :default-active="activeMenu" mode="horizontal" :router="true" class="el-menu-vertical-demo">
+      <el-menu-item index="/financialAudit/billChecking" v-if="hasPerm('pms:finance:checking')">
         <span slot="title">订单对账</span>
+      </el-menu-item>
+      <el-menu-item index="/financialAudit/billCheckingLog" v-if="hasPerm('pms:finance:checkingLog')">
+        <span slot="title">收账记录</span>
+      </el-menu-item>
+      <el-menu-item index="/financialAudit/billPostilLog" v-if="hasPerm('pms:finance:postilLog')">
+        <span slot="title">账单批注记录</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
@@ -46,7 +52,7 @@ export default {
       },
     },
     mounted(){
-      let routerPath = this.$refs.reserveMenu.$children[0].$options.propsData.index;
+      let routerPath = this.$refs.financialMenu.$children[0].$options.propsData.index;
       this.activeMenu = routerPath
       this.$router.push(routerPath);
     },
