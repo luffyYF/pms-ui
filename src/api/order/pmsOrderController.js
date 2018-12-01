@@ -113,3 +113,7 @@ export const calcMoney = params => {
 export const listLog = params => {
     return request.get('/back/order/listLog', {params: params})
 }
+//根据主单号查询订单
+export const getPmsOrderByNo = params => {
+    return request.get('/back/order/getPmsOrderByNo', {params:params})
+}

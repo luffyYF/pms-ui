@@ -132,6 +132,7 @@ import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
 import BillChecking from '@/pages/financialAudit/BillChecking'
 import BillCheckingLog from '@/pages/financialAudit/billCheckingLog/BillCheckingLog'
 import BillPostilLog from '@/pages/financialAudit/billPostilLog'
+import InvoiceList from '@/pages/financialAudit/invoiceManage/invoiceList.vue'
 
 Vue.use(Router)
 /**
@@ -284,7 +285,8 @@ export const constantRouterMap = [
         children: [
           {path: '/financialAudit/billChecking', component: BillChecking, label: '订单对账'},
           {path: '/financialAudit/billCheckingLog', component: BillCheckingLog, label: '对账记录'},
-          {path: '/financialAudit/billPostilLog', component: BillPostilLog, label: '账单批注记录'}
+          {path: '/financialAudit/billPostilLog', component: BillPostilLog, label: '账单批注记录'},
+          {path: '/financialAudit/InvoiceList', component: InvoiceList, label: '发票管理'},
           // {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
         ]
       },

@@ -3,9 +3,12 @@
   <div>
     <el-form ref="form" size="mini" :model="form" label-width="80px">
       <el-form-item label="所在仓库">
-        <el-checkbox-group v-model="form.storageIds">
+        <!-- <el-checkbox-group v-model="form.storageIds">
           <el-checkbox v-for="item in storageOptions" :label="item.storageId" :key="item.storageId">{{item.name}}</el-checkbox>
-        </el-checkbox-group>
+        </el-checkbox-group> -->
+        <el-select v-model="form.storageIds">
+          <el-option v-for="item in storageOptions" :label="item.name" :key="item.storageId" :value="item.storageId"></el-option>
+        </el-select>
       </el-form-item>
       <!-- <el-form-item label="部门">
         <el-checkbox-group v-model="form.deptPk">
@@ -32,6 +35,12 @@
         </el-checkbox-group>
       </el-form-item> -->
       <el-row>
+        <el-col :span="3.5">
+          <el-form-item label="货物类型">
+            <el-cascader clearable :options="cascaderList" v-model="form.typeIds" change-on-select>
+            </el-cascader>
+          </el-form-item>
+        </el-col>
         <el-col :span="4">
           <el-form-item label="货物编号">
             <el-input v-model="form.inventoryNo"></el-input>
@@ -40,12 +49,6 @@
         <el-col :span="4">
           <el-form-item label="名称/简拼">
             <el-input v-model="form.nameOrShortName"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item label="货物类型">
-            <el-cascader clearable :options="cascaderList" v-model="form.typeIds" change-on-select>
-            </el-cascader>
           </el-form-item>
         </el-col>
         <!-- <el-col :span="4">
@@ -85,7 +88,7 @@
       <el-table-column prop="typeName" label="类别"> </el-table-column>
       <el-table-column prop="amount" label="数量"> </el-table-column>
       <el-table-column prop="unit" label="单位"> </el-table-column>
-      <el-table-column prop="storageName" label="仓库"> </el-table-column>
+      <!-- <el-table-column prop="storageName" label="仓库"> </el-table-column> -->
       <!-- <el-table-column prop="goodsSpec" label="规格"> </el-table-column> -->
       <!-- <el-table-column prop="costPrice" label="进价"> </el-table-column> -->
       <!-- <el-table-column prop="totalPrice" label="总价"> </el-table-column> -->
@@ -115,7 +118,7 @@ export default {
   data() {
     return {
       form: {
-        storageIds: [],
+        storageIds: null,
         typeIds: [],
         inventoryNo: null,
         nameOrShortName:null,
@@ -141,7 +144,7 @@ export default {
       getStorageList({ companyPk: this.currCompanyPk }).then(res => {
         this.storageOptions = res.data;
         //加载库存列表
-        // this.form.storageIds=[this.storageOptions[0].storageId]
+        this.form.storageIds = this.storageOptions[0].storageId
         this.stockList();
       });
       //加载货物类型
@@ -154,7 +157,7 @@ export default {
       var data = {
         pageNum:this.pageNum,
         pageSize:this.pageSize,
-        storageIds: this.form.storageIds.join(','),
+        storageIds: this.form.storageIds,
         typeIds: this.form.typeIds.join(','),
         inventoryNo: this.form.inventoryNo,
         nameOrShortName: this.form.nameOrShortName,

@@ -56,6 +56,9 @@
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
+.menu-content {
+  overflow: auto;
+}
 </style>
 <style>
 .goodsmanage .el-tabs__content{

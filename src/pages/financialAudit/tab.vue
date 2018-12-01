@@ -30,6 +30,9 @@
       <el-menu-item index="/financialAudit/billPostilLog" v-if="hasPerm('pms:finance:postilLog')">
         <span slot="title">账单批注记录</span>
       </el-menu-item>
+      <el-menu-item index="/financialAudit/InvoiceList" v-if="hasPerm('pms:finance:invoiceManage')">
+        <span slot="title">发票管理</span>
+      </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
       <transition name="el-fade-in-linear">
