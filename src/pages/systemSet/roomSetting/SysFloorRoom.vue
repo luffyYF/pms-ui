@@ -213,6 +213,13 @@
           <el-input v-model="selectRoom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
         </el-form-item>
 
+        <el-form-item style="width:100%;" label="授权图片：" v-if="selectRoom.intelligentFlag=='Y'" required>
+          <upload-avatar :avatar.sync="selectRoom.authorizedPicture"></upload-avatar>
+        </el-form-item>
+        <el-form-item label="门锁图片：" v-if="selectRoom.intelligentFlag=='Y'" required>
+          <upload-avatar :avatar.sync="selectRoom.lockPictures"></upload-avatar>
+        </el-form-item>
+
         <el-form-item style="display:block;margin-left:32px;">
           <el-checkbox label="RFL门卡" v-model="selectRoom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
@@ -287,8 +294,9 @@
 <script>
 import {addStorey, listStorey, delStorey, listRoom, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
 import {listType} from '@/api/utils/pmsTypeController'
+import UploadAvatar from "@/components/UploadImage/UploadAvatar2";
 export default {
-  components: {  },
+  components: {UploadAvatar},
   data() {
     return {
       formLabelWidth: '120px',

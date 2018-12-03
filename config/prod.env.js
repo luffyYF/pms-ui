@@ -2,7 +2,8 @@
 module.exports = {
   NODE_ENV: '"testing"',
   API_ROOT: '"https://www.housefeel.cn/pms-back"',
-  IMAGE_ROOT: '"https://www.housefeel.cn"',
+  IMAGE_ROOT: '"https://www.housefeel.cn/"',
+  UPLOAD_ROOT: '"https://www.housefeel.cn/wechat-back"',//上传文件的地址，使用微云服务器
   UPMS_ROOT:'"https://www.housefeel.cn/upms-back"',
   OA_ROOT:'"https://www.housefeel.cn/oa-back"',
   PRINT_ROOT: '"https://www.housefeel.cn/printing/"',
