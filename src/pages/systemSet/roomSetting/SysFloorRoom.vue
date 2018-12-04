@@ -3,11 +3,11 @@
     <!-- table -->
     <el-row>
       <el-col :span="5">
-        <div class="bg-reserve book-info">
+        <div class="bg-reserve book-info init_floor">
         <h5 class="info-title">楼层</h5>
         <el-form label-width="80px" size="mini"  label-position="top" style="padding-left:10px">
           <el-form-item label="楼层名">
-            <el-input v-model="storeyName" class="block_input"></el-input>
+            <el-input-number v-model="storeyName" placeholder="请输入楼层名" class="block_input" :controls="false"></el-input-number>
           </el-form-item>
           <el-form-item>
             <el-button @click="addStorey" type="primary">保存</el-button>
@@ -101,7 +101,8 @@
           <span class="text-cs">{{selectStorey.storeyName}}</span>
         </el-form-item>
         <el-form-item label="房号：" required>
-          <el-input v-model="addFrom.roomNumber" placeholder="请输入房号" auto-complete="off"></el-input>
+          <!-- <el-input v-model="addFrom.roomNumber" placeholder="请输入房号" auto-complete="off"></el-input> -->
+          <el-input-number v-model="addFrom.roomNumber" placeholder="请输入房号" :controls="false" class="text_position"></el-input-number>
         </el-form-item>
         <el-form-item label="房间类型：" required>
           <el-select v-model="addFrom.roomTypePk" placeholder="请选择房间类型">
@@ -249,15 +250,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="房号前缀：">
-          <el-input v-model="previewData.prefix" prop="prefix" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房号前缀"></el-input>
+          <el-input v-model="previewData.prefix" class="el-select" prop="prefix" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房号前缀"></el-input>
         </el-form-item>
         <el-form-item label="房间数量：" required>
-          <el-input class="text-cs" v-model="previewData.roomNum" prop="roomNum" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房间数量"></el-input>
+          <!-- <el-input class="text-cs" v-model="previewData.roomNum" prop="roomNum" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房间数量"></el-input> -->
+          <el-input-number class="text-cs" v-model="previewData.roomNum" controls-position="right" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房间数量" :min="1" :max="20"></el-input-number>
           <span class="red">单次添加房间数量不能大于20</span>
         </el-form-item>
         <el-form-item label="过滤尾数：">
-          <el-checkbox v-model="previewData.checked4" @change="enters">4</el-checkbox>
-          <el-checkbox v-model="previewData.checked7" @change="enters">7</el-checkbox>
+          <!-- <el-checkbox v-model="previewData.checked4" @change="enters">4</el-checkbox>
+          <el-checkbox v-model="previewData.checked7" @change="enters">7</el-checkbox> -->
+          <el-select v-model="value5" multiple placeholder="请选择" @change="enters">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item style="padding:0 20px;">
           说明：房间批量生成的房号由房间数量和房号前缀生成，如输入房间数量：“12”，房号前缀“A”，那么生成的房号为：A01、A02……A11、A812，如果前缀为空则生成的房间号为：楼层+01。 
@@ -349,7 +359,41 @@ export default {
         "intelligentFloorNo":null,
         "intelligentRoomNo":null,
         "rflLockNo":null
-      }
+      },
+      options: [
+        {
+          label: "0",
+          value: "0"
+        },{
+          label: "1",
+          value: "1"
+        },{
+          label: "2",
+          value: "2"
+        },{
+          label: "3",
+          value: "3"
+        },{
+          label: "4",
+          value: "4"
+        },{
+          label: "5",
+          value: "5"
+        },{
+          label: "6",
+          value: "6"
+        },{
+          label: "7",
+          value: "7"
+        },{
+          label: "8",
+          value: "8"
+        },{
+          label: "9",
+          value: "9"
+        }
+      ],
+      value5: [],
     };
   },
   mounted(){
@@ -556,13 +600,16 @@ export default {
     },
     enters(){
       this.previewData.filterTail = []
-      if(this.previewData.checked4){
-        this.previewData.filterTail.push("4")
-      }
+      this.value5.forEach(item => {
+        this.previewData.filterTail.push(item)
+      });
+      // if(this.previewData.checked4){
+      //   this.previewData.filterTail.push("4")
+      // }
 
-      if(this.previewData.checked7){
-        this.previewData.filterTail.push("7")
-      }
+      // if(this.previewData.checked7){
+      //   this.previewData.filterTail.push("7")
+      // }
       this.previewRoom()
     }
   }
@@ -644,5 +691,13 @@ export default {
 }
 .block_input{
   width:96%;
+}
+</style>
+<style>
+.init_floor .el-input-number .el-input__inner {
+  text-align: left;
+}
+.text_position .el-input__inner{
+  text-align: left;
 }
 </style>
