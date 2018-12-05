@@ -27,6 +27,9 @@
       <el-menu-item index="/operators/nightTrialRecord" v-if="hasPerm('pms:menu:nightAuditRecord')">
         <span slot="title">夜审记录查询</span>
       </el-menu-item>
+      <el-menu-item index="/operators/attendanceGroupList" v-if="hasPerm('pms:menu:nightAuditRecord')">
+        <span slot="title">排班管理</span>
+      </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
       <transition name="el-fade-in-linear">
