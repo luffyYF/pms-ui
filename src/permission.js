@@ -30,6 +30,15 @@ function getUrlParam(name){
 const whiteList = ['/login', '/404']
 
 router.beforeEach((to, from, next) => {
+  // 解决重复点击顶级目录导致路由页面空白的问题
+  // console.log("to",to);
+  // console.log("from",from);
+  if(to.path!="/" && from.path.indexOf(to.path)!=-1){
+    next(false);
+    return;
+  }
+
+
   // 开启Progress
   NProgress.start()
   if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
