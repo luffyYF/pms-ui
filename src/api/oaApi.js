@@ -17,3 +17,12 @@ export const listApi = params => {
 export const updateApi = params => {
   return requestOa.post('/backend/sysUser/update', params)
 }
+
+/**
+ * 排班管理接口
+ * @param params
+ */
+// 查找数据
+export const listGroupApi = params => {
+  return requestOa.get('/backend/attendanceGroup/list', { params: params })
+}
