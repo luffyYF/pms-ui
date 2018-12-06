@@ -126,3 +126,10 @@ export const takeStockStatusMap = {
   '1': '已预审',
   '2': '已入库',
 }
+
+//考勤类型
+export const attendanceTypeMap = {
+  'NONE': '无班次',
+  'FIXED': '固定排班',
+  'TURN': '轮班排班',
+}

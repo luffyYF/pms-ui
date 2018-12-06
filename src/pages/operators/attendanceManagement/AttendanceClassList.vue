@@ -1,11 +1,11 @@
-// 考勤组(班次组)表列表
+// 班次列表
 // Created by Administrator on 2018-12-04T15:20:24.254.
 <template>
   <div class="content-body">
     <el-form ref="listQuery" :inline="true" :model="listQuery" size="mini" label-width="120px">
       <el-form-item style="margin-left:10px;">
         <el-button type="primary" @click="listSearch(1)" icon="el-icon-search">搜索</el-button>
-        <el-button type="primary" @click="addClick">添加考勤组</el-button>
+        <el-button type="primary" @click="addClick">添加班次</el-button>
       </el-form-item>
     </el-form>
     <!--表格-->
@@ -19,24 +19,16 @@
         style="width: 100%;"
         v-loading="loading">
         <!-- 需要映射的表 -->
-        <el-table-column prop="groupName" label="组名称" align="left"  show-overflow-tooltip></el-table-column>
-        <el-table-column prop="type" label="考勤类型" align="left"  show-overflow-tooltip>
-          <template slot-scope="scope">
-            <span>{{attendanceTypeMap[scope.row.type]}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="isDefault" label="是否默认" align="left" show-overflow-tooltip>
-          <template slot-scope="scope">
-            <span>{{scope.row.isDefault=='1' ? '是' : '否'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="deptNameList" label="关联的部门" align="left"  show-overflow-tooltip></el-table-column>
+        <el-table-column prop="className" label="班次名称" align="left"  show-overflow-tooltip></el-table-column>
+        <el-table-column prop="groupName" label="班次组名称" align="left"  show-overflow-tooltip></el-table-column>
+        <el-table-column prop="beginTime" label="开始时间" align="left" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="endTime" label="结束时间" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column prop="orderNum" label="排序" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column prop="createTime" label="创建时间" align="left"  show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" align="left" fixed="right">
           <template slot-scope="scope">
-            <el-button type="primary" @click="editClick(scope.row.groupId)" v-if="hasPerm('upms:permManage:editPerm')" size="mini">编辑</el-button>
-            <el-button type="danger" @click="deleteClick(scope.row.groupId)" v-if="hasPerm('upms:permManage:delPerm')" size="mini">删除</el-button>
+            <el-button type="primary" @click="editClick(scope.row.classId)" v-if="hasPerm('upms:permManage:editPerm')" size="mini">编辑</el-button>
+            <el-button type="danger" @click="deleteClick(scope.row.classId)" v-if="hasPerm('upms:permManage:delPerm')" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,26 +44,23 @@
       </el-pagination>
     </div>
     <!--添加、修改组件-->
-    <AttendanceGroupEdit ref="attendanceGroupEditRef" @callback="listSearch"/>
+    <AttendanceClassEdit ref="attendanceClassEditRef" @callback="listSearch"/>
   </div>
 </template>
 <script>
   import {attendanceTypeMap} from '@/utils/orm'
   import Cookies from 'js-cookie'
-  import { attendanceGroupList,attendanceGroupDelete } from '@/api/oaApi'
-  import AttendanceGroupEdit from './AttendanceGroupEdit'
+  import { attendanceClassList } from '@/api/oaApi'
+  import AttendanceClassEdit from './AttendanceClassEdit'
 
   export default {
-    components: { AttendanceGroupEdit },
+    components: { AttendanceClassEdit },
     data () {
       return {
         attendanceTypeMap:attendanceTypeMap,
         loading: false,
         rows: [],
         listQuery: {
-          systemId: null,
-          title: null,
-          permType: null,
           pageNum: 1,
           pageSize: 10
         },
@@ -89,18 +78,18 @@
           pageSize: this.listQuery.pageSize,
           companyPk:Cookies.get('select_company_pk')
         }
-        attendanceGroupList(data).then(res => {
-          this.total = Number(res.total)
-          this.rows = res.list
+        attendanceClassList(data).then(res => {
+          this.total = Number(res.data.total)
+          this.rows = res.data.list
         }).finally(() => {
           this.loading = false
         })
       },
       addClick () {
-        this.$refs.attendanceGroupEditRef.showDialog()
+        this.$refs.attendanceClassEditRef.showDialog(this.listQuery.systemId)
       },
       editClick (id) {
-        this.$refs.attendanceGroupEditRef.showDialog(id)
+        this.$refs.attendanceClassEditRef.showDialog(id)
       },
       deleteClick (id) {
         this.$confirm('确定删除数据?', '提示', {

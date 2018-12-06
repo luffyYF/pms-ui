@@ -27,8 +27,11 @@
       <el-menu-item index="/operators/nightTrialRecord" v-if="hasPerm('pms:menu:nightAuditRecord')">
         <span slot="title">夜审记录查询</span>
       </el-menu-item>
-      <el-menu-item index="/operators/attendanceGroupList" v-if="hasPerm('pms:menu:nightAuditRecord')">
-        <span slot="title">排班管理</span>
+      <el-menu-item index="/operators/attendanceClass">
+        <span slot="title">班次管理</span>
+      </el-menu-item>
+      <el-menu-item index="/operators/attendanceGroupList">
+        <span slot="title">班次组管理</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
@@ -40,7 +43,6 @@
 </template>
 
 <script>
-  import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {},
     data () {
@@ -50,7 +52,6 @@
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
-      // this.activeMenu = this.$route.path;
       let routerPath = this.$refs.menuRef.$children[0].$options.propsData.index;
       this.activeMenu = routerPath
       this.$router.push(routerPath);
@@ -59,9 +60,6 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
     }
   }
 </script>

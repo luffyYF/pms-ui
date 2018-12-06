@@ -45,9 +45,6 @@
       <el-menu-item index="/systemSet/paramsSetting" v-if="hasPerm('pms:systemSet:paramsSetting')">
         <span slot="title">系统参数设置</span>
       </el-menu-item>
-      <el-menu-item index="/systemSet/shiftManage" v-if="hasPerm('pms:systemSet:shiftManage')">
-        <span slot="title">班次管理</span>
-      </el-menu-item>
       <el-menu-item index="/systemSet/userSetting" v-if="hasPerm('pms:systemSet:userSetting')">
         <span slot="title">会员相关设置</span>
       </el-menu-item>
@@ -80,34 +77,7 @@
 </template>
 
 <script>
-  // import SystemParameter from './SystemParameter/tab'
-  // import ClassManagement from './ClassManagement'
-  // import MembershipRelated from './MembershipRelated/tab'
-  // import RoomSetting from './RoomSetting/tab'
-  // import BellSpecialRoom from './BellSpecialRoom/tab'
-  // import ConsumerProjects from './ConsumerProjects'
-  // import ChannelManagement from './ChannelManagement'
-  // import AccountEntry from './AccountEntry/tab'
-  // import PriceSetting from './PriceSetting/tab'
-
-  // import RegimentPaymentTemplate from './RegimentPaymentTemplate'
-  // import PriceScheme from './PriceScheme'
-  // import {powerJudge} from '@/utils/permissionsOperation.js'
-  
   export default {
-    // components: {
-    //   SystemParameter,
-    //   ClassManagement,
-    //   MembershipRelated,
-    //   RoomSetting,
-    //   BellSpecialRoom,
-    //   ConsumerProjects,
-    //   ChannelManagement,
-    //   AccountEntry,
-    //   // RegimentPaymentTemplate,
-    //   // PriceScheme,
-    //   PriceSetting
-    // },
     data () {
       return {
         activeMenu:'',
@@ -123,24 +93,6 @@
       // this.activeName = this.$refs.checkTabs.panes[0].name
     },
     methods: {
-      // handleClick (tab, event) {
-      //   console.log(tab, event)
-      //   if(this.activeName == "channelManagement"){
-      //     var child = this.$refs.channelManagement
-      //     child.init()
-      //   }else if(this.activeName == "classManagement"){
-      //     var child = this.$refs.classManagement
-      //     child.init()
-      //   }else if(this.activeName == "consumerProjects"){
-      //     var child = this.$refs.consumerProjects
-      //     child.init()
-      //   }else if(this.activeName == 'eleven'){
-      //     this.$refs.priceSettingRef.init()
-      //   }
-      // },
-      // powerJudge(id){
-      //   return powerJudge(id);
-      // }
     }
   }
 </script>
