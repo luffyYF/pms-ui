@@ -27,6 +27,9 @@ export const listGroupApi = params => {
   return requestOa.get('/backend/attendanceGroup/list', { params: params })
 }
 
+/**
+ *  考勤组(班次组)表controller
+ */
 // 查找考勤组列表
 export const attendanceGroupList = params => {
   return requestOa.get('/backend/attendanceGroup/list', { params: params })
@@ -52,6 +55,9 @@ export const attendanceListSelect = params => {
   return requestOa.get('/backend/attendanceGroup/listSelect', { params: params })
 }
 
+/**
+ * 班次表controller
+ */
 //添加班次
 export const attendanceClassAdd = params => {
   return requestOa.post('/backend/attendanceClass/add', params)
@@ -59,6 +65,10 @@ export const attendanceClassAdd = params => {
 //查询班次列表
 export const attendanceClassList = params => {
   return requestOa.get('/backend/attendanceClass/list', { params: params })
+}
+//班次下拉列表
+export const attendanceClassSelect = params => {
+  return requestOa.get('/backend/attendanceClass/selectList', { params: params })
 }
 //班次详情
 export const attendanceClassDetail = params => {
@@ -68,5 +78,23 @@ export const attendanceClassDetail = params => {
 export const attendanceClassUpdate = params => {
   return requestOa.post('/backend/attendanceClass/update', params)
 }
+//删除班次
+export const attendanceClassDelete = params => {
+  return requestOa.get('/backend/attendanceClass/delete',  {params: params})
+}
 
-
+/**
+ *  排班计划日程安排表controller
+ */
+//查找排班 
+export const attendancePlanList = params => {
+  return requestOa.get('/backend/attendancePlan/list', { params: params })
+}
+//添加排班
+export const attendancePlanAdd = params => {
+  return requestOa.post('/backend/attendancePlan/add', params)
+}
+//添加排班
+export const attendancePlanDelete = params => {
+  return requestOa.post('/backend/attendancePlan/delete', params)
+}

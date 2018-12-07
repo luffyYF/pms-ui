@@ -75,6 +75,7 @@ import NightTrialRecord from '@/pages/operators/NightTrialRecord.vue'
 import MobileClientAccessAuthorization from '@/pages/operators/MobileClientAccessAuthorization.vue'
 import AttendanceGroupList from '@/pages/operators/attendanceManagement/AttendanceGroupList.vue'
 import AttendanceClassList from '@/pages/operators/attendanceManagement/AttendanceClassList'
+import AttendancePlanList from '@/pages/operators/attendanceManagement/AttendancePlanList'
 
 //前台交接班和查账
 import ReceiptsReportPage from '@/pages/reportCenter/shiftAndAudit/ReceiptsReport.vue'
@@ -295,7 +296,8 @@ export const constantRouterMap = [
           {path: '/operators/employeeManagement', component: EmployeeManagement, label: '员工管理'},
           {path: '/operators/nightTrialRecord', component: NightTrialRecord, label: '夜审记录查询'},
           {path: '/operators/attendanceClass', component: AttendanceClassList, label: '班次管理'},
-          {path: '/operators/attendanceGroupList', component: AttendanceGroupList, label: '排班管理'},
+          {path: '/operators/attendanceGroup', component: AttendanceGroupList, label: '排班管理'},
+          {path: '/operators/attendancePlan', component: AttendancePlanList, label: '排班'},
         ]
       },
       {

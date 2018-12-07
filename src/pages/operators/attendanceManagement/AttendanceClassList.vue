@@ -50,7 +50,7 @@
 <script>
   import {attendanceTypeMap} from '@/utils/orm'
   import Cookies from 'js-cookie'
-  import { attendanceClassList } from '@/api/oaApi'
+  import { attendanceClassList,attendanceClassDelete } from '@/api/oaApi'
   import AttendanceClassEdit from './AttendanceClassEdit'
 
   export default {
@@ -97,7 +97,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          attendanceGroupDelete({ id: id }).then(res => {
+          attendanceClassDelete({ id: id }).then(res => {
             this.$message({ type: 'success', message: res.sub_msg })
             this.listSearch()
           })
