@@ -82,6 +82,10 @@ export const attendanceClassUpdate = params => {
 export const attendanceClassDelete = params => {
   return requestOa.get('/backend/attendanceClass/delete',  {params: params})
 }
+//查找组-班次级联下拉列表
+export const attendanceClassCascaderList = params => {
+  return requestOa.get('/backend/attendanceClass/cascaderList',  {params: params})
+}
 
 /**
  *  排班计划日程安排表controller

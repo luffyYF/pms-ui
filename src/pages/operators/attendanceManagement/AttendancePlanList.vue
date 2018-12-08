@@ -3,11 +3,11 @@
 <template>
   <div class="content-body">
     <el-form ref="listQuery" :inline="true" :model="listQuery" size="mini" label-width="120px">
-      <el-form-item label="考勤组" prop="groupId">
+      <!-- <el-form-item label="考勤组" prop="groupId">
         <el-select v-model="listQuery.groupId" placeholder="请选择" @change="listSearch">
           <el-option v-for="(v,i) in groupList" :key="i" :label="v.groupName" :value="v.groupId"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="日期" prop="currDate">
         <el-date-picker
           v-model="listQuery.currDate"
@@ -42,9 +42,9 @@
           <template slot-scope="scope">
             <span v-if="classMap[scope.row[value.code]]">
               <el-popover trigger="hover" placement="top">
-                <span>{{timeMap[scope.row[value.code]]}}</span>
+                <span>{{classMap[scope.row[value.code]]['beginTime']}} - {{classMap[scope.row[value.code]]['endTime']}}</span>
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]}}</el-tag>
+                  <el-tag size="medium" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]['groupName']}} - {{classMap[scope.row[value.code]]['className']}}</el-tag>
                   <!-- <el-button style="color:red" type="text" icon="el-icon-delete" v-on:click.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)"></el-button> -->
                 </div>
               </el-popover>
@@ -87,21 +87,22 @@
         groupList: [],
         listQuery: {
           currDate:moment().format("YYYY-MM"),
-          groupId: null,
+          // groupId: null,
           pageNum: 1,
           pageSize: 10
         },
         total: 0,
         multipleSelection:[],
         classMap:{},//班次名称
-        timeMap:{},//班次时间
+        // timeMap:{},//班次时间
+        // timeMap:{},//组id
       }
     },
     mounted () {
       this.groupList = []
       attendanceListSelect({companyPk:Cookies.get('select_company_pk')}).then(res=>{
         this.groupList = res.data;
-        this.listQuery.groupId = this.groupList[0].groupId;
+        // this.listQuery.groupId = this.groupList[0].groupId;
         this.listSearch()
       })
     },
@@ -111,10 +112,11 @@
         this.classMap = {}
         this.timeMap = {}
         //查找班次列表
-        attendanceClassSelect({groupId: this.listQuery.groupId}).then(res=>{
+        attendanceClassSelect().then(res=>{
           res.data.forEach(item=>{
-            this.$set(this.classMap, item.classId, item.className)
-            this.$set(this.timeMap, item.classId, item.beginTime+'-'+item.endTime)
+            this.$set(this.classMap, item.classId, item)
+            // this.$set(this.classMap, item.classId, item.className)
+            // this.$set(this.timeMap, item.classId, item.beginTime+'-'+item.endTime)
           })
           this.planList();
         })
@@ -123,7 +125,7 @@
       planList() {
         let data = {
           date:this.listQuery.currDate+'-01',
-          groupId:this.listQuery.groupId,
+          // groupId:this.listQuery.groupId,
           companyPk:Cookies.get('select_company_pk')
         }
         this.header1 = []
@@ -151,7 +153,7 @@
         this.multipleSelection.forEach(item=>{
           users.push({userName:item.userName, userPk:item.userPk})
         })
-        this.$refs.planAddRef.showDialog(users, null, [moment().format("YYYY-MM-DD"),moment().format("YYYY-MM-DD")], this.listQuery.groupId)
+        this.$refs.planAddRef.showDialog(users, null, [moment().format("YYYY-MM-DD"),moment().format("YYYY-MM-DD")])
       },
       deleteClick (classId, userPk, day) {
         this.$confirm('将删除该排班, 是否继续?', '提示', {
@@ -195,9 +197,9 @@
             userName: row.userName
           }]
           let date = this.listQuery.currDate+'-'+(Array(2).join(0) + column.label).slice(-2)
-          this.$refs.planAddRef.showDialog(users,row[column.property], [date,date], this.listQuery.groupId)
+          let classId = row[column.property]
+          this.$refs.planAddRef.showDialog(users,classId , this.classMap[classId]['groupId'], [date,date], )
         }
-
       }
     }
   }
