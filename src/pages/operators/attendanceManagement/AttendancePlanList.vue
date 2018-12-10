@@ -42,9 +42,10 @@
           <template slot-scope="scope">
             <span v-if="classMap[scope.row[value.code]]">
               <el-popover trigger="hover" placement="top">
+                <span>{{classMap[scope.row[value.code]]['companyName']}}</span>
                 <span>{{classMap[scope.row[value.code]]['beginTime']}} - {{classMap[scope.row[value.code]]['endTime']}}</span>
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]['groupName']}} - {{classMap[scope.row[value.code]]['className']}}</el-tag>
+                  <el-tag size="medium" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]['className']}}</el-tag>
                   <!-- <el-button style="color:red" type="text" icon="el-icon-delete" v-on:click.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)"></el-button> -->
                 </div>
               </el-popover>
