@@ -1,7 +1,7 @@
 // 新增考勤日程
 <template>
   <el-dialog title="排班" :visible.sync="dialogVisible" width="500px" :close-on-click-modal="false" :before-close="handleClose">
-    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="80px" class="plan-form">
+    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="88px" class="plan-form">
       <el-form-item label="选择员工" prop="selectUsers">
         <el-select v-model="dataForm.selectUsers" multiple placeholder="请选择">
           <el-option
@@ -103,10 +103,10 @@
         //查找级联列表 组-班次
         attendanceClassCascaderList().then(res=>{
           this.cascaderArr = res.data
-          this.dataForm.selectedOptions=[groupId,classId]
+          if(groupId && classId){
+            this.dataForm.selectedOptions=[groupId,classId]
+          }
         })
-
-
       },
       handleClose () {
         this.dialogVisible = false

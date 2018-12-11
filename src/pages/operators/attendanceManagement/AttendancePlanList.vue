@@ -34,15 +34,15 @@
         style="width: 100%;"
         v-loading="loading">
         <!-- 需要映射的表 -->
-        <el-table-column type="selection" :selectable="disableCheck" width="55" fixed></el-table-column>
-        <el-table-column v-for="(value,index) in header1" :prop="value.code" :label="value.desc" :key="index" align="left" fixed></el-table-column>
+        <el-table-column type="selection" :selectable="disableCheck" width="58" fixed></el-table-column>
+        <el-table-column v-for="(value,index) in header1" :prop="value.code" :label="value.desc" :key="value.code" align="left" fixed></el-table-column>
         </el-table-column>
         
-        <el-table-column v-for="(value,index) in header2" :prop="value.code" :label="value.desc" :key="index" align="left" min-width="130">
+        <el-table-column v-for="(value,index) in header2" :prop="value.code" :label="value.desc" :key="value.code" align="left" min-width="90">
           <template slot-scope="scope">
             <span v-if="classMap[scope.row[value.code]]">
               <el-popover trigger="hover" placement="top">
-                <span>{{classMap[scope.row[value.code]]['companyName']}}</span>
+                <span>{{classMap[scope.row[value.code]]['companyName']}}</span> <br>
                 <span>{{classMap[scope.row[value.code]]['beginTime']}} - {{classMap[scope.row[value.code]]['endTime']}}</span>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]['className']}}</el-tag>
@@ -199,7 +199,8 @@
           }]
           let date = this.listQuery.currDate+'-'+(Array(2).join(0) + column.label).slice(-2)
           let classId = row[column.property]
-          this.$refs.planAddRef.showDialog(users,classId , this.classMap[classId]['groupId'], [date,date], )
+          let groupId =  classId ? this.classMap[classId]['groupId'] : null
+          this.$refs.planAddRef.showDialog(users, classId, groupId, [date,date],)
         }
       }
     }
