@@ -456,7 +456,9 @@ export default {
         }
         //初始化客单数据
         this.$nextTick(() => {
-          this.$refs.visitorForm.initGuestData(res.data.guestList, this.currGuestIndex)
+          if(this.$refs.visitorForm){
+            this.$refs.visitorForm.initGuestData(res.data.guestList, this.currGuestIndex)
+          }
         });
         //设置当前选中的客单,默认第一个
         this.currGuest = res.data.guestList[this.currGuestIndex]

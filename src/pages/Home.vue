@@ -186,16 +186,15 @@ export default {
     }
     
     this.validateToken();
-    // console.log(this.activeCompany);
   },
   data() {
     return {
       contInterval:null,
-      // routes: store.getters.permission_routers,
       collapsed: false,
       screenWidth: document.body.clientWidth,
       activeCompany: {},
       stompClient: null,
+      
     };
   },
   methods: {

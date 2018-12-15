@@ -1,7 +1,6 @@
 import axios from 'axios'
 import {Message, MessageBox} from 'element-ui'
 import store from '@/store'
-import {getToken, removeToken, removeRefreshToken} from './auth'
 import router from '@/router'
 
 // 创建axios实例

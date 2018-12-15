@@ -34,7 +34,7 @@ import DumbHouseTag from '@/pages/dumbHouse/tab.vue'
 import CommodityDeptTag from '@/pages/commodityDept/tab.vue'
 import StockTag from '@/pages/stock/tab.vue'
 import ConferenceRoomTag from '@/pages/conferenceRoom/tab.vue'
-import OperatorsTag from '@/pages/operators/tab.vue'
+
 import SystemSetTag from '@/pages/systemSet/tab.vue'
 import LinenTag from '@/pages/linen/tab.vue'
 
@@ -63,6 +63,7 @@ import Invoice from '@/pages/customerRelation/invoice/tab.vue'
 import PassengerInformationUploading from '@/pages/customerRelation/passengerInformationUploading/tab.vue'
 
 //操作员管理
+import OperatorsTag from '@/pages/operators/tab.vue'
 import Operators from '@/pages/operators/Operators.vue'
 import ModifyThePassword from '@/pages/operators/ModifyThePassword.vue'
 import LogBrowsing from '@/pages/operators/LogBrowsing.vue'
@@ -72,6 +73,9 @@ import EmployeeManagement from '@/pages/operators/EmployeeManagement.vue'
 import MACBindingSettings from '@/pages/operators/MACBindingSettings.vue'
 import NightTrialRecord from '@/pages/operators/NightTrialRecord.vue'
 import MobileClientAccessAuthorization from '@/pages/operators/MobileClientAccessAuthorization.vue'
+import AttendanceGroupList from '@/pages/operators/attendanceManagement/AttendanceGroupList.vue'
+import AttendanceClassList from '@/pages/operators/attendanceManagement/AttendanceClassList'
+import AttendancePlanList from '@/pages/operators/attendanceManagement/AttendancePlanList'
 
 //前台交接班和查账
 import ReceiptsReportPage from '@/pages/reportCenter/shiftAndAudit/ReceiptsReport.vue'
@@ -118,7 +122,6 @@ import StockSetUp from "@/pages/stock/stockSetUp/tab";
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
-import ClassManagement from '@/pages/systemSet/ClassManagement'
 import MembershipRelated from '@/pages/systemSet/MembershipRelated/tab'
 import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
 import BellSpecialRoom from '@/pages/systemSet/BellSpecialRoom/tab'
@@ -144,22 +147,6 @@ export const constantRouterMap = [
   {path: '/login', hidden: true, component: Login, name: '登录'},
   {path: '/404', hidden: true, component: NotFound, name: '404页面'},
   {path: '/classSelection', hidden: true,component: ClassSelection, name: '班次选择'},
-  // {
-  //   path: '/',
-  //   component: Home,
-  //   name: 'demo',
-  //   meta: {icon: 'fa-home', noCache: true},
-  //   hidden: false,
-  //   children: [
-  //     {path: '/tinymce', component: tinymce, name: '富文本编辑器'},
-  //     {path: '/form', component: FormPage, name: '表单'},
-  //     {path: '/data', component: DataPage, name: '数据列表'},
-  //     {path: '/echarts', component: EchartsPage, name: 'echarts统计图'},
-  //     {path: '/map', component: AMapDomePage, name: '高德地图'},
-  //     {path: '/tree', component: TreePage, name: '树结构数据'},
-  //     {path: '/address', component: AddressPage, name: '地址管理'}
-  //   ]
-  // },
   {
     path: '/',
     component: Home,
@@ -307,7 +294,10 @@ export const constantRouterMap = [
           {path: '/operators/logRflRecord',  component: LogRflRecord, label: '制卡日志'},
           // {path: '/operators/roleManagement', component: RoleManagement, label: '角色管理'},
           {path: '/operators/employeeManagement', component: EmployeeManagement, label: '员工管理'},
-          {path: '/operators/nightTrialRecord', component: NightTrialRecord, label: '夜审记录查询'}
+          {path: '/operators/nightTrialRecord', component: NightTrialRecord, label: '夜审记录查询'},
+          {path: '/operators/attendanceClass', component: AttendanceClassList, label: '班次管理'},
+          {path: '/operators/attendanceGroup', component: AttendanceGroupList, label: '排班管理'},
+          {path: '/operators/attendancePlan', component: AttendancePlanList, label: '排班'},
         ]
       },
       {
@@ -318,7 +308,6 @@ export const constantRouterMap = [
         hidden: false,
         children: [
           {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
-          {path: '/systemSet/shiftManage', component: ClassManagement, label: '班次管理'},
           {path: '/systemSet/userSetting',  component: MembershipRelated, label: '会员相关设置'},
           {path: '/systemSet/roomSetting', component: RoomSetting , label: '客房设置'},
           {path: '/systemSet/clockSpecial',  component: BellSpecialRoom, label: '钟点特殊房'},

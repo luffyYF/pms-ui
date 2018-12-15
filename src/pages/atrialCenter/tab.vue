@@ -24,7 +24,7 @@
       <el-menu-item index="/atrialCenter/AccountStatement" v-if="hasPerm('pms:menu:accountStatement')">
         <span slot="title">催账报表</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/atrialCenter/JointRealManage" v-if="powerJudge('1107')">
+      <!-- <el-menu-item index="/atrialCenter/JointRealManage" >
         <span slot="title">联房管理</span>
       </el-menu-item> -->
       <el-menu-item index="/reportCenter/ShiftReport" v-if="hasPerm('pms:menu:shiftReport')">
@@ -43,8 +43,6 @@
 </template>
 
 <script>
-  import {powerJudge} from '@/utils/permissionsOperation.js'
-
   export default {
     components: {},
     data () {
@@ -60,14 +58,11 @@
     },
     methods: {
       handleClick () {
-        //  console.log(this.$refs.atrialTabs)
+        // console.log(this.$refs.atrialTabs)
         // if(this.activeName=='fourth'){
         //   this.$refs.housekeepingRef.listData()
         // }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
     }
   }
 </script>

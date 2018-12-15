@@ -11,6 +11,8 @@
           <el-option label="退房未结" value="7"></el-option>
           <el-option label="结账离店" value="4"></el-option>
         </el-select>
+        订单描述：<el-input type="text" v-model="searchForm.name" size="mini"></el-input>
+        
         <el-button type="primary" size="mini" icon="el-icon-search" @click="search">查询</el-button>
       </div>
     </el-col>
@@ -20,7 +22,7 @@
           <h3>订单对账确认收账</h3>
         </div>
         <div class="tabs-contetn">
-          <el-table 
+          <el-table
           :data="orderTable" 
           @selection-change="handleSelectionChange"
           @expand-change="expandChange"
@@ -62,8 +64,15 @@
               </template>
             </el-table-column>
             <el-table-column prop="orderNo" label="订单编号"></el-table-column>
+            <el-table-column prop="name" label="订单描述"></el-table-column>
             <el-table-column prop="userName" label="预定人"></el-table-column>
             <el-table-column prop="userPhone" label="预定人手机号"></el-table-column>
+            <el-table-column prop="isTeam" label="是否团体">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isTeam=='Y'">是</span>
+                <span v-else>否</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
             <el-table-column prop="totalFree" label="房费"></el-table-column>
             <el-table-column prop="totalCommission" label="佣金"></el-table-column>
@@ -134,6 +143,7 @@ export default {
           moment().format("YYYY-MM-DD")
         ],
         status: ["4", "7"],
+        name:null,
         pageNum: 1,
         pageSize: 10
       },
@@ -181,6 +191,7 @@ export default {
         begin: this.searchForm.datepicker[0],
         end: this.searchForm.datepicker[1],
         status: this.searchForm.status.toString(),
+        name: this.searchForm.name,
         pageNum: this.searchForm.pageNum,
         pageSize: this.searchForm.pageSize
       };
