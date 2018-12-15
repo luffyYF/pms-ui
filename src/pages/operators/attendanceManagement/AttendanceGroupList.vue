@@ -5,7 +5,7 @@
     <el-form ref="listQuery" :inline="true" :model="listQuery" size="mini" label-width="120px">
       <el-form-item style="margin-left:10px;">
         <el-button type="primary" @click="listSearch(1)" icon="el-icon-search">搜索</el-button>
-        <el-button type="primary" @click="addClick">添加考勤组</el-button>
+        <el-button type="primary" @click="addClick" v-if="hasPerm('pms:attGroup:add')">添加班次组</el-button>
       </el-form-item>
     </el-form>
     <!--表格-->
@@ -35,8 +35,8 @@
         <el-table-column prop="createTime" label="创建时间" align="left"  show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" align="left" fixed="right">
           <template slot-scope="scope">
-            <el-button type="primary" @click="editClick(scope.row.groupId)" v-if="hasPerm('upms:permManage:editPerm')" size="mini">编辑</el-button>
-            <el-button type="danger" @click="deleteClick(scope.row.groupId)" v-if="hasPerm('upms:permManage:delPerm')" size="mini">删除</el-button>
+            <el-button type="primary" @click="editClick(scope.row.groupId)" v-if="hasPerm('pms:attGroup:modify')" size="mini">编辑</el-button>
+            <el-button type="danger" @click="deleteClick(scope.row.groupId)" v-if="hasPerm('pms:attGroup:delete')" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

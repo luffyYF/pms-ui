@@ -157,8 +157,8 @@
       </el-aside>
       <el-main>
         <el-row>
-          <div class="pattern-li" :class="classRoomStatusObject(item.roomStatus)" v-for="(item, index) in checkedFilter(numberFilter(roomList))">
-            <el-dropdown trigger="click" class="pattern-dropdown" :hide-on-click="true">
+          <div class="pattern-li" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)">
+            <el-dropdown trigger="click" class="pattern-dropdown" placement="bottom" >
               <div class="el-dropdown-link">
                 <div class="pattern-li-title">
                   <label class="rm">{{item.roomNumber}}</label>
@@ -166,41 +166,86 @@
                 </div>
                 <!-- 用户信息 -->
                 <div class="pattern-li-info">
-                  <!--  v-if="item.guestOrderPk" -->
-                  <template v-if="item.futureFlag=='Y'">
-                    <!-- 预抵客人信息-->
+                  <!-- <template v-if="item.futureFlag=='Y'">
+                    预抵客人信息
                     <label class="userinfo">{{item.futureInfo ? item.futureInfo.guestName : ''}}</label>
                     <label class="channelinfo">{{item.futureInfo ? item.futureInfo.channelTypeName : ''}}</label> 
                   </template>
                   <template v-if="item.guestOrderPk">
-                    <!-- 在住客人信息 -->
+                    在住客人信息 
                     <label class="userinfo">{{item.guestInfo ? item.guestInfo.guestName : ''}}</label>
                     <label class="channelinfo">{{item.guestInfo ? item.guestInfo.channelTypeName : ''}}</label>
-                  </template>
+                  </template> -->
+                  
+
+                  <label class="userinfo">{{item.guestName}}</label>
+                  <label class="channelinfo">{{item.channelName}}</label>
                 </div>
 
                 <div class="pattern-li-date" v-if="item.guestOrderPk">
-                  <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
-                  <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label>
+                  <!-- <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
+                  <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label> -->
+                  <label class="userinfo" v-if="item.guestBeginDate">入住：{{moment(item.guestBeginDate).format('MM-DD')}}</label><br>
+                  <label class="userinfo" v-if="item.guestEndDate">离开：{{moment(item.guestEndDate).format('MM-DD')}}</label><br>
                 </div>
 
               <!-- 状态图标 -->
                 <div class="pattern-li-details">
-                  <label class="detailsinfo" v-if="item.futureFlag=='Y'"><span class="bg-icon reserve_today"></span></label>
-                  <label class="detailsinfo" v-if="item.leaveFlag=='Y'"><span class="bg-icon reserve_leave"></span></label>
-                  <label class="detailsinfo" v-if="item.connectTwoFlag=='Y'"><span class="bg-icon relation"></span></label>
-                  <label class="detailsinfo" v-if="item.connectManyFlag=='Y'"><span class="bg-icon room_team"></span></label>
-                  <label class="detailsinfo" v-if="item.arrearsAmount<0" :title="'欠费金额：￥'+Math.abs(item.arrearsAmount)"><span class="bg-icon arrears"></span></label>
-                  <label class="detailsinfo" v-if="item.checkInType==1" title="钟点房"><span class="bg-icon clockroom"></span></label>
-                  <label class="detailsinfo" v-if="item.checkInType==2" title="特殊房"><span class="bg-icon special"></span></label>
-                  <label class="detailsinfo" v-if="item.checkInType==3" title="自用房"><span class="bg-icon selfuse"></span></label>
-                  <label class="detailsinfo" v-if="item.checkInType==4" title="免费房"><span class="bg-icon freeroom"></span></label>
-                  <!-- el-icon-time -->
-                  <!-- <label class="detailsprice"><i class="el-icon-tickets"></i></label> -->
+                  <el-popover
+                    placement="bottom"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    @show="iconHoverEven(index)">
+                    <div v-if="item.orderInfo">
+                      入住类型：<span>{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
+                      来源渠道：<span>{{item.orderInfo.guestPo.channelTypeName}}</span><br>
+                      客人姓名：<span>{{item.orderInfo.guestPo.guestName}}</span><br>
+                      客人手机：<span>{{item.orderInfo.guestPo.guestPhone}}</span><br>
+                      抵店时间：<span>{{item.orderInfo.guestPo.beginDate}}</span><br>
+                      抵店时间：<span>{{item.orderInfo.guestPo.endDate}}</span><br>
+                      房间价格：<span>￥{{item.orderInfo.guestPo.currPrice}}</span><br>
+                    </div>
+                    <!-- 关联类型 -->
+                    <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1"></label>
+                    <label slot="reference" class="detailsinfo relation" v-if="item.roomRelationType==2"></label>
+                    <label slot="reference" class="detailsinfo room_team" v-if="item.roomRelationType==3"></label>
+                  </el-popover>
+                  
+                  <el-popover
+                    placement="bottom"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    :content="'今天是'+item.guestName+'的生日'">
+                    <!-- 生日-->
+                    <label slot="reference" v-if="item.birthdayFlag==1" class="detailsinfo today_birthday"></label>
+                  </el-popover>
+
+                  <!-- 今天预抵 -->
+                  <label class="detailsinfo reserve_today" v-if="item.futureFlag=='Y'"></label>
+
+                  <!-- 预离 -->
+                  <label class="detailsinfo reserve_leave" v-if="item.leaveFlag=='Y'"></label>
+                  
+                  <el-popover
+                    placement="bottom"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    :content="'欠费金额：￥'+Math.abs(item.arrearsAmount)">
+                    <!-- 欠费-->
+                    <label slot="reference" class="detailsinfo arrears " v-if="item.arrearsAmount<0"></label>
+                  </el-popover>
+                  
+                  <label class="detailsinfo clockroom" v-if="item.checkInType==1" title="钟点房"></label>
+                  <label class="detailsinfo special" v-if="item.checkInType==2" title="特殊房"></label>
+                  <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
+                  <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
                 </div>
               </div>
               <!-- 下拉菜单操作 -->
-              <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li" >
+              <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li">
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED' 
                                                                       || item.roomStatus=='CLEAN_NOCHECK' 
                                                                       || item.roomStatus=='DIRTY' )
@@ -555,8 +600,8 @@
 </template>
 <script>
   import bus from '@/utils/bus'
-  import DialogCheckinVisible from './roomPattern/DialogVisible'
   import moment from 'moment'
+  import DialogCheckinVisible from './roomPattern/DialogVisible'
   import {checkInTypeMap} from '@/utils/orm'
   import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
@@ -566,13 +611,15 @@
     updateRoomStatus, 
     addRoomReason,
     delRoomReason, 
-    findRoomReason
+    findRoomReason,
+    loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
   import {listType} from '@/api/utils/pmsTypeController'
   export default {
     components: {DialogCheckinVisible},
     data() {
       return {
+        moment:moment,
         roomNumber: '',
         checkInTypeMap: checkInTypeMap,
         roomList: [],
@@ -613,27 +660,6 @@
         
         batchOccupancy: 'fastRoom',
         activeContract: 'addContract',
-        tableData: [{ 
-          roomLayout: '单身公寓',  
-          availableRoom: '425',
-          space: '12',
-          rentals: '87%'
-        }, {
-          roomLayout: '单身公寓',  
-          availableRoom: '425',
-          space: '12',
-          rentals: '87%'
-        }, {
-          roomLayout: '单身公寓',  
-          availableRoom: '425',
-          space: '12',
-          rentals: '87%'
-        }, {
-          roomLayout: '总计',  
-          availableRoom: '425',
-          space: '12',
-          rentals: '87%'
-        }],
         WakeData:[{
           Wakenumber:'',  
           Wakedate: '', 
@@ -683,14 +709,15 @@
       handleClick(tab, event) {
         console.log(tab, event);
       },
-      classRoomStatusObject(status) {// 控制房间的背景颜色
+      classRoomStatusObject(item) {// 控制房间的背景颜色
         return {
-          'occupy': status=='OCCUPY',
-          'dirty': status=='DIRTY',
-          'clean_nocheck': status=='CLEAN_NOCHECK',
-          'clean_checked': status=='CLEAN_CHECKED',
-          'repair_room': status=='REPAIR_ROOM',
-          'disable_room': status=='DISABLE_ROOM',
+          'occupy': item.roomStatus=='OCCUPY',
+          'dirty': item.roomStatus=='DIRTY',
+          'clean_nocheck': item.roomStatus=='CLEAN_NOCHECK',
+          'clean_checked': item.roomStatus=='CLEAN_CHECKED',
+          'repair_room': item.roomStatus=='REPAIR_ROOM',
+          'disable_room': item.roomStatus=='DISABLE_ROOM',
+          'connect-room': item.connectRoom
         }
       },
       closeOrderDialog() {
@@ -957,9 +984,27 @@
           }
         })
       },
-      simpleDate(date){
+      simpleDate(date) {
         return  moment(date).format("MM-DD")
       },
+      //图标悬浮显示订单信息
+      iconHoverEven(index) {
+        if(!this.roomList[index].orderInfo) {
+          loadOrderInfo({guestOrderPk:this.roomList[index].guestOrderPk}).then(res=>{
+            this.$set(this.roomList[index], 'orderInfo',res.data);
+          })
+        }
+      },
+      //点击房间
+      roomClick(item){
+        this.roomList.forEach(room=>{
+          this.$set(room, 'connectRoom', false);
+          //标识虚线框
+          if(room.orderPk!=null && room.orderPk!='' && item.orderPk==room.orderPk) {
+            this.$set(room, 'connectRoom', true);
+          }
+        })
+      }
     },
     mounted() {
       listType({typeMaster:'REPAIR'}).then(res=>{
@@ -1089,8 +1134,8 @@
   display: inline-flex;
   background: #fff;
   margin-right: 3px;
-  width: 15px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
 }
 .empty{ 
   /* 空房 */
@@ -1124,9 +1169,9 @@
   /* 预离房 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
-  background-position: -913px -19px;
-  width: 17px;
-  height:14px;
+  background-position: -913px -18px;
+  /* width: 16px;
+  height: 15px; */
   /* background-size: 523px 22px; */
 }
 .arrears{
@@ -1134,64 +1179,80 @@
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
   background-position: -335px -18px;
-  width: 17px;
-  height: 17px;
+  /* width: 16px;
+  height: 15px; */
 }
 .clockroom{
   /* 钟点房 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
   background-position: -10px -18px;
-  width: 17px;
-  height: 18px;
+  /* width: 16px;
+  height: 15px; */
 }
 .special{
   /* 特殊房 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
   background-position: -468px -18px;
-  width: 17px;
-  height: 17px;
+  /* width: 16px;
+  height: 15px; */
 }
 .selfuse{
   /* 自用房 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
-  background-position: -978px -19px;
-  width: 17px;
-  height: 14px;
+  background-position: -978px -18px;
+  /* width: 16px;
+  height: 15px; */
 }
 .freeroom{
   /* 免费房 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
-  background-position: -1018px -19px;
-  width: 17px;
-  height: 14px;
+  background-position: -1018px -18px;
+  /* width: 16px;
+  height: 15px; */
 }
 .reserve_today{
   /* 今日预抵 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
-  background-position: -788px -19px;
-  width: 17px;
-  height: 14px;
+  background-position: -788px -18px;
+  /* width: 16px;
+  height: 15px; */
+}
+.reserve_single{
+  /* 单人预定 */
+  background: url('../../assets/image/room-status/room_status.png');
+  background-repeat: no-repeat;
+  background-position: -880px -18px;
+  /* width: 16px;
+  height: 15px; */
+}
+.today_birthday{
+  /* 生日 */
+  background: url('../../assets/image/room-status/room_status.png');
+  background-repeat: no-repeat;
+  background-position: -68px -18px;
+  /* width: 16px;
+  height: 15px; */
 }
 .room_team{
   /* 团队 */ 
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
-  background-position: -119px -19px;
-  width: 17px;
-  height: 14px;
+  background-position: -119px -18px;
+  /* width: 16px;
+  height: 15px; */
 }
 .relation{
   /* 连房 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
-  background-position: -649px -19px;
-  width: 17px;
-  height: 14px;
+  background-position: -649px -18px;
+  /* width: 16px;
+  height: 15px; */
 }
 .from-select{
   margin-top: 10px;
@@ -1199,7 +1260,6 @@
 .real-state-li span{
   margin-left: 5px;
 }
-
 
 .el-main{
   position: absolute;
@@ -1414,5 +1474,18 @@
     left: 290px;
     width: calc(100% - 290px);
     height: calc(100% - 135px);
+}
+.detailsinfo{
+  cursor: pointer;
+  float:left;
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+}
+.el-dropdown-link{
+  height: 70px;
+}
+.connect-room{
+  border: 2px red dashed;
 }
 </style>
