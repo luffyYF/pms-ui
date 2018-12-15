@@ -16,6 +16,12 @@ export const updateApi = params => {
 export const deleteApi = params => {
   return requestUpms.get('/backend/invoiceInfo/delete', { params: params })
 }
+
+// 详细数据by订单主键
+export const detailByOrderPk = params => {
+  return requestUpms.get('/backend/invoiceInfo/detailByOrderPk', { params: params })
+}
+
 // 详细数据
 export const detailApi = params => {
   return requestUpms.get('/backend/invoiceInfo/detail', { params: params })

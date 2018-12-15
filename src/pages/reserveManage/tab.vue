@@ -13,7 +13,7 @@
         <span slot="title">团队预定</span>
       </el-menu-item>
       <el-menu-item index="/reserveManage/listReserve" v-if="hasPerm('pms:menu:listReserve')">
-        <span slot="title">订单列表</span>
+        <span slot="title">预定订单</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
