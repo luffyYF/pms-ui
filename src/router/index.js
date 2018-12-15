@@ -30,7 +30,6 @@ import TeamSearch from '@/pages/checkInManage/TeamSearch.vue'
 import CustomerRelationTag from '@/pages/customerRelation/tab.vue'
 import SmsMarketingTag from '@/pages/smsMarketing/tab.vue'
 import ReportCenterTag from '@/pages/reportCenter/tab.vue'
-import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
 import DumbHouseTag from '@/pages/dumbHouse/tab.vue'
 import CommodityDeptTag from '@/pages/commodityDept/tab.vue'
 import StockTag from '@/pages/stock/tab.vue'
@@ -127,6 +126,13 @@ import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
 import ChannelManagement from '@/pages/systemSet/ChannelManagement'
 import AccountEntry from '@/pages/systemSet/AccountEntry/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
+
+// 财务稽核
+import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
+import BillChecking from '@/pages/financialAudit/BillChecking'
+import BillCheckingLog from '@/pages/financialAudit/billCheckingLog/BillCheckingLog'
+import BillPostilLog from '@/pages/financialAudit/billPostilLog'
+import InvoiceList from '@/pages/financialAudit/invoiceManage/invoiceList.vue'
 
 Vue.use(Router)
 /**
@@ -277,7 +283,11 @@ export const constantRouterMap = [
         name: '财务稽核', 
         hidden: false,
         children: [
-          {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
+          {path: '/financialAudit/billChecking', component: BillChecking, label: '订单对账'},
+          {path: '/financialAudit/billCheckingLog', component: BillCheckingLog, label: '对账记录'},
+          {path: '/financialAudit/billPostilLog', component: BillPostilLog, label: '账单批注记录'},
+          {path: '/financialAudit/InvoiceList', component: InvoiceList, label: '发票管理'},
+          // {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
         ]
       },
       {path: '/dumbHouse', component: DumbHouseTag, name: '哑房账', hidden: false},

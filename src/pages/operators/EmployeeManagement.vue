@@ -2,16 +2,26 @@
   <div class="content-body">
     <div v-if="!showTabFlag">
         <span class="title-span">员工管理</span>
-        <el-button @click="addRow(userList)" type="primary" size="mini">添加员工</el-button>
+        <!-- <el-button @click="addRow(userList)" type="primary" size="mini">添加员工</el-button> -->
         <el-button @click="selectUserList" type="primary"  icon="el-icon-refresh" size="mini">刷新</el-button>
         <hr>
         <el-form :inline="true" size="mini" :model="selectUserForm" class="demo-form-inline">
           <el-form-item label="员工姓名">
             <el-input v-model="selectUserForm.userName" placeholder="员工姓名" clearable></el-input>
           </el-form-item>
-          <el-form-item label="操作员">
-            <el-input v-model="selectUserForm.userAccount" placeholder="操作员" clearable></el-input>
+          <el-form-item label="员工状态">
+            <el-select size="mini" v-model="selectUserForm.state" placeholder="请选择状态">
+              <el-option
+                v-for="item in jabOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
+          <!-- <el-form-item label="操作员">
+            <el-input v-model="selectUserForm.userAccount" placeholder="操作员" clearable></el-input>
+          </el-form-item> -->
           <el-form-item>
             <el-button type="primary" @click="conditionalQuery">查询</el-button>
           </el-form-item>
@@ -24,11 +34,11 @@
           v-loading="loading"
           style="width: 100%">
           <el-table-column
-            prop="userCode"
+            prop="employeeNo"
             align="center"
             label="员工编号">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.userCode" disabled size="mini" ></el-input>
+              <el-input v-model="scope.row.employeeNo" disabled size="mini" ></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -77,11 +87,11 @@
             </template>
           </el-table-column> -->
           <el-table-column
-            prop="marriage"
+            prop="state"
             align="center"
             label="员工状态">
             <template slot-scope="scope">
-              <span>{{scope.row.jobType==1?'离职':'在职'}}</span>
+              <span>{{scope.row.state==1?'在职':'离职'}}</span>
               <!-- <el-input v-model="scope.row.name" disabled size="mini" placeholder=""></el-input> -->
             </template>
           </el-table-column>
@@ -91,10 +101,10 @@
             align="center"
             width="180">
             <template slot-scope="scope">
-              <el-button v-if="scope.row.userPk == ''" type="text" size="small" @click="addUser(scope.row)">保存</el-button>
-              <el-button v-if="scope.row.userPk != ''" type="text" size="small" @click="saveUserModify(scope.row)">保存</el-button>
-              <el-button v-if="scope.row.userPk != ''" @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="deleteRow(scope.$index,userList,scope.row)" type="text" size="small"> 移除</el-button>
+              <!-- <el-button v-if="scope.row.userPk == ''" type="text" size="small" @click="addUser(scope.row)">保存</el-button> -->
+              <el-button v-if="scope.row.userPk != ''" type="text" size="small" @click="saveUserModify(scope.row)">修改</el-button>
+              <!-- <el-button v-if="scope.row.userPk != ''" @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button> -->
+              <!-- <el-button @click="deleteRow(scope.$index,userList,scope.row)" type="text" size="small"> 移除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -594,6 +604,7 @@
 
 <script>
 import { pmsUserAdd, pmsUserDel, pmsUserList, pmsUserUpdate } from '../../api/operators/pmsUserController'
+import { listApi, updateApi } from '@/api/oaApi'
 export default {
   components: {},
   created(){
@@ -605,7 +616,8 @@ export default {
     return {
       selectUserForm:{
         userName:'',
-        userAccount:''
+        userAccount:'',
+        state: 1,
       },
       userList:[],
       sexOptions: [
@@ -621,8 +633,8 @@ export default {
         {value: 2, label: "离婚"}
       ],
       jabOptions:[
-        {value:0,label:'在职'},
-        {value:1,label:'离职'}
+        {value:0,label:'离职'},
+        {value:1,label:'在职'}
       ],
       buyer:true,
       director:true,
@@ -701,16 +713,20 @@ export default {
   methods: {
     //查找员工列表
     selectUserList(){
-      var param = {};
+      var param = {
+        companyPk: JSON.parse(localStorage.getItem("current_logon_company")).companyPk,
+        userName: this.selectUserForm.userName,
+        state: this.selectUserForm.state,
+      };
       this.loading = true;
-      console.log(arguments);
-      if(arguments[0] != 'query') {
-        this.selectUserForm.userName = '';
-        this.selectUserForm.userAccount = '';
-      }
-      param.userName = this.selectUserForm.userName;
-      param.userAccount = this.selectUserForm.userAccount;
-      pmsUserList(param).then(res => {
+      // console.log(arguments);
+      // if(arguments[0] != 'query') {
+      //   this.selectUserForm.userName = '';
+      //   this.selectUserForm.userAccount = '';
+      // }
+      // param.userName = this.selectUserForm.userName;
+      // param.userAccount = this.selectUserForm.userAccount;
+      listApi(param).then(res => {
         this.loading = false;
         if(res.code == 1) {
           this.userList = res.data;
@@ -723,12 +739,12 @@ export default {
     //保存修改
     saveUserModify(row){
       let data = {
-        userPk: row.userPk,
+        userPkno: row.userPkno,
         userName: row.userName,
         sexFlag: row.sexFlag,
         userPhone: row.userPhone
       }
-      pmsUserUpdate(data).then(res => {
+      updateApi(data).then(res => {
         if(res.code == 1) {
           this.$message({
             showClose: true,

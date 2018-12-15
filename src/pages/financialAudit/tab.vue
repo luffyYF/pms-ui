@@ -1,6 +1,6 @@
 <template>
   <div class="height-programme-one">
-    <el-tabs v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
+    <!-- <el-tabs v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
       <el-tab-pane label="历史换房报表" name="first" class="aLayerOfPage" v-if="powerJudge('1801')">
         <history-exchange-houses/>
       </el-tab-pane>
@@ -19,43 +19,45 @@
       <el-tab-pane label="营业收入上缴" name="sixth" class="aLayerOfPage" v-if="powerJudge('1806')">
         <business-income-paid/>
       </el-tab-pane>
-    </el-tabs>
+    </el-tabs> -->
+    <el-menu ref="financialMenu" :default-active="activeMenu" mode="horizontal" :router="true" class="el-menu-vertical-demo">
+      <el-menu-item index="/financialAudit/billChecking" v-if="hasPerm('pms:finance:checking')">
+        <span slot="title">订单对账</span>
+      </el-menu-item>
+      <el-menu-item index="/financialAudit/billCheckingLog" v-if="hasPerm('pms:finance:checkingLog')">
+        <span slot="title">收账记录</span>
+      </el-menu-item>
+      <el-menu-item index="/financialAudit/billPostilLog" v-if="hasPerm('pms:finance:postilLog')">
+        <span slot="title">账单批注记录</span>
+      </el-menu-item>
+      <el-menu-item index="/financialAudit/InvoiceList" v-if="hasPerm('pms:finance:invoiceManage')">
+        <span slot="title">发票管理</span>
+      </el-menu-item>
+    </el-menu>
+    <el-col class="menu-content" :span="24">
+      <transition name="el-fade-in-linear">
+        <router-view></router-view>
+      </transition>
+    </el-col>
   </div>
 </template>
 
 <script>
-  import HistoryExchangeHouses from './HistoryExchangeHouses'
-  import PunchingSubtraction from './PunchingSubtraction'
-  import RentContractReport from './RentContractReport'
-  import DailyRentalHourRoom from './DailyRentalHourRoom'
-  import HistoricalDeparture from './HistoricalDeparture'
-  import BusinessIncomePaid from './BusinessIncomePaid/tab'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
-  export default {
-     components: {
-       HistoryExchangeHouses,
-       PunchingSubtraction,
-       RentContractReport,
-       DailyRentalHourRoom,
-       HistoricalDeparture,
-       BusinessIncomePaid
-     },
-    data () {
+export default {
+  data () {
       return {
-        activeMenu: ''
+        activeMenu:''
       }
     },
     methods: {
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
     },
     mounted(){
-      //设置第一个不被隐藏的el-tab-pane为激活状态
-      // this.activeName = this.$refs.checkTabs.panes[0].name
+      let routerPath = this.$refs.financialMenu.$children[0].$options.propsData.index;
+      this.activeMenu = routerPath
+      this.$router.push(routerPath);
     },
-  }
+};
 </script>

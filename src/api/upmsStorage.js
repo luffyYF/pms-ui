@@ -111,6 +111,14 @@ export const outInventoryInfo = params => {
 }
 
 /**
+ * 查看出货信息和详细
+ * @param params
+ */
+export const inventoryOutInfo = params => {
+  return requestUpms.get('/backend/ckApplyForm/inventoryOutInfo',{params:params})
+}
+
+/**
  * 确认收货
  * @param params
  */

@@ -31,9 +31,9 @@
           guestList: [],
           formAddBill: {
             projectPk:'',
-            guestOrderPk: null,  
+            guestOrderPk: null,
             channelTypePk: null,
-            projectName: '',  
+            projectName: '',
             consumptionAmount: '',
             remark: '',
             payment: '0',
@@ -180,12 +180,12 @@
             this.$message({type:'warning', message:'请选择支付方式'})
             return
           }
-          if(formAddBill.payment=='5'){//是选择AR帐
-            if(!formAddBill.channelTypePk){
-              this.$message({type:'warning', message:'请选择渠道类型'})
-              return
-            }
-          }
+          // if(formAddBill.payment=='5'){//是选择AR帐
+          //   if(!formAddBill.channelTypePk){
+          //     this.$message({type:'warning', message:'请选择渠道类型'})
+          //     return
+          //   }
+          // }
           if(!formAddBill.consumptionAmount){
             this.$message({type:'warning', message:'请输入消费金额'})
             return

@@ -40,20 +40,10 @@
       <el-table-column prop="applyNo" label="货单编号"> </el-table-column>
       <el-table-column prop="oaApplyNo" label="OA申请单号"> </el-table-column>
       <el-table-column prop="userName" label="操作人"> </el-table-column>
-      <el-table-column prop="approvalStatus" label="审批状态">
+      <el-table-column prop="approvalStatus" label="状态">
         <template slot-scope="scope">
-          <span>{{approvalStatusMap[scope.row.approvalStatus]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="status" label="申领状态">
-        <template slot-scope="scope">
-          <span>{{outStatusMap[scope.row.status]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="isConfirm" label="确认收货">
-        <template slot-scope="scope">
-          <span v-if="scope.row.outId && scope.row.isConfirm==1">已确认</span>
-          <span v-else>未确认</span>
+          <span v-if="scope.row.approvalStatus != 1">{{approvalStatusMap[scope.row.approvalStatus]}}</span>
+          <span v-else>{{outStatusMap[scope.row.status]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="申请时间">
@@ -66,10 +56,10 @@
           <el-button type="primary" size="mini" @click="clickDetail(scope.row)">详细</el-button>
 
           <template v-if="scope.row.approvalStatus == 1">
-            <el-button type="success" size="mini" @click="clickTake(scope.row)" v-if="scope.row.outStatus==2">入库完成</el-button>
-            <el-button type="primary" size="mini" @click="clickTake(scope.row)" v-else-if="scope.row.isConfirm==1">入库</el-button>
+            <el-button type="primary" size="mini" @click="clickTake(scope.row.applyId, 0, null)" v-if="scope.row.status>0 && scope.row.confirmSum > 0">待收货（{{scope.row.confirmSum}}）</el-button>
+            <el-button type="primary" size="mini" @click="clickTake(scope.row.applyId, 1, 0)" v-if="scope.row.statusSum > 0">待入库（{{scope.row.statusSum}}）</el-button>
+            <el-button type="success" size="mini" @click="clickTake(scope.row.applyId, 1, 2)" v-if="scope.row.inSum > 0">查看</el-button>
             <el-button type="primary" size="mini" :disabled="true" v-else-if="scope.row.status==0">等待出库</el-button>
-            <el-button type="primary" size="mini" @click="clickTake(scope.row)" v-else-if="scope.row.status>0">确认收货</el-button>
           </template>
 
           <el-button type="danger" size="mini" @click="cancelApply(scope.row.oaApplyNo)" v-if="scope.row.approvalStatus==0">取消申请</el-button>
@@ -126,44 +116,56 @@
     </el-dialog>
 
     <!-- 出库详细 -->
-    <el-dialog title="出库详细" :visible.sync="dialogVisible2" width="800px">
-      <div class="forminfo">
-        <el-row>
-          <el-col :span="12">货单编号：{{outForm.inventoryNo}} </el-col>
-          <el-col :span="12">收货确认：{{outForm.isConfirm==1?'已收货':'未确认'}}</el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">操作人：{{outForm.userName}} </el-col>
-          <el-col :span="12">出货时间：{{outForm.createTime}}</el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">入库状态：{{inStatusMap[outForm.status]}} </el-col>
-        </el-row>
-      </div>
-      <el-table :data="outDetails" height="250" border style="width: 100%">
-        <el-table-column prop="inventoryNo" label="货物编号">
+    <el-dialog title="出库详细" :visible.sync="dialogVisible2" width="1000px">
+      <el-table :data="outData" height="550" border style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-table :data="props.row.details" border style="width: 100%">
+              <el-table-column prop="inventoryNo" label="货物编号">
+              </el-table-column>
+              <el-table-column prop="inventoryName" label="货物名称">
+              </el-table-column>
+              <el-table-column prop="shortName" label="简称">
+              </el-table-column>
+              <el-table-column prop="typeName" label="货物类型">
+              </el-table-column>
+              <el-table-column prop="price" label="货物单价">
+              </el-table-column>
+              <el-table-column prop="unit" label="单位">
+              </el-table-column>
+              <el-table-column prop="spec" label="规格">
+              </el-table-column>
+              <el-table-column prop="amount" label="货物数量">
+              </el-table-column>
+              <el-table-column prop="remark" label="备注">
+              </el-table-column>
+            </el-table>
+          </template>
         </el-table-column>
-        <el-table-column prop="inventoryName" label="货物名称">
+        <el-table-column prop="inventoryNo" label="出库编号">
         </el-table-column>
-        <el-table-column prop="shortName" label="简称">
+        <el-table-column prop="companyName" label="出库公司">
         </el-table-column>
-        <el-table-column prop="typeName" label="货物类型">
+        <el-table-column prop="userName" label="操作员">
         </el-table-column>
-        <el-table-column prop="price" label="货物单价">
+        <el-table-column prop="isConfirm" label="收货状态">
+          <template slot-scope="scope">
+            <span>{{scope.row.isConfirm == 0 ? '未收货' : '已收货'}}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="unit" label="单位">
+        <el-table-column prop="createTime" label="出库时间">
         </el-table-column>
-        <el-table-column prop="spec" label="规格">
-        </el-table-column>
-        <el-table-column prop="amount" label="货物数量">
-        </el-table-column>
-        <el-table-column prop="remark" label="备注">
+        <el-table-column label="操作" min-width="48" v-if="status != 2">
+          <template slot-scope="scope">
+            <el-button type="primary" @click="clickOutConfirm(scope.row.outId)" v-if="scope.row.isConfirm==0" size="mini">确认收货</el-button>
+            <el-button type="primary" @click="clickToInventoryIn(scope.row.outId)" v-if="scope.row.isConfirm==1 && scope.row.status<2" size="mini">入库</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="clickOutConfirm(outForm.outId)" v-if="outForm.isConfirm==0" size="mini">确认收货</el-button>
-        <el-button type="primary" @click="clickToInventoryIn(outForm.outId)" v-if="outForm.isConfirm==1 && outForm.status<2" size="mini">入库</el-button>
-        <el-button @click="dialogVisible2 = false" size="mini">取 消</el-button>
+        <!-- <el-button type="primary" @click="clickOutConfirm(outForm.outId)" v-if="outForm.isConfirm==0" size="mini">确认收货</el-button>
+        <el-button type="primary" @click="clickToInventoryIn(outForm.outId)" v-if="outForm.isConfirm==1 && outForm.status<2" size="mini">入库</el-button> -->
+        <el-button @click="dialogVisible2 = false" size="mini">关 闭</el-button>
       </span>
     </el-dialog>
     
@@ -174,7 +176,7 @@
 import moment from "moment";
 import Cookies from "js-cookie";
 import { approvalStatusMap, outStatusMap,inStatusMap } from "@/utils/orm";
-import { applyList, applyDetailList,outInventoryInfo,outConfirm } from "@/api/upmsStorage";
+import { applyList, applyDetailList,inventoryOutInfo,outConfirm } from "@/api/upmsStorage";
 import { cancelApply } from "@/api/oaApi";
 
 
@@ -195,15 +197,15 @@ export default {
         companyPk: Cookies.get("select_company_pk")
       },
       currApplyForm:{},
-      outForm:{},//出货单
-      outDetails:[],//出货详细
+      outData:[],//出货单及详细
       tableData: [],
       detailTableData:[],
       pickerTime: "",
       cascaderList: [],
       pageNum: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
+      status: 0,
     };
   },
   methods: {
@@ -250,12 +252,11 @@ export default {
       this.dialogVisible = true;
     },
     //查看收货
-    clickTake(row){
-      this.outForm = {};
-      this.outDetails = [];
-      outInventoryInfo({applyId:row.applyId}).then(res=>{
-        this.outForm = res.data.invOut;
-        this.outDetails = res.data.outDetails;
+    clickTake(applyId, isConfirm, status){
+      this.status = status;
+      this.outData = [];
+      inventoryOutInfo({applyId: applyId, isConfirm: isConfirm, status: status}).then(res=>{
+        this.outData = res.data;
       })
       this.dialogVisible2 = true;
     },

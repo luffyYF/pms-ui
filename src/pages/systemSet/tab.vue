@@ -54,9 +54,9 @@
       <el-menu-item index="/systemSet/roomSetting" v-if="hasPerm('pms:systemSet:roomSetting')">
         <span slot="title">客房设置</span>
       </el-menu-item>
-      <el-menu-item index="/systemSet/clockSpecial" v-if="hasPerm('pms:systemSet:clockSpecial')">
+      <!-- <el-menu-item index="/systemSet/clockSpecial" v-if="hasPerm('pms:systemSet:clockSpecial')">
         <span slot="title">钟点特殊房</span>
-      </el-menu-item>
+      </el-menu-item> -->
       <el-menu-item index="/systemSet/settleSetting" v-if="hasPerm('pms:systemSet:consItemSetting')">
         <span slot="title">消费项目设置</span>
       </el-menu-item>

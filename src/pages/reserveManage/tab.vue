@@ -4,7 +4,7 @@
       :default-active="activeMenu"
       mode="horizontal"
       ref="reserveMenu"
-      :router=true
+      :router="true"
       class="el-menu-vertical-demo">
       <el-menu-item index="/reserveManage/addReserve" v-if="hasPerm('pms:menu:addReserve')">
         <span slot="title">新增预定</span>
@@ -13,7 +13,7 @@
         <span slot="title">团队预定</span>
       </el-menu-item>
       <el-menu-item index="/reserveManage/listReserve" v-if="hasPerm('pms:menu:listReserve')">
-        <span slot="title">订单列表</span>
+        <span slot="title">预定订单</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
@@ -25,9 +25,7 @@
 </template>
 
 <script>
-  import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
-    components: {},
     data () {
       return {
         activeMenu:''
@@ -37,9 +35,6 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-       powerJudge(id){
-        return powerJudge(id);
-      }
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
