@@ -27,13 +27,13 @@
       <el-menu-item index="/operators/nightTrialRecord" v-if="hasPerm('pms:menu:nightAuditRecord')">
         <span slot="title">夜审记录查询</span>
       </el-menu-item>
-      <el-menu-item index="/operators/attendancePlan">
+      <el-menu-item index="/operators/attendancePlan" v-if="hasPerm('pms:menu:attendPlan')">
         <span slot="title">排班</span>
       </el-menu-item>
-      <el-menu-item index="/operators/attendanceClass">
+      <el-menu-item index="/operators/attendanceClass" v-if="hasPerm('pms:menu:attendanceClass')">
         <span slot="title">班次管理</span>
       </el-menu-item>
-      <el-menu-item index="/operators/attendanceGroup">
+      <el-menu-item index="/operators/attendanceGroup" v-if="hasPerm('pms:menu:attendanceGroup')">
         <span slot="title">班次组管理</span>
       </el-menu-item>
     </el-menu>

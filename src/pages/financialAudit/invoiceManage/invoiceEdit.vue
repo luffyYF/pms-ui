@@ -9,7 +9,8 @@
         <h5 class="info-title">订单信息</h5>
           <el-form ref="orderForm" :inline="true" :model="orderForm" size="mini" label-width="100px" :rules="orderRules">
             <el-form-item label="订单编号" prop="orderNo" class="width-46">
-              <el-input size="small" v-model="orderForm.orderNo" type="text" class="width-180" @change="handelOrderChange" :readonly="dataForm.status != 0"/>
+              <!-- :readonly="dataForm.status != 0" -->
+              <el-input size="small" v-model="orderForm.orderNo" type="text" class="width-180" @change="handelOrderChange" />
             </el-form-item>
             <el-form-item label="订单状态" prop="orderStatus" class="width-46">
               <el-input size="small" v-model="orderForm.orderStatus" type="text" class="width-180" readonly/>
@@ -74,13 +75,20 @@
       <el-row>
         <el-col :span="24" class="bg-reserve">
           <h5 class="info-title">收件信息</h5>
+            <el-form-item label="收货方式" prop="receivingType" class="width-46">
+                <el-select v-model="dataForm.receivingType" placeholder="请选择收货方式" size="small" class="width-172" :disabled="dataForm.status != 0">
+                <el-option label="快递到付" key="0" value="0"></el-option>
+                <el-option label="电子邮箱" key="1" value="1"></el-option>
+                <el-option label="自取" key="2" value="2"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="收件人姓名" prop="addresseeName" class="width-46">
               <el-input size="small" v-model="dataForm.addresseeName" type="text" class="width-180" :readonly="dataForm.status != 0"/>
             </el-form-item>
             <el-form-item label="收件人电话" prop="addresseePhone" class="width-46">
               <el-input size="small" v-model="dataForm.addresseePhone" type="text" class="width-180" :readonly="dataForm.status != 0"/>
             </el-form-item>
-            <el-form-item label="收件人邮箱" prop="addresseeEmail" class="width-46">
+            <el-form-item label="收件人邮箱" prop="addresseeEmail" class="width-46" v-if="dataForm.receivingType == '1' ">
               <el-input size="small" v-model="dataForm.addresseeEmail" type="text" class="width-180" :readonly="dataForm.status != 0"/>
             </el-form-item>
             <el-form-item label="收件人地址" prop="addresseeAddress" class="width-46">
@@ -103,7 +111,7 @@
     </el-form>
 
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="dataForm.invoiceId == null && dataForm.status == 0">保 存</el-button>
+      <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="dataForm.invoiceId == null && dataForm.status == 0">保 存   </el-button>
       <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="dataForm.invoiceId != null && dataForm.status == 0">修 改</el-button>
       <el-button type="success" size="small" :loading="loading" @click="submitData" v-if="dataForm.status == 0">提 交</el-button>
       <el-button @click="dialogVisible = false" size="small" v-else>关 闭</el-button>
@@ -112,7 +120,7 @@
 </template>
 
 <script>
-  import { addApi, detailApi, updateApi, getInvoiceTitleApi } from '@/api/upmsInvoiceInfo'
+  import { addApi, detailApi, updateApi, getInvoiceTitleApi,detailByOrderPk } from '@/api/upmsInvoiceInfo'
   import { getPmsOrderByNo, findOrder } from '@/api/order/pmsOrderController'
 
   class InvoiceInfo {
@@ -220,10 +228,11 @@
           userName: null,
           userPhone: null,
         },
+        isOrderPage:false
       }
     },
     methods: {
-      showDialog (id) {
+      showDialog (id,orderNo) {
         this.dialogVisible = true
         if (id) {
           detailApi({ id: id }).then(res => {
@@ -235,14 +244,20 @@
               this.orderForm.orderStatus= (res.data.order.orderStatus == 'LEAVENOPAY' ? '退房未结' : '结账离店');
             })
           })
-        } else {
+        }else {
           this.dataForm = new InvoiceInfo()
-          this.orderForm = {
-            orderPk: null,
-            orderStatus: null,
-            orderNo: null,
-            userName: null,
-            userPhone: null,
+          if(orderNo){
+            this.isOrderPage = true;
+            this.orderForm.orderNo = orderNo
+            this.handelOrderChange(orderNo);
+          }else{
+            this.orderForm = {
+              orderPk: null,
+              orderStatus: null,
+              orderNo: null,
+              userName: null,
+              userPhone: null,
+            }
           }
           this.invoiceTitleId = null
           this.invoiceTitleStatus = 0
@@ -266,7 +281,6 @@
             tempData = item;
           }
         });
-
         if (tempData) {
           this.dataForm.invoiceTitle= tempData.invoiceTitle;
           this.dataForm.taxpayerIdNo= tempData.taxpayerIdNo;
@@ -292,9 +306,35 @@
             this.orderForm.orderStatus = (res.data[0].orderStatus == 'LEAVENOPAY' ? '退房未结' : '结账离店');
             this.dataForm.orderId = res.data[0].orderPk;
             this.dataForm.orderNo = res.data[0].orderNo;
+            detailByOrderPk({ orderPk: this.orderForm.orderPk }).then(res => {
+              if(res.data){
+                this.dataForm.invoiceInfo = res.data
+                this.invoiceTitleId = res.data.invoiceTitle
+                this.invoiceTitleStatus = 1
+              }else{
+                this.dataForm.status = 0;
+                this.dataForm.receivingType = "0";
+                this.dataForm.invoiceId = null;
+                this.dataForm.addresseeName = null;
+                this.dataForm.addresseePhone = null;
+                this.dataForm.addresseeEmail = null;
+                this.dataForm.addresseeAddress = null;
+                this.dataForm.invoiceAmount = null;
+                this.invoiceTitleStatus = 0;
+                this.dataForm.invoiceTitleId = null;
+                this.dataForm.taxpayerIdNo = null;
+                this.dataForm.unitPhone = null;
+                this.dataForm.unitAddress = null;
+                this.dataForm.openingBank = null;
+                this.dataForm.openingAccount = null;
+              }
+            })
           } else {
             this.$message.warning("订单编号为" + val + "的订单不存在，请重新输入新的订单编号");
-            this.orderForm = {};
+            this.orderForm = {
+              orderNo:val
+            };
+            this.dataForm = new InvoiceInfo();
             this.dataForm.orderId = null;
             this.dataForm.orderNo = null;
           }
@@ -357,11 +397,16 @@
         }).then(() => {
           this.dataForm.status = 1
           updateApi(this.dataForm).then(res => {
-            this.$message({ type: 'success', message: res.sub_msg })
-            this.dialogVisible = false
-            this.$emit('callback')
+            if(res.code == 1){
+              this.$message({ type: 'success', message: res.sub_msg })
+              this.dialogVisible = false
+              this.$emit('callback')
+            }else{
+              this.$message({ type: 'warning', message:  res.sub_msg})
+            }
           });
         }).catch(() => { 
+          
         });
       },
     }

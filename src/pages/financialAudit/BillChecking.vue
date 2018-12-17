@@ -67,6 +67,12 @@
             <el-table-column prop="name" label="订单描述"></el-table-column>
             <el-table-column prop="userName" label="预定人"></el-table-column>
             <el-table-column prop="userPhone" label="预定人手机号"></el-table-column>
+            <el-table-column prop="isTeam" label="是否团体">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isTeam=='Y'">是</span>
+                <span v-else>否</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
             <el-table-column prop="totalFree" label="房费"></el-table-column>
             <el-table-column prop="totalCommission" label="佣金"></el-table-column>

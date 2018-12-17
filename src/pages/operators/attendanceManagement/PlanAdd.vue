@@ -1,7 +1,7 @@
 // 新增考勤日程
 <template>
   <el-dialog title="排班" :visible.sync="dialogVisible" width="500px" :close-on-click-modal="false" :before-close="handleClose">
-    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="80px" class="plan-form">
+    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="88px" class="plan-form">
       <el-form-item label="选择员工" prop="selectUsers">
         <el-select v-model="dataForm.selectUsers" multiple placeholder="请选择">
           <el-option
@@ -12,13 +12,12 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择班次" prop="classId">
-        <el-select v-model="dataForm.classId" placeholder="请选择">
-          <el-option v-for="(item,index) in classArr" :key="index" :label="item.className" :value="item.classId">
-            <span style="float: left">{{ item.className }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.beginTime }} - {{item.endTime}}</span>
-          </el-option>
-        </el-select>
+      <el-form-item label="选择班次" prop="selectedOptions">
+        <el-cascader
+          :options="cascaderArr"
+          v-model="dataForm.selectedOptions"
+          @change="handleChange">
+        </el-cascader>
       </el-form-item>
       <el-form-item label="日期" prop="days">
         <el-date-picker
@@ -34,7 +33,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-      <el-button type="primary" size="small" :loading="loading" @click="saveData">保存</el-button>
+      <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="hasPerm('pms:attPlan:add')">保存</el-button>
     </span>
   </el-dialog>
 </template>
@@ -42,19 +41,21 @@
 <script>
   import Cookies from 'js-cookie'
   import {attendanceTypeMap} from '@/utils/orm'
-  import { attendancePlanAdd,attendanceClassSelect } from '@/api/oaApi'
+  import { attendancePlanAdd,attendanceClassCascaderList } from '@/api/oaApi'
 
   class AttendanceGroup {
     constructor () {
       this.selectUsers = []
       this.classId = null
       this.days = []
+      this.selectedOptions = []
     }
 
     set attendanceGroup (attendanceGroup) {
       this.selectUsers = attendanceGroup.selectUsers
       this.classId = attendanceGroup.classId
       this.days = attendanceGroup.days
+      this.selectedOptions = attendanceGroup.selectedOptions
     }
   }
 
@@ -67,26 +68,19 @@
         dataForm: new AttendanceGroup(),
         rules: {
           selectUsers: [{ required: true, message: '请选择员工', trigger: 'blur' }],
-          classId: [{ required: true, message: '请选择班次', trigger: 'blur' }],
+          selectedOptions: [{ required: true, message: '请选择班次', trigger: 'blur' }],
           days: [{ required: true, message: '请选择日期', trigger: 'blur' }],
         },
         users:[],
-        classArr: [],
+        cascaderArr: [],
       }
     },
     methods: {
-      showDialog (users, classId, days, groupId) {
+      showDialog (users, classId, groupId, days) {
         this.dialogVisible = true
         this.$nextTick(()=>{
           this.$refs.dataForm.clearValidate();
         })
-        // if (id) {
-        //   attendanceGroupDetail({ id: id }).then(res => {
-        //     this.dataForm.attendanceGroup = res.data
-        //   })
-        // }else{
-        //   this.dataForm = new AttendanceGroup();
-        // }
 
         this.dataForm = new AttendanceGroup();
         this.users = users
@@ -96,9 +90,13 @@
 
         this.dataForm.classId = classId;
         this.dataForm.days = days
-        //查找班次列表
-        attendanceClassSelect({groupId: groupId}).then(res=>{
-          this.classArr = res.data
+
+        //查找级联列表 组-班次
+        attendanceClassCascaderList().then(res=>{
+          this.cascaderArr = res.data
+          if(groupId && classId){
+            this.dataForm.selectedOptions=[groupId,classId]
+          }
         })
       },
       handleClose () {
@@ -124,7 +122,7 @@
               })
 
               let data = {
-                classId: this.dataForm.classId,
+                classId: this.dataForm.selectedOptions[1],
                 days: this.dataForm.days,
                 selectUsers: selectUsers
               }
@@ -139,7 +137,12 @@
             })
           }
         })
-      }
+      },
+      handleChange(){
+
+      },
+      
+
     }
   }
 </script>

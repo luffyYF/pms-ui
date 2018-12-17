@@ -8,6 +8,16 @@ const service = axios.create({
 })
 
 let imageRoot = process.env.IMAGE_ROOT
+
+let uploadRoot = process.env.UPLOAD_ROOT
+
+/**
+ * 上传公共图片
+ */
+export const getUploadImageAction = () => {
+  return uploadRoot + '/back/file/uploadImage';
+}
+
 /**
  * 上传头像url
  * @type {string}
@@ -28,10 +38,17 @@ export const uploadImage = imageRoot + '/upload/image'
 export const avatarUrl = imageRoot + '/uploaded/img/'
 
 /**
- * 加载原图前缀
+ * 加载原图前缀  (旧)
  * @type {string}
  */
-export const sourceImgUrl = imageRoot + '/uploaded/img/'
+export const sourceImgUrl = imageRoot 
+// '/uploaded/img/'
+
+/**
+ * 加载原图前缀 (新)  调用微云系统
+ * @type {string}
+ */
+// export const sourceImgUrl2 = imageRoot 
 
 /**
  * 根据uuid获取图片

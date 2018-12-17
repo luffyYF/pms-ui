@@ -184,6 +184,7 @@
       </el-table-column> -->
       <el-table-column label="操作" min-width="200" fixed="right">
         <template slot-scope="scope">
+          <el-button size="mini" type="primary" v-if="scope.row.orderStatus == 'LEAVE' || scope.row.orderStatus == 'LEAVENOPAY' " @click="onInvoiceClick(scope.row.orderNo)">开发票</el-button>
           <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
           <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0">
             <el-button size="mini" type="danger" @click="cancelOrder(scope.row)">取消订单</el-button>
@@ -202,9 +203,11 @@
         <DialogCheckinVisible ref="checkinDialogRef" />
       </div>
     </el-dialog> -->
+    <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
   </section>
 </template>
 <script>
+  import invoiceEdit from '@/pages/financialAudit/invoiceManage/invoiceEdit'
   import bus from '@/utils/bus'
   import {orderStatusMap, checkInTypeMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
@@ -215,7 +218,7 @@
   import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
-    components: {DialogCheckinVisible},
+    components: {DialogCheckinVisible,invoiceEdit},
     data () {
       return {
         orderStatusMap:orderStatusMap,
@@ -309,6 +312,9 @@
       filterText: function (value) {}
     },
     methods: {
+      onInvoiceClick(orderNo){
+        this.$refs.invoiceEditRef.showDialog(null,orderNo);
+      },
       powerJudge(id){
         return powerJudge(id);
       },
