@@ -24,3 +24,7 @@ export const delRoomReason = params => {
 export const findRoomReason = params => {
     return request.get('/back/room/reason/find', {params: params})
 }
+//加载订单信息
+export const loadOrderInfo = params => {
+    return request.get('/back/room/status/orderInfo', {params: params})
+}

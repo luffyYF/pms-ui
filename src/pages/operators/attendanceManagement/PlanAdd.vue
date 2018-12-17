@@ -18,15 +18,6 @@
           v-model="dataForm.selectedOptions"
           @change="handleChange">
         </el-cascader>
-        
-        <!-- <el-select v-model="dataForm.classId" placeholder="请选择">
-          <el-option v-for="(item,index) in cascaderArr" :key="index" :label="item.className" :value="item.classId">
-            <span style="float: left">{{ item.className }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.beginTime }} - {{item.endTime}}</span>
-          </el-option>
-        </el-select> -->
-
-
       </el-form-item>
       <el-form-item label="日期" prop="days">
         <el-date-picker
@@ -42,7 +33,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-      <el-button type="primary" size="small" :loading="loading" @click="saveData">保存</el-button>
+      <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="hasPerm('pms:attPlan:add')">保存</el-button>
     </span>
   </el-dialog>
 </template>
