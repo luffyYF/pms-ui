@@ -166,25 +166,19 @@
                 </div>
                 <!-- 用户信息 -->
                 <div class="pattern-li-info">
-                  <!-- <template v-if="item.futureFlag=='Y'">
-                    预抵客人信息
-                    <label class="userinfo">{{item.futureInfo ? item.futureInfo.guestName : ''}}</label>
-                    <label class="channelinfo">{{item.futureInfo ? item.futureInfo.channelTypeName : ''}}</label> 
-                  </template>
-                  <template v-if="item.guestOrderPk">
-                    在住客人信息 
-                    <label class="userinfo">{{item.guestInfo ? item.guestInfo.guestName : ''}}</label>
-                    <label class="channelinfo">{{item.guestInfo ? item.guestInfo.channelTypeName : ''}}</label>
-                  </template> -->
-                  
-
-                  <label class="userinfo">{{item.guestName}}</label>
-                  <label class="channelinfo">{{item.channelName}}</label>
+                  <div v-if="item.guestOrderPk">
+                    <!-- 入住信息 -->
+                    <label class="userinfo">{{item.guestName}}</label>
+                    <label class="channelinfo">{{item.channelName}}</label>
+                  </div>
+                  <div v-else-if="item.arrivalGuestPk">
+                    <!-- 预抵信息 -->
+                    <label class="userinfo">{{item.arrivalGuestName}}</label>
+                    <label class="channelinfo">{{item.arrivalChannelName}}</label>
+                  </div>
                 </div>
 
                 <div class="pattern-li-date" v-if="item.guestOrderPk">
-                  <!-- <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
-                  <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label> -->
                   <label class="userinfo" v-if="item.guestBeginDate">入住：{{moment(item.guestBeginDate).format('MM-DD')}}</label><br>
                   <label class="userinfo" v-if="item.guestEndDate">离开：{{moment(item.guestEndDate).format('MM-DD')}}</label><br>
                 </div>
@@ -223,11 +217,9 @@
                   </el-popover>
 
                   <!-- 今天预抵 -->
-                  <label class="detailsinfo reserve_today" v-if="item.futureFlag=='Y'"></label>
+                  <!-- <label class="detailsinfo reserve_today" v-if="item.futureFlag=='Y'"></label> -->
+                  <label class="detailsinfo reserve_today" v-if="item.arrivalGuestPk"></label>
 
-                  <!-- 预离 -->
-                  <label class="detailsinfo reserve_leave" v-if="item.leaveFlag=='Y'"></label>
-                  
                   <el-popover
                     placement="bottom"
                     title=""
@@ -242,6 +234,9 @@
                   <label class="detailsinfo special" v-if="item.checkInType==2" title="特殊房"></label>
                   <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
                   <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
+
+                   <!-- 预离 -->
+                  <label class="detailsinfo reserve_leave" v-if="item.leaveFlag"></label>
                 </div>
               </div>
               <!-- 下拉菜单操作 -->
@@ -601,6 +596,7 @@
 <script>
   import bus from '@/utils/bus'
   import moment from 'moment'
+  import {nightTrialTime} from '@/utils/orm'
   import DialogCheckinVisible from './roomPattern/DialogVisible'
   import {checkInTypeMap} from '@/utils/orm'
   import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
@@ -687,12 +683,22 @@
           floorPk: this.selectForm.floor,
           checkInType: this.selectForm.checkInType,
         }
-        currentRoomList(data).then(res1=>{
-          this.roomList = res1.data
+        currentRoomList(data).then(res=>{
+          this.roomList = res.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
           })
           this.$refs.channelRef.load(false);
+
+          //标识预离
+          let now = moment().hour() >= nightTrialTime ? moment() : moment().subtract(1, 'days');
+          this.roomList.forEach(item=> {
+            if(item.guestEndDate && moment(item.guestEndDate).format('YYYY-MM-DD') <= now.format('YYYY-MM-DD') ){
+              this.$set(item, 'leaveFlag', true)
+            }else{
+              this.$set(item, 'leaveFlag', null)
+            }
+          })
         })
       },
       handleClose(done) { //11
@@ -999,9 +1005,16 @@
       roomClick(item){
         this.roomList.forEach(room=>{
           this.$set(room, 'connectRoom', false);
-          //标识虚线框
-          if(room.orderPk!=null && room.orderPk!='' && item.orderPk==room.orderPk) {
-            this.$set(room, 'connectRoom', true);
+          //标识虚线框 arrivalOrderPk
+          if(item.orderPk) {
+            if(item.orderPk==room.orderPk || item.orderPk==room.arrivalOrderPk){
+              this.$set(room, 'connectRoom', true);
+            }
+          } 
+          if(item.arrivalOrderPk){
+            if(item.arrivalOrderPk==room.arrivalOrderPk || item.arrivalOrderPk==room.orderPk){
+              this.$set(room, 'connectRoom', true);
+            }
           }
         })
       }
