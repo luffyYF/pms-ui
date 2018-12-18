@@ -47,7 +47,10 @@
                     v-for="item in inventorySelectList"
                     :key="item.inventoryId"
                     :label="item.inventoryNo+' - '+item.name+' - '+item.shortName+' - ￥'+(item.price?item.price:0)"
-                    :value="item.inventoryId">
+                    :value="item.inventoryId" class="in_select">
+                    <span>{{item.inventoryNo}}</span>
+                    <br />
+                    <span style="color: #8492a6; font-size: 13px">{{item.name}}&nbsp;-&nbsp;{{item.shortName}}&nbsp;-&nbsp;￥{{item.price}}&nbsp;-&nbsp;{{item.spec}}</span>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -356,5 +359,9 @@ export default {
 }
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: 178px;
+}
+.in_select {
+  height: 100%;
+  line-height: 22px !important;
 }
 </style>

@@ -12,12 +12,26 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择班次" prop="selectedOptions">
-        <el-cascader
+      <el-form-item label="选择班次" prop="classId">
+        <!-- <el-cascader
           :options="cascaderArr"
           v-model="dataForm.selectedOptions"
           @change="handleChange">
-        </el-cascader>
+        </el-cascader> -->
+        <el-select
+          v-model="dataForm.classId"
+          placeholder="请选择班次"
+          class="width-93">
+          <el-option
+            v-for="item in cascaderArr"
+            :key="item.classId"
+            :label="item.classCode + '（' + item.className + '）'"
+            :value="item.classId" class="plan_select">
+            <span>{{item.classCode}}（{{item.className}}）</span>
+            <br />
+            <span style="color: #8492a6; font-size: 13px">{{item.groupName}}，{{item.companyName}}</span>
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="日期" prop="days">
         <el-date-picker
@@ -41,21 +55,19 @@
 <script>
   import Cookies from 'js-cookie'
   import {attendanceTypeMap} from '@/utils/orm'
-  import { attendancePlanAdd,attendanceClassCascaderList } from '@/api/oaApi'
+  import { attendancePlanAdd,attendanceClassCascaderList,attendanceClassSelect } from '@/api/oaApi'
 
   class AttendanceGroup {
     constructor () {
       this.selectUsers = []
       this.classId = null
       this.days = []
-      this.selectedOptions = []
     }
 
     set attendanceGroup (attendanceGroup) {
       this.selectUsers = attendanceGroup.selectUsers
       this.classId = attendanceGroup.classId
       this.days = attendanceGroup.days
-      this.selectedOptions = attendanceGroup.selectedOptions
     }
   }
 
@@ -68,7 +80,7 @@
         dataForm: new AttendanceGroup(),
         rules: {
           selectUsers: [{ required: true, message: '请选择员工', trigger: 'blur' }],
-          selectedOptions: [{ required: true, message: '请选择班次', trigger: 'blur' }],
+          classId: [{ required: true, message: '请选择班次', trigger: 'blur' }],
           days: [{ required: true, message: '请选择日期', trigger: 'blur' }],
         },
         users:[],
@@ -76,12 +88,13 @@
       }
     },
     methods: {
-      showDialog (users, classId, groupId, days) {
+      showDialog (users, classId, days) {
         this.dialogVisible = true
         this.$nextTick(()=>{
           this.$refs.dataForm.clearValidate();
         })
 
+        this.findAttendanceClass()
         this.dataForm = new AttendanceGroup();
         this.users = users
         this.users.forEach(item=>{
@@ -90,14 +103,6 @@
 
         this.dataForm.classId = classId;
         this.dataForm.days = days
-
-        //查找级联列表 组-班次
-        attendanceClassCascaderList().then(res=>{
-          this.cascaderArr = res.data
-          if(groupId && classId){
-            this.dataForm.selectedOptions=[groupId,classId]
-          }
-        })
       },
       handleClose () {
         this.dialogVisible = false
@@ -122,7 +127,7 @@
               })
 
               let data = {
-                classId: this.dataForm.selectedOptions[1],
+                classId: this.dataForm.classId,
                 days: this.dataForm.days,
                 selectUsers: selectUsers
               }
@@ -141,13 +146,20 @@
       handleChange(){
 
       },
-      
-
+      findAttendanceClass () {
+        attendanceClassSelect().then(res => {
+          this.cascaderArr = res.data
+        })
+      },
     }
   }
 </script>
 <style>
 .plan-form .el-select{
   width: 350px
+}
+.plan_select {
+    height: 100%;
+    line-height: 26px !important;
 }
 </style>

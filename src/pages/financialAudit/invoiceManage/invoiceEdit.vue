@@ -24,7 +24,7 @@
           </el-form>
       </el-col>
     </el-row>
-    <el-form ref="dataForm" :inline="true" :model="dataForm" size="mini" label-width="100px" :rules="rules">
+    <el-form ref="dataForm" :inline="true" :model="dataForm" size="mini" label-width="106px" :rules="rules">
       <!-- input -->
       <div class="bg-reserve">
         <h5 class="info-title">发票信息</h5>
@@ -77,9 +77,9 @@
           <h5 class="info-title">收件信息</h5>
             <el-form-item label="收货方式" prop="receivingType" class="width-46">
                 <el-select v-model="dataForm.receivingType" placeholder="请选择收货方式" size="small" class="width-172" :disabled="dataForm.status != 0">
-                <el-option label="快递到付" key="0" value="0"></el-option>
-                <el-option label="电子邮箱" key="1" value="1"></el-option>
-                <el-option label="自取" key="2" value="2"></el-option>
+                <el-option label="快递到付" :value="0"></el-option>
+                <el-option label="电子邮箱" :value="1"></el-option>
+                <el-option label="自取" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="收件人姓名" prop="addresseeName" class="width-46">
@@ -88,10 +88,10 @@
             <el-form-item label="收件人电话" prop="addresseePhone" class="width-46">
               <el-input size="small" v-model="dataForm.addresseePhone" type="text" class="width-180" :readonly="dataForm.status != 0"/>
             </el-form-item>
-            <el-form-item label="收件人邮箱" prop="addresseeEmail" class="width-46" v-if="dataForm.receivingType == '1' ">
+            <el-form-item label="收件人邮箱" prop="addresseeEmail" class="width-46" v-if="dataForm.receivingType == 1">
               <el-input size="small" v-model="dataForm.addresseeEmail" type="text" class="width-180" :readonly="dataForm.status != 0"/>
             </el-form-item>
-            <el-form-item label="收件人地址" prop="addresseeAddress" class="width-46">
+            <el-form-item label="收件人地址" prop="addresseeAddress" class="width-46" v-if="dataForm.receivingType == 0">
               <el-input size="small" v-model="dataForm.addresseeAddress" type="text" class="width-180" :readonly="dataForm.status != 0"/>
             </el-form-item>
         </el-col>
@@ -148,6 +148,7 @@
       this.createUserName = null
       this.createTime = null
       this.updateTime = null
+      this.receivingType = 0
     }
 
     set invoiceInfo (invoiceInfo) {
@@ -174,6 +175,7 @@
       this.createUserName = invoiceInfo.createUserName
       this.createTime = invoiceInfo.createTime
       this.updateTime = invoiceInfo.updateTime
+      this.receivingType = invoiceInfo.receivingType
     }
   }
 
@@ -190,6 +192,14 @@
           permissionValue: [
             { required: true, message: '请填写权限值', trigger: 'blur' }
           ],
+          taxpayerIdNo: [{ required: true, message: '请填写纳税人识别号', trigger: 'blur' }],
+          invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'blur' }],
+          invoiceAmount: [{ required: true, message: '请填写发票金额', trigger: 'blur' }],
+          receivingType: [{ required: true, message: '请选择收货方式', trigger: 'blur' }],
+          addresseeName: [{ required: true, message: '请填写收件人姓名', trigger: 'blur' }],
+          addresseePhone: [{ required: true, message: '请填写收件人电话', trigger: 'blur' }],
+          addresseeEmail: [{ required: true, message: '请填写收件人邮箱', trigger: 'blur' }],
+          addresseeAddress: [{ required: true, message: '请填写收件人地址', trigger: 'blur' }],
         },
         orderRules: {
           orderNo: [{ required: true, message: '请填写订单编号', trigger: 'blur' }],
