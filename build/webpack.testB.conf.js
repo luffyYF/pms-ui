@@ -12,19 +12,19 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
-  : require('../config/testB.env')
+  : require('../config/testb.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
-      sourceMap: config.testB.productionSourceMap,
+      sourceMap: config.testb.productionSourceMap,
       extract: true,
       usePostCSS: true
     })
   },
-  devtool: config.testB.productionSourceMap ? config.testB.devtool : false,
+  devtool: config.testb.productionSourceMap ? config.testb.devtool : false,
   output: {
-    path: config.testB.assetsRoot,
+    path: config.testb.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
@@ -38,7 +38,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       compress: {
         warnings: false
       },
-      sourceMap: config.testB.productionSourceMap,
+      sourceMap: config.testb.productionSourceMap,
       parallel: true
     }),
     // extract css into its own file
@@ -52,7 +52,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
-      cssProcessorOptions: config.testB.productionSourceMap
+      cssProcessorOptions: config.testb.productionSourceMap
       ? { safe: true, map: { inline: false } }
       : { safe: true }
     }),
@@ -62,7 +62,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: process.env.NODE_ENV === 'testing'
         ? 'index.html'
-        : config.testB.index,
+        : config.testb.index,
       template: 'index.html',
       inject: true,
       minify: {
@@ -113,14 +113,14 @@ const webpackConfig = merge(baseWebpackConfig, {
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
-        to: config.testB.assetsSubDirectory,
+        to: config.testb.assetsSubDirectory,
         ignore: ['.*']
       }
     ])
   ]
 })
 
-if (config.testB.productionGzip) {
+if (config.testb.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
   webpackConfig.plugins.push(
@@ -129,7 +129,7 @@ if (config.testB.productionGzip) {
       algorithm: 'gzip',
       test: new RegExp(
         '\\.(' +
-        config.testB.productionGzipExtensions.join('|') +
+        config.testb.productionGzipExtensions.join('|') +
         ')$'
       ),
       threshold: 10240,

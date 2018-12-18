@@ -113,14 +113,13 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   },
 
-  testB: {
+  testb: {
     // Template for index.html
-    index: path.resolve(__dirname, '../testB/index.html'),
+    index: path.resolve(__dirname, '../distTest/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../testB'),
+    assetsRoot: path.resolve(__dirname, '../distTest'),
     assetsSubDirectory: 'static',
-    // assetsPublicPath: '/',
     assetsPublicPath: './',
 
     /**

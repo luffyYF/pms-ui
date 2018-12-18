@@ -1,7 +1,7 @@
 'use strict'
 require('./check-versions')()
 
-process.env.NODE_ENV = 'testB'
+process.env.NODE_ENV = 'testb'
 
 const ora = require('ora')
 const rm = require('rimraf')
@@ -9,12 +9,12 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const config = require('../config')
-const webpackConfig = require('./webpack.testB.conf')
+const webpackConfig = require('./webpack.testb.conf')
 
 const spinner = ora('building for production...')
 spinner.start()
 
-rm(path.join(config.testB.assetsRoot, config.testB.assetsSubDirectory), err => {
+rm(path.join(config.testb.assetsRoot, config.testb.assetsSubDirectory), err => {
   if (err) throw err
   webpack(webpackConfig, function (err, stats) {
     spinner.stop()
