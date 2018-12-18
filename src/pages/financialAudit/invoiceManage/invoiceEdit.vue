@@ -281,7 +281,6 @@
             tempData = item;
           }
         });
-
         if (tempData) {
           this.dataForm.invoiceTitle= tempData.invoiceTitle;
           this.dataForm.taxpayerIdNo= tempData.taxpayerIdNo;
@@ -313,7 +312,21 @@
                 this.invoiceTitleId = res.data.invoiceTitle
                 this.invoiceTitleStatus = 1
               }else{
-                  this.dataForm = new InvoiceInfo();
+                this.dataForm.status = 0;
+                this.dataForm.receivingType = "0";
+                this.dataForm.invoiceId = null;
+                this.dataForm.addresseeName = null;
+                this.dataForm.addresseePhone = null;
+                this.dataForm.addresseeEmail = null;
+                this.dataForm.addresseeAddress = null;
+                this.dataForm.invoiceAmount = null;
+                this.invoiceTitleStatus = 0;
+                this.dataForm.invoiceTitleId = null;
+                this.dataForm.taxpayerIdNo = null;
+                this.dataForm.unitPhone = null;
+                this.dataForm.unitAddress = null;
+                this.dataForm.openingBank = null;
+                this.dataForm.openingAccount = null;
               }
             })
           } else {
