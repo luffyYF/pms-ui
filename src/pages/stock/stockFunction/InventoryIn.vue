@@ -16,10 +16,10 @@
           <el-form-item label="填单日期">
             <div class="block">
               <el-date-picker
-                readonly
-                v-model="inForm.createTime"
+                v-model="inForm.inTime"
                 type="datetime"
-                placeholder="选择日期时间">
+                placeholder="选择日期时间"
+                value-format="yyyy-MM-dd HH:mm:ss">
               </el-date-picker>
             </div>
           </el-form-item>
@@ -103,7 +103,8 @@ export default {
         inventoryNo: null,
         userName: null,
         companyPk: Cookies.get("select_company_pk"),
-        createTime: null,
+        supplierPk: null,
+        inTime: null,
         outId:null,
       },
       outForm:{},//出库表单
@@ -119,7 +120,7 @@ export default {
      */
     init(outId){
       this.inForm.userName = JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName;
-      this.inForm.createTime = Moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
+      this.inForm.inTime = Moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
       //获取入库编号
       getInSequence().then(res=>{
         this.inForm.inventoryNo= res.data
@@ -134,6 +135,7 @@ export default {
         this.outDetails = [];
         findOutInfo({outId:outId}).then(res2=>{
           this.outForm = res2.data.invOut;
+          this.inForm.supplierPk = res2.data.invOut.companyPk;
           this.outDetails = res2.data.outDetails;
           console.log("出库详情",this.outDetails);
 

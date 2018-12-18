@@ -36,6 +36,7 @@
         <el-table-column label="操作" align="left" fixed="right">
           <template slot-scope="scope">
             <el-button type="primary" @click="editClick(scope.row.groupId)" v-if="hasPerm('pms:attGroup:modify')" size="mini">编辑</el-button>
+            <el-button type="primary" @click="editSettingClick(scope.row.groupId)" v-if="hasPerm('pms:menu:planSetManage')" size="mini">设置参数</el-button>
             <el-button type="danger" @click="deleteClick(scope.row.groupId)" v-if="hasPerm('pms:attGroup:delete')" size="mini">删除</el-button>
           </template>
         </el-table-column>
@@ -123,7 +124,11 @@
       handleCurrentChange (val) {
         this.listQuery.pageNum = val
         this.listSearch()
-      }
+      },
+      //编辑设置
+      editSettingClick (id) {
+        this.$router.push("/operators/attendanceSetting/" + id);
+      },
     }
   }
 </script>

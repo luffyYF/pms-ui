@@ -76,6 +76,7 @@ import MobileClientAccessAuthorization from '@/pages/operators/MobileClientAcces
 import AttendanceGroupList from '@/pages/operators/attendanceManagement/AttendanceGroupList.vue'
 import AttendanceClassList from '@/pages/operators/attendanceManagement/AttendanceClassList'
 import AttendancePlanList from '@/pages/operators/attendanceManagement/AttendancePlanList'
+import AttendanceGroupSettingEdit from '@/pages/operators/attendanceManagement/AttendanceGroupSettingEdit.vue'
 
 //前台交接班和查账
 import ReceiptsReportPage from '@/pages/reportCenter/shiftAndAudit/ReceiptsReport.vue'
@@ -298,6 +299,7 @@ export const constantRouterMap = [
           {path: '/operators/attendanceClass', component: AttendanceClassList, label: '班次管理'},
           {path: '/operators/attendanceGroup', component: AttendanceGroupList, label: '排班管理'},
           {path: '/operators/attendancePlan', component: AttendancePlanList, label: '排班'},
+          {path: '/operators/attendanceSetting/:groupId', component: AttendanceGroupSettingEdit, label: '设置参数'},
         ]
       },
       {

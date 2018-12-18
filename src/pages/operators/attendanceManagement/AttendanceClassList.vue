@@ -19,6 +19,7 @@
         style="width: 100%;"
         v-loading="loading">
         <!-- 需要映射的表 -->
+        <el-table-column prop="classCode" label="班次编号" align="left" width="120" show-overflow-tooltip/>
         <el-table-column prop="className" label="班次名称" align="left"  show-overflow-tooltip></el-table-column>
         <el-table-column prop="groupName" label="班次组名称" align="left"  show-overflow-tooltip></el-table-column>
         <el-table-column prop="beginTime" label="开始时间" align="left" show-overflow-tooltip></el-table-column>
