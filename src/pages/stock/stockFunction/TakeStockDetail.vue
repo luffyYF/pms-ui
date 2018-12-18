@@ -76,7 +76,7 @@ export default {
       }
     },
     toPrint(){
-      window.open("http://localhost:8083/#/pmsTakeStockDetail?stockId="+this.stockId
+      window.open(process.env.PRINT_ROOT+"/#/pmsTakeStockDetail?stockId="+this.stockId
       +"&storageName="+this.stock.storageName
       +"&statusName="+this.takeStockStatusMap[this.stock.status]
       +"&companyName="+this.stock.companyName);
