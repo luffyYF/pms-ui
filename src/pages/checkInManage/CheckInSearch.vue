@@ -167,7 +167,7 @@
 <script>
   import bus from '@/utils/bus'
   import {orderStatusMap,checkInTypeMap} from '@/utils/orm'
-  import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
+  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";

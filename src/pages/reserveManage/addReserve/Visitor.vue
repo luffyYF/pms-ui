@@ -921,6 +921,7 @@
           this.form.currTitle = '添加预定'
           this.currFormType = 'empty'
           this.getBookableCount()
+          this.loadPrice();
         },
         //添加预定（外部调用）
         addReserveGuest() {
@@ -1088,6 +1089,10 @@
         },
         //开始日期改变
         beginDateChange(){
+          let f = 'YYYY-MM-DD'
+          if(moment(this.form.beginDate).format(f) >= moment(this.form.endDate).format(f)){
+            this.form.endDate = moment(this.form.beginDate).add(1, 'days').format('YYYY-MM-DD HH:mm:ss') 
+          }
           this.calcDays()
           this.loadPrice()
           this.getBookableCount()

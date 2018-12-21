@@ -188,17 +188,17 @@
                   <el-popover
                     placement="bottom"
                     title=""
-                    :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 400 : 200"
+                    :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 200"
                     trigger="hover"
                     @show="relationIconHover(index)">
-                    <div v-if="item.orderInfo">
-                      入住类型：<span>{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
-                      来源渠道：<span>{{item.orderInfo.guestPo.channelTypeName}}</span><br>
-                      客人姓名：<span>{{item.orderInfo.guestPo.guestName}}</span><br>
-                      客人手机：<span>{{item.orderInfo.guestPo.guestPhone}}</span><br>
-                      抵店时间：<span>{{item.orderInfo.guestPo.beginDate}}</span><br>
-                      抵店时间：<span>{{item.orderInfo.guestPo.endDate}}</span><br>
-                      房间价格：<span>￥{{item.orderInfo.guestPo.currPrice}}</span><br>
+                    <div v-if="item.orderInfo" style="max-height:400px; overflow-y: scroll;">
+                      <span>入住类型：{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
+                      <span>来源渠道：{{item.orderInfo.guestPo.channelTypeName}}</span><br>
+                      <span>客人姓名：{{item.orderInfo.guestPo.guestName}}</span><br>
+                      <span>客人手机：{{item.orderInfo.guestPo.guestPhone}}</span><br>
+                      <span>抵店时间：{{item.orderInfo.guestPo.beginDate}}</span><br>
+                      <span>离店时间：{{item.orderInfo.guestPo.endDate}}</span><br>
+                      <span>房间价格：￥{{item.orderInfo.guestPo.currPrice}}</span><br>
                       <div v-if="item.roomRelationType>1 && item.orderInfo.guestList && item.orderInfo.guestList.length>0">
                         <hr>
                         <div class="manay-guest-panel" v-for="g in item.orderInfo.guestList">
@@ -230,17 +230,17 @@
                   <el-popover
                     placement="bottom"
                     title=""
-                    :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 400 : 200"
+                    :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 420 : 200"
                     trigger="hover"
                     @show="arrivalIconHover(index)">
-                    <div v-if="item.arrivalInfo">
-                      入住类型：<span>{{checkInTypeMap[item.arrivalInfo.guestPo.checkInType]}}</span><br>
-                      来源渠道：<span>{{item.arrivalInfo.guestPo.channelTypeName}}</span><br>
-                      客人姓名：<span>{{item.arrivalInfo.guestPo.guestName}}</span><br>
-                      客人手机：<span>{{item.arrivalInfo.guestPo.guestPhone}}</span><br>
-                      抵店时间：<span>{{item.arrivalInfo.guestPo.beginDate}}</span><br>
-                      抵店时间：<span>{{item.arrivalInfo.guestPo.endDate}}</span><br>
-                      房间价格：<span>￥{{item.arrivalInfo.guestPo.currPrice}}</span><br>
+                    <div v-if="item.arrivalInfo" style="max-height:400px; overflow-y: scroll;">
+                      <span>入住类型：{{checkInTypeMap[item.arrivalInfo.guestPo.checkInType]}}</span><br>
+                      <span>来源渠道：{{item.arrivalInfo.guestPo.channelTypeName}}</span><br>
+                      <span>客人姓名：{{item.arrivalInfo.guestPo.guestName}}</span><br>
+                      <span>客人手机：{{item.arrivalInfo.guestPo.guestPhone}}</span><br>
+                      <span>抵店时间：{{item.arrivalInfo.guestPo.beginDate}}</span><br>
+                      <span>离店时间：{{item.arrivalInfo.guestPo.endDate}}</span><br>
+                      <span>房间价格：￥{{item.arrivalInfo.guestPo.currPrice}}</span><br>
                       <div v-if="item.arrivalInfo.guestList && item.arrivalInfo.guestList.length>0">
                         <hr>
                         <div class="manay-guest-panel" v-for="g in item.arrivalInfo.guestList">
@@ -640,7 +640,7 @@
   import bus from '@/utils/bus'
   import moment from 'moment'
   import {nightTrialTime} from '@/utils/orm'
-  import DialogCheckinVisible from './roomPattern/DialogVisible'
+  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {checkInTypeMap, orderStatusMap} from '@/utils/orm'
   import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
@@ -728,6 +728,7 @@
           checkInType: this.selectForm.checkInType,
         }
         currentRoomList(data).then(res=>{
+          this.$forceUpdate()
           this.roomList = res.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
@@ -1039,7 +1040,6 @@
       },
       //关联图标信息
       relationIconHover(index) {
-        console.log(this.roomList[index].orderInfo);
         if(!this.roomList[index].orderInfo) {
           loadOrderInfo({guestOrderPk:this.roomList[index].guestOrderPk}).then(res=>{
             this.$set(this.roomList[index], 'orderInfo',res.data);
@@ -1048,7 +1048,6 @@
       },
       //预抵信息
       arrivalIconHover(index) {
-        console.log(this.roomList[index].arrivalInfo);
         if(!this.roomList[index].arrivalInfo) {
           loadOrderInfo({guestOrderPk:this.roomList[index].arrivalGuestPk}).then(res=>{
             this.$set(this.roomList[index], 'arrivalInfo',res.data);

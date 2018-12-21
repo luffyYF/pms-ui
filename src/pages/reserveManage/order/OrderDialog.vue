@@ -1,4 +1,4 @@
-// 组订单弹出
+// 订单弹窗
 <template>
   <div>
     <el-dialog class="dialogVisibleClass" top="5vh" 
@@ -123,7 +123,8 @@
                     </el-popover>
                     <!-- <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button> -->
                     <el-button size="mini" @click="addReserveGuest" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
-                    <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
+                    <!-- <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button> -->
+                    <el-button size="mini" @click="reserveRowRoom2" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
                     <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
                     <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
                     <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION'">换房</el-button>
@@ -184,6 +185,7 @@
       </span>
     </el-dialog>
 
+    <!-- 预定排房 废，后续去除 -->
     <el-dialog class="son-dialog" title="预定排房" :visible.sync="dialogRowRoom" width="50%" :append-to-body="true" :before-close="handleCloseRowRoom">
       <div class="pattern-dialog-container" style="padding: 0px 4px;">
         <el-table
@@ -217,8 +219,6 @@
         <el-button size="mini" type="primary" @click="handleCloseRowRoom">关闭</el-button>
       </span>
     </el-dialog>
-
-
     <el-dialog class="son-dialog" title="选择房间" :visible.sync="dialogSelectRoom" width="30%" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 0px 4px;">
         <div class="select-title">可选房型：{{select_room_type_name}}</div>
@@ -246,6 +246,10 @@
         <el-button size="mini" type="primary" @click="dialogSelectRoom = false">关闭</el-button>
       </span>
     </el-dialog>
+    <!-- 预定排房 end 废，后续去除  -->
+
+    <!-- 预定排房 新 -->
+    <RowRoomDialog ref="rowRoomRef" @refresh="initOrderInfo"></RowRoomDialog>
 
     <!-- 外借 -->
     <dialogBorrow ref="dialogBorrowRef" ></dialogBorrow>
@@ -279,7 +283,6 @@ import {listType} from '@/api/utils/pmsTypeController'
 
 // 组件
 import VisitorTag from '@/pages/reserveManage/addReserve/Visitor'
-// import bill from '@/pages/reserveManage/addReserve/bills'
 import bill from '@/pages/reserveManage/addReserve/bill'
 import dialogPriceChangeHistory from '@/pages/reserveManage/addReserve/dialogPriceChangeHistory'
 import dialogModifyHomePrice from '@/pages/reserveManage/addReserve/dialogModifyHomePrice'
@@ -287,6 +290,8 @@ import dialogOperationLog from '@/pages/reserveManage/addReserve/dialogOperation
 import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
 import dialogNote from '@/pages/reserveManage/addReserve/dialogNote'
 import dialogDeposit from '@/pages/reserveManage/addReserve/dialogDeposit'
+import RowRoomDialog from './RowRoomDialog'
+
 
 export default {
   components: {
@@ -297,7 +302,8 @@ export default {
     dialogNote,
     dialogOperationLog, 
     dialogModifyHomePrice,
-    dialogPriceChangeHistory
+    dialogPriceChangeHistory,
+    RowRoomDialog
   },
   data() {
     return {
@@ -610,10 +616,12 @@ export default {
 
       return true
     },
-    toCheckout() {//跳转退房
+    //跳转退房
+    toCheckout() {
        this.$refs.billTagForm.lookupBillList(this.currOrderPk);
     },
-    reserveRowRoom() {//预定排房
+    //预定排房 【旧，后续去除】
+    reserveRowRoom() {
       this.rowRoomTableData = []
       this.currOrderInfo.guestList.forEach(guest=>{
         if(guest.orderStatus=='RESERVE' && !guest.roomPk){
@@ -638,6 +646,34 @@ export default {
         }
       })
       this.dialogRowRoom = true
+    },
+    reserveRowRoom2() {
+      this.$refs.rowRoomRef.showDialog(this.currOrderPk, this.currOrderInfo.guestList);
+
+      // this.rowRoomTableData = []
+      // this.currOrderInfo.guestList.forEach(guest=>{
+      //   if(guest.orderStatus=='RESERVE' && !guest.roomPk){
+      //     let obj = {
+      //       guestOrderPk: guest.guestOrderPk,
+      //       roomPk: guest.roomPk,
+      //       roomTypePk: guest.roomTypePk,
+      //       roomNumber: guest.roomNumber,
+      //       roomTypeName: guest.roomTypeName,
+      //       beginDate: guest.beginDate,
+      //       endDate: guest.endDate
+      //     }
+      //     if(typeof guest.beginDate == 'object'){
+      //       obj.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
+      //       guest.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
+      //     }
+      //     if(typeof guest.endDate == 'object'){
+      //       obj.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
+      //       guest.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
+      //     }
+      //     this.rowRoomTableData.push(obj)
+      //   }
+      // })
+      // this.dialogRowRoom = true
     },
     clickForRowRoom(row) {//查找可排房的房间列表
       this.selectRoomTableData = []
