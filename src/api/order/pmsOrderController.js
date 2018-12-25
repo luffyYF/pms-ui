@@ -117,3 +117,7 @@ export const listLog = params => {
 export const getPmsOrderByNo = params => {
     return request.get('/back/order/getPmsOrderByNo', {params:params})
 }
+//批量排房
+export const rowRoomBatch = params => {
+    return request.post('/back/order/rowRoomBatch', params)
+}

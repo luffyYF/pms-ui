@@ -7,12 +7,13 @@
     <el-amap vid="amapDemo" :center="center" :zoom="12" class="amap-demo" :events="events">
       <el-amap-marker :position="marker"></el-amap-marker>
     </el-amap>
-    <div class="toolbar">
+    <!-- <div class="toolbar">
       position: [{{ lng }}, {{ lat }}] address: {{ address }}
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
+import bus from "@/utils/bus";
   export default {
     props: ['value'],
     data: function () {
@@ -52,15 +53,22 @@
           extensions: 'all'
         })
         geocoder.getAddress(this.marker, (status, result) => {
+          let shortAddress;
           if (status === 'complete' && result.info === 'OK') {
             if (result && result.regeocode) {
               if (result.regeocode.addressComponent) {
                 this.adcode = result.regeocode.addressComponent.adcode
               }
+              if (result.regeocode.aois.length > 0) {
+                shortAddress = result.regeocode.aois[0].name
+              } else {
+                shortAddress = result.regeocode.addressComponent.township + result.regeocode.addressComponent.streetNumber
+              }
               this.address = result.regeocode.formattedAddress
               this.$nextTick()
             }
           }
+          bus.$emit("returnPosition",{lng:this.lng,lat:this.lat,address:this.address,shortAddress:shortAddress});
         })
       },
       getAddressLocal () {

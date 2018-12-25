@@ -26,7 +26,7 @@
     </el-form>
     <!-- table -->
     <el-row>
-      <el-table :data="rows" border fit size="small" highlight-current-row v-loading="loading " class="tables-list">
+      <el-table :data="rows" border fit size="small" height="400" highlight-current-row v-loading="loading " class="tables-list">
         <el-table-column prop="inventoryNo" label="编号" align="left" show-overflow-tooltip/>
         <el-table-column prop="inventoryName" label="名称" align="left" show-overflow-tooltip/>
         <el-table-column prop="shortName" label="简拼" align="left" show-overflow-tooltip/>
@@ -163,7 +163,8 @@ export default {
         }
       })
       let companyName = JSON.parse(window.localStorage.getItem("current_logon_company")).companyName;
-      window.open("http://localhost:8083/#/pmsTakeStock?storageId="+this.storageId
+      
+      window.open(process.env.PRINT_ROOT+"/#/pmsTakeStock?storageId="+this.storageId
         +"&statusName="+takeStockStatusMap[this.stock.status.toString()]
         +"&companyName="+companyName
         +"&storageName="+storageName);

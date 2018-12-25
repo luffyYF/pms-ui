@@ -35,17 +35,20 @@
         v-loading="loading">
         <!-- 需要映射的表 -->
         <el-table-column type="selection" :selectable="disableCheck" width="58" fixed></el-table-column>
-        <el-table-column v-for="(value,index) in header1" :prop="value.code" :label="value.desc" :key="value.code" align="left" fixed></el-table-column>
+        <el-table-column v-for="(value,index) in header1" :prop="value.code" :label="value.desc" :key="value.code" align="left" fixed>
         </el-table-column>
         
-        <el-table-column v-for="(value,index) in header2" :prop="value.code" :label="value.desc" :key="value.code" align="left" min-width="90">
+        <el-table-column v-for="(value,index) in header2" :prop="value.code" :label="value.desc" :key="value.code" align="left" min-width="80">
           <template slot-scope="scope">
             <span v-if="classMap[scope.row[value.code]]">
-              <el-popover trigger="hover" placement="top">
-                <span>{{classMap[scope.row[value.code]]['companyName']}}</span> <br>
-                <span>{{classMap[scope.row[value.code]]['beginTime']}} - {{classMap[scope.row[value.code]]['endTime']}}</span>
+              <el-popover trigger="hover" placement="top" width="210">
+                <span style="float: left">{{groupMap[scope.row[value.code]]}}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{companyMap[scope.row[value.code]]}}</span>
+                <br />
+                <span style="float: left">{{nameMap[scope.row[value.code]]}}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{timeMap[scope.row[value.code]]}}</span>
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]['className']}}</el-tag>
+                  <el-tag size="medium" :type="companyPk == companyPks[scope.row[value.code]] ? '' : 'success'" closable v-on:close.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)">{{classMap[scope.row[value.code]]}}</el-tag>
                   <!-- <el-button style="color:red" type="text" icon="el-icon-delete" v-on:click.stop="deleteClick(scope.row[value.code], scope.row.userPk, value.desc)"></el-button> -->
                 </div>
               </el-popover>
@@ -64,6 +67,13 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination> -->
+      <el-row>
+        <el-col :span="23" style="margin: 20px 12px 0 12px;">
+          <p v-for="(item, index) in companyIds" :key="index">
+            {{item.companyName}}：<span v-for="(y, index) in classIds" :key="index" v-if="y.companyPk == item.companyPk">{{classMap[y.classId]}}（{{nameMap[y.classId]}}）{{timeMap[y.classId]}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          </p>
+        </el-col>
+      </el-row>
     </div>
     <!--添加、修改组件-->
     <PlanAdd ref="planAddRef" @callback="listSearch"/>
@@ -97,30 +107,36 @@
         classMap:{},//班次名称
         // timeMap:{},//班次时间
         // timeMap:{},//组id
+        classIds: [],
+        companyIds: [],
+        nameMap: {},
+        timeMap: {},
+        groupMap: {},
+        companyPks: {},
+        companyMap: {},
+        companyPkData: [],
+        classIdData: [],
+        companyPk: JSON.parse(localStorage.getItem('current_logon_company')).companyPk,
       }
     },
     mounted () {
       this.groupList = []
-      attendanceListSelect({companyPk:Cookies.get('select_company_pk')}).then(res=>{
-        this.groupList = res.data;
-        // this.listQuery.groupId = this.groupList[0].groupId;
-        this.listSearch()
-      })
+      this.listSearch()
     },
     methods: {
       //搜索
       listSearch () {
-        this.classMap = {}
-        this.timeMap = {}
-        //查找班次列表
-        attendanceClassSelect().then(res=>{
-          res.data.forEach(item=>{
-            this.$set(this.classMap, item.classId, item)
-            // this.$set(this.classMap, item.classId, item.className)
-            // this.$set(this.timeMap, item.classId, item.beginTime+'-'+item.endTime)
-          })
-          this.planList();
-        })
+        this.classIds = [];
+        this.companyIds = [];
+        this.classMap = {};
+        this.nameMap = {};
+        this.timeMap = {};
+        this.groupMap = {};
+        this.companyPks = {};
+        this.companyMap = {};
+        this.companyPkData = [];
+        this.classIdData = [];
+        this.planList();
       }, 
       //查找排班数据列表 
       planList() {
@@ -139,6 +155,24 @@
               this.header1.push(item)
             }
           })
+          if (res.data.planData.length > 0) {
+            res.data.planData.forEach(item => {
+              this.$set(this.classMap, item.classId, item.classCode);
+              this.$set(this.nameMap, item.classId, item.className);
+              this.$set(this.timeMap, item.classId, item.beginTime + '-' + item.endTime);
+              this.$set(this.groupMap, item.classId, item.groupName);
+              this.$set(this.companyMap, item.classId, item.companyName);
+              this.$set(this.companyPks, item.classId, item.companyPk);
+              if (this.classIdData.indexOf(item.classId) == -1) {
+                this.classIdData.push(item.classId);
+                this.classIds.push({"classId": item.classId, "companyPk": item.companyPk});
+              }
+              if (this.companyPkData.indexOf(item.companyPk) == -1) {
+                this.companyPkData.push(item.companyPk);
+                this.companyIds.push({"companyPk": item.companyPk, "companyName": item.companyName});
+              }
+            });
+          }
           this.tableData = res.data.tableData
         }).finally(() => {
           this.loading = false
@@ -199,8 +233,7 @@
           }]
           let date = this.listQuery.currDate+'-'+(Array(2).join(0) + column.label).slice(-2)
           let classId = row[column.property]
-          let groupId =  classId ? this.classMap[classId]['groupId'] : null
-          this.$refs.planAddRef.showDialog(users, classId, groupId, [date,date],)
+          this.$refs.planAddRef.showDialog(users, classId, [date,date])
         }
       }
     }

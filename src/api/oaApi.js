@@ -102,3 +102,16 @@ export const attendancePlanAdd = params => {
 export const attendancePlanDelete = params => {
   return requestOa.post('/backend/attendancePlan/delete', params)
 }
+
+// 查询所有班次组
+export const getAllApi = params => {
+  return requestOa.get('/backend/attendanceGroup/getAll', { params: params })
+}
+// 查询班次组的参数配置和考勤地址
+export const getSettingAndAddress = params => {
+  return requestOa.get('/backend/attendanceGroup/getSettingAndAddress', { params: params })
+}
+// 添加参数配置和考勤地址
+export const addSettingAndAddress = params => {
+  return requestOa.post('/backend/attendanceGroup/addSettingAndAddress', params)
+}

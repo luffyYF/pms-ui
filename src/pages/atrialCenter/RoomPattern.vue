@@ -166,25 +166,19 @@
                 </div>
                 <!-- 用户信息 -->
                 <div class="pattern-li-info">
-                  <!-- <template v-if="item.futureFlag=='Y'">
-                    预抵客人信息
-                    <label class="userinfo">{{item.futureInfo ? item.futureInfo.guestName : ''}}</label>
-                    <label class="channelinfo">{{item.futureInfo ? item.futureInfo.channelTypeName : ''}}</label> 
-                  </template>
-                  <template v-if="item.guestOrderPk">
-                    在住客人信息 
-                    <label class="userinfo">{{item.guestInfo ? item.guestInfo.guestName : ''}}</label>
-                    <label class="channelinfo">{{item.guestInfo ? item.guestInfo.channelTypeName : ''}}</label>
-                  </template> -->
-                  
-
-                  <label class="userinfo">{{item.guestName}}</label>
-                  <label class="channelinfo">{{item.channelName}}</label>
+                  <div v-if="item.guestOrderPk">
+                    <!-- 入住信息 -->
+                    <label class="userinfo">{{item.guestName}}</label>
+                    <label class="channelinfo">{{item.channelName}}</label>
+                  </div>
+                  <div v-else-if="item.arrivalGuestPk">
+                    <!-- 预抵信息 -->
+                    <label class="userinfo">{{item.arrivalGuestName}}</label>
+                    <label class="channelinfo">{{item.arrivalChannelName}}</label>
+                  </div>
                 </div>
 
                 <div class="pattern-li-date" v-if="item.guestOrderPk">
-                  <!-- <label class="userinfo">入住：{{simpleDate(item.guestInfo ? item.guestInfo.beginDate : '') }}</label><br>
-                  <label class="userinfo">离开：{{simpleDate(item.guestInfo ? item.guestInfo.endDate : '')}}</label> -->
                   <label class="userinfo" v-if="item.guestBeginDate">入住：{{moment(item.guestBeginDate).format('MM-DD')}}</label><br>
                   <label class="userinfo" v-if="item.guestEndDate">离开：{{moment(item.guestEndDate).format('MM-DD')}}</label><br>
                 </div>
@@ -194,17 +188,27 @@
                   <el-popover
                     placement="bottom"
                     title=""
-                    width="200"
+                    :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 200"
                     trigger="hover"
-                    @show="iconHoverEven(index)">
-                    <div v-if="item.orderInfo">
-                      入住类型：<span>{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
-                      来源渠道：<span>{{item.orderInfo.guestPo.channelTypeName}}</span><br>
-                      客人姓名：<span>{{item.orderInfo.guestPo.guestName}}</span><br>
-                      客人手机：<span>{{item.orderInfo.guestPo.guestPhone}}</span><br>
-                      抵店时间：<span>{{item.orderInfo.guestPo.beginDate}}</span><br>
-                      抵店时间：<span>{{item.orderInfo.guestPo.endDate}}</span><br>
-                      房间价格：<span>￥{{item.orderInfo.guestPo.currPrice}}</span><br>
+                    @show="relationIconHover(index)">
+                    <div v-if="item.orderInfo" style="max-height:400px; overflow-y: scroll;">
+                      <span>入住类型：{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
+                      <span>来源渠道：{{item.orderInfo.guestPo.channelTypeName}}</span><br>
+                      <span>客人姓名：{{item.orderInfo.guestPo.guestName}}</span><br>
+                      <span>客人手机：{{item.orderInfo.guestPo.guestPhone}}</span><br>
+                      <span>抵店时间：{{item.orderInfo.guestPo.beginDate}}</span><br>
+                      <span>离店时间：{{item.orderInfo.guestPo.endDate}}</span><br>
+                      <span>房间价格：￥{{item.orderInfo.guestPo.currPrice}}</span><br>
+                      <div v-if="item.roomRelationType>1 && item.orderInfo.guestList && item.orderInfo.guestList.length>0">
+                        <hr>
+                        <div class="manay-guest-panel" v-for="g in item.orderInfo.guestList">
+                          房号：{{g.roomNumber}} <br/>
+                          房型：{{g.roomTypeName}} <br/>
+                          状态：{{orderStatusMap[g.orderStatus]}} <br/>
+                          抵店：{{g.beginDate}} <br/> 
+                          离店：{{g.endDate}} <br/>
+                        </div>
+                      </div>
                     </div>
                     <!-- 关联类型 -->
                     <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1"></label>
@@ -222,12 +226,36 @@
                     <label slot="reference" v-if="item.birthdayFlag==1" class="detailsinfo today_birthday"></label>
                   </el-popover>
 
-                  <!-- 今天预抵 -->
-                  <label class="detailsinfo reserve_today" v-if="item.futureFlag=='Y'"></label>
+                  <!-- <label class="detailsinfo reserve_today" v-if="item.futureFlag=='Y'"></label> -->
+                  <el-popover
+                    placement="bottom"
+                    title=""
+                    :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 420 : 200"
+                    trigger="hover"
+                    @show="arrivalIconHover(index)">
+                    <div v-if="item.arrivalInfo" style="max-height:400px; overflow-y: scroll;">
+                      <span>入住类型：{{checkInTypeMap[item.arrivalInfo.guestPo.checkInType]}}</span><br>
+                      <span>来源渠道：{{item.arrivalInfo.guestPo.channelTypeName}}</span><br>
+                      <span>客人姓名：{{item.arrivalInfo.guestPo.guestName}}</span><br>
+                      <span>客人手机：{{item.arrivalInfo.guestPo.guestPhone}}</span><br>
+                      <span>抵店时间：{{item.arrivalInfo.guestPo.beginDate}}</span><br>
+                      <span>离店时间：{{item.arrivalInfo.guestPo.endDate}}</span><br>
+                      <span>房间价格：￥{{item.arrivalInfo.guestPo.currPrice}}</span><br>
+                      <div v-if="item.arrivalInfo.guestList && item.arrivalInfo.guestList.length>0">
+                        <hr>
+                        <div class="manay-guest-panel" v-for="g in item.arrivalInfo.guestList">
+                          房号：{{g.roomNumber}} <br/>
+                          房型：{{g.roomTypeName}} <br/>
+                          状态：{{orderStatusMap[g.orderStatus]}} <br/>
+                          抵店：{{g.beginDate}} <br/> 
+                          离店：{{g.endDate}} <br/>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 当天预抵 -->
+                    <label slot="reference" class="detailsinfo reserve_today" v-if="item.arrivalGuestPk"></label>
+                  </el-popover>
 
-                  <!-- 预离 -->
-                  <label class="detailsinfo reserve_leave" v-if="item.leaveFlag=='Y'"></label>
-                  
                   <el-popover
                     placement="bottom"
                     title=""
@@ -242,6 +270,16 @@
                   <label class="detailsinfo special" v-if="item.checkInType==2" title="特殊房"></label>
                   <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
                   <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
+
+                  <el-popover
+                    placement="bottom"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    :content="'预离日期：'+item.guestEndDate">
+                    <!-- 预离 -->
+                    <label slot="reference" class="detailsinfo reserve_leave" v-if="item.leaveFlag"></label>
+                  </el-popover>
                 </div>
               </div>
               <!-- 下拉菜单操作 -->
@@ -601,8 +639,9 @@
 <script>
   import bus from '@/utils/bus'
   import moment from 'moment'
-  import DialogCheckinVisible from './roomPattern/DialogVisible'
-  import {checkInTypeMap} from '@/utils/orm'
+  import {nightTrialTime} from '@/utils/orm'
+  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
+  import {checkInTypeMap, orderStatusMap} from '@/utils/orm'
   import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
   import {findToday} from '@/api/order/pmsOrderController'
@@ -622,6 +661,7 @@
         moment:moment,
         roomNumber: '',
         checkInTypeMap: checkInTypeMap,
+        orderStatusMap:orderStatusMap,
         roomList: [],
         roomType: [],//房间类型
         floorArr: [],//楼层数据
@@ -687,12 +727,23 @@
           floorPk: this.selectForm.floor,
           checkInType: this.selectForm.checkInType,
         }
-        currentRoomList(data).then(res1=>{
-          this.roomList = res1.data
+        currentRoomList(data).then(res=>{
+          this.$forceUpdate()
+          this.roomList = res.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
           })
           this.$refs.channelRef.load(false);
+
+          //标识预离
+          let now = moment().hour() >= nightTrialTime ? moment() : moment().subtract(1, 'days');
+          this.roomList.forEach(item=> {
+            if(item.guestEndDate && moment(item.guestEndDate).format('YYYY-MM-DD') <= now.format('YYYY-MM-DD') ){
+              this.$set(item, 'leaveFlag', true)
+            }else{
+              this.$set(item, 'leaveFlag', null)
+            }
+          })
         })
       },
       handleClose(done) { //11
@@ -987,21 +1038,37 @@
       simpleDate(date) {
         return  moment(date).format("MM-DD")
       },
-      //图标悬浮显示订单信息
-      iconHoverEven(index) {
+      //关联图标信息
+      relationIconHover(index) {
         if(!this.roomList[index].orderInfo) {
           loadOrderInfo({guestOrderPk:this.roomList[index].guestOrderPk}).then(res=>{
             this.$set(this.roomList[index], 'orderInfo',res.data);
           })
         }
       },
+      //预抵信息
+      arrivalIconHover(index) {
+        if(!this.roomList[index].arrivalInfo) {
+          loadOrderInfo({guestOrderPk:this.roomList[index].arrivalGuestPk}).then(res=>{
+            this.$set(this.roomList[index], 'arrivalInfo',res.data);
+          })
+        }
+      },
+
       //点击房间
       roomClick(item){
         this.roomList.forEach(room=>{
           this.$set(room, 'connectRoom', false);
-          //标识虚线框
-          if(room.orderPk!=null && room.orderPk!='' && item.orderPk==room.orderPk) {
-            this.$set(room, 'connectRoom', true);
+          //标识虚线框 arrivalOrderPk
+          if(item.orderPk) {
+            if(item.orderPk==room.orderPk || item.orderPk==room.arrivalOrderPk){
+              this.$set(room, 'connectRoom', true);
+            }
+          } 
+          if(item.arrivalOrderPk){
+            if(item.arrivalOrderPk==room.arrivalOrderPk || item.arrivalOrderPk==room.orderPk){
+              this.$set(room, 'connectRoom', true);
+            }
           }
         })
       }
@@ -1487,5 +1554,14 @@
 }
 .connect-room{
   border: 2px red dashed;
+}
+.manay-info{
+  width:300px;
+  overflow: hidden;
+}
+.manay-guest-panel{
+  float:left;
+  margin-bottom: 10px;
+  margin-right: 20px;
 }
 </style>

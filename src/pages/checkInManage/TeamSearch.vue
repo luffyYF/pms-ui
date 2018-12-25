@@ -54,9 +54,9 @@
     <el-table v-loading="loading" 
     :data="tableData" 
     filter-change="handlerFilterChange" border style="width:98%;margin:auto">
-      <el-table-column label="组单" align="center" width="110" prop="orderNo" fixed="left">
+      <el-table-column label="组单号" align="center" width="110" prop="orderNo" fixed="left">
       </el-table-column>
-      <el-table-column label="团体名称" align="center" width="80" prop="name">
+      <el-table-column label="团体名称" align="center" width="120" prop="name">
       </el-table-column>
       <el-table-column label="入住房数" align="center" width="80" prop="roomNum">
       </el-table-column>
@@ -104,9 +104,9 @@
 <script>
   import bus from '@/utils/bus'
   import {orderStatusMap} from '@/utils/orm'
-  import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
+  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   export default {
     components: {DialogCheckinVisible},
     data () {
@@ -222,7 +222,6 @@
         this.loading = true
         teamListProject(parameters).then(res => {
           this.loading = false
-          console.log(res.data)
           this.tableData = res.data.data;
           this.total = res.data.total;
         })  
@@ -236,8 +235,6 @@
         this.getList();
       }
     },
-    mounted () {
-    }
   }
 </script>
 <style scoped>

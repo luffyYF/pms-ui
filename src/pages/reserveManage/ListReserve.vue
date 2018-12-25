@@ -210,7 +210,7 @@
   import invoiceEdit from '@/pages/financialAudit/invoiceManage/invoiceEdit'
   import bus from '@/utils/bus'
   import {orderStatusMap, checkInTypeMap} from '@/utils/orm'
-  import DialogCheckinVisible from '@/pages/atrialCenter/roomPattern/DialogVisible'
+  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
   import {listChannelType} from '../../api/systemSet/type/typeController'

@@ -1,3 +1,12 @@
+
+/**
+ * 常量映射
+ */
+
+ //夜审时间 单位：小时
+export const nightTrialTime=6;
+
+
 /**
  * 枚举映射
  */
