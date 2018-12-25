@@ -9,7 +9,7 @@
       <el-menu-item index="/reserveManage/addReserve" v-if="hasPerm('pms:menu:addReserve')">
         <span slot="title">新增预定</span>
       </el-menu-item>
-      <el-menu-item index="/reserveManage/groupReserve" v-if="hasPerm('pms:menu:groupReserve')">
+      <el-menu-item index="/reserveManage/teamReserve" v-if="hasPerm('pms:menu:groupReserve')">
         <span slot="title">团队预定</span>
       </el-menu-item>
       <el-menu-item index="/reserveManage/listReserve" v-if="hasPerm('pms:menu:listReserve')">

@@ -210,12 +210,19 @@
                         </div>
                       </div>
                     </div>
-                    <!-- 关联类型 -->
+                    <!-- 入住关联类型 -->
                     <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1"></label>
                     <label slot="reference" class="detailsinfo relation" v-if="item.roomRelationType==2"></label>
                     <label slot="reference" class="detailsinfo room_team" v-if="item.roomRelationType==3"></label>
                   </el-popover>
-                  
+
+                  <!-- 预抵关联类型 -->
+                  <template v-if="!item.guestOrderPk">
+                    <label slot="reference" class="detailsinfo reserve_single" v-if="item.arrivalRelationType==1"></label>
+                    <label slot="reference" class="detailsinfo relation" v-if="item.arrivalRelationType==2"></label>
+                    <label slot="reference" class="detailsinfo room_team" v-if="item.arrivalRelationType==3"></label>
+                  </template>
+
                   <el-popover
                     placement="bottom"
                     title=""
@@ -944,12 +951,12 @@
           }
         })
       },
-      toCheckin(room) {
+      toCheckin(room, arrivalGuestPk) {
         findToday({roomNumberPk:room.roomPk}).then(res=>{
           if(res.data){
             //回显订单
             setTimeout(() => {
-              this.$refs.checkinDialogRef.initOrderInfo(res.data, 'visitor')
+              this.$refs.checkinDialogRef.initOrderInfo(res.data, 'visitor', room.arrivalGuestPk)
             },0)
           }else{
             //办理入住

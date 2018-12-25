@@ -123,6 +123,19 @@
                 </el-form-item>
               </el-col>
             </el-col>
+            <el-col :span="10">
+              <el-form-item label="餐券数量：" style="margin-bottom: 0px !important;">
+                  <el-form-item label="早" label-width="10px" style="width:47px;float:left;">
+                    <el-input v-model="form.mealTicketMorn" style="width:28px;margin-left:5px;text-align: center;"></el-input>
+                  </el-form-item>
+                  <el-form-item label="中" label-width="10px" style="width:47px;float:left;">
+                    <el-input v-model="form.mealTicketNoon" style="width:28px;margin-left:5px;text-align: center;"></el-input>
+                  </el-form-item>
+                  <el-form-item label="晚" label-width="10px" style="width:47px;float:left;">
+                    <el-input v-model="form.mealTicketNight" style="width:28px;margin-left:5px;text-align: center;"></el-input>
+                  </el-form-item>
+              </el-form-item>
+            </el-col>
           </el-col>
 
           <el-col :span="24">
@@ -165,19 +178,6 @@
               </el-col>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="餐券数量：" style="margin-bottom: 0px !important;">
-                  <el-form-item label="早" label-width="10px" style="width:47px;float:left;">
-                    <el-input v-model="form.mealTicketMorn" style="width:28px;margin-left:5px;text-align: center;"></el-input>
-                  </el-form-item>
-                  <el-form-item label="中" label-width="10px" style="width:47px;float:left;">
-                    <el-input v-model="form.mealTicketNoon" style="width:28px;margin-left:5px;text-align: center;"></el-input>
-                  </el-form-item>
-                  <el-form-item label="晚" label-width="10px" style="width:47px;float:left;">
-                    <el-input v-model="form.mealTicketNight" style="width:28px;margin-left:5px;text-align: center;"></el-input>
-                  </el-form-item>
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="客人名称：" required>
                   <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称"></el-input>
@@ -185,18 +185,6 @@
               </el-col>
               <el-col :span="1">
                 <span class="iconSearch" @click="chooseEmptyGuest" title="根据客人姓名查询历史客人"></span>
-              </el-col>
-            </el-col>
-
-            <el-col :span="12">
-              <el-col :span="18">
-                <el-form-item label="协议单位：">
-                  <el-input v-model="form.unitName" :readonly="true"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <span class="iconSearch" style="float: left;" @click="toDialogAgreement" title="查询协议单位"></span>
-                <el-button type="text" size="mini" @click="clearAgreement">清空</el-button>
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -214,8 +202,6 @@
               </el-col>
               <el-col :span="5">
                 <span class="iconCarNoVip" title="读会员卡"></span>
-                <!-- <span class="iconCarNoAdd" title="发展新会员" @click="registeredMember = true"></span> -->
-                <!-- <span class="iconCarNoCopy" title="发展新会员" @click="registeredMember = true"></span> -->
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -327,258 +313,6 @@
       </el-col>
     </el-row>
 
-    <!-- 协议单位 -->
-    <!-- <el-dialog class="agreement-body" title="协议单位" :visible.sync="dialogAgreement" width="50%" :append-to-body="true">
-      <div class="body-conten">
-        <Agreement ref="agreementRef"></Agreement>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="dialogAgreement = false">取 消</el-button>
-      </span>
-    </el-dialog> -->
-
-    <!-- 协议单位 -->
-    <Agreement ref="agreementRef" @sendData="loadAgreement($event)"></Agreement>
-
-    <!-- 注册会员 -->
-    <el-dialog class="agreement-body" title="注册会员" :visible.sync="registeredMember" width="60%" :before-close="registeredMemberClose" :append-to-body="true">
-      <div class="body-conten">
-        <div class="member-title">
-          <h4>会员来源信息（不可修改）</h4>
-          <p>
-            <span>销售员： 管理员223995 </span>
-            <span>领卡部门： 深圳市前海豪斯菲尔信息科技有限公司</span>
-          </p>
-        </div>
-        <div class="member-title">
-          <h4>会员基本资料</h4>
-          <div class="member-content">
-            <el-row>
-              <el-form ref="form" :model="registForm" size="mini" label-width="100px">
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="证件类型：">
-                        <el-select v-model="registForm.credentialsType" placeholder="请选择证件类型">
-                          <el-option label="二代身份证" value="TWO_IDENTITY"></el-option>
-                          <el-option label="一代身份证" value="ONE_IDENTITY"></el-option>
-                          <el-option label="其他" value="ORDER"></el-option>
-                          <el-option label="驾驶证" value="DRIVER"></el-option>
-                          <el-option label="护照" value="PASSPORT"></el-option>
-                          <el-option label="士兵证" value="SOLDIER"></el-option>
-                          <el-option label="军官证" value="OFFICERS"></el-option>
-                          <el-option label="港澳通行证" value="HK_MACAO_PASS"></el-option>
-                          <el-option label="回乡证" value="RETURN_HOME"></el-option>
-                          <el-option label="临时身份证" value="TEMP_IDENTITY"></el-option>
-                          <el-option label="户口簿" value="BOOKLET"></el-option>
-                          <el-option label="警官证" value="POLICE_OFFICER"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="证 件  号">
-                        <el-input v-model="registForm.credentialsNo"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="姓      名：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-col :span="16">
-                        <el-form-item label="卡      号：">
-                          <el-select v-model="registForm.checkType" placeholder="请选择会员级别">
-                            <el-option label="普通会员" value="shanghai"></el-option>
-                            <el-option label="高级会员" value="beijing"></el-option>
-                            <el-option label="VIP会员" value="beijing"></el-option>
-                            <el-option label="铂金会员" value="beijing"></el-option>
-                            <el-option label="尊贵会员" value="beijing"></el-option>
-                          </el-select>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="8">
-                        <el-form-item label-width="0">
-                          <el-input v-model="registForm.guestName"></el-input>
-                        </el-form-item>
-                      </el-col>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="卡      费：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="	备      注：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="性      别：">
-                        <el-select v-model="registForm.guestName" placeholder="请选择性别">
-                          <el-option label="男" value="shanghai"></el-option>
-                          <el-option label="女" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="籍      贯：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="出      生：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="	邮      箱：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="国      家：">
-                        <el-input v-model="registForm.guestName" placeholder="中国大陆"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="手机号码：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2"><span class="required-icon">*</span></el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="24">
-                    <el-col :span="23">
-                      <el-form-item label="地      址：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="客房喜好：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="餐饮喜好：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="特殊要求：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="兴趣爱好：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="推荐卡号：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="推 荐  人：">
-                        <el-input v-model="registForm.guestName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="卡有效期：">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="registForm.date1" style="width: 100%;"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22">
-                      <el-form-item label="	协议单位：">
-                        <el-input v-model="registForm.unitName"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-col>
-                <el-col :span="24">
-                  <el-col :span="12">
-                    <span class="paddingLeft">注：<span class="required-icon">*</span> 为必填项！请用户仔细填写！</span>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-col :span="22"><span @click="toDialogAgreement('registMember')" class="alignRight">选择协议单位</span></el-col>
-                  </el-col>
-                </el-col>
-              </el-form>
-            </el-row>
-          </div>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary">保存注册信息</el-button>
-        <el-button size="mini" type="primary" @click="registeredMember = false">清空</el-button>
-      </span>
-    </el-dialog>
-
     <!-- 续房 -->
     <el-dialog class="agreement-body" title="是否确认续房" :visible.sync="dialogExtend" width="30%" :append-to-body="true" :before-close="extendClose">
       <div class="body-conten">
@@ -648,14 +382,13 @@
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
 
-    //组件
-    import Agreement from '@/components/Agreement/Agreement'
+    
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, Agreement,DialogMakeCard},
+      components:{chooseGuest, reserveManager, DialogMakeCard},
       data() {
         return {
           submitLock:false,
@@ -676,7 +409,6 @@
           proForm: {},
           dialogQRCodeSetting:false,
           dialogAgreement:false,
-          registeredMember: false,
           hobbySetting: false,
           haveRoomFlag: false,
           dialogExtend: false,
@@ -685,7 +417,6 @@
             memPk: undefined,
             guestOrderPk: undefined,
             agreementPk: undefined,
-            unitName:'',
             count: 1,
             checkinDays:1,
             deposit: 200,
@@ -741,7 +472,6 @@
           tempEndDate:null,
           currTableIndex: '',
           listProjectDate: [],
-          listTypeDate: [],
           contractTableData: [], //合约列表
           pickerOptions0: {
             //限制今天以前的日期不可选择
@@ -752,9 +482,6 @@
           regisType: '',
         }
       },
-      created() {
-        this.listTypeType();
-      },
       methods: {
         tableRowClassName({row, rowIndex}) {
           if(this.currTableIndex==row.guestOrderPk){
@@ -762,26 +489,7 @@
           }
           return '';
         },
-        //协议类别 协议单位
-        listTypeType(){
-          listType({typeMaster:'AGREEMENT'}).then(res => {
-            this.listTypeDate = res.data
-          })
-          listProject().then(res => {
-            this.listProjectDate = res.data
-          })
-          setTimeout(_=>{
-            for (let index = 0; index < this.listProjectDate.length; index++) {
-              const agreementTypePk = this.listProjectDate[index].agreementTypePk;
-              for (let ken = 0; ken < this.listTypeDate.length; ken++) {
-                const typePk = this.listTypeDate[ken].typePk;
-                if(agreementTypePk == typePk){
-                  this.listProjectDate[index].agreementTypePk = this.listTypeDate[ken].typeName
-                }
-              }
-            }
-          },1000)
-        },
+       
         /**
          * 初始化空表单（外部调用）
          */
@@ -947,8 +655,6 @@
           this.form.currTitle = ''
           this.form.memPk = undefined
           this.form.guestOrderPk = undefined
-          this.form.agreementPk = undefined
-          this.form.unitName = null
           this.form.count = 1
           this.form.checkinDays = 1
           this.form.deposit = 200
@@ -988,7 +694,6 @@
           this.memberFlag = false
         },
         formFillGuestInfo(guest) {//填充客单信息
-          this.form.agreementPk = guest.agreementPk
           this.form.beginDate = guest.beginDate
           this.form.bornDate = guest.bornDate
           this.form.pmsCancelFlag = guest.pmsCancelFlag
@@ -1028,13 +733,6 @@
           this.form.roomPk = guest.roomPk
           this.form.roomTypeName = guest.roomTypeName
           this.form.roomTypePk = guest.roomTypePk
-          
-          this.form.unitName = null
-          if(this.form.agreementPk){
-            findUnitName({agreementPk:this.form.agreementPk}).then(res=>{
-              this.form.unitName = res.data.unitName
-            })
-          }
 
           if(guest.memType=='MEMBER'){//是会员
             this.memberFlag = true
@@ -1222,17 +920,6 @@
         reserveManager() {//打开预定管理
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
-        // editGuestInfo() {//修改客人信息
-        //   if(this.form.pmsCancelFlag=='Y'){
-        //     return;
-        //   }
-        //   editOrderMember(this.form).then(res=>{
-        //     this.$message({type:'success', message: '客人信息修改成功'})
-        //     bus.$emit('refreshOrderInfo', this.form.orderPk)
-        //   }).catch(error=>{
-        //     bus.$emit('refreshOrderInfo', this.form.orderPk)
-        //   })
-        // },
         toDialogAgreement(buttonType) {//打开选择协议单位
           if(buttonType == 'registMember'){
             this.regisType = buttonType
@@ -1243,21 +930,7 @@
           // },0)
           this.$refs.agreementRef.init()
         },
-        loadAgreement(po) {//回显协议单位
-          // this.dialogAgreement = false
-          if(this.currFormType!='add-guest'){
-            this.form.agreementPk = po.agreementPk
-            this.form.unitName = po.unitName
-          }
-          if(this.regisType == 'registMember') {
-            this.registForm.agreementPk = po.agreementPk;
-            this.registForm.unitName = po.unitName;
-          }
-        },
-        clearAgreement() {//清空协议单位
-          this.form.agreementPk = undefined
-          this.form.unitName = ''
-        },
+        
         tableRowClassName({row, rowIndex}) {
           if(this.currTableIndex==row.guestOrderPk){
             return 'success-row';
@@ -1284,26 +957,6 @@
             this.roomTypeArr = res.data.data;
             callback()
           })
-        },
-        listTypeType(){
-          //协议单位
-          listType({typeMaster:'AGREEMENT'}).then(res => {
-            this.listTypeDate = res.data
-          })
-          listProject().then(res => {
-            this.listProjectDate = res.data
-          })
-          setTimeout(_=>{
-            for (let index = 0; index < this.listProjectDate.length; index++) {
-              const agreementTypePk = this.listProjectDate[index].agreementTypePk;
-              for (let ken = 0; ken < this.listTypeDate.length; ken++) {
-                const typePk = this.listTypeDate[ken].typePk;
-                if(agreementTypePk == typePk){
-                  this.listProjectDate[index].agreementTypePk = this.listTypeDate[ken].typeName
-                }
-              }
-            }
-          },1000)
         },
 
         //设置二维码开门手机号

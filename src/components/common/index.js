@@ -52,6 +52,7 @@ Vue.component('channelSelect', {
     // 切换每页条数
     handleChange (val) {
       this.$emit('input', val)
+      this.$emit('callback', val);
     },
     /**
      * 初始化加载数据
