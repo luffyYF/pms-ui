@@ -58,7 +58,13 @@
       </el-table-column>
       <el-table-column label="团体名称" align="center" width="120" prop="name">
       </el-table-column>
-      <el-table-column label="入住房数" align="center" width="80" prop="roomNum">
+      <el-table-column label="协议单位" align="center" width="120" prop="agreementName">
+      </el-table-column>
+      <el-table-column label="房型名称" align="center" width="120" prop="roomTypeName">
+      </el-table-column>
+      <el-table-column label="总房数" align="center" width="80" prop="roomNum">
+      </el-table-column>
+      <el-table-column label="已排房数" align="center" width="80" prop="rowRoomCount">
       </el-table-column>
       <el-table-column label="入住房号" align="center" width="200" prop="roomNumbers">
         <template slot-scope="scope">
@@ -69,9 +75,9 @@
       </el-table-column>
       <!-- <el-table-column label="虚拟客单号" align="center" width="100" prop="orderGuestNo">
       </el-table-column> -->
-      <el-table-column label="入住时间" align="center" width="180"  prop="beginDate">
+      <el-table-column label="抵店日期" align="center" width="180"  prop="beginDate">
       </el-table-column>
-      <el-table-column label="结账时间" align="center" width="180" prop="endDate">
+      <el-table-column label="离店日期" align="center" width="180" prop="endDate">
       </el-table-column>
       <el-table-column label="团付金额" align="center" width="80" prop="teamAmount">
       </el-table-column>

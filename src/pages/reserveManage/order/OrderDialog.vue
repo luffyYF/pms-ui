@@ -18,11 +18,7 @@
                   <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col class="dialog-li">
-                <el-form-item label="预订卡号">
-                  <el-input v-model="form.reserveCardNo" :disabled="true"></el-input>
-                </el-form-item>
-              </el-col>
+              
               <el-col class="dialog-li">
                 <el-form-item label="预订人">
                   <el-input v-model="form.userName" :disabled="true"></el-input>
@@ -39,6 +35,16 @@
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
                   </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col class="dialog-li">
+                <el-form-item label="协议单位">
+                  <el-input v-model="form.agreementName" :disabled="true"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col class="dialog-li">
+                <el-form-item label="预订卡号">
+                  <el-input v-model="form.reserveCardNo" :disabled="true"></el-input>
                 </el-form-item>
               </el-col>
               <el-col class="dialog-li">
@@ -251,6 +257,7 @@
     <!-- 预定排房 新 -->
     <RowRoomDialog ref="rowRoomRef" @refresh="initOrderInfo"></RowRoomDialog>
 
+
     <!-- 外借 -->
     <dialogBorrow ref="dialogBorrowRef" ></dialogBorrow>
     <!-- 寄存 -->
@@ -263,6 +270,7 @@
     <dialogModifyHomePrice ref="dialogModifyHomePriceRef"></dialogModifyHomePrice>
     <!-- 价格变更记录 -->
     <dialogPriceChangeHistory ref="dialogPriceChangeHistoryRef"></dialogPriceChangeHistory>
+    
 
   </div>
 </template>
@@ -303,7 +311,7 @@ export default {
     dialogOperationLog, 
     dialogModifyHomePrice,
     dialogPriceChangeHistory,
-    RowRoomDialog
+    RowRoomDialog,
   },
   data() {
     return {
@@ -607,12 +615,13 @@ export default {
         this.$message({type:'warning', message:'手机号不合法'})
         return false
       }
-      if(orderPo.isTeam=='Y'){
-        if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
-          this.$message({type:'warning', message: '协议单位不能为空'})
-          return false
-        }
-      }
+      //TODO 协议单位校验
+      // if(orderPo.isTeam=='Y'){
+      //   if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
+      //     this.$message({type:'warning', message: '协议单位不能为空'})
+      //     return false
+      //   }
+      // }
 
       return true
     },

@@ -11,7 +11,12 @@
               trigger="click"
               v-model="scope.row.showFlag">
               <el-table :data="scope.row.tempRowRoomData" height="300" @row-dblclick="selectRoom($event, scope.$index)">
-                <el-table-column property="roomNumber" label="房间号"></el-table-column>
+                <el-table-column property="roomNumber" label="房间号">
+                  <template slot-scope="subScope">
+                    <span>{{subScope.row.roomNumber}}</span>
+                    <span v-if="subScope.row.roomPk==scope.row.roomPk" style="color:red">（已排房）</span>
+                  </template>
+                </el-table-column>
                 <el-table-column property="roomStatusName" label="状态"></el-table-column>
               </el-table>
               <el-input slot="reference" v-model="scope.row.roomNumber" readonly size="mini"></el-input>
@@ -57,9 +62,26 @@ export default {
       multipleSelection:[],
     };
   },
+  watch: {
+    cpCount(currVal, oldVal) {
+      if(currVal==this.guestTable.length) {
+        //处理自动排房 tempRowRoomData
+        let single = '';//记录每次排房的房间主键
+        for(let g of this.guestTable) {
+          for(let room of g.tempRowRoomData) {
+            if(single.indexOf(room.roomPk)==-1) {
+              g.roomNumber = room.roomNumber
+              g.roomPk = room.roomPk
+              single += room.roomPk
+              break;
+            }
+          }
+        }
+      }
+    }
+  },
   methods: {
     showDialog(orderPk, guestList) {
-      console.log(guestList);
       this.orderPk = orderPk;
       this.cpCount = 0;
       this.dialogVisible = true;
@@ -79,7 +101,7 @@ export default {
         }
       });
 
-      //处理自动排房
+      //加载排房数据
       this.guestTable.forEach((guest, index) => {
         let data = {
           roomTypePk: guest.roomTypePk,
@@ -88,15 +110,15 @@ export default {
         }
         rowRoomList(data).then(res => {
           this.$set(guest, 'tempRowRoomData', res.data)
-          if (res.data.length>0) {
-            if (res.data[index]) {
-              guest.roomNumber = res.data[index].roomNumber
-              guest.roomPk = res.data[index].roomPk
-            }else{
-              guest.roomNumber = res.data[0].roomNumber
-              guest.roomPk = res.data[0].roomPk
-            }
-          }
+          // if (res.data.length>0) {
+          //   if (res.data[index]) {
+          //     guest.roomNumber = res.data[index].roomNumber
+          //     guest.roomPk = res.data[index].roomPk
+          //   }else{
+          //     guest.roomNumber = res.data[0].roomNumber
+          //     guest.roomPk = res.data[0].roomPk
+          //   }
+          // }
         }).finally(()=>{
           this.cpCount++;
         })

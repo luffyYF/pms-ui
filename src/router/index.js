@@ -51,7 +51,7 @@ import ShiftTab from '@/pages/atrialCenter/shiftReport/tab.vue'
 
 //预订管理
 import ListReserve from '@/pages/reserveManage/ListReserve.vue'
-import GroupReserve from '@/pages/reserveManage/GroupReserve.vue'
+import TeamReserve from '@/pages/reserveManage/TeamReserve.vue'
 import AddReserve from '@/pages/reserveManage/addReserve.vue'
 
 //客户关系
@@ -182,7 +182,7 @@ export const constantRouterMap = [
         hidden: false,
         children: [
           {path: '/reserveManage/addReserve', component: AddReserve, label: '新增预定'},
-          {path: '/reserveManage/groupReserve',  component: GroupReserve, label: '团队预定'},
+          {path: '/reserveManage/teamReserve',  component: TeamReserve, label: '团队预定'},
           {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
         ]
       },
