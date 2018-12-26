@@ -1,31 +1,30 @@
 <template>
   <section class="class-container">
-      
-      <div class="box">
-        <el-button class="backBtn" @click="goBack">返回</el-button>
-        <h2 class="box-title">当前选择分店：
-            <span class="sub-title">{{activeCompany.companyName}}</span>
-        </h2>
-        <div class="box-list clearfix" v-for="(company,index) in companyShift" :key="index">
-            <h3 class="fl">{{company.cityName}}</h3>
-            <div class="fl company-list" v-for="(com,index) in company.arr" :key="index">
-                <span @click="selectCompany(com)"  class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
-            </div>
-        </div>
-        <div class="box-select clearfix">
-            <h3  class="fl">班次选择：</h3>
-            <div class="class-list fl">
-                <span v-if="activeCompany.companyPk == ''">请先选择店面</span>
-                <span v-if="shiftList.length == 0 && activeCompany.companyPk != ''" style="text-decoration: underline;" @click="toHome">暂未设置班次，进入系统</span>
-                <span @click="toHome(shift)" v-for="(shift,index) of shiftList" :key="index">{{shift.shiftName}}（{{shift.beginTime}} - {{shift.endTime}}）</span>
-            </div>
-        </div>
+    <div class="box">
+      <el-button class="backBtn" @click="goBack">返回</el-button>
+      <h2 class="box-title">当前选择分店：
+        <span class="sub-title">{{activeCompany.companyName}}</span>
+      </h2>
+      <div class="box-list clearfix" v-for="(company,index) in companyShift" :key="index">
+          <h3 class="fl">{{company.cityName}}</h3>
+          <div class="fl company-list" v-for="(com,index) in company.arr" :key="index">
+            <span @click="selectCompany(com)"  class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
+          </div>
       </div>
+      <div class="box-select clearfix">
+          <h3  class="fl">班次选择：</h3>
+          <div class="class-list fl">
+              <span v-if="activeCompany.companyPk == ''">请先选择店面</span>
+              <span v-if="shiftList.length == 0 && activeCompany.companyPk != ''" style="text-decoration: underline;" @click="toHome">暂未设置班次，进入系统</span>
+              <span @click="toHome(shift)" v-for="(shift,index) of shiftList" :key="index">{{shift.shiftName}}（{{shift.beginTime}} - {{shift.endTime}}）</span>
+          </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import { getCompanyShift, selectCompanyShift, getUserInfo } from "@/api/login";
+import { getCompanyShift, getUserInfo } from "@/api/login";
 import { logout } from '@/api/upmsApi'
 import Cookies from 'js-cookie'
 import store from "@/store";

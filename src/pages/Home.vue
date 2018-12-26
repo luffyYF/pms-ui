@@ -1,5 +1,6 @@
 <template>
-  <el-row class="container">
+  <div class="container">
+     <!-- el-col :span="24" -->
     <!--头部1-->
     <el-col :span="24" class="header1">
       <div class="left" @click="toSelectClass" style="cursor: pointer;">{{activeCompany.companyName}}</div>
@@ -11,7 +12,7 @@
     <!--头部2-->
     <el-col :span="24" class="header2">
       <div class="left"><img src="../assets/image/home_logo.png" /></div>
-      <!--<div class="right">-->
+      <!--<el-col class="right">-->
       <div class="right" ref="dirRef">
         <!-- getRPath('/atrialCenter',1) -->
         <router-link to="/atrialCenter" v-if="hasPerm('pms:dir:roomCenter')">
@@ -149,18 +150,26 @@
       </div>
     </el-col>
     <!-- tab标签切换页面显示 -->
-    <el-col class="house-content" :span="24">
+    <el-col :span="24" class="house-content">
       <transition name="el-fade-in-linear">
         <router-view></router-view>
       </transition>
       <audio id="audio" src="http://www.housefeel.cn/Control/File/mp3/yuyintishi.mp3"></audio>
     </el-col>
-  </el-row>
+    <el-col :span="24" class="line-footer">
+      酒店编号：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp;
+      营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
+      周{{footerData.weekday}} {{footerData.currTime}}
+      <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
+    </el-col>
+  </div>
 </template>
 
 <script>
+import moment from 'moment'
 import store from "@/store";
 import Cookies from 'js-cookie'
+import {nightTrialTime} from '@/utils/orm'
 import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import {getToken, removeToken, removeRefreshToken} from '@/utils/auth'
@@ -176,7 +185,6 @@ export default {
     if(test){
       this.activeCompany = JSON.parse(test);
     }
-      
     if (
       this.activeCompany.companyName == "" ||
       this.activeCompany.companyName == null ||
@@ -184,17 +192,34 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
-    
+    this.userinfo = JSON.parse(localStorage.getItem('pms_userinfo'))
+    this.footerData.companyCode = this.activeCompany.companyCode
+    this.footerData.upmsRealName = this.userinfo.upmsRealName
+    this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
+    setInterval(()=>{
+      this.footerData.currTime = moment().format('MM月DD日 HH:mm')
+      this.footerData.weekday = moment().weekday();
+    }, 5000)/**一秒钟 */
+
     this.validateToken();
   },
   data() {
     return {
+      moment: moment,
       contInterval:null,
       collapsed: false,
       screenWidth: document.body.clientWidth,
       activeCompany: {},
       stompClient: null,
-      
+      bussinessDate: null,
+      userinfo: null,
+      footerData: {
+        companyCode:null,
+        bussinessDate: null,
+        upmsRealName: null,
+        currTime: null,
+        weekday: null,
+      }
     };
   },
   methods: {
@@ -423,6 +448,18 @@ export default {
 .right .router-link-active {
   background: rgba(225, 102, 0, 0.6);
 }
+.line-footer{
+  height: 30px;
+  position: absolute;
+  bottom: 0px;
+  line-height: 30px;
+  background: #ffefe4;
+  z-index: 999;
+  color: #c55d00;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 12px;
+}
 .router_nav_popover a {
   display: inline-block;
 }
@@ -519,7 +556,8 @@ export default {
   padding: 6px 0;
 }
 .house-content {
-  height: calc(100% - 80px);
+  /* height: calc(100% - 80px); */
+  height: calc(100% - 122px);
 }
 .el-tabs__nav-scroll {
   padding: 0 10px;
@@ -622,8 +660,14 @@ export default {
   line-height: 40px;
 }
 .menu-content {
+  /* height: calc(100% - 42px);
+  padding: 18px; */
+  /* overflow-y: scroll; */
+  /* height: 100%; */
+  overflow-y: scroll;
   height: calc(100% - 42px);
-  padding: 18px;
+  padding: 10px; 
+
 }
 
 .primary-tool {

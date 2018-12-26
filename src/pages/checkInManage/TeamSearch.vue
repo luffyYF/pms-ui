@@ -99,12 +99,17 @@
         <el-pagination @current-change="getchenkTeamGird" @size-change="sizeChange" :page-sizes="[5,10,20,30,40,50]" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
     </div>
+
+    <!-- table底部提示 -->
+    <div class="table-tip">
+      <p>注：</p>
+      <p>总房数：取消订单的除外，包含预定未排房、预定已排房、入住、退房未结、结账离店的客单数量</p>
+      <p>已排房数：仅包含预定已排房的客单数量</p>
+    </div>
     <!-- 订单弹出 -->
-    <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose"> -->
-      <div class="pattern-dialog-container">
-        <DialogCheckinVisible ref="checkinDialogRef" />
-      </div>
-    <!-- </el-dialog> -->
+    <div class="pattern-dialog-container">
+      <DialogCheckinVisible ref="checkinDialogRef" />
+    </div>
   </section>
 </template>
 <script>
@@ -262,5 +267,7 @@
 .el-table--border{
   top: 10px;
 }
-
+.table-tip p{
+  color:red;
+}
 </style>

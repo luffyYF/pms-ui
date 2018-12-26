@@ -758,9 +758,18 @@
             }
           })
 
-          this.roomList.forEach((v,i)=>{
-            this.$refs.popover1[i].$mount()
-          })
+          //
+          // this.roomList.forEach((v,i)=>{
+          //   console.log('pop',this.$refs.popover1[i]);
+          //   this.$refs.popover1[i].$forceUpdate()
+          // })
+          // this.$nextTick(()=>{
+          //   this.$refs.popover1.forEach(ref=>{
+          //     console.log('pop', ref);
+          //     ref.$forceUpdate()
+          //   })
+          // })
+
           
         })
       },
@@ -1178,10 +1187,11 @@
   margin-bottom: 0px !important
 }
 .el-aside{
-  height: calc(100% - 80px);
+  /* position: absolute;
+  height: calc(100% - 162px);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-left: 15px;
+  padding-left: 15px; */
 }
 .form-screh{
   width: 100%;
@@ -1352,10 +1362,10 @@
 .el-main{
   position: absolute;
   left: 290px;
-  padding: 0 20px !important;
+  padding: 0px 20px !important;
   overflow: auto;
   width: calc(100% - 290px);
-  height: calc(100% - 80px);
+  height: calc(100% - 162px);
 }
 
 .el-row {
