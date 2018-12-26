@@ -60,8 +60,8 @@
       </el-table-column>
       <el-table-column label="协议单位" align="center" width="120" prop="agreementName">
       </el-table-column>
-      <el-table-column label="房型名称" align="center" width="120" prop="roomTypeName">
-      </el-table-column>
+      <!-- <el-table-column label="房型名称" align="center" width="120" prop="roomTypeName">
+      </el-table-column> -->
       <el-table-column label="总房数" align="center" width="80" prop="roomNum">
       </el-table-column>
       <el-table-column label="已排房数" align="center" width="80" prop="rowRoomCount">
