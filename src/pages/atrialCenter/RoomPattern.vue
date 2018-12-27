@@ -273,8 +273,9 @@
                 title=""
                 width="200"
                 trigger="hover"
-                :content="'欠费金额：￥'+Math.abs(item.arrearsAmount)">
-                <label slot="reference" class="detailsinfo arrears " v-if="item.arrearsAmount<0"></label>
+                :content="'欠费金额：￥'+Math.abs(item.owePirce)">
+                <!-- <label slot="reference" class="detailsinfo arrears " v-if="item.arrearsAmount<0"></label> -->
+                <label slot="reference" class="detailsinfo arrears " v-if="item.owePirce"></label>
               </el-popover>
               
               <label class="detailsinfo clockroom" v-if="item.checkInType==1" title="钟点房"></label>
@@ -289,7 +290,6 @@
                 width="200"
                 trigger="hover"
                 :content="'预离日期：'+item.guestEndDate">
-               
                 <label slot="reference" class="detailsinfo reserve_leave" v-if="item.leaveFlag"></label>
               </el-popover>
             </div>
@@ -1441,7 +1441,7 @@
 }
 .pattern-dropdown{
   width: 100%;
-  height: 64px;
+  height: 55px;
   top: 5px;
   position: absolute;
   /* padding: 0 5px; */

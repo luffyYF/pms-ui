@@ -193,12 +193,14 @@ export default {
     this.userinfo = JSON.parse(localStorage.getItem('pms_userinfo'))
     this.footerData.companyCode = this.activeCompany.companyCode
     this.footerData.upmsRealName = this.userinfo.upmsRealName
-    this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
+    this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     setInterval(()=>{
       this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
-    }, 1000)/**一秒钟 */
-
+    }, 2000);
+    setInterval(()=>{
+      this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
+    }, 30*60*1000)
     this.validateToken();
   },
   data() {

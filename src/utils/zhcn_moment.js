@@ -1,3 +1,7 @@
+
+/**
+ * moment汉化 ，只需要在main.js中引用该文件即可
+ */
 import moment from 'moment'
 // 里面的字符可以根据自己的需要进行调整
 moment.locale('zh-cn', {
