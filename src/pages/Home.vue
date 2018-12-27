@@ -157,9 +157,9 @@
       <audio id="audio" src="http://www.housefeel.cn/Control/File/mp3/yuyintishi.mp3"></audio>
     </el-col>
     <el-col :span="24" class="line-footer">
-      酒店编号：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp;
+      酒店编码：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp;
       营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
-      周{{footerData.weekday}} {{footerData.currTime}}
+      {{footerData.currTime}}
       <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
     </el-col>
   </div>
@@ -167,12 +167,10 @@
 
 <script>
 import moment from 'moment'
-import store from "@/store";
 import Cookies from 'js-cookie'
 import {nightTrialTime} from '@/utils/orm'
 import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
-import {getToken, removeToken, removeRefreshToken} from '@/utils/auth'
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
 // import {logout,refreshTokenUpms }from '@/api/login'
@@ -196,10 +194,10 @@ export default {
     this.footerData.companyCode = this.activeCompany.companyCode
     this.footerData.upmsRealName = this.userinfo.upmsRealName
     this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
+    this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
     setInterval(()=>{
-      this.footerData.currTime = moment().format('MM月DD日 HH:mm')
-      this.footerData.weekday = moment().weekday();
-    }, 5000)/**一秒钟 */
+      this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
+    }, 1000)/**一秒钟 */
 
     this.validateToken();
   },
@@ -218,7 +216,6 @@ export default {
         bussinessDate: null,
         upmsRealName: null,
         currTime: null,
-        weekday: null,
       }
     };
   },
@@ -260,21 +257,6 @@ export default {
         type: "warning"
       })
         .then(() => {
-          // store
-          //   .dispatch("LogOut")
-          //   .then(res => {
-          //     this.stompClient.disconnect();
-          //     // 拉取user_info
-          //     this.$router.push("/login");
-          //     window.localStorage.setItem("current_logon_company", "");
-          //   })
-          //   .catch(() => {
-          //     store.dispatch("FedLogOut").then(() => {
-          //       this.$message.error("验证失败,请重新登录");
-          //       this.$router.push("/login");
-          //       window.localStorage.setItem("current_logon_company", "");
-          //     });
-          //   });
           logout().then(res=>{}).finally(()=>{
             Cookies.set('select_company_pk','')
             Cookies.set('select_shift_pk','')

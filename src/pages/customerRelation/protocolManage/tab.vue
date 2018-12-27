@@ -1,16 +1,16 @@
 <template>
   <div>
     <el-tabs type="border-card" ref='checkTabs' v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="协议单位管理" name="protocolUnitManagement" v-if="powerJudge('150301')">
+      <el-tab-pane label="协议单位管理" name="protocolUnitManagement" >
         <protocol-unit-management ref="protocolUnitManagement"/>
       </el-tab-pane>
-      <el-tab-pane label="销售员管理" name="salesmanManagement" v-if="powerJudge('150302')">
+      <el-tab-pane label="销售员管理" name="salesmanManagement" >
         <salesman-management ref="salesmanManagement"/>
       </el-tab-pane>
-      <el-tab-pane label="协议类别" name="protocolCategory" v-if="powerJudge('150303')">
+      <el-tab-pane label="协议类别" name="protocolCategory" >
         <protocol-category ref="protocolCategory"/>
       </el-tab-pane>
-      <el-tab-pane label="行业分类" name="industryClassification" v-if="powerJudge('150304')">
+      <el-tab-pane label="行业分类" name="industryClassification" >
         <industry-classification ref="industryClassification"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="协议价格调控" name="agreementPriceRegulation" v-if="powerJudge('150306')">
@@ -26,7 +26,7 @@
   import ProtocolCategory from './ProtocolCategory'
   import IndustryClassification from './IndustryClassification'
   import AgreementPriceRegulation from './AgreementPriceRegulation'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
       ProtocolUnitManagement,
@@ -64,9 +64,9 @@
         }
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

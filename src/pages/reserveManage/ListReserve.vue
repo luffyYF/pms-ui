@@ -215,7 +215,7 @@
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
   import {listChannelType} from '../../api/systemSet/type/typeController'
   import {listType} from '@/api/utils/pmsTypeController'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
     components: {DialogCheckinVisible,invoiceEdit},
@@ -315,9 +315,9 @@
       onInvoiceClick(orderNo){
         this.$refs.invoiceEditRef.showDialog(null,orderNo);
       },
-      powerJudge(id){
-        return powerJudge(id);
-      },
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // },
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {

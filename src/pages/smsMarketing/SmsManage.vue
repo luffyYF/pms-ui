@@ -1,16 +1,16 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs'>
-      <el-tab-pane label="短信列表" name="first" v-if="powerJudge('160101')">
+      <el-tab-pane label="短信列表" name="first">
         <short-message-list/>
       </el-tab-pane>
-      <el-tab-pane label="短信详细列表" name="secone" v-if="powerJudge('160102')">
+      <el-tab-pane label="短信详细列表" name="secone">
         <sms-detailed-list/>
       </el-tab-pane>
-      <el-tab-pane label="管理员短信列表" name="three" v-if="powerJudge('160103')">
+      <el-tab-pane label="管理员短信列表" name="three">
         <admin-short-message-list/>
       </el-tab-pane>
-      <el-tab-pane label="管理员短信详细列表" name="four" v-if="powerJudge('160104')">
+      <el-tab-pane label="管理员短信详细列表" name="four">
         <admin-sms-detailed-list/>
       </el-tab-pane>
     </el-tabs>
@@ -22,7 +22,7 @@ import shortMessageList from './smsManageFolder/ShortMessageList'
 import smsDetailedList from './smsManageFolder/SmsDetailedList'
 import adminShortMessageList from './smsManageFolder/AdminShortMessageList'
 import adminSmsDetailedList from './smsManageFolder/AdminSmsDetailedList'
-import {powerJudge} from '@/utils/permissionsOperation.js'
+// import {powerJudge} from '@/utils/permissionsOperation.js'
 export default {
   components: {shortMessageList, smsDetailedList, adminShortMessageList, adminSmsDetailedList},
   data () {
@@ -35,9 +35,9 @@ export default {
       this.activeName = this.$refs.checkTabs.panes[0].name
     },
     methods: {
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
 }
 </script>

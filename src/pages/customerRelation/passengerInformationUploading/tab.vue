@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="旅客信息" name="one" v-if="powerJudge('150601')">
+      <el-tab-pane label="旅客信息" name="one" >
         <passenger-information/>
       </el-tab-pane>
-      <el-tab-pane label="上传历史" name="two" v-if="powerJudge('150602')">
+      <el-tab-pane label="上传历史" name="two">
         <upload-history/>
       </el-tab-pane>
-      <el-tab-pane label="失败记录" name="three" v-if="powerJudge('150603')">
+      <el-tab-pane label="失败记录" name="three" >
         <failure-record/>
       </el-tab-pane>
     </el-tabs>
@@ -18,7 +18,7 @@
   import PassengerInformation from './PassengerInformation'
   import UploadHistory from './UploadHistory'
   import FailureRecord from './FailureRecord'
-  import {powerJudge} from '@/utils/permissionsOperation.js'  
+  // import {powerJudge} from '@/utils/permissionsOperation.js'  
   export default {
     components: {
       PassengerInformation,
@@ -38,9 +38,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

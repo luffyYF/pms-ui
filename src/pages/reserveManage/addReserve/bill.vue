@@ -66,23 +66,23 @@
         </el-col>
         <el-col :span="24" class="marginTop10 bill-el-button">
           财务处理：
-          <el-button size="mini" @click="splitBillOperation" v-if="powerJudge('402007')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">拆账</el-button>
-          <el-button size="mini" @click="offsetBillOperation" v-if="powerJudge('402003')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">冲减</el-button>
+          <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">拆账</el-button>
+          <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">冲减</el-button>
           <!-- <el-button size="mini" @click="dialogTransferAccounts = true" v-if="powerJudge('402004')">转账</el-button> -->
-          <el-button size="mini" @click="dialogAccountedFor = true" v-if="powerJudge('402005')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">入账</el-button>
+          <el-button size="mini" @click="dialogAccountedFor = true" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">入账</el-button>
           <!-- <el-button size="mini" @click="dialogBatchEntry = true">批量入账</el-button> -->
           <!-- <el-button size="mini" @click="dialogPreLicensing = true">预授权<span>0</span>笔</el-button> -->
           <!-- <el-button size="mini" @click="dialogVirtualBill = true">虚拟账单</el-button> -->
         </el-col>
         <el-col :span="24" class="bill-el-button">
           结账处理：
-          <el-button size="mini" @click="settlement(0)" v-if="powerJudge('402010') && (currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY')" :disabled="currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN'">结账</el-button>
+          <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY'" :disabled="currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN'">结账</el-button>
           <!-- (currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') -->
           <!-- <el-button size="mini">部分结账回复</el-button> -->
           <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> --> 
           <!-- <el-button size="mini">取消入住</el-button> -->
           <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN'">退房未结</el-button>
-          <el-button size="mini" @click="settlement(2)" v-if="powerJudge('402011')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>
+          <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
         <el-col :span="24" class="bill-el-button">

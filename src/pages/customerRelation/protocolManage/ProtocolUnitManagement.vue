@@ -51,7 +51,7 @@
     <!-- table -->
     <div class="bg-reserve">
       <h5 class="info-title">协议单位列表</h5>
-      <el-button type="primary" size="mini" class="add-pro" @click="addProClick" v-if="powerJudge('401501')">添加协议单位</el-button>
+      <el-button type="primary" size="mini" class="add-pro" @click="addProClick">添加协议单位</el-button>
       <el-table 
       size="mini" 
       border 
@@ -78,9 +78,9 @@
         <el-table-column fixed="right" label="操作" align="center" width="160">
           <!-- 操作 -->
           <template slot-scope="scope">
-            <el-button @click="editProClick(scope.row)" type="text" size="mini" v-if="powerJudge('401502')">修改</el-button>
+            <el-button @click="editProClick(scope.row)" type="text" size="mini">修改</el-button>
             <!-- <el-button @click="specialPriceClick(scope.row)" type="text" size="mini">特殊房间设置</el-button> -->
-            <el-button @click="deleteClick(scope.row)" type="text" size="mini" v-if="powerJudge('401503')">删除</el-button>
+            <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -351,7 +351,7 @@
 import {listType} from '@/api/utils/pmsTypeController'
 import {addProject,delProject,updateProject,listProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
 import {addPriceProject,delPriceProject,listPriceProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementRoomPrice'
-import {powerJudge} from '@/utils/permissionsOperation.js'
+// import {powerJudge} from '@/utils/permissionsOperation.js'
 
 export default {
   data() {
@@ -478,9 +478,9 @@ export default {
     init() {
       this.listMastersType()
     },
-    powerJudge(id){
-      return powerJudge(id);
-    },
+    // powerJudge(id){
+    //   return powerJudge(id);
+    // },
     addProClick(row) {
       const self = this;
       this.dialogProtocolVisible = true

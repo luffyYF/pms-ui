@@ -82,7 +82,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:15px">搜索订单</el-button>
-          <el-button type="primary" icon="el-icon-download" @click="getList" v-if="powerJudge('401602')">导出excel</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="getList">导出excel</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -171,7 +171,7 @@
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
     components: {DialogCheckinVisible},
@@ -357,9 +357,9 @@
         self.getList();
       }
       ,
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
 
     },
     mounted () {

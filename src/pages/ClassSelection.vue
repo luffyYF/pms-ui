@@ -27,7 +27,7 @@
 import { getCompanyShift, getUserInfo } from "@/api/login";
 import { logout } from '@/api/upmsApi'
 import Cookies from 'js-cookie'
-import store from "@/store";
+// import store from "@/store";
 import Moment from "moment";
 export default {
   created() {

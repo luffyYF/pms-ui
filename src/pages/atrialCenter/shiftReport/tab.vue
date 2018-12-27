@@ -2,7 +2,7 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="收银员收款报表" name="one" class="aLayerOfPage" v-if="powerJudge('110801')">
+      <el-tab-pane label="收银员收款报表" name="one" class="aLayerOfPage">
         <receipts-report/>
       </el-tab-pane>
     </el-tabs>
@@ -11,7 +11,7 @@
 
 <script>
   import ReceiptsReport from '@/pages/reportCenter/shiftAndAudit/ReceiptsReport'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
       ReceiptsReport
@@ -25,9 +25,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

@@ -12,7 +12,7 @@
       show-summary
       :summary-method="getSummaries"
       border>
-      <el-table-column prop="roomTypeName" min-width="60" show-overflow-tooltip/>
+      <el-table-column prop="roomTypeName" min-width="150" show-overflow-tooltip/>
       <el-table-column v-for="title in tableTitle" :key="title.roomTypePk" :label="title.name" :prop="title.value"  min-width="120" show-overflow-tooltip>
         <template slot-scope="scope">
           <span v-if="title.name !== '出租率'">{{scope.row[title.value]==null?0:scope.row[title.value]}}</span>

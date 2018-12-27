@@ -1,10 +1,10 @@
 <template>
   <div class="height-programme-one">
     <el-tabs v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
-      <el-tab-pane label="哑房账列表" name="first" class="aLayerOfPage" v-if="powerJudge('1901')">
+      <el-tab-pane label="哑房账列表" name="first" class="aLayerOfPage" >
         <dumb-house :dumbHouse="disableds"/>
       </el-tab-pane>
-      <el-tab-pane label="新增哑房账" name="second" class="twoLayerOfPage" v-if="powerJudge('1902')">
+      <el-tab-pane label="新增哑房账" name="second" class="twoLayerOfPage" >
         <add-dumb-house :dumbHouse="disableds"/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import DumbHouse from './DumbHouse'
   import AddDumbHouse from './addDumbHouse/tab'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
       DumbHouse,
@@ -40,9 +40,9 @@
           this.disableds = true
           console.log(this.disableds)        }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

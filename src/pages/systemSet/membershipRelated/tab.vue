@@ -1,16 +1,16 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="积分商品管理" name="memberIntegralCommodity" v-if="powerJudge('240302')">
+      <el-tab-pane label="积分商品管理" name="memberIntegralCommodity">
         <member-integral-commodity ref="memberIntegralCommodity"/>
       </el-tab-pane>
-      <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount" v-if="powerJudge('240303')">
+      <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount">
         <member-recharge-discount ref="memberRechargeDiscount"/>
       </el-tab-pane>
-      <el-tab-pane label="会员卡费管理" name="memberCardFee" v-if="powerJudge('240304')">
+      <el-tab-pane label="会员卡费管理" name="memberCardFee">
         <member-card-fee ref="memberCardFee"/>
       </el-tab-pane>
-      <el-tab-pane label="会员级别管理" name="memberLevel" v-if="powerJudge('240305')">
+      <el-tab-pane label="会员级别管理" name="memberLevel">
         <member-level ref="memberLevel"/>
       </el-tab-pane>
     </el-tabs>
@@ -22,7 +22,7 @@
   import MemberRechargeDiscount from './MemberRechargeDiscount'
   import MemberCardFee from './MemberCardFee'
   import MemberLevel from './MemberLevel'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -57,9 +57,9 @@
           child.init()
         }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
 
     }
   }

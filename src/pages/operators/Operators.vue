@@ -31,7 +31,7 @@
         <el-input type="password" v-model="addOperaterObj.userRePwd" clearable></el-input>
       </el-form-item>
       <el-form-item style="margin-left:10px;">
-        <el-button type="primary" v-if="!showModifyBtn && powerJudge('401401')" @click="saveAddOperator">添加操作员</el-button>
+        <el-button type="primary" v-if="!showModifyBtn" @click="saveAddOperator">添加操作员</el-button>
         <el-button type="primary" v-if="showModifyBtn" @click="submitModify">修改</el-button>
         <el-button type="primary" v-if="showModifyBtn" @click="cancelModify">取消修改</el-button>
         <span style="color:red" v-if="showModifyBtn">登录密码不填，使用原密码</span>
@@ -72,10 +72,10 @@
       <el-table-column fixed="right" align="center" label="操作">
         <template slot-scope="scope">
           <el-button @click="changeStatus(scope.row)" type="text" size="small">{{scope.row.locked=='1'?'正常':'锁定'}}</el-button>
-          <el-button type="text" size="small" @click="modifyOpetator(scope.row)" v-if="powerJudge('401405')">修改</el-button>
-          <el-button @click="resetPassword(scope.row)" type="text" size="small" v-if="powerJudge('401406')">密码重置</el-button>
+          <el-button type="text" size="small" @click="modifyOpetator(scope.row)">修改</el-button>
+          <el-button @click="resetPassword(scope.row)" type="text" size="small" >密码重置</el-button>
           <!-- <el-button @click="dialogVisible3 = true" type="text" size="small">微信绑定</el-button> -->
-          <el-button @click="deleteOpetator(scope.row)" type="text" size="small" v-if="powerJudge('401403')">移除</el-button>
+          <el-button @click="deleteOpetator(scope.row)" type="text" size="small" >移除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,7 +106,7 @@ import {
   addOperater,
 } from "../../api/operators/pmsUserController";
 // import { listRole } from "../../api/operators/pmsRoleController";
-import { powerJudge } from "@/utils/permissionsOperation.js";
+// import { powerJudge } from "@/utils/permissionsOperation.js";
 import {listRoles,checkOnlyUser,updateOperater,updateStatus,resetPwd} from '@/api/upmsApi'
 
 export default {
@@ -396,9 +396,9 @@ export default {
       this.listSelectUser(input);
     },
     
-    powerJudge(id) {
-      return powerJudge(id);
-    }
+    // powerJudge(id) {
+    //   return powerJudge(id);
+    // }
   }
 };
 </script>

@@ -95,10 +95,10 @@
                     </el-col>
                     <el-col :span="24" style="text-align: center;">
                         <el-form-item>
-                            <el-button type="primary" @click="btnAdd" :disabled="currRow!=null" v-if="powerJudge('401302')">增加</el-button>
-                            <el-button type="primary" @click="giveBack" :disabled="!(this.currRow!=null && this.currRow.status=='NORETURN')" v-if="powerJudge('401303')">归还</el-button>
+                            <el-button type="primary" @click="btnAdd" :disabled="currRow!=null">增加</el-button>
+                            <el-button type="primary" @click="giveBack" :disabled="!(this.currRow!=null && this.currRow.status=='NORETURN')">归还</el-button>
                             <el-button type="primary" @click="payfor" :disabled="!(this.currRow!=null && this.currRow.status=='NORETURN')">赔偿</el-button>
-                            <el-button type="primary" @click="cancel" :disabled="!(this.currRow!=null && this.currRow.status=='NORETURN')" v-if="powerJudge('401304')">取消</el-button>
+                            <el-button type="primary" @click="cancel" :disabled="!(this.currRow!=null && this.currRow.status=='NORETURN')">取消</el-button>
                             <el-button type="primary" @click="toClose">关闭</el-button>
                         </el-form-item>
                     </el-col>
@@ -114,7 +114,7 @@
 import bus from '@/utils/bus'
 import { letoutMap } from "@/utils/orm";
 import { formatDate } from "@/utils/index";
-import {powerJudge} from '@/utils/permissionsOperation.js'
+// import {powerJudge} from '@/utils/permissionsOperation.js'
 
 import {
   guestSelect,
@@ -307,9 +307,9 @@ export default {
       bus.$emit('billload')
       bus.$emit("togmcount")
     },
-    powerJudge(id){
-      return powerJudge(id);
-    }
+    // powerJudge(id){
+    //   return powerJudge(id);
+    // }
 
   }
 };

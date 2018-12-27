@@ -126,7 +126,7 @@
         <template slot-scope="scope">
           <el-button @click="showDumbDetail(scope.row)" type="text" size="mini">查看</el-button>
           <el-dialog :title="scope.row.orderNo" :visible.sync="dialogTableVisible" width="70%">
-            <el-button type="primary" size="mini" :disabled="!powerJudge(402002)" @click="showOperList(scope.row.dumbPk)" class="opear-str">操作记录</el-button>
+            <el-button type="primary" size="mini"  @click="showOperList(scope.row.dumbPk)" class="opear-str">操作记录</el-button>
             <!-- 操作记录 -->
             <el-dialog
               title="操作记录"
@@ -206,7 +206,7 @@
                 </el-form>
                 <hr>
                 <center>
-                  <el-button size="mini" type="primary" :disabled="!powerJudge(402001)" @click="updateDumb">保 存</el-button>
+                  <el-button size="mini" type="primary" @click="updateDumb">保 存</el-button>
                   <el-button size="mini" type="primary" @click="dialogTableVisible = false">关 闭</el-button>
                 </center>
               </el-tab-pane>
@@ -224,11 +224,11 @@
 </template>
 
 <script>
+  import Moment from 'moment'
   import {listByGrid,updateDumbHouse,listLog} from '@/api/dumbHouse/pmsDumbHouseController'
   import {listProject } from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
   import BillTag from "../reserveManage/addReserve/bill"
-  import Moment from 'moment'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     props: ['dumbHouse'],
     components: {BillTag},
@@ -352,9 +352,9 @@
       }
     },
     methods: {
-      powerJudge(id){
-        return powerJudge(id);
-      },
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // },
       //获取协议的单位
       listProjectDate(){
         listProject().then(res => {

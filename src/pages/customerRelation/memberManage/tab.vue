@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
-      <el-tab-pane label="注册会员" name="registeredMember" v-if="powerJudge('150101')">
+      <el-tab-pane label="注册会员" name="registeredMember">
         <registered-member ref="registeredMember"/>
       </el-tab-pane>
-      <el-tab-pane label="会员管理" name="membeManagement" v-if="powerJudge('150102')">
+      <el-tab-pane label="会员管理" name="membeManagement">
         <membe-management ref="membeManagement"/>
       </el-tab-pane>
-      <el-tab-pane label="恢复删除会员" name="resumeDeletingMembers" v-if="powerJudge('150103')">
+      <el-tab-pane label="恢复删除会员" name="resumeDeletingMembers">
         <resume-deleting-members ref="resumeDeletingMembers"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="激活会员" name="activatingMember" v-if="powerJudge('150104')">
@@ -46,7 +46,7 @@
   import MemberRechargeReport from './MemberRechargeReport'
   import MemberBalanceReport from './MemberBalanceReport'
   import StorageCardConsumption from './StorageCardConsumption'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -71,9 +71,9 @@
       this.activeName = this.$refs.checkTabs.panes[0].name
     },
     methods: {
-      powerJudge(id){
-        return powerJudge(id);
-      },
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // },
       handleClick (tab, event) {
         console.log(tab, event)
         if(this.activeName == "registeredMember"){

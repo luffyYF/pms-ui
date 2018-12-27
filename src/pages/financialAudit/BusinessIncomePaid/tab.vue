@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="上缴管理" name="one" v-if="powerJudge('180601')">
+      <el-tab-pane label="上缴管理" name="one">
         <turn-over-management/>
       </el-tab-pane>
-      <el-tab-pane label="上缴历史查询" name="two" v-if="powerJudge('180602')">
+      <el-tab-pane label="上缴历史查询" name="two">
         <turn-over-history/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import TurnOverHistory from './turnOverHistory'
   import TurnOverManagement from './turnOverManagement'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
       TurnOverHistory,
@@ -33,9 +33,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

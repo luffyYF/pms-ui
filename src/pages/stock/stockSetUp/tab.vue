@@ -1,7 +1,7 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="仓库设置" name="one" v-if="powerJudge('210201')">
+      <el-tab-pane label="仓库设置" name="one">
         <storage-setting ref="StorageSettingRef"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="商品类型设置" name="two" v-if="powerJudge('210202')">
@@ -22,7 +22,7 @@
   import CommodityTypeSetting from './CommodityTypeSetting'
   import CommoditySetting from './CommoditySetting'
   import VendorSetting from './VendorSetting'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -46,9 +46,9 @@
           this.$refs.StorageSettingRef.listStorage();
         }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
 
     }
   }

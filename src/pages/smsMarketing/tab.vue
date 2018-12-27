@@ -1,10 +1,10 @@
 <template>
   <div class="height-programme-one">
     <el-tabs v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
-      <el-tab-pane label="短息管理" name="first" class="aLayerOfPage" v-if="powerJudge('1601')">
+      <el-tab-pane label="短息管理" name="first" class="aLayerOfPage">
         <sms-manage/>
       </el-tab-pane>
-      <el-tab-pane label="短息设置" name="second" class="aLayerOfPage" v-if="powerJudge('1602')">
+      <el-tab-pane label="短息设置" name="second" class="aLayerOfPage">
         <sms-set/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import SmsManage from './SmsManage'
   import SmsSet from './SmsSet'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {SmsManage, SmsSet},
     data () {
@@ -30,9 +30,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

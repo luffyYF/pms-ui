@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick" ref="wxTabs">
-      <el-tab-pane label="微信开门授权" name="first" v-if="powerJudge('1201')">
+      <el-tab-pane label="微信开门授权" name="first" >
         <wx-open/>
       </el-tab-pane>
     </el-tabs>
@@ -10,7 +10,7 @@
 
 <script>
   import WxOpen from './WxOpen'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {WxOpen},
     data () {
@@ -26,9 +26,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

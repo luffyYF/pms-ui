@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-tabs type="border-card" ref='checkTabs' v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="会员充值发票" name="one" v-if="powerJudge('150501')">
+      <el-tab-pane label="会员充值发票" name="one" >
         <member-recharge-invoice/>
       </el-tab-pane>
-      <el-tab-pane label="组单发票" name="two" v-if="powerJudge('150502')">
+      <el-tab-pane label="组单发票" name="two" >
         <single-invoice/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import MemberRechargeInvoice from './MemberRechargeInvoice'
   import SingleInvoice from './SingleInvoice'
-  import {powerJudge} from '@/utils/permissionsOperation.js' 
+  // import {powerJudge} from '@/utils/permissionsOperation.js' 
   export default {
     components: {
       MemberRechargeInvoice,
@@ -33,9 +33,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

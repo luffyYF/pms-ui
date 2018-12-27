@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="钟点房设置" name="hourRoom" v-if="powerJudge('240501')">
+      <el-tab-pane label="钟点房设置" name="hourRoom">
         <hour-room ref="hourRoom"/>
       </el-tab-pane>
-      <el-tab-pane label="特殊房设置" name="specialRoom" v-if="powerJudge('240502')">
+      <el-tab-pane label="特殊房设置" name="specialRoom">
         <special-room ref="specialRoom"/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import HourRoom from './HourRoom'
   import SpecialRoom from './SpecialRoom'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -41,9 +41,9 @@
           child.init()
         }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
 
     }
   }
