@@ -121,3 +121,15 @@ export const getPmsOrderByNo = params => {
 export const rowRoomBatch = params => {
     return request.post('/back/order/rowRoomBatch', params)
 }
+//查找客单简单信息
+export const listSimpleGuestMemberInfo = params => {
+    return request.get('/back/order/listSimpleGuestMemberInfo', {params:params})
+}
+//批量修改客单简单信息
+export const editOrderMemberBatch = params => {
+    return request.post('/back/order/editOrderMemberBatch', params)
+}
+
+
+
+

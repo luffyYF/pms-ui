@@ -94,7 +94,7 @@
                <el-button size="mini" @click="dialogRegimentPayment = true">团付账</el-button> -->
               <el-button size="mini" @click="toDialogPriceChangeHistory">房价变更记录</el-button>
               <el-button size="mini" @click="toDialogOperationLog">操作记录</el-button>
-              <!-- <el-button size="mini" @click="dialogPrint = true">打印RC单</el-button> -->
+              <el-button size="mini" @click="toRcprint">打印RC单</el-button>
               <!-- <el-popover ref="wakeSort" placement="top">
                 <el-button type="primary" size="mini" @click="dialogWake = true">叫醒</el-button>
                 <el-button type="primary" size="mini" @click="dialogGroupPrinting = true">团会打印</el-button>
@@ -132,6 +132,7 @@
                     <!-- <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button> -->
                     <el-button size="mini" @click="reserveRowRoom2" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
                     <el-button size="mini" @click="toDialogModifyHomePrice" :disabled="currConfirmType == 'add-checkin' || currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
+                    <el-button size="mini" @click="toDialogGuestManger" :disabled="currConfirmType == 'add-checkin'">客单管理</el-button>
                     <el-button size="mini" @click="toReserveManager" :disabled="currConfirmType == 'add-checkin' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
                     <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk" :disabled="this.currGuest.pmsCancelFlag=='Y' || currConfirmType == 'add-checkin' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION'">换房</el-button>
                     <el-button size="mini" @click="confirmClick" :loading="loading"  :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
@@ -192,7 +193,7 @@
     </el-dialog>
 
     <!-- 预定排房 废，后续去除 -->
-    <el-dialog class="son-dialog" title="预定排房" :visible.sync="dialogRowRoom" width="50%" :append-to-body="true" :before-close="handleCloseRowRoom">
+    <!-- <el-dialog class="son-dialog" title="预定排房" :visible.sync="dialogRowRoom" width="50%" :append-to-body="true" :before-close="handleCloseRowRoom">
       <div class="pattern-dialog-container" style="padding: 0px 4px;">
         <el-table
           ref="rowRoomTable"
@@ -251,13 +252,11 @@
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="dialogSelectRoom = false">关闭</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 预定排房 end 废，后续去除  -->
 
     <!-- 预定排房 新 -->
     <RowRoomDialog ref="rowRoomRef" @refresh="initOrderInfo"></RowRoomDialog>
-
-
     <!-- 外借 -->
     <dialogBorrow ref="dialogBorrowRef" ></dialogBorrow>
     <!-- 寄存 -->
@@ -270,7 +269,8 @@
     <dialogModifyHomePrice ref="dialogModifyHomePriceRef"></dialogModifyHomePrice>
     <!-- 价格变更记录 -->
     <dialogPriceChangeHistory ref="dialogPriceChangeHistoryRef"></dialogPriceChangeHistory>
-    
+    <!-- 客单管理 -->
+    <GuestManagerDialog ref="guestManagerDialogRef" @refresh="initOrderInfo"></GuestManagerDialog>
 
   </div>
 </template>
@@ -299,6 +299,7 @@ import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
 import dialogNote from '@/pages/reserveManage/addReserve/dialogNote'
 import dialogDeposit from '@/pages/reserveManage/addReserve/dialogDeposit'
 import RowRoomDialog from './RowRoomDialog'
+import GuestManagerDialog from './GuestManagerDialog'
 
 
 export default {
@@ -312,6 +313,7 @@ export default {
     dialogModifyHomePrice,
     dialogPriceChangeHistory,
     RowRoomDialog,
+    GuestManagerDialog,
   },
   data() {
     return {
@@ -348,12 +350,11 @@ export default {
       dialogCommodity: false,
       dialogRegimentPayment: false,
       batchModification: false,
-      dialogPrint: false,
       dialogWake: false, 
       dialogGroupPrinting: false,
       dialogBusinessCard: false,
       dialogChangeRoom: false,
-      dialogRowRoom: false,
+      // dialogRowRoom: false,
       dialogSelectRoom: false,
       selectRoomTableData:[],
       changeRoomTableData: [],
@@ -381,7 +382,8 @@ export default {
         name: ''
       }],
       isIndeterminate: true,
-      commodityAddTo:false
+      commodityAddTo:false,
+      companyObj: JSON.parse(localStorage.getItem("current_logon_company"))
     }
   },
   methods: {
@@ -607,14 +609,19 @@ export default {
         this.$message({type:'warning', message:'离店日期不能为空'})
         return false
       }
-      if(!guestOrderPo.guestPhone){
-        this.$message({type:'warning', message:'请填写手机号'})
-        return false
+      if(this.currConfirmType=='add-checkin' || this.currConfirmType=='add-guest'){
+        if(!guestOrderPo.guestPhone){
+          this.$message({type:'warning', message:'请填写手机号'})
+          return false
+        }
       }
-      if(!validatePhone(guestOrderPo.guestPhone)){
-        this.$message({type:'warning', message:'手机号不合法'})
-        return false
+      if(guestOrderPo.guestPhone) {
+        if(!validatePhone(guestOrderPo.guestPhone)){
+          this.$message({type:'warning', message:'手机号不合法'})
+          return false
+        }
       }
+     
       //TODO 协议单位校验
       // if(orderPo.isTeam=='Y'){
       //   if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
@@ -630,32 +637,32 @@ export default {
        this.$refs.billTagForm.lookupBillList(this.currOrderPk);
     },
     //预定排房 【旧，后续去除】
-    reserveRowRoom() {
-      this.rowRoomTableData = []
-      this.currOrderInfo.guestList.forEach(guest=>{
-        if(guest.orderStatus=='RESERVE' && !guest.roomPk){
-          let obj = {
-            guestOrderPk: guest.guestOrderPk,
-            roomPk: guest.roomPk,
-            roomTypePk: guest.roomTypePk,
-            roomNumber: guest.roomNumber,
-            roomTypeName: guest.roomTypeName,
-            beginDate: guest.beginDate,
-            endDate: guest.endDate
-          }
-          if(typeof guest.beginDate == 'object'){
-            obj.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
-            guest.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
-          }
-          if(typeof guest.endDate == 'object'){
-            obj.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
-            guest.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
-          }
-          this.rowRoomTableData.push(obj)
-        }
-      })
-      this.dialogRowRoom = true
-    },
+    // reserveRowRoom() {
+    //   this.rowRoomTableData = []
+    //   this.currOrderInfo.guestList.forEach(guest=>{
+    //     if(guest.orderStatus=='RESERVE' && !guest.roomPk){
+    //       let obj = {
+    //         guestOrderPk: guest.guestOrderPk,
+    //         roomPk: guest.roomPk,
+    //         roomTypePk: guest.roomTypePk,
+    //         roomNumber: guest.roomNumber,
+    //         roomTypeName: guest.roomTypeName,
+    //         beginDate: guest.beginDate,
+    //         endDate: guest.endDate
+    //       }
+    //       if(typeof guest.beginDate == 'object'){
+    //         obj.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
+    //         guest.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
+    //       }
+    //       if(typeof guest.endDate == 'object'){
+    //         obj.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
+    //         guest.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
+    //       }
+    //       this.rowRoomTableData.push(obj)
+    //     }
+    //   })
+    //   this.dialogRowRoom = true
+    // },
     reserveRowRoom2() {
       this.$refs.rowRoomRef.showDialog(this.currOrderPk, this.currOrderInfo.guestList);
 
@@ -831,6 +838,17 @@ export default {
     },
     toDialogPriceChangeHistory() {
       this.$refs.dialogPriceChangeHistoryRef.init(this.currOrderPk)
+    },
+    toRcprint() {
+      if(!this.currGuest.guestOrderPk){
+        this.$message.warning('请选择一个客单');
+        return;
+      }
+      window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
+      +"&guestOrderPk="+this.currGuest.guestOrderPk);
+    },
+    toDialogGuestManger() {
+      this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
     }
   },
   mounted() {

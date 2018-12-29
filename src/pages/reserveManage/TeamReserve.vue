@@ -115,11 +115,11 @@
           </el-col>
           <el-col :span="4" class="guest-opr">
             <el-tooltip class="buttonOprItem" effect="dark" content="添加预定" placement="right">
-              <el-button type="primary" icon="el-icon-plus" @click="addItem"></el-button>
+              <el-button type="primary" icon="el-icon-plus" @click="addItem" size="mini">添加</el-button>
             </el-tooltip>
             <br>
             <el-tooltip class="buttonOprItem" effect="dark" content="清空预定" placement="right">
-              <el-button type="danger" icon="el-icon-delete" @click="clearItem"></el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="clearItem" size="mini">清空</el-button>
             </el-tooltip>
           </el-col>
         </el-row>

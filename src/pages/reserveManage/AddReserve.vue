@@ -22,7 +22,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="预订手机">
+              <el-form-item label="预订手机" required>
                 <el-input v-model="form.userPhone"></el-input>
               </el-form-item>
             </el-col> 
@@ -156,12 +156,16 @@
           return;
         }
 
-        // if(!this.form.userPhone){
-        //   this.$message({type:'warning', message: '请填写 预定人手机号'})
-        //   return
-        // }else{
-          
-        // }
+        if(!this.form.userPhone){
+          this.$message({type:'warning', message: '请填写 预定人手机号'})
+          return
+        }else{
+          if(!validatePhone(this.form.userPhone)){
+            this.$message({type:'warning', message: '手机号不合法！'})
+            return
+          }
+        }
+        
         if(this.form.userPhone){
           if(!validatePhone(this.form.userPhone)){
             this.$message({type:'warning', message: '手机号不合法！'})

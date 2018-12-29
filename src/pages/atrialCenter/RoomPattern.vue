@@ -283,7 +283,7 @@
               <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
               <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
               
-              <!-- 预离 -->    
+              <!-- 预离 -->
               <el-popover
                 placement="bottom"
                 title=""
