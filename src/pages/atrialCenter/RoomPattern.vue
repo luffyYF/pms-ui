@@ -187,7 +187,7 @@
             </div>
 
             <!-- 状态图标 -->
-            <div class="pattern-li-item">
+            <div class="pattern-li-item button-status-icon">
 
               <!-- 入住关联类型 -->
               <el-popover
@@ -223,9 +223,9 @@
 
               <!-- 预抵关联类型 -->
               <template v-if="!item.guestOrderPk">
-                <label slot="reference" class="detailsinfo reserve_single" v-if="item.arrivalRelationType==1"></label>
-                <label slot="reference" class="detailsinfo relation" v-if="item.arrivalRelationType==2"></label>
-                <label slot="reference" class="detailsinfo room_team" v-if="item.arrivalRelationType==3"></label>
+                <label class="detailsinfo reserve_single" v-if="item.arrivalRelationType==1"></label>
+                <label class="detailsinfo relation" v-if="item.arrivalRelationType==2"></label>
+                <label class="detailsinfo room_team" v-if="item.arrivalRelationType==3"></label>
               </template>
 
               <!-- 生日-->
@@ -301,7 +301,7 @@
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED' 
                                                                       || item.roomStatus=='CLEAN_NOCHECK' 
                                                                       || item.roomStatus=='DIRTY' )
-                                                                      && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item)">办理入住</el-button></el-dropdown-item>
+                                                                      && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item.arrivalOrderPk, item.arrivalGuestPk)">办理入住</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:saveContinue')">办理续住</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'settle')" :disabled="!hasPerm('pms:roomPattern:settleLeave')">结账退房</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_NOCHECK'
@@ -464,188 +464,6 @@
           <el-button size="mini" type="primary" @click="dialogDisableRoom = false">关闭</el-button>
         </span>
       </el-dialog>
-      <!-- <el-dialog class="pattern-dialog" title="批量入住" :visible.sync="dialogBatchOccupancy" width="80%" :before-close="handleClose">
-        <div class="pattern-dialog-container">
-          <div class="batchOccupancy-title">
-            <span>准备入住房间：</span>
-            <el-select v-model="form.region" size="mini" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-            <el-button type="primary" size="mini" @click="onSubmit">确认入住</el-button>
-            <el-button type="primary" size="mini" @click="onSubmit">关闭</el-button>
-          </div>
-          <el-tabs v-model="batchOccupancy" type="card" @tab-click="handleClick">
-            <el-tab-pane label="快速选房" name="fastRoom">
-              <el-col :span="10" class="batchOccupancy-content">
-                <p style="color: red;">注：双击选择入住房间</p>
-                <el-form ref="form" :model="form" size="mini" label-width="80px">
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="抵店日期">
-                        <el-date-picker type="datetime" placeholder="选择抵店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="离店日期">
-                        <el-date-picker type="datetime" placeholder="选择离店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="价格方案">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="协议单位">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="会员卡号">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="每房人数">
-                        <el-select v-model="form.region" placeholder="请选择每房人数">
-                          <el-option label="1" value="shanghai"></el-option>
-                          <el-option label="2" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-form>
-                <el-col :span="24">
-                  <el-table :data="tableData" height="250" border style="width: 100%">
-                    <el-table-column prop="date" label="房号"></el-table-column>
-                    <el-table-column prop="date" label="房型"></el-table-column>
-                    <el-table-column prop="date" label="房价"></el-table-column>
-                  </el-table>
-                </el-col>
-              </el-col>
-              <el-col :span="13" :offset="1">
-                <p style="color: red;">双击删除房间</p>
-                <el-table :data="tableData" height="250" border style="width: 100%">
-                  <el-table-column prop="date" label="房号"></el-table-column>
-                  <el-table-column prop="date" label="房型"></el-table-column>
-                  <el-table-column prop="date" label="人数"></el-table-column>
-                  <el-table-column prop="date" label="协议单位"></el-table-column>
-                  <el-table-column prop="date" label="离店时间"></el-table-column>
-                </el-table>
-              </el-col>
-            </el-tab-pane>
-            <el-tab-pane label="批量选房" name="batchRoom">
-              <el-col :span="10" class="batchOccupancy-content">
-                <p style="color: red;">注：双击选择入住房间</p>
-                <el-form ref="form" :model="form" size="mini" label-width="80px">
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="抵店日期">
-                        <el-date-picker type="datetime" placeholder="选择抵店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="离店日期">
-                        <el-date-picker type="datetime" placeholder="选择离店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="价格方案">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="协议单位">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="房间类型">
-                        <el-select v-model="form.region" placeholder="请选择房间类型">
-                          <el-option label="浪漫" value="shanghai"></el-option>
-                          <el-option label="温馨" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="会员卡号">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="房间数量">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="每房人数">
-                        <el-select v-model="form.region" placeholder="请选择每房人数">
-                          <el-option label="1" value="shanghai"></el-option>
-                          <el-option label="2" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24" style="text-align: right;margin-bottom: 10px;">
-                    <el-button type="primary" @click="onSubmit" size="mini">批量选房</el-button>
-                  </el-col>
-                </el-form>
-                <el-col :span="24">
-                  <el-table :data="tableData" height="250" border style="width: 100%">
-                    <el-table-column prop="date" label="房号"></el-table-column>
-                    <el-table-column prop="date" label="房型"></el-table-column>
-                    <el-table-column prop="date" label="房价"></el-table-column>
-                  </el-table>
-                </el-col>
-              </el-col>
-              <el-col :span="13" :offset="1">
-                <p style="color: red;">双击删除房间</p>
-                <el-table :data="tableData" height="250" border style="width: 100%">
-                  <el-table-column prop="date" label="房号"></el-table-column>
-                  <el-table-column prop="date" label="房型"></el-table-column>
-                  <el-table-column prop="date" label="人数"></el-table-column>
-                  <el-table-column prop="date" label="协议单位"></el-table-column>
-                  <el-table-column prop="date" label="离店时间"></el-table-column>
-                </el-table>
-              </el-col>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-        <span slot="footer" class="dialog-footer">
-        </span>
-      </el-dialog> -->
-      <!-- <el-dialog class="pattern-dialog" title="续住" :visible.sync="dialogContinuedLive" width="60%" :before-close="handleClose">
-        <div class="pattern-dialog-container">
-          <el-col :span="24">
-            <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
-              <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column prop="name" label="房号"></el-table-column>
-              <el-table-column prop="name" label="抵店日期"></el-table-column>
-              <el-table-column prop="name" label="离店日期"></el-table-column>
-              <el-table-column prop="name" label="人数"></el-table-column>
-              <el-table-column prop="name" label="房租"></el-table-column>
-            </el-table>
-          </el-col>
-          <el-col :span="24" style="text-align: right;margin-top: 10px;">
-            延期至：<el-date-picker type="datetime" size="mini" placeholder="选择日期时间"></el-date-picker>&nbsp;离店
-          </el-col>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" size="mini" @click="onSubmit">确认</el-button>
-          <el-button type="primary" size="mini" @click="onSubmit">关闭</el-button>
-        </span>
-      </el-dialog> -->
       <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="closeOrderDialog($event)"/>
       
     </el-container>
@@ -660,8 +478,8 @@
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
   import {findToday} from '@/api/order/pmsOrderController'
   import {
-    currentRoomList, 
-    updateRoomStatus, 
+    currentRoomList,
+    updateRoomStatus,
     addRoomReason,
     delRoomReason, 
     findRoomReason,
@@ -758,19 +576,6 @@
             }
           })
 
-          //
-          // this.roomList.forEach((v,i)=>{
-          //   console.log('pop',this.$refs.popover1[i]);
-          //   this.$refs.popover1[i].$forceUpdate()
-          // })
-          // this.$nextTick(()=>{
-          //   this.$refs.popover1.forEach(ref=>{
-          //     console.log('pop', ref);
-          //     ref.$forceUpdate()
-          //   })
-          // })
-
-          
         })
       },
       handleClose(done) { //11
@@ -971,20 +776,33 @@
           }
         })
       },
-      toCheckin(room, arrivalGuestPk) {
-        findToday({roomNumberPk:room.roomPk}).then(res=>{
-          if(res.data){
-            //回显订单
-            setTimeout(() => {
-              this.$refs.checkinDialogRef.initOrderInfo(res.data, 'visitor', room.arrivalGuestPk)
-            },0)
-          }else{
-            //办理入住
-            setTimeout(() => {
-              this.$refs.checkinDialogRef.initEmpty(room); 
-            },0)
-          }
-        })
+      // toCheckin(room, arrivalGuestPk) {
+      //   findToday({roomNumberPk:room.roomPk}).then(res=>{
+      //     if(res.data){
+      //       //回显订单
+      //       setTimeout(() => {
+      //         this.$refs.checkinDialogRef.initOrderInfo(res.data, 'visitor', room.arrivalGuestPk)
+      //       },0)
+      //     }else{
+      //       //办理入住
+      //       setTimeout(() => {
+      //         this.$refs.checkinDialogRef.initEmpty(room); 
+      //       },0)
+      //     }
+      //   })
+      // },
+      toCheckin(arrivalOrderPk, arrivalGuestPk) {
+        if(arrivalOrderPk) {
+          //回显订单
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initOrderInfo(arrivalOrderPk, 'visitor', arrivalGuestPk)
+          },0)
+        }else{
+          //办理入住
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initEmpty(room); 
+          },0)
+        }
       },
       toDialogVisible(item, type) {//打开订单弹窗
         if(type=='info'){
@@ -1180,6 +998,10 @@
 </style>
 
 <style scoped>
+.button-status-icon{
+  bottom: 3px;
+  position: absolute;
+}
 .tabs-hieght{
   height: 100%;
 }
