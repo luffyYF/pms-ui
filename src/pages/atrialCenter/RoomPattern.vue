@@ -301,7 +301,7 @@
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED' 
                                                                       || item.roomStatus=='CLEAN_NOCHECK' 
                                                                       || item.roomStatus=='DIRTY' )
-                                                                      && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item.arrivalOrderPk, item.arrivalGuestPk)">办理入住</el-button></el-dropdown-item>
+                                                                      && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item)">办理入住</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:saveContinue')">办理续住</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'settle')" :disabled="!hasPerm('pms:roomPattern:settleLeave')">结账退房</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_NOCHECK'
@@ -791,11 +791,11 @@
       //     }
       //   })
       // },
-      toCheckin(arrivalOrderPk, arrivalGuestPk) {
-        if(arrivalOrderPk) {
+      toCheckin(room) {
+        if(room.arrivalOrderPk) {
           //回显订单
           setTimeout(() => {
-            this.$refs.checkinDialogRef.initOrderInfo(arrivalOrderPk, 'visitor', arrivalGuestPk)
+            this.$refs.checkinDialogRef.initOrderInfo(room.arrivalOrderPk, 'visitor',room.arrivalGuestPk)
           },0)
         }else{
           //办理入住
