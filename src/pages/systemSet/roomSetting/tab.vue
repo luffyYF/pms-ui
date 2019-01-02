@@ -34,7 +34,7 @@
   import SysRoomCompensation from './SysRoomCompensation'
   import SysBan from './SysBan'
   import SysRepairReason from './SysRepairReason'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -81,9 +81,9 @@
           child.init()
         }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

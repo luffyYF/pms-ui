@@ -189,7 +189,7 @@
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="手机号码：" required>
+                <el-form-item label="手机号码：" :required="currFormType=='room-info'">
                   <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange"></el-input>
                 </el-form-item>
               </el-col>
@@ -419,7 +419,7 @@
             agreementPk: undefined,
             count: 1,
             checkinDays:1,
-            deposit: 200,
+            deposit: 0,
             currPrice:100,
             currPromotionPrice:0,
             roomNumber: '',
@@ -657,7 +657,7 @@
           this.form.guestOrderPk = undefined
           this.form.count = 1
           this.form.checkinDays = 1
-          this.form.deposit = 200
+          this.form.deposit = 0
           this.form.currPrice = 0
           this.form.currPromotionPrice = 0
           this.form.roomNumber = null
@@ -733,6 +733,9 @@
           this.form.roomPk = guest.roomPk
           this.form.roomTypeName = guest.roomTypeName
           this.form.roomTypePk = guest.roomTypePk
+          this.form.mealTicketMorn = guest.mealTicketMorn
+          this.form.mealTicketNoon = guest.mealTicketNoon
+          this.form.mealTicketNight = guest.mealTicketNight
 
           if(guest.memType=='MEMBER'){//是会员
             this.memberFlag = true
@@ -888,12 +891,18 @@
         },
         phoneChange(val) {//手机号改变
           if(val){
-            if(!phoneReg.test(val)){
+            if(!validatePhone(val)){
               this.$message({type:'warning', message:'手机号不合法'})
               return
             }
+            // if(!phoneReg.test(val)){
+            //   this.$message({type:'warning', message:'手机号不合法'})
+            //   return
+            // }
             this.$refs.chooseGuestRef.initByPhone(this.form.guestPhone)
           }
+
+
         },
         loadGuest(guest) {//回显客人
           this.form.memPk = guest.memPk

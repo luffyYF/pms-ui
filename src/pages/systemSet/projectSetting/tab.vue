@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="消费项设置" name="consumptionItem" v-if="powerJudge('240901')">
+      <el-tab-pane label="消费项设置" name="consumptionItem">
         <consumption-item ref="consumptionItem"/>
       </el-tab-pane>
-      <el-tab-pane label="结算项设置" name="settlementItem" v-if="powerJudge('240902')">
+      <el-tab-pane label="结算项设置" name="settlementItem">
         <settlement-item ref="settlementItem"/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import ConsumptionItem from './ConsumptionItem'
   import SettlementItem from './SettlementItem'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -41,9 +41,9 @@
           child.init()
         }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
 
     }
   }

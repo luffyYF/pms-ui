@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {Message, MessageBox} from 'element-ui'
-import store from '@/store'
-import {getToken, removeToken, removeRefreshToken} from './auth'
+// import store from '@/store'
+// import {getToken, removeToken, removeRefreshToken} from './auth'
 import router from '@/router'
 import Cookies from 'js-cookie'
 

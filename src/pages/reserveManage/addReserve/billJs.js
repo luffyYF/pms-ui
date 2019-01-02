@@ -3,7 +3,7 @@
   //全局变量
   import {paymentMap, billStatusMap} from '@/utils/orm'
   // 权限
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   // 组件
   import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
   import commentPrint from '@/components/PrintPage/commonPrintPage'
@@ -384,9 +384,9 @@
         onSubmit() {
           // console.log('submit!');
         },
-        powerJudge(id){
-          return powerJudge(id);
-        },
+        // powerJudge(id){
+        //   return powerJudge(id);
+        // },
         ifRoomNumber(roomNumber){
           if(roomNumber==null || roomNumber==undefined || roomNumber=='')
             return '未安排'

@@ -1,10 +1,10 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card"  ref='checkTabs' v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane class="aLayerOfPage" label="在住客人" name="one" v-if="powerJudge('150201')">
+      <el-tab-pane class="aLayerOfPage" label="在住客人" name="one">
         <live-in-guest/>
       </el-tab-pane>
-      <el-tab-pane class="aLayerOfPage" label="历史客人" name="two" v-if="powerJudge('150202')">
+      <el-tab-pane class="aLayerOfPage" label="历史客人" name="two">
         <history-guest/>
       </el-tab-pane>
     </el-tabs>
@@ -14,7 +14,7 @@
 <script>
   import LiveInGuest from './LiveInGuest'
   import HistoryGuest from './HistoryGuest'
-  import {powerJudge} from '@/utils/permissionsOperation.js'  
+  // import {powerJudge} from '@/utils/permissionsOperation.js'  
   export default {
     components: {
       LiveInGuest,
@@ -33,9 +33,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

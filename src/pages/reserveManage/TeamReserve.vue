@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24" class="book-info">
             <h5 class="info-title">预定信息</h5>
-            <el-form-item label="名   称">
+            <el-form-item label="名   称" required>
               <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="预订人" required>
@@ -115,17 +115,17 @@
           </el-col>
           <el-col :span="4" class="guest-opr">
             <el-tooltip class="buttonOprItem" effect="dark" content="添加预定" placement="right">
-              <el-button type="primary" icon="el-icon-plus" @click="addItem"></el-button>
+              <el-button type="primary" icon="el-icon-plus" @click="addItem" size="mini">添加</el-button>
             </el-tooltip>
             <br>
             <el-tooltip class="buttonOprItem" effect="dark" content="清空预定" placement="right">
-              <el-button type="danger" icon="el-icon-delete" @click="clearItem"></el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="clearItem" size="mini">清空</el-button>
             </el-tooltip>
           </el-col>
         </el-row>
         <!-- 客单 end -->
         <el-row>
-          <el-col :span="16" class="bottom-submit">
+          <el-col :span="20" class="bottom-submit">
             <el-form-item>
               <el-button type="primary" @click="onSubmit" :loading="submitLock">保存预订</el-button>
               <!-- <el-button type="primary" @click="init" :loading="submitLock">清空</el-button> -->
@@ -348,6 +348,10 @@ export default {
     //表单验证
     validateForm() {
       // 验证主单
+      if(!this.form.name) {
+        this.$message.warning('团队名称不能为空');
+        return false;
+      }
       if(!this.form.userName){
         this.$message.warning('预订人不能为空');
         return false;

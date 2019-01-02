@@ -1,13 +1,13 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" class="goodsmanage-tabs">
-      <el-tab-pane label="外借" name="first" v-if="powerJudge('110501')">
+      <el-tab-pane label="外借" name="first" >
         <lend-out/>
       </el-tab-pane>
-      <el-tab-pane label="留言" name="second" v-if="powerJudge('110502')">
+      <el-tab-pane label="留言" name="second">
         <leaving-msg/>
       </el-tab-pane>
-      <el-tab-pane label="寄存" name="third" v-if="powerJudge('110503')">
+      <el-tab-pane label="寄存" name="third">
         <deposit/>
       </el-tab-pane>
     </el-tabs>
@@ -18,7 +18,7 @@
   import LendOut from './LendOut'
   import LeavingMsg from './LeavingMsg'
   import Deposit from './Deposit'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {LendOut, LeavingMsg, Deposit},
     data () {
@@ -30,9 +30,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

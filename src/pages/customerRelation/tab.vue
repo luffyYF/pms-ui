@@ -61,7 +61,7 @@
 
   import Invoice from './invoice/tab'
   import PassengerInformationUploading from './passengerInformationUploading/tab'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -82,9 +82,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     },
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态

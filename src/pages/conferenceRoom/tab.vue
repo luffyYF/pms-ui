@@ -1,10 +1,10 @@
 <template>
   <div class="height-programme-one">
     <el-tabs v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="会议室" name="first" :disabled="firstDisabled" class="aLayerOfPage" v-if="powerJudge('2201')">
+      <el-tab-pane label="会议室" name="first" :disabled="firstDisabled" class="aLayerOfPage" >
         <conference-room ref='room'/>
       </el-tab-pane>
-      <el-tab-pane label="会议室管理" name="second" class="aLayerOfPage" v-if="powerJudge('2202')">
+      <el-tab-pane label="会议室管理" name="second" class="aLayerOfPage" >
         <conference-room-manage ref="roomMange"/>
       </el-tab-pane>
     </el-tabs>
@@ -15,7 +15,7 @@
   import bus from '@/utils/bus'
   import ConferenceRoom from './ConferenceRoom'
   import ConferenceRoomManage from './ConferenceRoomManage'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -50,9 +50,9 @@
         this.firstDisabled = false;
       }
       ,
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

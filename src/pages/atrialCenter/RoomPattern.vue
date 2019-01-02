@@ -157,139 +157,146 @@
       </el-aside>
       <el-main>
         <el-row>
+          <!-- 房间item begin -->
           <div class="pattern-li" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)">
-            <el-dropdown trigger="click" class="pattern-dropdown" placement="bottom" >
-              <div class="el-dropdown-link">
-                <div class="pattern-li-title">
-                  <label class="rm">{{item.roomNumber}}</label>
-                  <label class="ht">{{item.roomTypeName}}</label>
-                </div>
-                <!-- 用户信息 -->
-                <div class="pattern-li-info">
-                  <div v-if="item.guestOrderPk">
-                    <!-- 入住信息 -->
-                    <label class="userinfo">{{item.guestName}}</label>
-                    <label class="channelinfo">{{item.channelName}}</label>
-                  </div>
-                  <div v-else-if="item.arrivalGuestPk">
-                    <!-- 预抵信息 -->
-                    <label class="userinfo">{{item.arrivalGuestName}}</label>
-                    <label class="channelinfo">{{item.arrivalChannelName}}</label>
-                  </div>
-                </div>
+            <!-- 房间号 渠道 -->
+            <div class="pattern-li-item">
+              <label class="rm">{{item.roomNumber}}</label>
+              <label class="ht">{{item.roomTypeName}}</label>
+            </div>
 
-                <div class="pattern-li-date" v-if="item.guestOrderPk">
-                  <label class="userinfo" v-if="item.guestBeginDate">入住：{{moment(item.guestBeginDate).format('MM-DD')}}</label><br>
-                  <label class="userinfo" v-if="item.guestEndDate">离开：{{moment(item.guestEndDate).format('MM-DD')}}</label><br>
-                </div>
-
-              <!-- 状态图标 -->
-                <div class="pattern-li-details">
-                  <el-popover
-                    placement="bottom"
-                    title=""
-                    :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 200"
-                    trigger="hover"
-                    @show="relationIconHover(index)">
-                    <div v-if="item.orderInfo" style="max-height:400px; overflow-y: scroll;">
-                      <span>入住类型：{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
-                      <span>来源渠道：{{item.orderInfo.guestPo.channelTypeName}}</span><br>
-                      <span>客人姓名：{{item.orderInfo.guestPo.guestName}}</span><br>
-                      <span>客人手机：{{item.orderInfo.guestPo.guestPhone}}</span><br>
-                      <span>抵店时间：{{item.orderInfo.guestPo.beginDate}}</span><br>
-                      <span>离店时间：{{item.orderInfo.guestPo.endDate}}</span><br>
-                      <span>房间价格：￥{{item.orderInfo.guestPo.currPrice}}</span><br>
-                      <div v-if="item.roomRelationType>1 && item.orderInfo.guestList && item.orderInfo.guestList.length>0">
-                        <hr>
-                        <div class="manay-guest-panel" v-for="g in item.orderInfo.guestList">
-                          房号：{{g.roomNumber}} <br/>
-                          房型：{{g.roomTypeName}} <br/>
-                          状态：{{orderStatusMap[g.orderStatus]}} <br/>
-                          抵店：{{g.beginDate}} <br/> 
-                          离店：{{g.endDate}} <br/>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- 入住关联类型 -->
-                    <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1"></label>
-                    <label slot="reference" class="detailsinfo relation" v-if="item.roomRelationType==2"></label>
-                    <label slot="reference" class="detailsinfo room_team" v-if="item.roomRelationType==3"></label>
-                  </el-popover>
-
-                  <!-- 预抵关联类型 -->
-                  <template v-if="!item.guestOrderPk">
-                    <label slot="reference" class="detailsinfo reserve_single" v-if="item.arrivalRelationType==1"></label>
-                    <label slot="reference" class="detailsinfo relation" v-if="item.arrivalRelationType==2"></label>
-                    <label slot="reference" class="detailsinfo room_team" v-if="item.arrivalRelationType==3"></label>
-                  </template>
-
-                  <el-popover
-                    placement="bottom"
-                    title=""
-                    width="200"
-                    trigger="hover"
-                    :content="'今天是'+item.guestName+'的生日'">
-                    <!-- 生日-->
-                    <label slot="reference" v-if="item.birthdayFlag==1" class="detailsinfo today_birthday"></label>
-                  </el-popover>
-
-                  <!-- <label class="detailsinfo reserve_today" v-if="item.futureFlag=='Y'"></label> -->
-                  <el-popover
-                    placement="bottom"
-                    title=""
-                    :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 420 : 200"
-                    trigger="hover"
-                    @show="arrivalIconHover(index)">
-                    <div v-if="item.arrivalInfo" style="max-height:400px; overflow-y: scroll;">
-                      <span>入住类型：{{checkInTypeMap[item.arrivalInfo.guestPo.checkInType]}}</span><br>
-                      <span>来源渠道：{{item.arrivalInfo.guestPo.channelTypeName}}</span><br>
-                      <span>客人姓名：{{item.arrivalInfo.guestPo.guestName}}</span><br>
-                      <span>客人手机：{{item.arrivalInfo.guestPo.guestPhone}}</span><br>
-                      <span>抵店时间：{{item.arrivalInfo.guestPo.beginDate}}</span><br>
-                      <span>离店时间：{{item.arrivalInfo.guestPo.endDate}}</span><br>
-                      <span>房间价格：￥{{item.arrivalInfo.guestPo.currPrice}}</span><br>
-                      <div v-if="item.arrivalInfo.guestList && item.arrivalInfo.guestList.length>0">
-                        <hr>
-                        <div class="manay-guest-panel" v-for="g in item.arrivalInfo.guestList">
-                          房号：{{g.roomNumber}} <br/>
-                          房型：{{g.roomTypeName}} <br/>
-                          状态：{{orderStatusMap[g.orderStatus]}} <br/>
-                          抵店：{{g.beginDate}} <br/> 
-                          离店：{{g.endDate}} <br/>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- 当天预抵 -->
-                    <label slot="reference" class="detailsinfo reserve_today" v-if="item.arrivalGuestPk"></label>
-                  </el-popover>
-
-                  <el-popover
-                    placement="bottom"
-                    title=""
-                    width="200"
-                    trigger="hover"
-                    :content="'欠费金额：￥'+Math.abs(item.arrearsAmount)">
-                    <!-- 欠费-->
-                    <label slot="reference" class="detailsinfo arrears " v-if="item.arrearsAmount<0"></label>
-                  </el-popover>
-                  
-                  <label class="detailsinfo clockroom" v-if="item.checkInType==1" title="钟点房"></label>
-                  <label class="detailsinfo special" v-if="item.checkInType==2" title="特殊房"></label>
-                  <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
-                  <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
-
-                  <el-popover
-                    placement="bottom"
-                    title=""
-                    width="200"
-                    trigger="hover"
-                    :content="'预离日期：'+item.guestEndDate">
-                    <!-- 预离 -->
-                    <label slot="reference" class="detailsinfo reserve_leave" v-if="item.leaveFlag"></label>
-                  </el-popover>
-                </div>
+            <!-- 用户信息 -->
+            <div class="pattern-li-item username-channel">
+              <div v-if="item.guestOrderPk">
+                <!-- 入住信息 -->
+                <label class="userinfo">{{item.guestName}}</label>
+                <label class="channelinfo">{{item.channelName}}</label>
               </div>
-              <!-- 下拉菜单操作 -->
+              <div v-else-if="item.arrivalGuestPk">
+                <!-- 预抵信息 -->
+                <label class="userinfo">{{item.arrivalGuestName}}</label>
+                <label class="channelinfo">{{item.arrivalChannelName}}</label>
+              </div>
+            </div>
+
+            <!-- 抵店离店日期 -->
+            <div class="pattern-li-item checkin-date" v-if="item.guestOrderPk">
+              <!--  class="userinfo" -->
+              <label v-if="item.guestBeginDate">入住：{{moment(item.guestBeginDate).format('MM-DD')}}</label><br>
+              <label v-if="item.guestEndDate">离开：{{moment(item.guestEndDate).format('MM-DD')}}</label>
+            </div>
+
+            <!-- 状态图标 -->
+            <div class="pattern-li-item button-status-icon">
+
+              <!-- 入住关联类型 -->
+              <el-popover
+                ref="popover1"
+                placement="bottom"
+                title=""
+                :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 236"
+                trigger="hover"
+                @show="relationIconHover(index)">
+                <div v-if="item.orderInfo" style="max-height:400px; overflow-y: scroll;">
+                  <span>入住类型：{{checkInTypeMap[item.orderInfo.guestPo.checkInType]}}</span><br>
+                  <span>来源渠道：{{item.orderInfo.guestPo.channelTypeName}}</span><br>
+                  <span>客人姓名：{{item.orderInfo.guestPo.guestName}}</span><br>
+                  <span>客人手机：{{item.orderInfo.guestPo.guestPhone}}</span><br>
+                  <span>抵店时间：{{item.orderInfo.guestPo.beginDate}}</span><br>
+                  <span>离店时间：{{item.orderInfo.guestPo.endDate}}</span><br>
+                  <span>房间价格：￥{{item.orderInfo.guestPo.currPrice}}</span><br>
+                  <div v-if="item.roomRelationType>1 && item.orderInfo.guestList && item.orderInfo.guestList.length>0">
+                    <hr>
+                    <div class="manay-guest-panel" v-for="g in item.orderInfo.guestList">
+                      房号：{{g.roomNumber}} <br/>
+                      房型：{{g.roomTypeName}} <br/>
+                      状态：{{orderStatusMap[g.orderStatus]}} <br/>
+                      抵店：{{g.beginDate}} <br/> 
+                      离店：{{g.endDate}} <br/>
+                    </div>
+                  </div>
+                </div>
+                <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1"></label>
+                <label slot="reference" class="detailsinfo relation" v-if="item.roomRelationType==2"></label>
+                <label slot="reference" class="detailsinfo room_team" v-if="item.roomRelationType==3"></label>
+              </el-popover>
+
+              <!-- 预抵关联类型 -->
+              <template v-if="!item.guestOrderPk">
+                <label class="detailsinfo reserve_single" v-if="item.arrivalRelationType==1"></label>
+                <label class="detailsinfo relation" v-if="item.arrivalRelationType==2"></label>
+                <label class="detailsinfo room_team" v-if="item.arrivalRelationType==3"></label>
+              </template>
+
+              <!-- 生日-->
+              <el-popover
+                placement="bottom"
+                title=""
+                width="200"
+                trigger="hover"
+                :content="'今天是'+item.guestName+'的生日'">
+                <label slot="reference" v-if="item.birthdayFlag==1" class="detailsinfo today_birthday"></label>
+              </el-popover>
+
+              <!-- 当天预抵 -->
+              <el-popover
+                placement="bottom"
+                title=""
+                :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 420 : 236"
+                trigger="hover"
+                @show="arrivalIconHover(index)">
+                <div v-if="item.arrivalInfo" style="max-height:400px; overflow-y: scroll;">
+                  <span>入住类型：{{checkInTypeMap[item.arrivalInfo.guestPo.checkInType]}}</span><br>
+                  <span>来源渠道：{{item.arrivalInfo.guestPo.channelTypeName}}</span><br>
+                  <span>客人姓名：{{item.arrivalInfo.guestPo.guestName}}</span><br>
+                  <span>客人手机：{{item.arrivalInfo.guestPo.guestPhone}}</span><br>
+                  <span>抵店时间：{{item.arrivalInfo.guestPo.beginDate}}</span><br>
+                  <span>离店时间：{{item.arrivalInfo.guestPo.endDate}}</span><br>
+                  <span>房间价格：￥{{item.arrivalInfo.guestPo.currPrice}}</span><br>
+                  <div v-if="item.arrivalInfo.guestList && item.arrivalInfo.guestList.length>0">
+                    <hr>
+                    <div class="manay-guest-panel" v-for="g in item.arrivalInfo.guestList">
+                      房号：{{g.roomNumber}} <br/>
+                      房型：{{g.roomTypeName}} <br/>
+                      状态：{{orderStatusMap[g.orderStatus]}} <br/>
+                      抵店：{{g.beginDate}} <br/> 
+                      离店：{{g.endDate}} <br/>
+                    </div>
+                  </div>
+                </div>
+                <label slot="reference" class="detailsinfo reserve_today" v-if="item.arrivalGuestPk"></label>
+              </el-popover>
+
+              <!-- 欠费-->
+              <el-popover
+                placement="bottom"
+                title=""
+                width="200"
+                trigger="hover"
+                :content="'欠费金额：￥'+Math.abs(item.owePirce)">
+                <!-- <label slot="reference" class="detailsinfo arrears " v-if="item.arrearsAmount<0"></label> -->
+                <label slot="reference" class="detailsinfo arrears " v-if="item.owePirce"></label>
+              </el-popover>
+              
+              <label class="detailsinfo clockroom" v-if="item.checkInType==1" title="钟点房"></label>
+              <label class="detailsinfo special" v-if="item.checkInType==2" title="特殊房"></label>
+              <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
+              <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
+              
+              <!-- 预离 -->
+              <el-popover
+                placement="bottom"
+                title=""
+                width="200"
+                trigger="hover"
+                :content="'预离日期：'+item.guestEndDate">
+                <label slot="reference" class="detailsinfo reserve_leave" v-if="item.leaveFlag"></label>
+              </el-popover>
+            </div>
+            
+            <!-- 下拉菜单 -->
+            <el-dropdown trigger="click" class="pattern-dropdown" placement="bottom">
+              <div style="width:100%; height:100%"></div>
               <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li">
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED' 
                                                                       || item.roomStatus=='CLEAN_NOCHECK' 
@@ -457,188 +464,6 @@
           <el-button size="mini" type="primary" @click="dialogDisableRoom = false">关闭</el-button>
         </span>
       </el-dialog>
-      <!-- <el-dialog class="pattern-dialog" title="批量入住" :visible.sync="dialogBatchOccupancy" width="80%" :before-close="handleClose">
-        <div class="pattern-dialog-container">
-          <div class="batchOccupancy-title">
-            <span>准备入住房间：</span>
-            <el-select v-model="form.region" size="mini" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-            <el-button type="primary" size="mini" @click="onSubmit">确认入住</el-button>
-            <el-button type="primary" size="mini" @click="onSubmit">关闭</el-button>
-          </div>
-          <el-tabs v-model="batchOccupancy" type="card" @tab-click="handleClick">
-            <el-tab-pane label="快速选房" name="fastRoom">
-              <el-col :span="10" class="batchOccupancy-content">
-                <p style="color: red;">注：双击选择入住房间</p>
-                <el-form ref="form" :model="form" size="mini" label-width="80px">
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="抵店日期">
-                        <el-date-picker type="datetime" placeholder="选择抵店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="离店日期">
-                        <el-date-picker type="datetime" placeholder="选择离店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="价格方案">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="协议单位">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="会员卡号">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="每房人数">
-                        <el-select v-model="form.region" placeholder="请选择每房人数">
-                          <el-option label="1" value="shanghai"></el-option>
-                          <el-option label="2" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                </el-form>
-                <el-col :span="24">
-                  <el-table :data="tableData" height="250" border style="width: 100%">
-                    <el-table-column prop="date" label="房号"></el-table-column>
-                    <el-table-column prop="date" label="房型"></el-table-column>
-                    <el-table-column prop="date" label="房价"></el-table-column>
-                  </el-table>
-                </el-col>
-              </el-col>
-              <el-col :span="13" :offset="1">
-                <p style="color: red;">双击删除房间</p>
-                <el-table :data="tableData" height="250" border style="width: 100%">
-                  <el-table-column prop="date" label="房号"></el-table-column>
-                  <el-table-column prop="date" label="房型"></el-table-column>
-                  <el-table-column prop="date" label="人数"></el-table-column>
-                  <el-table-column prop="date" label="协议单位"></el-table-column>
-                  <el-table-column prop="date" label="离店时间"></el-table-column>
-                </el-table>
-              </el-col>
-            </el-tab-pane>
-            <el-tab-pane label="批量选房" name="batchRoom">
-              <el-col :span="10" class="batchOccupancy-content">
-                <p style="color: red;">注：双击选择入住房间</p>
-                <el-form ref="form" :model="form" size="mini" label-width="80px">
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="抵店日期">
-                        <el-date-picker type="datetime" placeholder="选择抵店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="离店日期">
-                        <el-date-picker type="datetime" placeholder="选择离店日期"></el-date-picker>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="价格方案">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="协议单位">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="房间类型">
-                        <el-select v-model="form.region" placeholder="请选择房间类型">
-                          <el-option label="浪漫" value="shanghai"></el-option>
-                          <el-option label="温馨" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="会员卡号">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-col :span="12">
-                      <el-form-item label="房间数量">
-                        <el-input v-model="form.name"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="每房人数">
-                        <el-select v-model="form.region" placeholder="请选择每房人数">
-                          <el-option label="1" value="shanghai"></el-option>
-                          <el-option label="2" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                  </el-col>
-                  <el-col :span="24" style="text-align: right;margin-bottom: 10px;">
-                    <el-button type="primary" @click="onSubmit" size="mini">批量选房</el-button>
-                  </el-col>
-                </el-form>
-                <el-col :span="24">
-                  <el-table :data="tableData" height="250" border style="width: 100%">
-                    <el-table-column prop="date" label="房号"></el-table-column>
-                    <el-table-column prop="date" label="房型"></el-table-column>
-                    <el-table-column prop="date" label="房价"></el-table-column>
-                  </el-table>
-                </el-col>
-              </el-col>
-              <el-col :span="13" :offset="1">
-                <p style="color: red;">双击删除房间</p>
-                <el-table :data="tableData" height="250" border style="width: 100%">
-                  <el-table-column prop="date" label="房号"></el-table-column>
-                  <el-table-column prop="date" label="房型"></el-table-column>
-                  <el-table-column prop="date" label="人数"></el-table-column>
-                  <el-table-column prop="date" label="协议单位"></el-table-column>
-                  <el-table-column prop="date" label="离店时间"></el-table-column>
-                </el-table>
-              </el-col>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-        <span slot="footer" class="dialog-footer">
-        </span>
-      </el-dialog> -->
-      <!-- <el-dialog class="pattern-dialog" title="续住" :visible.sync="dialogContinuedLive" width="60%" :before-close="handleClose">
-        <div class="pattern-dialog-container">
-          <el-col :span="24">
-            <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
-              <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column prop="name" label="房号"></el-table-column>
-              <el-table-column prop="name" label="抵店日期"></el-table-column>
-              <el-table-column prop="name" label="离店日期"></el-table-column>
-              <el-table-column prop="name" label="人数"></el-table-column>
-              <el-table-column prop="name" label="房租"></el-table-column>
-            </el-table>
-          </el-col>
-          <el-col :span="24" style="text-align: right;margin-top: 10px;">
-            延期至：<el-date-picker type="datetime" size="mini" placeholder="选择日期时间"></el-date-picker>&nbsp;离店
-          </el-col>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" size="mini" @click="onSubmit">确认</el-button>
-          <el-button type="primary" size="mini" @click="onSubmit">关闭</el-button>
-        </span>
-      </el-dialog> -->
       <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="closeOrderDialog($event)"/>
       
     </el-container>
@@ -653,8 +478,8 @@
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
   import {findToday} from '@/api/order/pmsOrderController'
   import {
-    currentRoomList, 
-    updateRoomStatus, 
+    currentRoomList,
+    updateRoomStatus,
     addRoomReason,
     delRoomReason, 
     findRoomReason,
@@ -735,7 +560,6 @@
           checkInType: this.selectForm.checkInType,
         }
         currentRoomList(data).then(res=>{
-          this.$forceUpdate()
           this.roomList = res.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
@@ -751,6 +575,7 @@
               this.$set(item, 'leaveFlag', null)
             }
           })
+
         })
       },
       handleClose(done) { //11
@@ -951,20 +776,33 @@
           }
         })
       },
-      toCheckin(room, arrivalGuestPk) {
-        findToday({roomNumberPk:room.roomPk}).then(res=>{
-          if(res.data){
-            //回显订单
-            setTimeout(() => {
-              this.$refs.checkinDialogRef.initOrderInfo(res.data, 'visitor', room.arrivalGuestPk)
-            },0)
-          }else{
-            //办理入住
-            setTimeout(() => {
-              this.$refs.checkinDialogRef.initEmpty(room); 
-            },0)
-          }
-        })
+      // toCheckin(room, arrivalGuestPk) {
+      //   findToday({roomNumberPk:room.roomPk}).then(res=>{
+      //     if(res.data){
+      //       //回显订单
+      //       setTimeout(() => {
+      //         this.$refs.checkinDialogRef.initOrderInfo(res.data, 'visitor', room.arrivalGuestPk)
+      //       },0)
+      //     }else{
+      //       //办理入住
+      //       setTimeout(() => {
+      //         this.$refs.checkinDialogRef.initEmpty(room); 
+      //       },0)
+      //     }
+      //   })
+      // },
+      toCheckin(room) {
+        if(room.arrivalOrderPk) {
+          //回显订单
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initOrderInfo(room.arrivalOrderPk, 'visitor',room.arrivalGuestPk)
+          },0)
+        }else{
+          //办理入住
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initEmpty(room); 
+          },0)
+        }
       },
       toDialogVisible(item, type) {//打开订单弹窗
         if(type=='info'){
@@ -1102,6 +940,9 @@
   }
 </script>
 <style>
+.el-popover{
+  text-align: left !important;
+}
 .cllapse-list .el-collapse-item__header,
 .cllapse-list .el-collapse-item__content{
   padding: 0 10px;
@@ -1157,6 +998,10 @@
 </style>
 
 <style scoped>
+.button-status-icon{
+  bottom: 3px;
+  position: absolute;
+}
 .tabs-hieght{
   height: 100%;
 }
@@ -1164,10 +1009,11 @@
   margin-bottom: 0px !important
 }
 .el-aside{
-  height: calc(100% - 80px);
+  /* position: absolute;
+  height: calc(100% - 162px);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-left: 15px;
+  padding-left: 15px; */
 }
 .form-screh{
   width: 100%;
@@ -1338,21 +1184,18 @@
 .el-main{
   position: absolute;
   left: 290px;
-  padding: 0 20px !important;
+  padding: 0px 20px !important;
   overflow: auto;
   width: calc(100% - 290px);
-  height: calc(100% - 80px);
+  height: calc(100% - 162px);
 }
 
 .el-row {
   margin-bottom: 20px;
 }
 .pattern-li{
-  /* width: 110px; */
-  /* height: 57px; */
   width: 117px;
   height: 89px;
-  /* background: #dddddd; */
   border-radius: 5px;
   overflow: hidden;
   font-family: "Times New Roman",Times,serif;
@@ -1363,17 +1206,24 @@
   text-align: left;
   font-weight: normal;
   border: 2px solid white;
-  display: inline-block;
+  /* display: inline-block; */
+  float: left;
+    position: relative;
 }
-.pattern-li-title, .pattern-li-info, .pattern-li-details{
+.pattern-li-item{
   font-family: "Arial Black",Times,serif;
   height: 19px;
   overflow: hidden;
+  margin: auto 3px;
 }
-.pattern-li-date{
+/* .pattern-li-title, .pattern-li-info, .pattern-li-details{
+
+} */
+
+/* .pattern-li-date{
   font-size:12px;
   font-family: "Arial Black",Times,serif;
-}
+} */
 .rm{
   font-size: 15px;
   font-weight: bold;
@@ -1398,9 +1248,25 @@
   font-variant: inherit;
   text-align: left;
 }
+.checkin-date{
+  height: 30px ;
+  color:#fff;
+  font-family: 微软雅黑,"Times New Roman",Helvetica,sans-serif;
+  width: 100%;
+  overflow: hidden;
+  font-variant: inherit;
+  text-align: left;
+}
+.username-channel{
+  font-family: 微软雅黑,Times New Roman,Helvetica,sans-serif;
+  font-size: 14px;
+}
 .pattern-dropdown{
   width: 100%;
-  padding: 0 5px;
+  height: 55px;
+  top: 5px;
+  position: absolute;
+  /* padding: 0 5px; */
 }
 .pattern-dropdown-li .el-button{
   display: block;
@@ -1556,9 +1422,7 @@
   height: 16px;
   margin-right: 2px;
 }
-.el-dropdown-link{
-  height: 70px;
-}
+
 .connect-room{
   border: 2px red dashed;
 }
@@ -1568,7 +1432,7 @@
 }
 .manay-guest-panel{
   float:left;
-  margin-bottom: 10px;
-  margin-right: 20px;
+  width:200px;
+  margin: 8px 0px 0px 5px
 }
 </style>

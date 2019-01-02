@@ -9,10 +9,10 @@
                   :name="item.deptPk" class="aLayerOfPage">
         <front-goods ref="frontGoods"/>
       </el-tab-pane>
-      <el-tab-pane label="商品部管理" name="first" class="aLayerOfPage" v-if="powerJudge('2001')">
+      <el-tab-pane label="商品部管理" name="first" class="aLayerOfPage" >
         <commodity-management/>
       </el-tab-pane>
-      <el-tab-pane label="退单管理" name="third" class="aLayerOfPage" v-if="powerJudge('2002')">
+      <el-tab-pane label="退单管理" name="third" class="aLayerOfPage">
         <refund-Management/>
       </el-tab-pane>
     </el-tabs>
@@ -26,7 +26,7 @@
   import CommodityManagement from './CommodityManagement'
   import { goodsDeptList } from "@/api/goods/goodsDeptController";
   import {getUpGoodsTypeList,listUpGoodsInfo} from "@/api/goods/goodsTypeController";
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
     components: {
@@ -52,9 +52,9 @@
       this.getGoodsDeptList();
     },
     methods: {
-      powerJudge(id){
-        return powerJudge(id);
-      },
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // },
       handleClick (tab, event) {
         console.log(tab, event)
         if(this.activeName != "second" && this.activeName != "third"){

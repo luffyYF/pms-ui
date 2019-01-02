@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/pages/Login.vue'
 import Home from '@/pages/Home.vue'
-import IndexPage from '@/pages/Index.vue'
+// import IndexPage from '@/pages/Index.vue'
 import NotFound from '@/pages/404.vue'
 
 //案例

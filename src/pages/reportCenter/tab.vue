@@ -27,7 +27,7 @@
 
 <script>
   import {commonReport, reportCenter} from './data/ReportNavList'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
     data () {
@@ -87,9 +87,9 @@
       handleClick (tab, event) {
         console.log(tab, event)
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
       
     }
   }

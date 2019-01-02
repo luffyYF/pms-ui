@@ -29,7 +29,7 @@
           <template slot-scope="scope">
             <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
             <el-button v-if="scope.row.typePk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button>
-            <el-button v-if="scope.row.typePk != '' && powerJudge('401901')" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
+            <el-button v-if="scope.row.typePk != ''" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import {powerJudge} from '@/utils/permissionsOperation.js'
+// import {powerJudge} from '@/utils/permissionsOperation.js'
 import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
   export default {
     data() {
@@ -151,9 +151,9 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
           self.loading = false
         })
       },
-      powerJudge(id){
-        return powerJudge(id);
-      },
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // },
     }
   }
 </script> 

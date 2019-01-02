@@ -111,9 +111,9 @@
     </el-form>
 
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="dataForm.invoiceId == null && dataForm.status == 0">保 存   </el-button>
+      <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="dataForm.invoiceId == null && dataForm.status == 0">保 存 草 稿   </el-button>
       <el-button type="primary" size="small" :loading="loading" @click="saveData" v-if="dataForm.invoiceId != null && dataForm.status == 0">修 改</el-button>
-      <el-button type="success" size="small" :loading="loading" @click="submitData" v-if="dataForm.status == 0">提 交</el-button>
+      <el-button type="success" size="small" :loading="loading" @click="submitData" v-if="dataForm.status == 0">提 交 审 核</el-button>
       <el-button @click="dialogVisible = false" size="small" v-else>关 闭</el-button>
     </span>
   </el-dialog>

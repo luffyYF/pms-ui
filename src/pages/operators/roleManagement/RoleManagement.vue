@@ -2,7 +2,7 @@
   <div class="content-body">
     <el-row style="margin-top:15px;">
       <span class="title-span">角色列表</span>
-      <el-button type="primary" size="mini" @click="addListRole" v-if="powerJudge('401701')">添加角色</el-button>
+      <el-button type="primary" size="mini" @click="addListRole">添加角色</el-button>
       <span style="color:red;">*注：角色级别低的操作员不能修改和创建角色级别高的操作员</span>
     </el-row>
     <hr>
@@ -39,7 +39,7 @@
           <el-button
             @click.native.prevent="deleteRole(scope.$index, tableData)"
             type="text"
-            size="small" v-if="powerJudge('401702')">
+            size="small">
             删除
           </el-button>
         </template>
@@ -55,7 +55,7 @@
 <script>
 import AddRoleManage from './AddRoleManage'
 import {listRole,delRole} from '@/api/operators/pmsRoleController'
-import {powerJudge} from '@/utils/permissionsOperation.js'
+// import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
     components: {AddRoleManage},
@@ -120,9 +120,9 @@ import {powerJudge} from '@/utils/permissionsOperation.js'
           })
           .catch(_ => {});
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
     }
   }
 </script>

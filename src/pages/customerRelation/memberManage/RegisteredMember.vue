@@ -114,7 +114,7 @@
             <span style="color:#F56C6C">*</span> 为必填项！请用户仔细填写！
         </el-form-item>
         <el-form-item label=" ">
-          <el-button type="primary" :disabled="loading || !powerJudge(400501)" @click="saveClick">保存注册信息</el-button>
+          <el-button type="primary" :disabled="loading" @click="saveClick">保存注册信息</el-button>
           <el-button type="primary" @click="empty">清空</el-button>
         </el-form-item>
       </el-form>
@@ -242,7 +242,7 @@ import Agreement from '@/components/Agreement/Agreement'
 import MemberGrade from '@/components/MemberGrade/MemberGrade'
 import {addMember,memberCertificateType} from '@/api/customerRelation/pmsMemberController'
 import {idcard} from '@/api/utils/pmsCommonController'
-import {powerJudge} from '@/utils/permissionsOperation.js'
+// import {powerJudge} from '@/utils/permissionsOperation.js'
 export default {
   components:{MemberGrade,Agreement},
   data() {
@@ -387,9 +387,9 @@ export default {
     bus.$on('agreementPo', (res) => { this.chooseAgreement(res) });
   },
   methods: {
-    powerJudge(id){
-      return powerJudge(id);
-    },
+    // powerJudge(id){
+    //   return powerJudge(id);
+    // },
     init(){
       this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
       this.memberCertificateType()

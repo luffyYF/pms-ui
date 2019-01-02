@@ -22,7 +22,7 @@
       <el-tab-pane label="其它参数" name="sysotherparameters" v-if="powerJudge('240107')">
         <sys-other-parameters ref="sysotherparameters"/>
       </el-tab-pane> -->
-      <el-tab-pane label="酒店信息" name="syshotelinformation" v-if="powerJudge('240108')">
+      <el-tab-pane label="酒店信息" name="syshotelinformation">
         <sys-hotel-information ref="syshotelinformation"/>
       </el-tab-pane>
     </el-tabs>
@@ -38,7 +38,7 @@
   import SysPrint from './SysPrint'
   import SysOtherParameters from './SysOtherParameters'
   import SysHotelInformation from './SysHotelInformation'
-  import {powerJudge} from '@/utils/permissionsOperation.js'
+  // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
     components: {
@@ -89,9 +89,9 @@
           child.init()
         }
       },
-      powerJudge(id){
-        return powerJudge(id);
-      }
+      // powerJudge(id){
+      //   return powerJudge(id);
+      // }
 
     }
   }
