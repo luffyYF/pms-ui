@@ -128,7 +128,7 @@ import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
 import BellSpecialRoom from '@/pages/systemSet/BellSpecialRoom/tab'
 import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
 import ChannelManagement from '@/pages/systemSet/ChannelManagement'
-import AccountEntry from '@/pages/systemSet/AccountEntry/tab'
+import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
 
 // 财务稽核
@@ -315,7 +315,7 @@ export const constantRouterMap = [
           {path: '/systemSet/clockSpecial',  component: BellSpecialRoom, label: '钟点特殊房'},
           {path: '/systemSet/settleSetting',  component: ConsumerProjects, label: '消费项目设置'},
           {path: '/systemSet/channelManage', component: ChannelManagement, label: '渠道管理'},
-          {path: '/systemSet/projectSetting', component: AccountEntry, label: '入账项目显示设置'},
+          {path: '/systemSet/projectSetting', component: ProjectSetting, label: '入账项目显示设置'},
           {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},
         ]
       },
