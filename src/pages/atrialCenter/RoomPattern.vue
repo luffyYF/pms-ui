@@ -194,7 +194,7 @@
                 ref="popover1"
                 placement="bottom"
                 title=""
-                :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 210"
+                :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 236"
                 trigger="hover"
                 @show="relationIconHover(index)">
                 <div v-if="item.orderInfo" style="max-height:400px; overflow-y: scroll;">
@@ -242,7 +242,7 @@
               <el-popover
                 placement="bottom"
                 title=""
-                :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 420 : 210"
+                :width="item.arrivalInfo && item.arrivalInfo.guestList.length>1 ? 420 : 236"
                 trigger="hover"
                 @show="arrivalIconHover(index)">
                 <div v-if="item.arrivalInfo" style="max-height:400px; overflow-y: scroll;">

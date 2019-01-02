@@ -2,9 +2,9 @@
 <template>
   <div class="bill_style">
     <el-row>
-      <el-col :span="15">
+      <el-col :span="16">
         <el-col :span="24">
-          <el-form ref="serachForm" :model="serachForm" size="mini" label-width="80px">
+          <el-form ref="serachForm" :inline="true" :model="serachForm" size="mini" label-width="80px">
             <el-col :span="24">
               <el-form-item label-width="0">
                 <el-radio-group v-model="serachForm.state" @change="listBill">
@@ -13,30 +13,24 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="房间号" label-width="55px">
-                <el-select v-model="serachForm.roomPk" placeholder="请选择房间号" @change="listBill">
-                  <el-option label="全部" value=""></el-option>
-                  <el-option v-for="y in filterRoom(guestOrderSelect)" :key="y.roomPk" :label="y.roomNumber" :value="y.roomPk"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="客人姓名">
-                <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill">
-                  <el-option label="全部" value=""></el-option>
-                  <el-option v-for="y in guestOrderSelect" :key="y.guestOrderPk" :label="y.memName" :value="y.guestOrderPk"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="营业日期">
-                <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 100%;"></el-date-picker>
-              </el-form-item>
-            </el-col>
+            <el-form-item label="房间号" label-width="55px">
+              <el-select v-model="serachForm.roomPk" placeholder="请选择房间号" @change="listBill" style="width: 140px;">
+                <el-option label="全部" value=""></el-option>
+                <el-option v-for="y in filterRoom(guestOrderSelect)" :key="y.roomPk" :label="y.roomNumber" :value="y.roomPk"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="客人姓名">
+              <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;"> 
+                <el-option label="全部" value=""></el-option>
+                <el-option v-for="y in guestOrderSelect" :key="y.guestOrderPk" :label="y.memName" :value="y.guestOrderPk"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="营业日期">
+              <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 152px;"></el-date-picker>
+            </el-form-item>
           </el-form>  
         </el-col>
-        <el-col :span="22">
+        <el-col :span="23">
           <!-- 账单列表 -->
           <el-table ref="multipleTable" size="mini" :data="billsList" @selection-change="handleSelectionChange" tooltip-effect="dark" border height="240" style="width: 100%">
             <el-table-column type="selection" width="55"></el-table-column>
@@ -64,7 +58,8 @@
             <el-table-column prop="remark" label="备注"  min-width="180"></el-table-column>
           </el-table>
         </el-col>
-        <el-col :span="24" class="marginTop10 bill-el-button">
+        <el-col :span="24"> <br> </el-col>
+        <el-col :span="24" class="bill-opr">
           财务处理：
           <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">拆账</el-button>
           <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">冲减</el-button>
@@ -74,7 +69,7 @@
           <!-- <el-button size="mini" @click="dialogPreLicensing = true">预授权<span>0</span>笔</el-button> -->
           <!-- <el-button size="mini" @click="dialogVirtualBill = true">虚拟账单</el-button> -->
         </el-col>
-        <el-col :span="24" class="bill-el-button">
+        <el-col :span="24" class="bill-opr">
           结账处理：
           <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY'" :disabled="currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN'">结账</el-button>
           <!-- (currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') -->
@@ -85,22 +80,25 @@
           <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
-        <el-col :span="24" class="bill-el-button">
+        <el-col :span="24" class="bill-opr">
           打印处理：
           <el-button size="mini" @click="clickPrint">打印</el-button>
           <!-- <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button> -->
         </el-col>
       </el-col>
-      <el-col :span="9" class="bill-el-button">
+      <el-col :span="8" class="bill-el-button">
+        <!-- 消费项目列表 -->
         <el-col :span="24" class="marginTop10">
           <el-button v-for="item in conProjectList" :key="item.projectPk" type="success" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
+        <!-- 结算项目列表 -->
         <el-col :span="24">
           <el-button v-for="item in roomProjectList" :key="item.projectPk" type="primary" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
       </el-col>
     </el-row>
 
+    <!-- 拆账 -->
     <el-dialog class="pattern-dialog height240" title="拆账" :visible.sync="dialogTollAllocation" width="25%" :before-close="handleClose" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
         <el-form ref="splitForm" :model="splitForm" size="mini" label-width="100px" class="batchOccupancy-content">
@@ -121,6 +119,7 @@
       </span>
     </el-dialog>
 
+    <!-- 冲减 -->
     <el-dialog class="pattern-dialog height240" title="冲减" :visible.sync="dialogOffset" width="30%" :before-close="handleClose" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
        <el-form ref="splitForm" :model="splitForm" size="mini" label-width="100px" class="batchOccupancy-content">
@@ -144,6 +143,7 @@
       </span>
     </el-dialog>
 
+    <!-- 入账 -->
     <el-dialog class="pattern-dialog height280" title="入账" :visible.sync="dialogAccountedFor" width="30%" :close-on-click-modal="false" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
         <el-form ref="formAddBill" :model="formAddBill" size="mini" label-width="80px">

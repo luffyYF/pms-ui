@@ -40,6 +40,14 @@
     margin-right: 0;
     margin-bottom: 5px;
   }
+
+  .bill-opr .el-button{
+    margin-right: 0;
+    margin-bottom: 5px;
+    width: 88px;
+  }
+
+
   .pattern-dialog-container{
     padding: 15px;
     display: inline-block;
@@ -170,4 +178,6 @@
   }
   .buttonsRight{
     margin-right: 10px !important;
+    width: 100px !important;
+    overflow: hidden;
   }
