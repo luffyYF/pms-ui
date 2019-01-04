@@ -9,7 +9,7 @@
               <el-form-item label-width="0">
                 <el-radio-group v-model="serachForm.state" @change="listBill">
                   <el-radio v-for="(value, key) in billStatusMap" :key="key" :label="key">{{value}}</el-radio>
-                  <el-radio >全部账</el-radio>
+                  <el-radio>全部账</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -28,7 +28,7 @@
             <el-form-item label="营业日期">
               <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 152px;"></el-date-picker>
             </el-form-item>
-          </el-form>  
+          </el-form>
         </el-col>
         <el-col :span="23">
           <!-- 账单列表 -->

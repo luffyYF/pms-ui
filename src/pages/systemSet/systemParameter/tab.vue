@@ -22,6 +22,9 @@
       <el-tab-pane label="其它参数" name="sysotherparameters" v-if="powerJudge('240107')">
         <sys-other-parameters ref="sysotherparameters"/>
       </el-tab-pane> -->
+      <el-tab-pane label="基本参数配置" name="sysBaseParamRef">
+        <sys-base-param ref="sysBaseParamRef"/>
+      </el-tab-pane>
       <el-tab-pane label="酒店信息" name="syshotelinformation">
         <sys-hotel-information ref="syshotelinformation"/>
       </el-tab-pane>
@@ -38,7 +41,7 @@
   import SysPrint from './SysPrint'
   import SysOtherParameters from './SysOtherParameters'
   import SysHotelInformation from './SysHotelInformation'
-  // import {powerJudge} from '@/utils/permissionsOperation.js'
+  import SysBaseParam from './SysBaseParam'
   
   export default {
     components: {
@@ -49,7 +52,8 @@
       SysMember,
       SysPrint,
       SysOtherParameters,
-      SysHotelInformation
+      SysHotelInformation,
+      SysBaseParam
     },
     data () {
       return {
@@ -87,11 +91,10 @@
         }else if(this.activeName == 'syshotelinformation'){
           var child = this.$refs.syshotelinformation
           child.init()
+        }else if(this.activeName == 'sysBaseParamRef') {
+          this.$refs.syshotelinformation.init();
         }
       },
-      // powerJudge(id){
-      //   return powerJudge(id);
-      // }
 
     }
   }

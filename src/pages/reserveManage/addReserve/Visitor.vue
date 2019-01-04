@@ -12,8 +12,8 @@
           <h5 class="info-title">客单</h5>
           <el-table :data="currGuestList" height="176" border style="width: 100%;margin-top: 7px;" @row-click="guestTableClick" :row-class-name="tableRowClassName">
             <el-table-column prop="roomTypeName" label="房类" width="100"></el-table-column>
-            <el-table-column prop="roomNumber" label="房号"></el-table-column>
-            <el-table-column prop="orderStatus" label="状态" width="60">
+            <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
+            <el-table-column prop="orderStatus" label="状态" width="80">
               <template slot-scope="scope">
                 <span v-if="scope.row.pmsCancelFlag=='Y'" style="color:#999999">订单取消</span>
                 <span v-else-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY' || scope.row.orderStatus=='NOSHOW'" style="color:#999999">{{orderStatusMap[scope.row.orderStatus]}}</span>
@@ -28,13 +28,24 @@
             </el-table-column>
             <el-table-column prop="count" label="操作" :fixed="'right'">
               <template slot-scope="scope">
-                <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
-                  <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住</el-button>
-                  <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN'" @click="toCheckout">退房</el-button>
-                  <br>
+                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.roomPk && scope.row.orderStatus=='RESERVE'">
+                  <el-button size="mini" type="text" @click="guestCheckin(scope.row)">入住</el-button>
+                </p>
+                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.orderStatus=='CHECKIN' && gsCheckin>1">
+                  <el-button size="mini" type="text" @click="toCheckout(scope.row.guestOrderPk)">退房</el-button>
+                </p>
+                <p class="guest-orp-item" v-if="scope.row.roomNumber && scope.row.rflLockNo">
+                  <el-button size="mini" type="text" @click="makeCard(scope.row)">门卡</el-button> 
+                </p>
+                <p class="guest-orp-item" v-if="scope.row.orderStatus=='CHECKIN' && scope.row.intelligentFlag=='Y'">
+                  <el-button size="mini" type="text" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>  
+                </p>
+                <!-- <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
+                  <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住<br></el-button>
+                  <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN' && gsCheckin>1" @click="toCheckout(scope.row.guestOrderPk)">退房<br></el-button>
                 </template> 
                 <el-button size="mini" type="text" v-if="scope.row.roomNumber && scope.row.rflLockNo" @click="makeCard(scope.row)">门卡<br></el-button> 
-                <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN' && scope.row.intelligentFlag=='Y'" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>
+                <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN' && scope.row.intelligentFlag=='Y'" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -67,9 +78,8 @@
                 <el-radio label="1">钟点房</el-radio>
                 <!-- <el-radio label="2">特殊房</el-radio> -->
                 <!-- <el-radio label="3">自用房</el-radio> -->
-
                 <!-- :disabled="true" -->
-                <el-radio label="4">接待房</el-radio>  
+                <el-radio label="4">接待房</el-radio>
                 <!-- <el-radio label="5">公寓房</el-radio> -->
               </el-radio-group>
             </el-form-item>
@@ -110,7 +120,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="7" v-if="currFormType=='empty' || currFormType=='room-info'">
-                &nbsp;&nbsp;<span style="color:red">可预订{{bookableCount}}间</span>
+                &nbsp;&nbsp;<span style="color:red">剩余{{bookableCount}}间</span>
               </el-col>
             </el-col>
           </el-col>
@@ -376,13 +386,12 @@
       continuedRoom,
       editOrderMember,
       addReserveGuest,
-      qrCodePhoneSetting
+      qrCodePhoneSetting,
+      checkoutGuest,
     } from '@/api/order/pmsOrderController'
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
-
-    
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
@@ -494,7 +503,7 @@
          * 初始化空表单（外部调用）
          */
         initEmpty() {
-          this.initType(_=>{
+          this.loadRoomType(_=>{
             this.formReset()
             this.form.currTitle = '添加客单'
             this.currFormType='empty'
@@ -511,7 +520,7 @@
          * 初始化带房间的表单（办理入住）（外部调用）
          * @augments room 当前选择的房间*/
         initRoomData(room) {
-          this.initType(_=>{
+          this.loadRoomType(_=>{
             this.formReset()
             this.currFormType='room-info'
             this.form.currTitle = '添加客单'
@@ -534,36 +543,20 @@
          * @augments guestList 客单列表
          * @augments loderIndex 装填下标 */
         initGuestData(guestList, loderIndex) {//TODO 初始化加载客单数据
-          this.initType(_=>{
+          this.loadRoomType(_=>{
             this.currFormType='guest-info'
             this.currGuestList = guestList
             this.formFillGuestInfo(guestList[loderIndex])
             this.currTableIndex = this.form.guestOrderPk
             this.form.currTitle = this.orderStatusMap[this.form.orderStatus]+'客人，客单号：'+this.form.orderGuestNo
             this.tempEndDate = this.form.endDate
-            listContract({ orderPk: this.form.orderPk }).then(res=>{//加载合约列表
-              this.contractTableData = res.data
-            })
+            this.loadContract()
             this.calcDays()
-
-            this.gsReserve = 0
-            this.gsCheckin = 0
-            this.gsLeave = 0
-            this.currGuestList.forEach(obj=>{
-              if(obj.mainFlag=='Y' && obj.pmsCancelFlag=='N'){
-                if(obj.orderStatus=='RESERVE'){
-                  this.gsReserve++;
-                }else if(obj.orderStatus=='CHECKIN'){
-                  this.gsCheckin++;
-                }else if(obj.orderStatus=='LEAVE' || obj.orderStatus=='LEAVENOPAY'){
-                  this.gsLeave++;
-                }
-              }
-            })
-            this.$refs.channelRef.load(false);
-            
+            this.calcGuest()
+            this.$refs.channelRef.load(false)
           });
         },
+        
         //添加客人初始化（外部调用）
         parentClearGuest() {
           if(!this.form.guestOrderPk){
@@ -743,7 +736,7 @@
             this.memberFlag = false
           }
         },
-        initType(callback) {
+        loadRoomType(callback) {
           // 获取房型
           listType({typeMaster:'ROOM_TYPE'}).then(res=>{
             this.roomTypeArr = res.data;
@@ -762,7 +755,6 @@
             .catch(_ => {});
         },
         loadPrice() {//动态加载当前房租 
-     
           if(this.currFormType == 'empty' || this.currFormType == 'room-info'){
             if(!this.form.roomTypePk){
               this.$message({type:'warning', message:'请先选择房间类型！'})
@@ -782,6 +774,27 @@
               this.form.currPrice = MyToFixed(res.data*this.form.count, 2)
             })
           }
+        },
+        loadContract(){
+          listContract({ orderPk: this.form.orderPk }).then(res=>{//加载合约列表
+            this.contractTableData = res.data
+          })
+        },
+        calcGuest() {
+          this.gsReserve = 0
+          this.gsCheckin = 0
+          this.gsLeave = 0
+          this.currGuestList.forEach(obj=>{
+            if(obj.mainFlag=='Y' && obj.pmsCancelFlag=='N'){
+              if(obj.orderStatus=='RESERVE'){
+                this.gsReserve++;
+              }else if(obj.orderStatus=='CHECKIN'){
+                this.gsCheckin++;
+              }else if(obj.orderStatus=='LEAVE' || obj.orderStatus=='LEAVENOPAY'){
+                this.gsLeave++;
+              }
+            }
+          })
         },
         //房型改变
         roomTypeChange(){
@@ -863,15 +876,18 @@
           }).then(() => {
             checkin({orderPk:row.orderPk, guestOrderPks:[row.guestOrderPk]}).then(res=>{
               row.orderStatus='CHECKIN'
-              this.$message({
-                type: 'success',
-                message: '入住成功!'
-              });
+              this.$message({type: 'success',message: '入住成功!'});
+              this.calcGuest()
+              this.loadContract()
             })
           })
         },
-        toCheckout(){
-          bus.$emit('toCheckout')
+        toCheckout(guestOrderPk){
+          this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
+            checkoutGuest(guestOrderPk).then(res=> {
+              bus.$emit('refreshOrderInfo', this.form.orderPk)
+            })
+          })
         },
         guestTableClick(row, event, column) {//点击客单table
           this.currGuestList.forEach((guest,index)=>{
@@ -960,14 +976,13 @@
              this.bookableCount = res.data
            })
         },
-        initType(callback) {
+        loadRoomType(callback) {
           // 获取房型
           listType({typeMaster:'ROOM_TYPE'}).then(res=>{
             this.roomTypeArr = res.data.data;
             callback()
           })
         },
-
         //设置二维码开门手机号
         dialogQRCodeSettingOpen(row){
           this.qrcodeForm.guestOrderPk = row.guestOrderPk
@@ -1105,6 +1120,10 @@
 }
 .iconCertificate{
   background-position: -1100px -15px;
+}
+.guest-orp-item{
+  margin:0px;
+  padding:0px;
 }
 </style>
 <style>

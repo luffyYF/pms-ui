@@ -129,6 +129,10 @@ export const listSimpleGuestMemberInfo = params => {
 export const editOrderMemberBatch = params => {
     return request.post('/back/order/editOrderMemberBatch', params)
 }
+//客单退房
+export const checkoutGuest = params => {
+    return request.post('/back/order/checkoutGuest/'+params)
+}
 
 
 
