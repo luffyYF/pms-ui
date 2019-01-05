@@ -130,7 +130,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="开会日期">
-              <el-input :disabled="true" v-model="nowSelectBook.mtgDate" placeholder="开会日期"></el-input>
+              <el-date-picker size="small" v-model="nowSelectBook.mtgDate" type="date" value-format="yyyy-MM-dd" placeholder="开会日期"/>
             </el-form-item>
             <el-form-item label="预订时段">
               <template slot-scope="scope">
@@ -589,6 +589,7 @@ export default {
       groupList:[     //组单表格列表
       ],
       bookPk: '',
+      currentDay:Moment(new Date()).format("YYYY-MM-DD")
     };
   },
   mounted() {
@@ -681,6 +682,7 @@ export default {
     },
     //日历日期点击函数
     dayClick(day, jsEvent) {
+      this.currentDay = day
       if(!this.nowSelectRoom){
         bus.$emit('conferenceRoomChange')
         return;
@@ -698,8 +700,9 @@ export default {
     //添加档期
     addSchedule() {
       this.book_scheduleList.unshift({
-        meetingTime: Moment(new Date()).format("YYYY-MM-DD"),
+        mtgDate: Moment(this.currentDay).format("YYYY-MM-DD"),
         meetingInterval: "",
+        mtgTimeType:"MORNING",
         isNew: true
       });
     },
@@ -714,13 +717,12 @@ export default {
         this.$message({type:'danger', message: '请选择时段'})
         return false;
       }
-      row.mtgDate = Moment(row.mtgDate).format("YYYY-MM-DD")
+      // row.mtgDate = Moment(row.mtgDate).format("YYYY-MM-DD")
       let num = 0;
       rows.forEach(ele => {
-        if(ele.mtgDate == row.mtgDate 
-          && ele.mtgTimeType == ele.mtgTimeType){
+        if(ele.mtgDate == row.mtgDate && row.mtgTimeType == ele.mtgTimeType){
             num++;
-          }
+        }
       });
       if(num>1){
         this.$message({type:'danger', message: '该档期已存在'});
@@ -738,14 +740,21 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           //处理数据
-          let data = {
-            bookPo:this.meetingBookObj,
-            bookDqList:this.book_scheduleList
-          };
-          if(data.bookDqList.size<=0){
-            this.$message({type:'waring', message: '请添加档期'})
+          var tempScheduleList = []
+          for(var i=0;i<this.book_scheduleList.length;i++){
+            if(!this.book_scheduleList[i].isNew){
+              tempScheduleList.push(this.book_scheduleList[i])
+            }
+          }
+          if(tempScheduleList.length<=0){
+            this.$message({type:'warning', message: '请添加档期'})
             return false;
           }
+          let data = {
+            bookPo:this.meetingBookObj,
+            bookDqList:tempScheduleList
+          };
+          
           addBookAndDq(data).then(res=>{
             if(res.code==1){
               this.$message({type:'success', message: '新增成功'})

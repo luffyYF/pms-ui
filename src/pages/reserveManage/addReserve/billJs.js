@@ -12,8 +12,9 @@
   import {findOrder} from '@/api/order/pmsOrderController'
   import {gmCount} from "@/api/goods/goodsManageController";
   import { listByProjectType } from '@/api/systemSet/pmsProjectController'
-  import {addBill,authBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill,transBill,selectGuestOrderBill,countCheckoutBill} from '@/api/bill'
-  
+  import {addBill,addDumbBill,authBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill,transBill,selectGuestOrderBill,countCheckoutBill} from '@/api/bill'
+  import {addVirtual} from '@/api/pmsVirtualBill/pmsVirtualBill'
+  import Moment from 'moment'
     export default {
       props:['dumbObj'],
       components:{dialogBorrow, commentPrint, billSettlement},
@@ -80,6 +81,7 @@
           dialogBankCard: false,
           dialogStoredCard: false,
           dialogWeChatPayment: false,
+          virDialog:false,
           tableData: [{
             name: '',
           }],
@@ -88,6 +90,28 @@
           seeLicensing: true,
           editLicensing: false,
           datepicker: [],
+          virtualBill:{},
+          virtualBillDatailList:[],
+          virGuestList:[],
+          allProjectList:[],
+          projectSelectDialog:false,
+          currentVirIndex:0,
+          consumptionAmount:0,
+          settlementAmount:0,
+          projectTypeList:[
+            {label:"所有消费类别",value:"ALL"},
+            {label:"餐券",value:"CJ"},
+            {label:"赔偿",value:"PC"},
+            {label:"房费",value:"FF"},
+            {label:"系统",value:"SYS"},
+            {label:"消费品",value:"XFP"},
+            {label:"客房赔偿",value:"ROOM_PC"},
+            {label:"支付",value:"ZF"},
+          ],
+          virProjectType:"ALL",
+          virPk:null,
+          PRINT_ROOT:process.env.PRINT_ROOT,
+          isDubm:false
         }
         
       },
@@ -120,14 +144,17 @@
             billStatus: this.serachForm.state,
             businessDate: this.serachForm.currentData,
             roomPk: this.serachForm.roomPk,
-            guestOrderPk: this.serachForm.guestOrderPk
+            guestOrderPk: this.serachForm.guestOrderPk,
+            dumbPk:this.dumbPk
           }
           listBill(data).then(res => {
             this.billsList = res.data;
-            this.billsList.forEach((bill, index) => {
-              bill.consumptionAmount = Math.round(bill.consumptionAmount*100)/100;
-              bill.settlementAmount = Math.round(bill.settlementAmount*100)/100;
-            });
+            if(this.billsList){
+              this.billsList.forEach((bill, index) => {
+                bill.consumptionAmount = Math.round(bill.consumptionAmount*100)/100;
+                bill.settlementAmount = Math.round(bill.settlementAmount*100)/100;
+              });
+            }
           })
         },
         initGuestSelect(orderPk) {//查找客单下拉框列表
@@ -154,25 +181,31 @@
           this.initAddBill()
           this.formAddBill.projectPk = p.projectPk
           this.formAddBill.projectName = p.projectName
-          this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
+          if(!this.isDubm){
+            this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
+          }else{
+            this.formAddBill.dumbPk = this.dumbPk
+          }
+          // this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
           this.dialogAccountedFor = true
         },
         //暂时注释哑房账回调 调用的文件DumbHouse.vue -> showDumbDetail()
-        // dumBill(dumbPk){
-        //   this.dumbPk = dumbPk
-        //   listBill({dumbPk: dumbPk}).then(res => {
-        //     this.billsList = res.data
-        //   });
-        //   countCheckoutBill({dumbPk: dumbPk}).then(res => {
-        //     this.countCheckoutDate = res.data
-        //   });
-        // },
+        dumBill(dumbPk){
+          this.dumbPk = dumbPk
+          this.isDubm = true
+          listBill({dumbPk: dumbPk}).then(res => {
+            this.billsList = res.data
+          });
+          countCheckoutBill({dumbPk: dumbPk}).then(res => {
+            this.countCheckoutDate = res.data
+          });
+        },
         addBillList(formAddBill){ //入账
           if(!formAddBill.projectPk){
             this.$message({type:'warning', message:'请选择项目'})
             return
           }
-          if(!formAddBill.guestOrderPk){
+          if(!formAddBill.guestOrderPk && !this.isDubm){
             this.$message({type:'warning', message:'请选择客单'})
             return
           }
@@ -203,19 +236,33 @@
             channelTypePk: formAddBill.channelTypePk,
             payment: formAddBill.payment,
             remark: formAddBill.remark,
-            billType: 'ROOM',
-
+            dumbPk:this.dumbPk,
+            billType: this.isDubm?'DUMB':'ROOM',
           }
-          addBill(formAddBillList).then(res => {
-            if(res.code == 1){
-              this.$message({
-                message: '入账成功！',
-                type: 'success'
-              });
-            }
-            this.dialogAccountedFor = false;
-            this.lookupBillList(this.orderPk);
-          })
+          if(!this.isDubm){
+            addBill(formAddBillList).then(res => {
+              if(res.code == 1){
+                this.$message({
+                  message: '入账成功！',
+                  type: 'success'
+                });
+              }
+              this.dialogAccountedFor = false;
+              this.lookupBillList(this.orderPk);
+            })
+          }else{
+            addDumbBill(formAddBillList).then(res => {
+              if(res.code == 1){
+                this.$message({
+                  message: '入账成功！',
+                  type: 'success'
+                });
+              }
+              this.listBill()
+              this.dialogAccountedFor = false;
+            })
+          }
+          
         },
         filterRoom(guestOrderSelect) {
           var temp = []
@@ -308,17 +355,20 @@
             this.$message({type:'warning',message:'至少选择一条账单'})
             return;
           }
-          let beginDate = this.currOrderInfo.guestList[0].beginDate
-          let endDate = this.currOrderInfo.guestList[0].endDate
+          let beginDate = this.currOrderInfo.guestList[0].beginDate|new Date()
+          let endDate = this.currOrderInfo.guestList[0].endDate|new Date()
           this.$refs.commentPrintRef.printBill(this.multipleSelection, beginDate, endDate)
         },
         initProject(){
           //SETTLEMENT,CONSUMER
+          this.allProjectList = []
           listByProjectType({projectType:'CONSUMER'}).then(res => {
             this.conProjectList = res.data
+            // this.allProjectList = this.allProjectList.concat(this.conProjectList)
           })
           listByProjectType({projectType:'SETTLEMENT'}).then(res => {
             this.roomProjectList = res.data
+            // this.allProjectList = this.allProjectList.concat(this.roomProjectList)
           })
           // var datas={
           //   orderPk:null,
@@ -392,7 +442,211 @@
             return '未安排'
           else
             return roomNumber
+        },
+        virtualBillClick() {
+          this.$confirm('确认生成虚拟账单?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            // this.billsList 
+           
+            var roomNumbers = ''
+            var channelTypePk = ''
+            var memNames = ''
+            var dumbPk = ''
+            var billType = ''
+            this.virtualBillDatailList = [];
+            this.virGuestList = [];
+            var userInfo = JSON.parse(localStorage.getItem("pms_userinfo"));
+            for(var i = 0;i<this.billsList.length;i++){
+              parseFloat(this.billsList[i].settlementAmount)
+              this.virtualBillDatailList.push({
+                guestOrderPk:this.billsList[i].guestOrderPk,
+                billCode:this.billsList[i].billCode,
+                dumbPk:this.billsList[i].dumbPk,
+                memName:this.billsList[i].memName,
+                projectPk:this.billsList[i].projectPk,
+                projectCode:this.billsList[i].projectCode,
+                projectName:this.billsList[i].projectName,
+                goodsOrderPk:this.billsList[i].goodsOrderPk,
+                billType:this.billsList[i].billType,
+                consumptionAmount:this.billsList[i].consumptionAmount,
+                settlementAmount:this.billsList[i].settlementAmount,
+                isZf:parseFloat(this.billsList[i].settlementAmount)>0,
+                number:this.billsList[i].number,
+                businessDate:this.billsList[i].businessDate,
+                roomPk:this.billsList[i].roomPk,
+                roomNumber:this.billsList[i].roomNumber,
+                roomTypeName:this.billsList[i].roomTypeName,
+                remark:this.billsList[i].remark,
+                createUserName:userInfo.upmsRealName,
+                payment:this.billsList[i].payment,
+                createTime:this.billsList[i].createTime,
+                channelTypePk:this.billsList[i].channelTypePk,
+              })
+              roomNumbers += this.billsList[i].roomNumber+","
+              if(this.billsList[i].memName != null){
+                memNames += this.billsList[i].memName+","
+              }
+              if(channelTypePk == null || channelTypePk == ''){
+                channelTypePk = this.billsList[i].channelTypePk
+              }
+              if(dumbPk == null || dumbPk== ''){
+                dumbPk = this.billsList[i].dumbPk
+              }
+              if(billType == null || billType == ''){
+                billType = this.billsList[i].billType
+              }
+            }
+            this.virMomeyChange()
+            var order = this.currOrderInfo.order
+            var guestList = this.currOrderInfo.guestList
+
+            var beginDate = null
+            var endDate = null
+            var currPrice = ""
+            for(var i=0;i<guestList.length;i++){
+              if(beginDate == null || guestList[i].beginDate<beginDate){
+                beginDate = guestList[i].beginDate
+              }
+              if(endDate == null || guestList[i].endDate>endDate){
+                endDate = guestList[i].endDate
+              }
+              if(guestList[i].currPrice){
+                currPrice += parseFloat(guestList[i].currPrice)+","
+              }
+              this.virGuestList.push({
+                guestOrderPk:guestList[i].guestOrderPk,
+                orderNo:guestList[i].orderGuestNo
+              })
+            }
+            currPrice = currPrice.length>1?currPrice.substring(0,currPrice.length-1):currPrice
+            roomNumbers = roomNumbers.length > 0?roomNumbers.substring(0,roomNumbers.length-1):roomNumbers
+            memNames = memNames.length > 0?memNames.substring(0,memNames.length-1):memNames
+            this.virtualBill = {
+              orderPk:order.orderPk,
+              orderNo:order.orderNo,
+              memNames:memNames,
+              dumbPk:dumbPk,
+              billType:billType,
+              remark:order.remark,
+              roomNumbers:roomNumbers,
+              beginDate:beginDate,
+              endDate:endDate,
+              currPrice:currPrice
+            }
+            this.virPk = null
+            this.virDialog = true;
+          }).catch(() => {
+
+          });
+        },
+        addVirtualClick(){
+          for(var i=0;i<this.virtualBillDatailList.length;i++){
+            if(this.virtualBillDatailList[i].projectPk == null || this.virtualBillDatailList[i].projectPk == ''){
+              this.$message({
+                message: "请选择账单"+(i+1)+"的项目",
+                type: 'warning'
+              });
+              return
+            }
+            if(this.virtualBillDatailList[i].projectPk == null || this.virtualBillDatailList[i].projectPk == ''){
+              this.$message({
+                message: "请填写账单"+(i+1)+"的消费金额",
+                type: 'warning'
+              });
+              return
+            }
+          }
+          var data = {
+            pmsVirtualBillPo:this.virtualBill,
+            pmsVirtualBillDetailPos:this.virtualBillDatailList
+          }
+          addVirtual(data).then(res => {
+            if(res.code == 1){
+              this.$message({
+                message: res.sub_msg,
+                type: 'success'
+              });
+              this.virPk = res.data
+            }
+          })
+        },
+        projectChangeClick(index){
+          this.currentVirIndex = index
+          this.virProjectType = "ALL"
+          this.allProjectList = this.conProjectList
+          this.projectSelectDialog = true
+        },
+        projectTypeChange(){
+          if(this.virProjectType == "ALL"){
+            this.allProjectList = this.conProjectList
+          }else if(this.virProjectType == "ZF"){
+            this.allProjectList = this.roomProjectList
+          }else{
+            this.allProjectList = []
+            for(var i=0;i<this.conProjectList.length;i++){
+              if(this.virProjectType == this.conProjectList[i].typeCode){
+                this.allProjectList.push(this.conProjectList[i])
+              }
+            }
+          }
         }
+        ,
+        handleProjectChange(val) {
+          this.virtualBillDatailList[this.currentVirIndex].projectCode = val.code
+          this.virtualBillDatailList[this.currentVirIndex].projectName = val.projectName
+          this.virtualBillDatailList[this.currentVirIndex].projectPk = val.projectPk
+          this.virtualBillDatailList[this.currentVirIndex].consumptionAmount = val.projectPrice
+          this.virtualBillDatailList[this.currentVirIndex].isZf = val.projectType == "SETTLEMENT"
+          this.virMomeyChange()
+          this.projectSelectDialog = false
+        },
+        delVirDetailListClick(index){
+          this.virtualBillDatailList.splice(index,1)
+          this.virMomeyChange()
+        },
+        addVirDetailListClick(){
+          var userInfo = JSON.parse(localStorage.getItem("pms_userinfo"));
+          this.virtualBillDatailList.unshift({
+                guestOrderPk:this.virtualBillDatailList[0].guestOrderPk,
+                billCode:"",
+                dumbPk:"",
+                memName:"",
+                projectPk:"",
+                projectCode:"",
+                projectName:"",
+                goodsOrderPk:"",
+                billType:"",
+                consumptionAmount:0,
+                settlementAmount:0,
+                isZf:false,
+                number:1,
+                businessDate:Moment().format("YYYY-MM-DD"),
+                roomPk:"",
+                roomNumber:"",
+                roomTypeName:"",
+                remark:"",
+                createUserName:userInfo.upmsRealName,
+                payment:-1,
+                createTime:Moment().format("YYYY-MM-DD"),
+                channelTypePk:"",
+          })
+        },
+        virMomeyChange(){
+          var consumptionAmount = 0
+          var settlementAmount = 0
+          for(var i=0;i<this.virtualBillDatailList.length;i++){
+            consumptionAmount = consumptionAmount + parseFloat(this.virtualBillDatailList[i].consumptionAmount)
+            settlementAmount = settlementAmount + parseFloat(this.virtualBillDatailList[i].settlementAmount)
+          }
+          this.consumptionAmount = consumptionAmount
+          this.settlementAmount = settlementAmount
+        },
+        virPringClick(){
+          window.open(this.PRINT_ROOT+'#/virtualBill?virtualBillPk='+this.virPk+"&beginDate="+this.virtualBill.beginDate+"&endDate="+this.virtualBill.beginDate+"&currPrice="+this.virtualBill.currPrice)
+        },
         
       },
       mounted() {

@@ -9,6 +9,6 @@ module.exports = merge(prodEnv, {
   UPMS_ROOT:'"http://192.168.5.3:8080"',
   UPLOAD_ROOT: '"http://localhost"',//上传文件的地址 微云系统
   OA_ROOT:'"http://192.168.5.3:8085"',
-  PRINT_ROOT: '"http://192.168.5:8085"',
+  PRINT_ROOT: '"http://192.168.5.3:8083/"',
   SERVER_FLAG:false,//是否是正式服标识 true是正式服 false本地测试
 })

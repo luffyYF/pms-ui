@@ -8,6 +8,10 @@ export const listProject = params => {
 export const addBill = params => {
   return request.post('/back/bill/add', params)
 }
+//哑房账单入账处理
+export const addDumbBill = params => {
+  return request.post('/back/bill/addDumbBill', params)
+}
 //账单授权处理
 export const authBill = params => {
   return request.post('/back/bill/auth', params)
