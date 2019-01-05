@@ -211,9 +211,9 @@
                 </center>
               </el-tab-pane>
               <!-- 账单 -->
-              <!-- <el-tab-pane label="账单" name="second" :disabled="dumbHouse">
+              <el-tab-pane label="账单" name="second" :disabled="dumbHouse">
                 <bill-tag ref="bill" :dumb-obj="scope.row"/>
-              </el-tab-pane> -->
+              </el-tab-pane>
             </el-tabs>
           </el-dialog>
         </template>
@@ -497,6 +497,7 @@
         if(tab.name=="second"){
           // console.log(123456);
           this.$refs.bill.initProject()
+          this.$refs.bill.listBill()
         }else{
           // console.log(654321);
         }

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import BillTag from "../../reserveManage/addReserve/bills"
+import BillTag from "../../reserveManage/addReserve/bill"
   export default {
     props:['dumbObj'],
     components: {BillTag},

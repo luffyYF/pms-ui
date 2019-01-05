@@ -24,7 +24,6 @@ export default {
   },
   getUserInfo: config => {
     const { token } = param2Obj(config.url)
-    debugger
     if (userMap[token]) {
       return {code: 1, data: userMap[token], msg: null}
     } else {
