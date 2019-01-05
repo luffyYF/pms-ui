@@ -9,7 +9,7 @@
               <el-form-item label-width="0">
                 <el-radio-group v-model="serachForm.state" @change="listBill">
                   <el-radio v-for="(value, key) in billStatusMap" :key="key" :label="key">{{value}}</el-radio>
-                  <el-radio >全部账</el-radio>
+                  <el-radio>全部账</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -21,7 +21,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="客人姓名">
-                <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;"> 
+                <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
                   <el-option v-for="y in guestOrderSelect" :key="y.guestOrderPk" :label="y.memName" :value="y.guestOrderPk"></el-option>
                 </el-select>
@@ -30,7 +30,7 @@
                 <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 152px;"></el-date-picker>
               </el-form-item>
             </div>
-          </el-form>  
+          </el-form>
         </el-col>
         <el-col :span="23">
           <!-- 账单列表 -->
@@ -76,7 +76,7 @@
           <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY'" :disabled="currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN'">结账</el-button>
           <!-- (currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') -->
           <!-- <el-button size="mini">部分结账回复</el-button> -->
-          <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> --> 
+          <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> -->
           <!-- <el-button size="mini">取消入住</el-button> -->
           <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN'">退房未结</el-button>
           <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>
@@ -115,7 +115,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer"> 
+      <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="confirmSplit(splitForm)">确认</el-button>
         <el-button size="mini" type="primary" @click="dialogTollAllocation=false">取消</el-button>
       </span>
@@ -137,9 +137,9 @@
           <el-form-item label="冲减原因：">
             <el-input v-model="splitForm.remark"></el-input>
           </el-form-item>
-        </el-form>  
+        </el-form>
       </div>
-      <span slot="footer" class="dialog-footer"> 
+      <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="confirmOffset(splitForm)">确认</el-button>
         <el-button size="mini" type="primary" @click="dialogOffset = false">取消</el-button>
       </span>
@@ -205,13 +205,13 @@
           <el-form-item label="备注">
             <el-input type="textarea" v-model="formAddBill.remark"></el-input>
           </el-form-item>
-        </el-form> 
+        </el-form>
       </div>
-      <span slot="footer" class="dialog-footer"> 
+      <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="addBillList(formAddBill)">确认</el-button>
         <el-button size="mini" type="primary" @click="dialogAccountedFor = false">关闭</el-button>
       </span>
-    </el-dialog> 
+    </el-dialog>
     <!-- 项目选择 -->
     <el-dialog class="pattern-dialog height600" title="项目选择" :visible.sync="projectSelectDialog" width="550px" :close-on-click-modal="false" :append-to-body="true">
             <el-form ref="serachForm" :inline="true" :model="serachForm" size="mini" label-width="70px">
@@ -222,7 +222,7 @@
                     </el-select>
                   </el-form-item>
               </el-col>
-            </el-form>  
+            </el-form>
            <el-table
               ref="singleTable"
               :data="allProjectList"
@@ -253,7 +253,7 @@
                 label="单价">
               </el-table-column> -->
             </el-table>
-      <span slot="footer" class="dialog-footer"> 
+      <span slot="footer" class="dialog-footer">
           <el-button size="mini" type="primary" @click="projectSelectDialog = false">关闭</el-button>
         </span>
     </el-dialog>
@@ -285,7 +285,7 @@
                   <el-date-picker type="datetime" style="width:150px;" v-model="virtualBill.endDate" placeholder="离店日期" value-format="yyyy-MM-dd HH:mm"  size="mini"> </el-date-picker>
                 </el-form-item>
             </el-col>
-          </el-form>  
+          </el-form>
 
         <el-table ref="multipleTable" size="mini" :data="virtualBillDatailList" tooltip-effect="dark" border height="550" style="width: 100%">
             <el-table-column
@@ -352,7 +352,7 @@
           <div>
             消费:{{consumptionAmount}}&nbsp;&nbsp;&nbsp;&nbsp;实收:{{settlementAmount}}&nbsp;&nbsp;&nbsp;应收:{{consumptionAmount-settlementAmount}}
           </div>
-          <span slot="footer" class="dialog-footer"> 
+          <span slot="footer" class="dialog-footer">
             <el-button size="mini" type="primary" @click="addVirtualClick()">保存</el-button>
             <el-button size="mini" type="primary" @click="virPringClick()" v-if="virPk != null">打印</el-button>
             <el-button size="mini" type="primary" @click="virDialog = false">关闭</el-button>
@@ -379,7 +379,7 @@
 .bill-tabs-card .el-tabs__nav-scroll{
   margin-top: 10px;
   padding-left: 0;
-} 
+}
 .bill-tabs-card>.el-tabs__header{
   margin-bottom: 0
 }

@@ -413,6 +413,7 @@ export default {
       this.reserveTime = new Date()
       this.currConfirmType = 'add-checkin'
       this.currOrderPk = null;
+      this.currGuestIndex = 0;
 
       //回显房间数据到客单组件
       setTimeout(() => {

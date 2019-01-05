@@ -70,6 +70,8 @@ export const paymentMap = {
 export const billStatusMap = {
   UN_SET: '未结账',
   FINISH: '已结算',
+  //账单分类
+  NORMAL: '普通',
   OFFSET: '冲减',
   FORWARD: '转账'
 }

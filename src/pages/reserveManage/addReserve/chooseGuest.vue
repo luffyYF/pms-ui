@@ -159,10 +159,10 @@ export default {
       this.formAGuest.certificateNo = null;
       this.formAGuest.memPhone = null;
     },
-    search(callback) {
+    search() {
       listMemberCondition(this.formAGuest).then(res => {
         this.tableAGuestData = res.data;
-        callback();
+        // callback();
       });
     },
     choose(row, event) {
