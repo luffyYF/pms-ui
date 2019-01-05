@@ -392,9 +392,11 @@
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
+    import {overtimeRemind} from '@/api/bill'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
+    
     export default {
       props: ['parentForm'],
       components:{chooseGuest, reserveManager, DialogMakeCard},
@@ -883,11 +885,37 @@
           })
         },
         toCheckout(guestOrderPk){
-          this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
-            checkoutGuest(guestOrderPk).then(res=> {
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            })
+          //检测入住的客单是否超过退房时间，进行提醒
+          overtimeRemind({orderPk: this.form.orderPk, guestOrderPk:guestOrderPk}).then(res=>{
+            if(res.data.length>0) {
+              let message = '<p>以下入住客单超过了退房时间，可能需要收取额外费用：</p>';
+              message += "<table cellpadding='3'>"
+              message += "<tr><td>房号</td><td>客人姓名</td><td>离店日期</td></tr>";
+              for(let obj of res.data) {
+                message += "<tr style='font-weight:bold;'><td>"+obj.roomNumber+"</td><td>"+obj.guestName+"</td><td>"+obj.endDate+"</td></tr>"
+              }
+              message += "</table>"
+              this.$msgbox({
+                title: '提醒',
+                message: message,
+                showCancelButton: true,
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '不收取，继续退房',
+                cancelButtonText: '取消',
+              }).then(action => {
+                checkoutGuest(guestOrderPk).then(res=> {
+                  bus.$emit('refreshOrderInfo', this.form.orderPk)
+                })
+              });
+            }else{
+               this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
+                checkoutGuest(guestOrderPk).then(res=> {
+                  bus.$emit('refreshOrderInfo', this.form.orderPk)
+                })
+              })
+            }
           })
+          
         },
         guestTableClick(row, event, column) {//点击客单table
           this.currGuestList.forEach((guest,index)=>{

@@ -12,7 +12,19 @@
   import {findOrder} from '@/api/order/pmsOrderController'
   import {gmCount} from "@/api/goods/goodsManageController";
   import { listByProjectType } from '@/api/systemSet/pmsProjectController'
-  import {addBill,authBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill,transBill,selectGuestOrderBill,countCheckoutBill} from '@/api/bill'
+  import {
+    addBill,
+    authBill,
+    listBill,
+    offsetBill,
+    partialCheckoutBill,
+    singleRoomCheckoutBill,
+    splitBill,
+    transBill,
+    selectGuestOrderBill,
+    countCheckoutBill,
+    overtimeRemind
+  } from '@/api/bill'
   
     export default {
       props:['dumbObj'],
@@ -360,8 +372,32 @@
                   pks.push(row.billPk)
                 })
                 this.$refs.billSettlementRef.init(this.orderPk, 2,pks.toString())
-              }else if(type==0){//结账
-                this.$refs.billSettlementRef.init(this.orderPk, 0)
+              }else if(type==0){
+                //结账+退房
+                //检测入住的客单是否超过退房时间，进行提醒
+                overtimeRemind({orderPk: this.orderPk}).then(res=>{
+                  if(res.data.length>0) {
+                    let message = '<p>以下入住客单超过了退房时间，可能需要收取额外费用：</p>';
+                    message += "<table cellpadding='3'>"
+                    message += "<tr><td>房号</td><td>客人姓名</td><td>离店日期</td></tr>";
+                    for(let obj of res.data) {
+                      message += "<tr style='font-weight:bold;'><td>"+obj.roomNumber+"</td><td>"+obj.guestName+"</td><td>"+obj.endDate+"</td></tr>"
+                    }
+                    message += "</table>"
+                    this.$msgbox({
+                      title: '提醒',
+                      message: message,
+                      showCancelButton: true,
+                      dangerouslyUseHTMLString: true,
+                      confirmButtonText: '不收取，继续结账',
+                      cancelButtonText: '取消',
+                    }).then(action => {
+                      this.$refs.billSettlementRef.init(this.orderPk, 0)
+                    });
+                  }else{
+                    this.$refs.billSettlementRef.init(this.orderPk, 0)
+                  }
+                })
               }
             }
           });

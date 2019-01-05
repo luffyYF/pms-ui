@@ -9,7 +9,7 @@
                 <div class="bg-reserve">
                   <!-- <h5 class="info-title">房间设置</h5> -->
                   <el-form-item label="退房结束时间：">
-                    <el-time-picker v-model="form.checkoutTime" value-format="HH:mm" placeholder="请选择">
+                    <el-time-picker v-model="form.checkoutTime" value-format="HH:mm:ss" placeholder="请选择">
                     </el-time-picker>
                   </el-form-item>
                 </div>
@@ -23,7 +23,7 @@
             </el-row>
             <el-row>
               <el-col :span="24" style="text-align:center">
-                  <el-button type="primary" size="mini">提交</el-button>
+                  <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
               </el-col>
             </el-row>
           </el-col>  
@@ -34,27 +34,23 @@
 </template>
 
 <script>
+  import {find, update} from '@/api/systemSet/pmsSysParamController'
   export default {
     data() {
       return {
-        value2: new Date(),
-        username:'',
-        num7:1,
-        radio:'',
-        qudao:'close',
-        form: {
-          checkoutTime: null,
-          region: ''
-        }
+        form: {}
       }
     },
     methods: {
       init() {
-        this.list()
+        find().then(res=>{
+          this.form = res.data
+        })
       },
-      list(){},
       onSubmit() {
-        console.log('submit!');
+        update(this.form).then(res=>{
+          this.$message.success('保存成功');
+        })
       }
     }
   }

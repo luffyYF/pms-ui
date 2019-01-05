@@ -63,10 +63,10 @@
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
       this.activeName = this.$refs.checkTabs.panes[0].name
+      this.handleClick();
     },
     methods: {
       handleClick (tab, event) {
-        console.log(tab, event)
         if(this.activeName == 'sysbill'){
           var child = this.$refs.sysbill
           child.init()
@@ -92,7 +92,7 @@
           var child = this.$refs.syshotelinformation
           child.init()
         }else if(this.activeName == 'sysBaseParamRef') {
-          this.$refs.syshotelinformation.init();
+          this.$refs.sysBaseParamRef.init();
         }
       },
 
