@@ -135,10 +135,10 @@
       methods: {
         lookupBillList(orderPk) {
           this.orderPk = orderPk
+          this.initSearchForm()
           this.listBill()
           this.initAddBill()
           this.initProject()
-          this.initSearchForm()
           this.initGuestSelect(orderPk)
           this.findOrderInfo(orderPk)
           // this.$nextTick(()=>{
@@ -194,7 +194,11 @@
           this.formAddBill.projectPk = p.projectPk
           this.formAddBill.projectName = p.projectName
           if(!this.isDubm){
-            this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
+            let arr = this.getAddBillFilter(this.guestOrderSelect);
+            if(arr!=null && arr.length>0) {
+              this.formAddBill.guestOrderPk = arr[0].guestOrderPk;
+            }
+            // this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
           }else{
             this.formAddBill.dumbPk = this.dumbPk
           }
@@ -410,10 +414,10 @@
               }else if(type==2){//部分结账
                 let select = this.multipleSelection;
                 let pks = []
-                if(this.serachForm.state!='UN_SET'){
-                  this.$message({type:'warning', message:'请选择未结账的账单'})
-                  return;
-                }
+                // if(this.serachForm.state!='UN_SET'){
+                //   this.$message({type:'warning', message:'请选择未结账的账单'})
+                //   return;
+                // }
                 if(select.length<=0){
                   this.$message({type:'warning', message:'请至少选择一条未结账的账单'})
                   return;
@@ -475,10 +479,11 @@
         // },
         ifRoomNumber(roomNumber){
           if(roomNumber==null || roomNumber==undefined || roomNumber=='')
-            return '未安排'
+            return '未排房'
           else
             return roomNumber
         },
+        
         virtualBillClick() {
           this.$confirm('确认生成虚拟账单?', '提示', {
             confirmButtonText: '确定',
@@ -680,12 +685,29 @@
           this.consumptionAmount = consumptionAmount
           this.settlementAmount = settlementAmount
         },
-        virPringClick(){
+        virPringClick() {
           window.open(this.PRINT_ROOT+'#/virtualBill?virtualBillPk='+this.virPk+"&beginDate="+this.virtualBill.beginDate+"&endDate="+this.virtualBill.beginDate+"&currPrice="+this.virtualBill.currPrice)
         },
-        
+        //过滤出下拉客单
+        getAddBillFilter(select) {
+          let temp = []
+          select.forEach(item=>{
+            if(item.orderStatus=="CHECKIN" || item.orderStatus=='RESERVE' || item.orderStatus=='LEAVENOPAY') {
+              temp.push(item)
+            }
+          })
+          return temp;
+        },
+        //限制账单勾选，只有未结账的才可以勾选
+        billSelectable(row,index) {
+          if(row.billStatus=='UN_SET') {
+            return true;
+          }else {
+            return false;
+          }
+        }
       },
       mounted() {
         bus.$on('billload', () => { this.listBill() })
-      }
+      },
     }

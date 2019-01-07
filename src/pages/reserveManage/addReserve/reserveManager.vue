@@ -7,7 +7,7 @@
                 <el-table ref="reservationManagTableRef" :data="reservationManagTable" border tooltip-effect="dark" height="450" style="width: 100%" @selection-change="changeCheck">
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="roomNumber" label="房号"></el-table-column>
-                    <!-- <el-table-column prop="address" label="黑名单"></el-table-column> -->
+                    <el-table-column prop="guestName" label="客人姓名"></el-table-column>
                     <el-table-column prop="roomTypeName" label="房间类型"></el-table-column>
                     <el-table-column prop="beginDate" label="预抵日期"></el-table-column>
                     <el-table-column prop="endDate" label="预离日期"></el-table-column>

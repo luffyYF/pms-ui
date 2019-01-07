@@ -133,6 +133,10 @@ export const editOrderMemberBatch = params => {
 export const checkoutGuest = params => {
     return request.post('/back/order/checkoutGuest/'+params)
 }
+//恢复退房客单
+export const recoverGuestOrder = params => {
+    return request.post('/back/order/recoverGuestOrder/'+params)
+}
 
 
 

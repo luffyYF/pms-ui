@@ -36,8 +36,11 @@
         <el-form-item label="　组单号">
           <el-input v-model="chenkInSearchData.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item label="组单名称">
+        <!-- <el-form-item label="组单名称">
           <el-input v-model="chenkInSearchData.name" placeholder="请输入组单名称" clearable style="width: 178px;"></el-input> 
+        </el-form-item> -->
+        <el-form-item label="客单号">
+          <el-input v-model="chenkInSearchData.guestNo" placeholder="请输入客单号" clearable style="width: 178px;"></el-input> 
         </el-form-item>
         <el-form-item label="客单状态">
           <el-select v-model="chenkInSearchData.orderStatus" placeholder="全部状态" clearable>
@@ -82,7 +85,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:15px">搜索订单</el-button>
-          <el-button type="primary" icon="el-icon-download" @click="getList">导出excel</el-button>
+          <!-- <el-button type="primary" icon="el-icon-download" @click="getList">导出excel</el-button> -->
         </el-form-item>
       </el-form>
     </el-col>
@@ -141,15 +144,16 @@
       </el-table-column>
       <el-table-column label="状态"  align="center" width="90" prop="orderStatusName">
       </el-table-column>
-      <el-table-column label="备注"  align="center"  prop="remark">
+      <el-table-column label="备注"  align="center" width="200" prop="remark" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="120" fixed="right">
+      <el-table-column label="操作" align="center" min-width="200" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="success" v-if="scope.row.orderStatus=='LEAVE'" @click="recoverGuest(scope.row)">恢复</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div class="block checkPagination"  >
+    <div class="block checkPagination">
         <el-pagination @current-change="getchenkGird" @size-change="sizeChange"  :current-page="chenkInSearchData.pageNum" :page-sizes="[5,10,20,30,40,50]" :page-size="chenkInSearchData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
     </div>
@@ -171,6 +175,7 @@
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";
+  import {recoverGuestOrder} from '@/api/order/pmsOrderController'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
@@ -195,6 +200,7 @@
           guestName: '',  
           guestPhone:'',
           orderNo: '', 
+          guestNo: '',
           beginDate: '', 
           endDate: '',
           orderStatus: 'CHECKIN',
@@ -355,12 +361,16 @@
         const self = this;
         self.chenkInSearchData.pageSize = val;
         self.getList();
+      },
+      //恢复客单
+      recoverGuest(row) {
+        this.$confirm("是否恢复客单？","提示",{type:'warning'}).then(()=>{
+          recoverGuestOrder(row.guestOrderPk).then(res=>{
+            this.$message.success('恢复成功')
+            this.getList();
+          })
+        })
       }
-      ,
-      // powerJudge(id){
-      //   return powerJudge(id);
-      // }
-
     },
     mounted () {
       bus.$on('refresh-listReserve', () => { this.getList() })

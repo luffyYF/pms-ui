@@ -40,7 +40,7 @@
                 </el-form-item>
                 <el-form-item label="客单：">
                   <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                    <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                    <el-option v-for="(item,index) in getAddBillFilter(guestOrderSelect)" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -55,7 +55,7 @@
               </el-form-item>
               <el-form-item label="客单：" v-if="billForm.onlineFlag">
                 <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                  <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                  <el-option v-for="(item,index) in getAddBillFilter(guestOrderSelect)" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -169,7 +169,7 @@ export default {
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
         this.guestOrderSelect = res.data;
         if(res.data.length>0){
-          this.billForm.guestOrderPk = res.data[0].guestOrderPk
+          this.billForm.guestOrderPk = this.getAddBillFilter(this.guestOrderSelect)[0].guestOrderPk
         }
       });
     },
@@ -275,6 +275,16 @@ export default {
           this.islock = false;
         })
       }
+    },
+    //过滤出下拉客单
+    getAddBillFilter(select) {
+      let temp = []
+      select.forEach(item=>{
+        if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
+          temp.push(item)
+        }
+      })
+      return temp;
     }
   }
 };
