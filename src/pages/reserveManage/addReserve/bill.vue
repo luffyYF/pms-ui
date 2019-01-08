@@ -122,7 +122,7 @@
                 <el-col class="colGreen" :span="8">{{billsList | changeconsumptionAmount}}</el-col>
                 <el-col class="colBlue" :span="8">{{billsList | changeSettlementAmount}}</el-col>
                 <el-col class="colRed" :span="8">{{billsList | changeYE}}</el-col>
-                <el-col class="colGreen bgBlue" :span="8">个付</el-col>
+                <!-- <el-col class="colGreen bgBlue" :span="8">个付</el-col>
                 <el-col class="colBlue bgBlue" :span="8">结算</el-col>
                 <el-col class="colRed bgBlue" :span="8">余额</el-col>
                 <el-col class="colGreen" :span="8">0</el-col>
@@ -133,7 +133,7 @@
                 <el-col class="colRed bgBlue" :span="8">余额</el-col>
                 <el-col class="colGreen" :span="8">0</el-col>
                 <el-col class="colBlue" :span="8">0</el-col>
-                <el-col class="colRed" :span="8">0</el-col>
+                <el-col class="colRed" :span="8">0</el-col> -->
             </el-tab-pane>
             <el-tab-pane label="消费汇总" name="tow"  style="max-height:144px;overflow:hidden;">
               <el-col class="colWhite bgGreen" :span="12">项目名称</el-col>
