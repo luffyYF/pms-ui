@@ -8,6 +8,7 @@
   import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
   import commentPrint from '@/components/PrintPage/commonPrintPage'
   import billSettlement from './bill/billSettlement'
+  import dialogRecoverBill from './bill/dialogRecoverBill'
   // API
   import {findOrder} from '@/api/order/pmsOrderController'
   import {gmCount} from "@/api/goods/goodsManageController";
@@ -29,9 +30,10 @@
   import Moment from 'moment'
     export default {
       props:['dumbObj'],
-      components:{dialogBorrow, commentPrint, billSettlement},
+      components:{dialogBorrow, commentPrint, billSettlement, dialogRecoverBill},
       data() {
         return {
+          //当前订单信息
           currOrderInfo:{
             order:{},
             guestList:[]
@@ -474,9 +476,6 @@
         onSubmit() {
           // console.log('submit!');
         },
-        // powerJudge(id){
-        //   return powerJudge(id);
-        // },
         ifRoomNumber(roomNumber){
           if(roomNumber==null || roomNumber==undefined || roomNumber=='')
             return '未排房'
@@ -705,6 +704,10 @@
           }else {
             return false;
           }
+        },
+        //恢复客单
+        toDialogRecoverBill() {
+          this.$refs.dialogRecoverBillRef.showDialog(this.currOrderInfo.order.orderPk)
         }
       },
       mounted() {

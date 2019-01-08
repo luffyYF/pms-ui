@@ -82,12 +82,10 @@
         <el-col :span="24" class="bill-opr">
           结账处理：
           <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY'" :disabled="currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN'">结账</el-button>
-          <!-- (currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') -->
-          <!-- <el-button size="mini">部分结账回复</el-button> -->
-          <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> -->
-          <!-- <el-button size="mini">取消入住</el-button> -->
           <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN'">退房未结</el-button>
           <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>
+          <el-button size="mini" @click="toDialogRecoverBill" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
+
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
         <el-col :span="24" class="bill-opr">
@@ -368,13 +366,13 @@
     </el-dialog>
 
     <!-- 外借 -->
-    <dialogBorrow ref="dialogBorrowRef" ></dialogBorrow>
-
+    <dialog-borrow ref="dialogBorrowRef" ></dialog-borrow>
     <!-- 打印组件 -->
-    <commentPrint ref="commentPrintRef"></commentPrint>
-
+    <comment-print ref="commentPrintRef"></comment-print>
     <!-- 结算弹出 -->
-    <billSettlement ref="billSettlementRef"></billSettlement>
+    <bill-settlement ref="billSettlementRef"></bill-settlement>
+    <!-- 部分结账恢复 -->
+    <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
   </div>
 </template>
 
