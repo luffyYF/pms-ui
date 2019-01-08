@@ -87,7 +87,7 @@
 
         <el-col :span="24" class="reserve-contert">
             <el-form-item class="addreserve-btn">
-              <el-button type="primary" @click="onSubmit" :disabled="submitLock">保存预订</el-button><!--v-loading.fullscreen.lock="fullscreenLoading"-->
+              <el-button type="primary" @click="onSubmit" v-if="hasPerm('pms:addReserve:saveReserve')" :disabled="submitLock">保存预订</el-button><!--v-loading.fullscreen.lock="fullscreenLoading"-->
               <el-button type="primary" @click="init">重置</el-button>
             </el-form-item>
         </el-col>

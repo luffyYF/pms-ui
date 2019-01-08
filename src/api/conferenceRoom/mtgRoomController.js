@@ -45,14 +45,18 @@ export const updateBook = params => {
 
 //哑房账接口
 export const listDumbHouse = params => {
-    return request.get('/back/dumbHouse/list')
+    return request.get('/back/dumbHouse/list',{params,params})
  }
-
+//查询哑房账详情接口
+export const getDumbByPk = params => {
+    return request.get('/back/dumbHouse/getDumbByPk',{params,params})
+ }
+ 
  export const addDumbAndBill = params => {
     return request.post('/back/dumbHouse/addDumbAndBill',params)
  }
 
 //订单接口
 export const mtgRoomGroupOrderList = params => {
-    return request.get('/back/order/mtgRoomGroupOrderList')
+    return request.get('/back/order/mtgRoomGroupOrderList',{params,params})
  }

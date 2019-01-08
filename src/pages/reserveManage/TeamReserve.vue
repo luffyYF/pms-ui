@@ -114,11 +114,11 @@
             </div>
           </el-col>
           <el-col :span="4" class="guest-opr">
-            <el-tooltip class="buttonOprItem" effect="dark" content="添加预定" placement="right">
+            <el-tooltip class="buttonOprItem" v-if="hasPerm('pms:groupReserve:addDetail')"  effect="dark" content="添加预定" placement="right">
               <el-button type="primary" icon="el-icon-plus" @click="addItem" size="mini">添加</el-button>
             </el-tooltip>
             <br>
-            <el-tooltip class="buttonOprItem" effect="dark" content="清空预定" placement="right">
+            <el-tooltip class="buttonOprItem" effect="dark" v-if="hasPerm('pms:groupReserve:remove')"  content="清空预定" placement="right">
               <el-button type="danger" icon="el-icon-delete" @click="clearItem" size="mini">清空</el-button>
             </el-tooltip>
           </el-col>
@@ -127,7 +127,7 @@
         <el-row>
           <el-col :span="20" class="bottom-submit">
             <el-form-item>
-              <el-button type="primary" @click="onSubmit" :loading="submitLock">保存预订</el-button>
+              <el-button type="primary"  v-if="hasPerm('pms:groupReserve:saveReserve')" @click="onSubmit" :loading="submitLock">保存预订</el-button>
               <!-- <el-button type="primary" @click="init" :loading="submitLock">清空</el-button> -->
             </el-form-item>
           </el-col>

@@ -333,6 +333,10 @@
         })
       },
       getList () {
+        if(!this.hasPerm('pms:checkInSearch:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true
         const self = this;
         const parameters = self.chenkInSearchData;

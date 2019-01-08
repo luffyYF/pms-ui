@@ -184,10 +184,10 @@
       </el-table-column> -->
       <el-table-column label="操作" min-width="200" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" v-if="scope.row.orderStatus == 'LEAVE' || scope.row.orderStatus == 'LEAVENOPAY' " @click="onInvoiceClick(scope.row.orderNo)">开发票</el-button>
-          <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" v-if="(scope.row.orderStatus == 'LEAVE' || scope.row.orderStatus == 'LEAVENOPAY') && hasPerm('pms:listReserve:onInvoice') " @click="onInvoiceClick(scope.row.orderNo)">开发票</el-button>
+          <el-button size="mini" type="primary" v-if="hasPerm('pms:listReserve:orderDetail')" @click="showOrderInfo(scope.row)">查看订单</el-button>
           <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0">
-            <el-button size="mini" type="danger" @click="cancelOrder(scope.row)">取消订单</el-button>
+            <el-button size="mini" type="danger" v-if="hasPerm('pms:listReserve:cancelOrder')" @click="cancelOrder(scope.row)">取消订单</el-button>
           </template>
         </template>
       </el-table-column>
@@ -388,6 +388,10 @@
         this.list()
       },
       list(){
+        if(!this.hasPerm('pms:listReserve:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true
         this.formInline.pageNum = 1;
         listReserve(this.formInline).then(result => {
@@ -400,6 +404,10 @@
         })
       },
       getListForStatus() {
+        if(!this.hasPerm('pms:listReserve:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true;
         this.formInline.pageNum = 1;
         listReserve(this.formInline).then(result => {
@@ -411,6 +419,10 @@
         })
       },
       getList(val){
+        if(!this.hasPerm('pms:listReserve:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true;
         this.formInline.pageNum = val;
         listReserve(this.formInline).then(result => {
@@ -422,6 +434,10 @@
         })
       },
       getSizeChange(val) {
+        if(!this.hasPerm('pms:listReserve:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true;
         this.formInline.pageSize = val;
         listReserve(this.formInline).then(result => {
