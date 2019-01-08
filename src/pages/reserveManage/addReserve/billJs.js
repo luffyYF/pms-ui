@@ -840,7 +840,7 @@
           }else {
             return false;
           }
-        }
+        },
         //批量入账
         dialogBatchEntryClick(){
           this.formAddBills = [{
@@ -941,7 +941,6 @@
       },
       mounted() {
         bus.$on('billload', () => { this.listBill() })
-      },
       },
       filters:{
         //所选

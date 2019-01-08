@@ -339,7 +339,6 @@
         })
       },
       getList (num) {
-      getList () {
         if(!this.hasPerm('pms:checkInSearch:list')){
           this.$message({type:'warning', message:'权限不足'})
           return
