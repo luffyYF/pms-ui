@@ -139,16 +139,16 @@
               <el-col class="colWhite bgGreen" :span="12">项目名称</el-col>
               <el-col class="colWhite bgGreen" :span="12">金额</el-col>
               <el-row :gutter="24" v-for="obj in consumptionSummary(billsList)" :key="obj.billPk">
-                <el-col :span="12">{{obj.projectName}}</el-col>
-                <el-col :span="12">{{obj.consumptionAmount}}</el-col>
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.projectName}}</el-col>
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.consumptionAmount}}</el-col>
               </el-row>
             </el-tab-pane>
             <el-tab-pane label="结算汇总" name="last"  style="max-height:144px;overflow:hidden;">
               <el-col class="colWhite bgBlue" :span="12">项目名称</el-col>
               <el-col class="colWhite bgBlue" :span="12">金额</el-col>
               <el-row :gutter="24" v-for="obj in settlementAmountSummary(billsList)" :key="obj.billPk">
-                <el-col :span="12">{{obj.projectName}}</el-col>
-                <el-col :span="12">{{obj.settlementAmount}}</el-col>
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.projectName}}</el-col>
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.settlementAmount}}</el-col>
               </el-row>
             </el-tab-pane>
           </el-tabs>

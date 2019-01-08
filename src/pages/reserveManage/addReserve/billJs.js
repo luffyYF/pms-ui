@@ -731,6 +731,7 @@
               return
             }
           }
+          this.virtualBill.virtualBillPk = this.virPk?this.virPk:''
           var data = {
             pmsVirtualBillPo:this.virtualBill,
             pmsVirtualBillDetailPos:this.virtualBillDatailList
@@ -792,7 +793,7 @@
                 projectCode:"",
                 projectName:"",
                 goodsOrderPk:"",
-                billType:"",
+                billType:this.isDubm?'DUMB':'ROOM',
                 consumptionAmount:0,
                 settlementAmount:0,
                 isZf:false,
@@ -804,7 +805,7 @@
                 remark:"",
                 createUserName:userInfo.upmsRealName,
                 payment:-1,
-                createTime:Moment().format("YYYY-MM-DD"),
+                createTime:Moment().format("YYYY-MM-DD HH:mm:ss"),
                 channelTypePk:"",
           })
         },

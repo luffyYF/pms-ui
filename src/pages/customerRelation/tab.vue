@@ -35,10 +35,10 @@
       <el-menu-item index="/customerRelation/protocolManage" v-if="hasPerm('pms:menu:protocolManage')">
         <span slot="title">协议管理</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/customerRelation/virtualOrder" v-if="powerJudge('1504')">
+      <el-menu-item index="/customerRelation/virtualOrder">
         <span slot="title">虚拟账单</span>
       </el-menu-item>
-      <el-menu-item index="/customerRelation/invoice" v-if="powerJudge('1505')">
+      <!-- <el-menu-item index="/customerRelation/invoice" v-if="powerJudge('1505')">
         <span slot="title">发票</span>
       </el-menu-item>
       <el-menu-item index="/customerRelation/passengerInformationUploading" v-if="powerJudge('1506')">

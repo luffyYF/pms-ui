@@ -425,6 +425,7 @@
       showDumbDetail(row){
         var dumPk = row.dumbPk
         this.dumbDetailObj = row;
+        this.activeName = 'first'
         setTimeout(_=>{
           this.$refs.bill.dumBill(dumPk)
         },0)
