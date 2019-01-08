@@ -73,11 +73,11 @@
             remark: ''
           },
           serachForm: {
-            state: 'UN_SET', 
-            roomPk: '', 
-            guestOrderPk: '', 
+            state: 'UN_SET',
+            roomPk: '',
+            guestOrderPk: '',
             currentData: null
-          }, 
+          },
           // 房态账单  end
           dumbHouseObj:{},
           roomProjectList:[],
@@ -145,7 +145,7 @@
           addBillsConsumptionAmount:0,
           addBillsSettlementAmount:0,
         }
-        
+
       },
       created(){
         this.dumbHouseObj = this.dumbObj;
@@ -155,10 +155,10 @@
       methods: {
         lookupBillList(orderPk) {
           this.orderPk = orderPk
+          this.initSearchForm()
           this.listBill()
           this.initAddBill()
           this.initProject()
-          this.initSearchForm()
           this.initGuestSelect(orderPk)
           this.findOrderInfo(orderPk)
           // this.$nextTick(()=>{
@@ -167,7 +167,7 @@
         },
         findOrderInfo(orderPk){
           findOrder({orderPk: orderPk}).then(res=>{
-            this.currOrderInfo = res.data 
+            this.currOrderInfo = res.data
           })
         },
         listBill() {//查找账单列表
@@ -190,7 +190,7 @@
           })
         },
         initGuestSelect(orderPk) {//查找客单下拉框列表
-          selectGuestOrderBill({orderPk: orderPk}).then(res=>{ 
+          selectGuestOrderBill({orderPk: orderPk}).then(res=>{
             this.guestOrderSelect = res.data
           })
         },
@@ -202,7 +202,7 @@
         },
         initAddBill() {
           this.formAddBill.projectPk=null
-          this.formAddBill.projectName=null 
+          this.formAddBill.projectName=null
           this.formAddBill.guestOrderPk=null
           this.formAddBill.channelTypePk=null
           this.formAddBill.consumptionAmount=null
@@ -214,7 +214,11 @@
           this.formAddBill.projectPk = p.projectPk
           this.formAddBill.projectName = p.projectName
           if(!this.isDubm){
-            this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
+            let arr = this.getAddBillFilter(this.guestOrderSelect);
+            if(arr!=null && arr.length>0) {
+              this.formAddBill.guestOrderPk = arr[0].guestOrderPk;
+            }
+            // this.formAddBill.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
           }else{
             this.formAddBill.dumbPk = this.dumbPk
           }
@@ -493,14 +497,14 @@
                   // }else{
                   //   this.$refs.billSettlementRef.init(this.orderPk, 1)
                   // }
-                  this.$refs.billSettlementRef.init(this.orderPk, 1,null,null,this.isDubm)
+                  this.$refs.billSettlementRef.init(this.orderPk, 1)
                 }else if(type==2){//部分结账
                   let select = this.multipleSelection;
                   let pks = []
-                  if(this.serachForm.state!='UN_SET'){
-                    this.$message({type:'warning', message:'请选择未结账的账单'})
-                    return;
-                  }
+                  // if(this.serachForm.state!='UN_SET'){
+                  //   this.$message({type:'warning', message:'请选择未结账的账单'})
+                  //   return;
+                  // }
                   if(select.length<=0){
                     this.$message({type:'warning', message:'请至少选择一条未结账的账单'})
                     return;
@@ -508,7 +512,7 @@
                   select.forEach(row=>{
                     pks.push(row.billPk)
                   })
-                  this.$refs.billSettlementRef.init(this.orderPk, 2,pks.toString(),null,this.isDubm)
+                  this.$refs.billSettlementRef.init(this.orderPk, 2,pks.toString())
                 }else if(type==0){
                   //结账+退房
                   //检测入住的客单是否超过退房时间，进行提醒
@@ -529,10 +533,10 @@
                         confirmButtonText: '不收取，继续结账',
                         cancelButtonText: '取消',
                       }).then(action => {
-                        this.$refs.billSettlementRef.init(this.orderPk, 0,null,null,this.isDubm)
+                        this.$refs.billSettlementRef.init(this.orderPk, 0)
                       });
                     }else{
-                      this.$refs.billSettlementRef.init(this.orderPk, 0,null,null,this.isDubm)
+                      this.$refs.billSettlementRef.init(this.orderPk, 0)
                     }
                   })
                 }
@@ -603,17 +607,18 @@
         // },
         ifRoomNumber(roomNumber){
           if(roomNumber==null || roomNumber==undefined || roomNumber=='')
-            return '未安排'
+            return '未排房'
           else
             return roomNumber
         },
+
         virtualBillClick() {
           this.$confirm('确认生成虚拟账单?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            // this.billsList 
+            // this.billsList
             var channelTypePk = ''
             var dumbPk = ''
             var billType = ''
@@ -646,7 +651,7 @@
                 createTime:this.billsList[i].createTime,
                 channelTypePk:this.billsList[i].channelTypePk,
               })
-              
+
               if(channelTypePk == null || channelTypePk == ''){
                 channelTypePk = this.billsList[i].channelTypePk
               }
@@ -682,7 +687,7 @@
               if(guestList[i].guestName){
                 memNames += guestList[i].guestName+","
               }
-              
+
               this.virGuestList.push({
                 guestOrderPk:guestList[i].guestOrderPk,
                 orderNo:guestList[i].orderGuestNo
@@ -818,6 +823,24 @@
         virPringClick(){
           window.open(this.PRINT_ROOT+'#/virtualBill?virtualBillPk='+this.virPk+"&beginDate="+this.virtualBill.beginDate+"&endDate="+this.virtualBill.beginDate+"&currPrice="+this.virtualBill.currPrice)
         },
+        //过滤出下拉客单
+        getAddBillFilter(select) {
+          let temp = []
+          select.forEach(item=>{
+            if(item.orderStatus=="CHECKIN" || item.orderStatus=='RESERVE' || item.orderStatus=='LEAVENOPAY') {
+              temp.push(item)
+            }
+          })
+          return temp;
+        },
+        //限制账单勾选，只有未结账的才可以勾选
+        billSelectable(row,index) {
+          if(row.billStatus=='UN_SET') {
+            return true;
+          }else {
+            return false;
+          }
+        }
         //批量入账
         dialogBatchEntryClick(){
           this.formAddBills = [{
@@ -858,7 +881,7 @@
           this.addBillMomeyChange()
         },
         changeSummary(list,index){
-          
+
         },
         consumptionSummary(list){
           var tempList = []
@@ -915,9 +938,10 @@
         // range: function() {
         //   return this.rangeList.sort((a,b)=>a.percent-b.percent);//升序
         // }
-      },    
+      },
       mounted() {
         bus.$on('billload', () => { this.listBill() })
+      },
       },
       filters:{
         //所选

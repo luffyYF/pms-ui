@@ -91,7 +91,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
         </template>
       </el-table-column>
     </el-table>

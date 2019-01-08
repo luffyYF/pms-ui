@@ -40,7 +40,7 @@
                 </el-form-item>
                 <el-form-item label="客单：">
                   <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                    <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                    <el-option v-for="(item,index) in getAddBillFilter(guestOrderSelect)" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -55,7 +55,7 @@
               </el-form-item>
               <el-form-item label="客单：" v-if="billForm.onlineFlag">
                 <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                  <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                  <el-option v-for="(item,index) in getAddBillFilter(guestOrderSelect)" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -98,7 +98,7 @@ export default {
     return {
       islock: false,
       orderPk: "",
-      type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 【废】3:豪斯菲尔退房未结 
+      type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 【废】3:豪斯菲尔退房未结
       dialogPartialCheckout: false,
       countCheckoutDate: {},
       guestOrderSelect: [],
@@ -274,7 +274,7 @@ export default {
           this.islock = false;
           bus.$emit("billload");
         }).catch(error=>{
-          this.islock = false;  
+          this.islock = false;
         })
       }else if(this.type==3){
         let data = {
@@ -293,6 +293,16 @@ export default {
           this.islock = false;
         })
       }
+    },
+    //过滤出下拉客单
+    getAddBillFilter(select) {
+      let temp = []
+      select.forEach(item=>{
+        if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
+          temp.push(item)
+        }
+      })
+      return temp;
     }
   }
 };

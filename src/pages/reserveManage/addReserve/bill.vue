@@ -17,13 +17,21 @@
               <el-form-item label="房间号" label-width="55px">
                 <el-select v-model="serachForm.roomPk" placeholder="请选择房间号" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option v-for="y in filterRoom(guestOrderSelect)" :key="y.roomPk" :label="y.roomNumber" :value="y.roomPk"></el-option>
+                  <el-option 
+                    v-for="y in filterRoom(guestOrderSelect)" 
+                    :key="y.roomPk"
+                    :label="y.roomNumber"
+                    :value="y.roomPk"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="客人姓名">
                 <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option v-for="y in guestOrderSelect" :key="y.guestOrderPk" :label="y.memName" :value="y.guestOrderPk"></el-option>
+                  <el-option 
+                    v-for="y in guestOrderSelect" 
+                    :key="y.guestOrderPk" 
+                    :label="y.memName+' ('+ifRoomNumber(y.roomNumber)+')'"
+                    :value="y.guestOrderPk"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="营业日期">
@@ -35,7 +43,7 @@
         <el-col :span="23">
           <!-- 账单列表 -->
           <el-table ref="multipleTable" size="mini" :data="billsList" @selection-change="handleSelectionChange" tooltip-effect="dark" border height="240" style="width: 100%">
-            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column type="selection" width="55" :selectable="billSelectable"></el-table-column>
             <el-table-column prop="projectName" label="项目" width="100"></el-table-column>
             <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
             <el-table-column prop="settlementAmount" label="结算金额"></el-table-column>
@@ -305,7 +313,7 @@
           <el-form-item label="客单" required v-if="!isDubm" >
             <el-select v-model="formAddBill.guestOrderPk" placeholder="请选择客单" style="width:100%">
               <el-option
-                v-for="(item,index) in guestOrderSelect"
+                v-for="(item,index) in getAddBillFilter(guestOrderSelect)"
                 :key="index"
                 :label="'房间号:'+ifRoomNumber(item.roomNumber)+' 客人姓名:'+item.memName"
                 :value="item.guestOrderPk">
