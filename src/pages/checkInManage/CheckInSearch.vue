@@ -37,10 +37,10 @@
           <el-input v-model="chenkInSearchData.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <!-- <el-form-item label="组单名称">
-          <el-input v-model="chenkInSearchData.name" placeholder="请输入组单名称" clearable style="width: 178px;"></el-input> 
+          <el-input v-model="chenkInSearchData.name" placeholder="请输入组单名称" clearable style="width: 178px;"></el-input>
         </el-form-item> -->
         <el-form-item label="客单号">
-          <el-input v-model="chenkInSearchData.guestNo" placeholder="请输入客单号" clearable style="width: 178px;"></el-input> 
+          <el-input v-model="chenkInSearchData.guestNo" placeholder="请输入客单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="客单状态">
           <el-select v-model="chenkInSearchData.orderStatus" placeholder="全部状态" clearable>
@@ -50,7 +50,7 @@
         <!-- <el-form-item label="房间数量">
           <el-input v-model="filterText" clearable></el-input>
         </el-form-item> -->
-        <el-form-item label="抵店日期"> 
+        <el-form-item label="抵店日期">
           <el-date-picker
             v-model="chenkInSearchData.beginDate"
             align="right"
@@ -91,21 +91,21 @@
     </el-col>
     <el-col :span="4"></el-col>
     <el-table v-loading="loading" style="top: 10px;width:98%;margin:auto"
-    :data="tableData" 
-    filter-change="handlerFilterChange" 
+    :data="tableData"
+    filter-change="handlerFilterChange"
     height="450"
     border
     stripe>
     <!--  条件过滤
-    | globalFilter(chenkInSearchData.roomTypeName) 
+    | globalFilter(chenkInSearchData.roomTypeName)
     | globalFilter(chenkInSearchData.roomNumber)
-    | globalFilter(chenkInSearchData.userName) 
-    | globalFilter(chenkInSearchData.guestName) 
-    | globalFilter(chenkInSearchData.orderNo) 
-    | globalFilter(chenkInSearchData.channelTypePk) 
+    | globalFilter(chenkInSearchData.userName)
+    | globalFilter(chenkInSearchData.guestName)
+    | globalFilter(chenkInSearchData.orderNo)
+    | globalFilter(chenkInSearchData.channelTypePk)
     | globalFilter(chenkInSearchData.price)
-    | globalFilter(chenkInSearchData.name) 
-    | globalFilter(chenkInSearchData.beginDate) 
+    | globalFilter(chenkInSearchData.name)
+    | globalFilter(chenkInSearchData.beginDate)
     | globalFilter(chenkInSearchData.endDate)
      -->
       <!-- <el-table-column label="组单号" prop="orderNo">
@@ -138,7 +138,7 @@
       </el-table-column>
       <!-- <el-table-column label="预授权金额" align="center" width="100" prop="groupPayTheAmount">
       </el-table-column> -->
-      <el-table-column label="抵店日期" align="center" width="180" prop="beginDate"> 
+      <el-table-column label="抵店日期" align="center" width="180" prop="beginDate">
       </el-table-column>
       <el-table-column label="离店时间" align="center" width="180" prop="endDate">
       </el-table-column>
@@ -188,7 +188,7 @@
         roomTypeOptions: [],
         channelOptions: [],
         agreementOptions: [],
-        industryOptions: [], 
+        industryOptions: [],
         saleOptions: [],
         chenkInSearchData:{
           // quickSearch: '在住',
@@ -196,12 +196,12 @@
           roomTypePk: '',
           channelTypePk:'',
           roomNumber: '',
-          userName: '',  
-          guestName: '',  
+          userName: '',
+          guestName: '',
           guestPhone:'',
-          orderNo: '', 
+          orderNo: '',
           guestNo: '',
-          beginDate: '', 
+          beginDate: '',
           endDate: '',
           orderStatus: 'CHECKIN',
           name:'',
@@ -339,6 +339,10 @@
         })
       },
       getList (num) {
+        if(!this.hasPerm('pms:checkInSearch:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true
         this.chenkInSearchData.pageNum = num
         const parameters = this.chenkInSearchData;

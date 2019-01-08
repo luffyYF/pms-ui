@@ -119,7 +119,7 @@
       title="订单管理"
       :visible.sync="orderManageDialog"
       :fit="false"
-      width="70%">
+      width="1000px">
       <div class="bg-reserve">
         <div class="bg-reserve">    
           <h5 class="info-title">档期</h5>
@@ -335,8 +335,12 @@
           <el-form-item label="挂账金额">
             <el-input v-model="billDetail.money"></el-input>
           </el-form-item>
-          <el-form-item label="挂账组单">
-            <el-input disabled v-model="billDetail.orderGuestNo" ></el-input>
+          <el-form-item label="挂账组单" v-if="!billDetail.isDumb">
+            <el-input disabled v-model="billDetail.orderGuestNo"  ></el-input>
+            <el-button type="text" @click="choseGroup">选择</el-button>
+          </el-form-item>
+          <el-form-item label="协议单位" v-else>
+            <el-input disabled v-model="billDetail.name"></el-input>
             <el-button type="text" @click="choseGroup">选择</el-button>
           </el-form-item>
           <el-form-item>
@@ -348,23 +352,33 @@
       title="选择组单"
       :visible.sync="groupDialog"
       :fit="false"
-      width="80%">
+      width="1200px">
       <div class="bg-reserve">
         <div class="bg-reserve">    
           <h5 class="info-title">查询</h5>
           <el-form :inline="true" size="mini" :model="selectGroupObj" class="demo-form-inline">
-            <el-form-item label="房号：">
-              <el-input v-model="selectGroupObj.roomNum"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名：">
-              <el-input v-model="selectGroupObj.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机：">
-              <el-input v-model="selectGroupObj.phone"></el-input>
-            </el-form-item>
-            <el-form-item label="组单号：">
-              <el-input v-model="selectGroupObj.groupNum"></el-input>
-            </el-form-item>
+            <div v-if="selectGroupObj.groupType == 'ORDERGUEST'">
+              <el-form-item label="房号：">
+                <el-input v-model="selectGroupObj.roomNum"></el-input>
+              </el-form-item>
+              <el-form-item label="姓名：">
+                <el-input v-model="selectGroupObj.name"></el-input>
+              </el-form-item>
+              <el-form-item label="手机：">
+                <el-input v-model="selectGroupObj.phone"></el-input>
+              </el-form-item>
+              <el-form-item label="组单号：">
+                <el-input v-model="selectGroupObj.groupNum"></el-input>
+              </el-form-item>
+            </div>
+            <div v-else>
+              <el-form-item label="名称：">
+                <el-input v-model="selectDubmObj.name"></el-input>
+              </el-form-item>
+              <el-form-item label="创建人：">
+                <el-input v-model="selectDubmObj.createUserName"></el-input>
+              </el-form-item>
+            </div>
             <el-form-item label="单据类别：">
               <el-select v-model="selectGroupObj.groupType">
                 <el-option label="客单" value="ORDERGUEST"></el-option>
@@ -372,7 +386,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button @click="getOrderList(selectGroupObj.groupType)" type="primary">查询</el-button>
+              <el-button @click="getOrderList(selectGroupObj.groupType,1)" type="primary">查询</el-button>
             </el-form-item>
           </el-form>
           <!-- 哑房单列表 -->
@@ -409,7 +423,7 @@
               label="创建营业日期">
             </el-table-column>
             <el-table-column
-              prop="checkoutUserName"
+              prop="createUserName"
               align="center"
               label="创建人">
             </el-table-column>
@@ -504,6 +518,16 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+          style="margin: 10px 20px;"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="1"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="selectPageParm.total">
+        </el-pagination>
         </div>
       </div>
     </el-dialog>
@@ -560,7 +584,7 @@ export default {
         roomPk: [
           { required: true, message: "请选择会议室", trigger: "blur" }
         ],
-        conpanyName: [
+        companyName: [
           { required: true, message: "请填写公司名称", trigger: "blur" }
         ],
         bookUserName: [
@@ -579,13 +603,28 @@ export default {
       },
       billDetail:{      //费用挂账
       },
+      selectPageParm:{
+        total:0,
+        pageSize:10,
+        pageNum:1
+      },
       selectGroupObj:{     //查询组单对象
         roomNum:'',
         name:'',
         phone:'',
         groupNum:'',
-        groupType:''
+        groupType:'',
+        pageSize:10,
+        pageNum:1
       },
+      selectDubmObj:{
+        name:"",
+        createTime:"",
+        createUserName:"",
+        pageSize:10,
+        pageNum:1
+      }
+      ,
       groupList:[     //组单表格列表
       ],
       bookPk: '',
@@ -912,21 +951,30 @@ export default {
       this.groupDialog = true;
     },
     //获取组单列表
-    getOrderList(groupType){
+    getOrderList(groupType,pageNum){
+      if(pageNum){
+        this.selectPageParm.pageNum = 1
+      }
       this.currGroupType = groupType;
       this.groupList=[];
       if("ORDERGUEST"==groupType){
-        mtgRoomGroupOrderList().then(res=>{
+        this.selectGroupObj.pageSize = this.selectPageParm.pageSize
+        this.selectGroupObj.pageNum = this.selectPageParm.pageNum
+        mtgRoomGroupOrderList(this.selectGroupObj).then(res=>{
           if(res.code==1){
-            this.groupList = res.data;
+            this.groupList = res.data.data
+            this.selectPageParm.total = res.data.total
           }
         }).catch(error=>{
           this.$message({type:'danger', message: error})
         })
       }else if("DUMBHOUSE"==groupType){
-        listDumbHouse().then(res=>{
+        this.selectDubmObj.pageSize = this.selectPageParm.pageSize
+        this.selectDubmObj.pageNum = this.selectPageParm.pageNum
+        listDumbHouse(this.selectDubmObj).then(res=>{
           if(res.code==1){
-            this.groupList = res.data;
+            this.groupList = res.data.data
+            this.selectPageParm.total = res.data.total
           }
         }).catch(error=>{
           this.$message({type:'danger', message: error})
@@ -937,18 +985,33 @@ export default {
     choseGroupConfirm(row){
       this.currBill = row;
       if("ORDERGUEST"==this.currGroupType){
+        this.billDetail.isDumb = false
         this.billDetail.singleGroupPk = this.currBill.orderPk;
         this.billDetail.orderGuestNo = this.currBill.orderNo;
       }else{
         this.billDetail.singleGroupPk = this.currBill.orderNo;
+        this.billDetail.dumbPk = this.currBill.dumbPk
+        this.billDetail.name =  this.currBill.name
+        this.billDetail.isDumb = true
+        // this.billDetail.orderGuestNo = this.currBill.orderNo;
       }
       this.groupDialog = false;
     },
     //挂账
     submitBill(){
+      if(!this.billDetail.singleGroupPk){
+          this.$message({type:'warning', message: '请选择挂账组单'})
+        return 
+      }
+      console.log(isNaN(this.billDetail.money))
+      if(!this.billDetail.money || isNaN(this.billDetail.money) || parseFloat(this.billDetail.money) <0 ){
+          this.$message({type:'warning', message: '请输入正确的挂账金额'})
+        return 
+      }
       let dumbHousePo={
         name:this.billDetail.companyName,
         balance:0,
+        dumbPk:this.billDetail.dumbPk,
         checkoutFlag:"N",
         businessDate:Moment(new Date()).format("YYYY-MM-DD"),
         remark:'会议室挂账，会议室账单号：'+this.billDetail.billId
@@ -958,7 +1021,7 @@ export default {
         billStatus:'UN_SET',//未结账/未处理
         consumptionAmount:this.billDetail.money,
         settlementAmount:0,
-        billType: 'DUMB',
+        billType: this.billDetail.isDumb?'DUMB':'ROOM',
         orderPk: this.billDetail.singleGroupPk,
         // dumbPk: this.billDetail.singleGroupPk,
         businessDate:Moment(new Date()).format("YYYY-MM-DD")
@@ -970,14 +1033,24 @@ export default {
       }
       addDumbAndBill(data).then(res=>{
         if(res.code==1){
-          this.$message({type:'danger', message: '挂账成功'})
+          this.$message({type:'success', message: '挂账成功'})
           this.eventClick(this.nowSelectBook);
           this.billDialog = false;
         }
       }).catch(error=>{
-        this.$message({type:'danger', message: error})
+         this.$message.error(error);
       })
     },
+    // 分页相关
+      handleSizeChange (val) {
+        this.selectPageParm.pageSize = val
+        this.getOrderList(this.currGroupType)
+      },
+      // 分页相关
+      handleCurrentChange (val) {
+        this.selectPageParm.pageNum = val
+        this.getOrderList(this.currGroupType)
+      },
   },
 };
 </script>
