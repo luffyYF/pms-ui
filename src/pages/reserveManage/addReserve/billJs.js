@@ -844,7 +844,7 @@
 		//恢复客单
         toDialogRecoverBill() {
           this.$refs.dialogRecoverBillRef.showDialog(this.currOrderInfo.order.orderPk)
-		}
+		  },
         //批量入账
         dialogBatchEntryClick(){
           this.formAddBills = [{
