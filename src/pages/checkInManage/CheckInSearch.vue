@@ -84,7 +84,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:15px">搜索订单</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList(1)" style="margin-left:15px">搜索订单</el-button>
           <!-- <el-button type="primary" icon="el-icon-download" @click="getList">导出excel</el-button> -->
         </el-form-item>
       </el-form>
@@ -276,7 +276,7 @@
       }
     },
     created () {
-      this.getList();
+      this.getList(1);
       this.listMastersType();
       this.selectPriceList();
       this.$nextTick(()=>{
@@ -338,10 +338,10 @@
           }
         })
       },
-      getList () {
+      getList (num) {
         this.loading = true
-        const self = this;
-        const parameters = self.chenkInSearchData;
+        this.chenkInSearchData.pageNum = num
+        const parameters = this.chenkInSearchData;
         listProject(parameters).then(res => {
           this.loading = false
           this.tableData = res.data.data;
@@ -353,27 +353,27 @@
       getchenkGird(val){
         this.loading = true;
         const self = this;
-        self.chenkInSearchData.pageNum = val;
-        self.getList();
+        // self.chenkInSearchData.pageNum = val;
+        self.getList(val);
       },
       sizeChange(val){
         this.loading = true;
         const self = this;
         self.chenkInSearchData.pageSize = val;
-        self.getList();
+        self.getList(1);
       },
       //恢复客单
       recoverGuest(row) {
         this.$confirm("是否恢复客单？","提示",{type:'warning'}).then(()=>{
           recoverGuestOrder(row.guestOrderPk).then(res=>{
             this.$message.success('恢复成功')
-            this.getList();
+            this.getList(1);
           })
         })
       }
     },
     mounted () {
-      bus.$on('refresh-listReserve', () => { this.getList() })
+      bus.$on('refresh-listReserve', () => { this.getList(1) })
     }
   }
 </script>
