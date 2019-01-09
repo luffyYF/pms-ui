@@ -423,18 +423,20 @@
         });
       },
       showDumbDetail(row){
+        this.dialogTableVisible = true
         var dumPk = row.dumbPk
         this.dumbDetailObj = row;
         this.activeName = 'first'
+        
         setTimeout(_=>{
           this.$refs.bill.dumBill(dumPk)
         },0)
-        this.dialogTableVisible = true
+        
       },
       updateDumb(){
         updateDumbHouse(this.dumbDetailObj).then(res=>{
           if(res.code==1){
-            this.$message({type:'success', message: '修改成功'})
+            this.$message({type:'success', message: '保存成功'})
             this.dumbDetailObj = {};
             this.dialogTableVisible = false;
             this.getList(this.searForm.pageNum);

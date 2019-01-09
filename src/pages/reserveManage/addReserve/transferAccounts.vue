@@ -3,6 +3,7 @@
       title="选择组单"
       :visible.sync="groupDialog"
       :fit="false"
+      :append-to-body="true"
       width="1200px">
       <div class="bg-reserve">
         <div class="bg-reserve">    
@@ -271,7 +272,8 @@ export default {
     },
     //选中挂账账单
     choseGroupConfirm(row){
-      this.$emit('callback',row,"ORDERGUEST"==this.currGroupType)
+      this.$emit('callback',row,"DUMBHOUSE"==this.currGroupType)
+       this.groupDialog = false;
     //   this.currBill = row;
     //   if("ORDERGUEST"==this.currGroupType){
     //     this.billDetail.isDumb = false
