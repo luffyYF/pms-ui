@@ -94,10 +94,10 @@
           <el-col :span="24">
             <el-col :span="11">
               <el-form-item label="协议分类" prop="agreementTypePk">
-                <el-select v-model="form.agreementTypePk" placeholder="请选择协议分类" style="width:178px">
+                <el-select v-model="form.agreementTypePk" placeholder="请选择协议分类" style="width:178px" clearable>
                   <el-option
-                    v-for="(items,index) in agreementOptions"
-                    :key="index"
+                    v-for="items in agreementOptions"
+                    :key="items.typePk"
                     :label="items.typeName"
                     :value="items.typePk">
                   </el-option>
@@ -115,8 +115,8 @@
               <el-form-item label="行业分类" prop="industryTypePk">
                 <el-select v-model="form.industryTypePk" placeholder="请选择行业分类" style="width:178px">
                   <el-option
-                    v-for="(item,index) in industryOptions"
-                    :key="index"
+                    v-for="item in industryOptions"
+                    :key="item.typePk"
                     :label="item.typeName"
                     :value="item.typePk">
                   </el-option>
@@ -125,10 +125,10 @@
             </el-col>
             <el-col :span="11">
               <el-form-item label="销售员" prop="saleTypePk">
-                <el-select v-model="form.saleTypePk" placeholder="请选择活动区域" style="width:178px">
+                <el-select v-model="form.saleTypePk" placeholder="请选择销售员" style="width:178px">
                   <el-option
-                    v-for="(item,index) in saleOptions"
-                    :key="index"
+                    v-for="item in saleOptions"
+                    :key="item.typePk"
                     :label="item.typeName"
                     :value="item.typePk">
                   </el-option>
@@ -153,6 +153,7 @@
           <el-col :span="24">
             <el-col :span="11">
               <el-form-item label="生效日期" prop="beginDate">
+                <!-- <el-date-picker size="mini" style="width:200px;" v-model="form.beginDate" type="date" value-format="yyyy-MM-dd" placeholder="请选择时间"/> -->
                 <el-date-picker type="date" placeholder="选择日期" v-model="form.beginDate" value-format="yyyy-MM-dd" style="width:178px"></el-date-picker>
               </el-form-item>
             </el-col>
@@ -220,6 +221,8 @@
         <el-button size="mini" type="primary" @click="preservationUnit('form',proDialogTitle)">保存协议单位</el-button>
       </div>
     </el-dialog>
+
+    <addProtocolUnit ref="addProtocolUnitRef" @callback="agreementList" />
 
     <!-- 协议单位特殊房价设置 dialog -->
     <el-dialog title="协议单位特殊房价设置" :visible.sync="dialogSpecialPriceVisible" width="50%" class="protocolPrice-contenter">
@@ -352,8 +355,12 @@ import {listType} from '@/api/utils/pmsTypeController'
 import {addProject,delProject,updateProject,listProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
 import {addPriceProject,delPriceProject,listPriceProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementRoomPrice'
 // import {powerJudge} from '@/utils/permissionsOperation.js'
-
+import addProtocolUnit from './addProtocolUnit'
+import moment from "moment"
 export default {
+  components:{
+    moment,addProtocolUnit
+  },
   data() {
     return {
       roomTypeOptions: [],
@@ -372,14 +379,14 @@ export default {
         agreementCode: '',
         agreementPk: '',
         agreementTypePk: '',
-        beginDate: '',
-        billFlag: "Y",
+        beginDate: moment().format("YYYY-MM-DD") ,
+        billFlag: 'Y',
         billPrice: 0,
         companyPk: '',
         contactName: '',
         contactPhone: '',
         contactPost: '',
-        endDate: '',
+        endDate:  moment().format("YYYY-MM-DD"),
         fax: '',
         industryTypePk: '',
         priceSchemePk: '',
@@ -423,19 +430,19 @@ export default {
           { required: true, message: '请选择行业分类', trigger: 'change' }
         ],
         saleTypePk: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+          { required: true, message: '请选择销售员', trigger: 'change' }
         ],
         priceSchemePk: [
           { required: true, message: '请选择价格方案', trigger: 'change' }
         ],   
         agreementCode: [
-          { required: true, message: '请输入协议号', trigger: 'change' }
+          { required: true, message: '请输入协议号', trigger: 'blur' }
         ],
         beginDate: [
-          { required: true, message: '选择日期', trigger: 'change' }
+          {type: 'date',  required: true, message: '选择日期', trigger: 'change' }
         ],
         endDate: [
-          { required: true, message: '选择日期', trigger: 'change' }
+          {type: 'date',  required: true, message: '选择日期', trigger: 'change' }
         ],
         billFlag: [
           { required: true, message: '请选择挂账', trigger: 'change' }
@@ -476,23 +483,26 @@ export default {
   },
   methods: {
     init() {
-      this.listMastersType()
+      this.listMastersType(1)
     },
     // powerJudge(id){
     //   return powerJudge(id);
     // },
     addProClick(row) {
       const self = this;
-      this.dialogProtocolVisible = true
-      self.form={};
-      this.proDialogTitle = '添加协议单位'
-      self.init();
+      // this.dialogProtocolVisible = true
+      // self.form={};
+      // this.proDialogTitle = '添加协议单位'
+      this.$refs.addProtocolUnitRef.init()
+      // self.init();
     },
     preservationUnit(formName,proDialogTitle) {
       const self = this;
-      this.$refs[formName].validate((valid) => {
+      // self.$refs.form.validate((valid) => {
+        var valid = true;
         if (valid) {
           console.log(self.form);
+          return
           if(proDialogTitle == '添加协议单位'){
             self.form.agreementPk=null;
             self.form.billPrice = Number(self.form.billPrice);
@@ -525,14 +535,15 @@ export default {
           console.log('error submit!!');
           return false;
         }
-      });
+      // });
     },
     editProClick(row) {
       const self = this;
       self.form = row;
-      this.dialogProtocolVisible = true
+      // this.dialogProtocolVisible = true
       this.proDialogTitle = '修改协议单位'
-      delete self.form.typeName;
+      // delete self.form.typeName;
+      this.$refs.addProtocolUnitRef.editProClick(row)
     },
     specialPriceClick(row) {//特殊房间设置
       this.dialogSpecialPriceVisible = true;
@@ -563,7 +574,7 @@ export default {
         });
       })
     },
-    listMastersType() {//查询分类类型
+    listMastersType(i) {//查询分类类型
       const self = this;
       self.roomTypeOptions = [];
       self.agreementOptions = [];
@@ -583,6 +594,17 @@ export default {
             self.saleOptions.push(listTypeData[index]);
           }
         }
+        if(i){
+          // self.form.beginDate = moment(new Date()).format("YYYY-MM-DD")
+          // self.form.endDate = moment(new Date()).format("YYYY-MM-DD")
+          self.form.billFlag = 'Y'
+          self.form.priceSchemePk = 'fanganyi'
+          self.form.saleTypePk = self.saleOptions.length>0?self.saleOptions[0].typePk:null
+          self.form.industryTypePk = self.industryOptions.length>0?self.industryOptions[0].typePk:null
+          self.form.agreementTypePk = self.agreementOptions.length>0?self.agreementOptions[0].typePk:null
+          console.log(self.form)
+        }
+        
         // console.log(self.roomTypeOptions)
       })
     },
@@ -596,7 +618,6 @@ export default {
       self.conditionalQuery.pageNum = val;
       const parameters = self.conditionalQuery;
       this.loading = true
-      // console.log(parameters)
       listProject(parameters).then(res => {
         this.loading = false
         this.tableData = res.data.data;

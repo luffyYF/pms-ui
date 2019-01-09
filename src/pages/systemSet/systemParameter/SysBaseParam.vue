@@ -1,16 +1,22 @@
 <template>
   <div>
-    <el-form :inline="true"  :model="form" size="mini" class="demo-form-inline">
+    <el-form  :model="form" size="mini" class="demo-form-inline">
       <div class="book-info">
         <el-row>
           <el-col :span="24">
             <el-row>
               <el-col :span="7">
                 <div class="bg-reserve">
-                  <!-- <h5 class="info-title">房间设置</h5> -->
+                  <h5 class="info-title">房间设置</h5>
                   <el-form-item label="退房结束时间：">
                     <el-time-picker v-model="form.checkoutTime" value-format="HH:mm:ss" placeholder="请选择">
                     </el-time-picker>
+                  </el-form-item>
+                  <el-form-item label="退房可恢复：">
+                    <el-input type="text" v-model="form.checkoutRecoverMinute">
+                    </el-input>
+                    分钟内可恢复
+                    <span style="color:red">（注：夜审后不允许恢复）</span>
                   </el-form-item>
                 </div>
               </el-col>
@@ -83,7 +89,7 @@
   width: 130px;
 }
 .el-input--mini{
-  width: 50px;
+  width: 100px;
 }
 .el-date-editor--time{
   width: 150px;

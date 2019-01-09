@@ -17,13 +17,21 @@
               <el-form-item label="房间号" label-width="55px">
                 <el-select v-model="serachForm.roomPk" placeholder="请选择房间号" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option v-for="y in filterRoom(guestOrderSelect)" :key="y.roomPk" :label="y.roomNumber" :value="y.roomPk"></el-option>
+                  <el-option 
+                    v-for="y in filterRoom(guestOrderSelect)" 
+                    :key="y.roomPk"
+                    :label="y.roomNumber"
+                    :value="y.roomPk"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="客人姓名">
                 <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option v-for="y in guestOrderSelect" :key="y.guestOrderPk" :label="y.memName" :value="y.guestOrderPk"></el-option>
+                  <el-option 
+                    v-for="y in guestOrderSelect" 
+                    :key="y.guestOrderPk" 
+                    :label="y.memName+' ('+ifRoomNumber(y.roomNumber)+')'"
+                    :value="y.guestOrderPk"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="营业日期">
@@ -35,7 +43,7 @@
         <el-col :span="23">
           <!-- 账单列表 -->
           <el-table ref="multipleTable" size="mini" :data="billsList" @selection-change="handleSelectionChange" tooltip-effect="dark" border height="240" style="width: 100%">
-            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column type="selection" width="55" :selectable="billSelectable"></el-table-column>
             <el-table-column prop="projectName" label="项目" width="100"></el-table-column>
             <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
             <el-table-column prop="settlementAmount" label="结算金额"></el-table-column>
@@ -63,23 +71,22 @@
         <el-col :span="24"> <br> </el-col>
         <el-col :span="24" class="bill-opr">
           财务处理：
-          <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">拆账</el-button>
-          <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">冲减</el-button>
-          <!-- <el-button size="mini" @click="dialogTransferAccounts = true" v-if="powerJudge('402004')">转账</el-button> -->
-          <el-button size="mini" @click="dialogAccountedFor = true" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">入账</el-button>
-          <!-- <el-button size="mini" @click="dialogBatchEntry = true">批量入账</el-button> -->
+          <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">拆账</el-button>
+          <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">冲减</el-button>
+          <el-button size="mini" @click="transferAccountsClick()" >转账</el-button>
+          <!-- v-if="powerJudge('402004')" -->
+          <el-button size="mini" @click="dialogAccountedFor = true" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">入账</el-button>
+          <el-button size="mini" @click="dialogBatchEntryClick()"  :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">批量入账</el-button>
           <!-- <el-button size="mini" @click="dialogPreLicensing = true">预授权<span>0</span>笔</el-button> -->
-          <el-button size="mini" @click="virtualBillClick()">虚拟账单</el-button>
+          <el-button size="mini" v-if="!isDubm" @click="virtualBillClick()">虚拟账单</el-button>
         </el-col>
         <el-col :span="24" class="bill-opr">
           结账处理：
-          <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY'" :disabled="currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN'">结账</el-button>
-          <!-- (currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') -->
-          <!-- <el-button size="mini">部分结账回复</el-button> -->
-          <!-- <el-button size="mini" @click="dialogSingleRoom = true">单房结账</el-button> -->
-          <!-- <el-button size="mini">取消入住</el-button> -->
-          <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN'">退房未结</el-button>
-          <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账</el-button>
+          <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)  ">结账</el-button>
+          <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
+          <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
+          <el-button size="mini" @click="toDialogRecoverBill" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
+
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
         <el-col :span="24" class="bill-opr">
@@ -98,6 +105,55 @@
           <el-button v-for="item in roomProjectList" :key="item.projectPk" type="primary" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
       </el-col>
+      <el-col :span="8">
+        <el-row :gutter="24">
+          <el-tabs v-model="summary" >
+            <el-tab-pane label="财务信息" name="first" style="max-height:144px;overflow:auto;">
+                <el-col class="colGreen bgBlue" :span="8">所选消费</el-col>
+                <el-col class="colBlue bgBlue" :span="8">所选结算</el-col>
+                <el-col class="colRed bgBlue" :span="8">所选余额</el-col>
+                <el-col class="colGreen" :span="8">{{multipleSelection | changeconsumptionAmount}}</el-col>
+                <el-col class="colBlue" :span="8">{{multipleSelection | changeSettlementAmount}}</el-col>
+                <el-col class="colRed" :span="8">{{multipleSelection | changeYE}}</el-col>
+                <el-col class="colGreen bgBlue" :span="8">消费</el-col>
+                <el-col class="colBlue bgBlue" :span="8">结算</el-col>
+                <el-col class="colRed bgBlue" :span="8">余额</el-col>
+                <el-col class="colGreen" :span="8">{{billsList | changeconsumptionAmount}}</el-col>
+                <el-col class="colBlue" :span="8">{{billsList | changeSettlementAmount}}</el-col>
+                <el-col class="colRed" :span="8">{{billsList | changeYE}}</el-col>
+                <!-- <el-col class="colGreen bgBlue" :span="8">个付</el-col>
+                <el-col class="colBlue bgBlue" :span="8">结算</el-col>
+                <el-col class="colRed bgBlue" :span="8">余额</el-col>
+                <el-col class="colGreen" :span="8">0</el-col>
+                <el-col class="colBlue" :span="8">0</el-col>
+                <el-col class="colRed" :span="8">0</el-col>
+                <el-col class="colGreen bgBlue" :span="8">团付</el-col>
+                <el-col class="colBlue bgBlue" :span="8">结算</el-col>
+                <el-col class="colRed bgBlue" :span="8">余额</el-col>
+                <el-col class="colGreen" :span="8">0</el-col>
+                <el-col class="colBlue" :span="8">0</el-col>
+                <el-col class="colRed" :span="8">0</el-col> -->
+            </el-tab-pane>
+            <el-tab-pane label="消费汇总" name="tow"  style="max-height:144px;overflow:auto;">
+              <el-col class="colWhite bgGreen" :span="12">项目名称</el-col>
+              <el-col class="colWhite bgGreen" :span="12">金额</el-col>
+              <el-row :gutter="24" v-for="obj in consumptionSummary(billsList)" :key="obj.billPk">
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.projectName}}</el-col>
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.consumptionAmount}}</el-col>
+              </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="结算汇总" name="last"  style="max-height:144px;overflow:auto;">
+              <el-col class="colWhite bgBlue" :span="12">项目名称</el-col>
+              <el-col class="colWhite bgBlue" :span="12">金额</el-col>
+              <el-row :gutter="24" v-for="obj in settlementAmountSummary(billsList)" :key="obj.billPk">
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.projectName}}</el-col>
+                <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.settlementAmount}}</el-col>
+              </el-row>
+            </el-tab-pane>
+          </el-tabs>
+        </el-row>
+      </el-col>
+
     </el-row>
 
     <!-- 拆账 -->
@@ -144,6 +200,88 @@
         <el-button size="mini" type="primary" @click="dialogOffset = false">取消</el-button>
       </span>
     </el-dialog>
+    
+    <!-- 批量入账 -->
+     <!-- v-if="addBillMultipleSelection.length > 0"  -->
+    <!-- <el-dialog class="pattern-dialog height500" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
+      <div class="pattern-dialog-container" >
+        <div>
+            <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
+           
+            <el-button size="mini" type="text" @click="delFormAddBillsClicks()">删除</el-button>
+        </div>
+        <el-form ref="formAddBills" size="mini" label-width="80px">
+          <el-table ref="multipleTable" size="mini" :data="formAddBills" @selection-change="addBillHandleSelectionChange" tooltip-effect="dark" border height="430" style="width: 100%">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="projectName" label="项目" width="120">
+              <template slot-scope="scope">
+                <el-select size="mini" v-model="scope.row.projectPk" placeholder="请选择项目" style="width:100%">
+                <el-option
+                  v-for="item in conProjectList"
+                  :key="item.projectPk"
+                  :label="'编码:'+item.code+'  项目名:'+item.projectName"
+                  :value="item.projectPk">
+                </el-option>
+                <el-option
+                  v-for="item in roomProjectList"
+                  :key="item.projectPk"
+                  :label="'编码:'+item.code+'  项目名:'+item.projectName"
+                  :value="item.projectPk">
+                </el-option>
+              </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="客单" v-if="!isDubm" width="120">
+              <template slot-scope="scope">
+                  <el-select size="mini" v-model="scope.row.guestOrderPk" placeholder="请选择客单" style="width:100%">
+                    <el-option
+                      v-for="(item,index) in guestOrderSelect"
+                      :key="index"
+                      :label="'房间号:'+ifRoomNumber(item.roomNumber)+' 客人姓名:'+item.memName"
+                      :value="item.guestOrderPk">
+                    </el-option>
+                  </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="settlementAmount" label="支付方式">
+              <template slot-scope="scope">
+                <el-select size="mini" v-model="scope.row.payment" placeholder="请选择支付方式" style="width:100%">
+                  <el-option
+                    v-for="(value, key) in paymentMap"
+                    :key="key"
+                    :label="value"
+                    :value="key">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="金额">
+              <template slot-scope="scope">
+                 <el-input size="mini" @change="addBillMomeyChange()" v-model="scope.row.consumptionAmount"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="备注" width="200">
+              <template slot-scope="scope">
+                 <el-input size="mini" v-model="scope.row.remark"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
+                 <el-button size="mini" type="text" v-if="formAddBills.length > 1" @click="delFormAddBillsClick(scope.$index)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
+        <div style="margin-top:5px;">
+            消费总计:{{addBillsConsumptionAmount}}元&nbsp;&nbsp;&nbsp;&nbsp;结算总价:{{addBillsSettlementAmount}}元
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="addBillLists(formAddBills)">确认</el-button>
+        <el-button size="mini" type="primary" @click="dialogBatchEntry = false">关闭</el-button>
+      </span>
+    </el-dialog> -->
 
     <!-- 入账 -->
     <el-dialog class="pattern-dialog height280" title="入账" :visible.sync="dialogAccountedFor" width="30%" :close-on-click-modal="false" :append-to-body="true">
@@ -176,7 +314,7 @@
           <el-form-item label="客单" required v-if="!isDubm" >
             <el-select v-model="formAddBill.guestOrderPk" placeholder="请选择客单" style="width:100%">
               <el-option
-                v-for="(item,index) in guestOrderSelect"
+                v-for="(item,index) in getAddBillFilter(guestOrderSelect)"
                 :key="index"
                 :label="'房间号:'+ifRoomNumber(item.roomNumber)+' 客人姓名:'+item.memName"
                 :value="item.guestOrderPk">
@@ -212,6 +350,7 @@
         <el-button size="mini" type="primary" @click="dialogAccountedFor = false">关闭</el-button>
       </span>
     </el-dialog>
+
     <!-- 项目选择 -->
     <el-dialog class="pattern-dialog height600" title="项目选择" :visible.sync="projectSelectDialog" width="550px" :close-on-click-modal="false" :append-to-body="true">
             <el-form ref="serachForm" :inline="true" :model="serachForm" size="mini" label-width="70px">
@@ -264,7 +403,7 @@
             <el-col :span="24">
                 <!-- <el-form-item label="请选择结账客单">
                   <el-select  style="width: 150px;" placeholder="请选择类型" clearable>
-                      <el-option v-for="obj in currOrderInfo.guestList" :key="obj.guestOrderPk" :disabled="!obj.roomNumber" :label="'房间号:'+obj.roomNumber+'客人姓名'+obj.guestName" :value="obj.guestOrderPk"></el-option>
+                      <el-option v-for="obj in currOrderInfo.guestList" :key="obj.guestOrderPk" :label="'房间号:'+ifRoomNumber(obj.roomNumber)+'客人姓名'+obj.guestName" :value="obj.guestOrderPk"></el-option>
                   </el-select>
                 </el-form-item> -->
                 <!-- <br> -->
@@ -287,7 +426,7 @@
             </el-col>
           </el-form>
 
-        <el-table ref="multipleTable" size="mini" :data="virtualBillDatailList" tooltip-effect="dark" border height="550" style="width: 100%">
+        <el-table ref="multipleTable" size="mini" :data="virtualBillDatailList" tooltip-effect="dark" border height="490" style="width: 100%">
             <el-table-column
               type="index"
               width="50">
@@ -349,7 +488,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <div>
+          <div style="margin-top:5px;">
             消费:{{consumptionAmount}}&nbsp;&nbsp;&nbsp;&nbsp;实收:{{settlementAmount}}&nbsp;&nbsp;&nbsp;应收:{{consumptionAmount-settlementAmount}}
           </div>
           <span slot="footer" class="dialog-footer">
@@ -359,14 +498,19 @@
           </span>
     </el-dialog>
 
+    <transferAccounts ref="transferAccountsRef" @callback="transferAccounts"></transferAccounts>
     <!-- 外借 -->
-    <dialogBorrow ref="dialogBorrowRef" ></dialogBorrow>
-
+    <dialog-borrow ref="dialogBorrowRef" ></dialog-borrow>
     <!-- 打印组件 -->
-    <commentPrint ref="commentPrintRef"></commentPrint>
-
+    <comment-print ref="commentPrintRef"></comment-print>
     <!-- 结算弹出 -->
-    <billSettlement ref="billSettlementRef"></billSettlement>
+    <bill-settlement ref="billSettlementRef"></bill-settlement>
+    <!-- 部分结账恢复 -->
+    <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
+    <!-- 退房超时提醒 -->
+    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toSettle" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <!-- 批量入账 -->
+    <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
   </div>
 </template>
 
@@ -394,9 +538,13 @@
 .height280 .el-dialog__body{
   height: 280px;
 }
+.height500 .el-dialog__body{
+  height: 500px;
+  /* padding: 20px; */
+}
 .height600 .el-dialog__body{
   height: 600px;
-  padding: 20px;
+  padding: 10px;
 }
 .height240 .el-dialog__body{
   height: 240px;
@@ -438,6 +586,24 @@
 }
 .info-title[data-v-2ab0e762]{
   padding: 0 5px;
+}
+.bgBlue{
+  background-color: rgb(153, 204, 255);
+}
+.bgGreen{
+  background-color: green;
+}
+.colGreen{
+  color:green;
+}
+.colBlue{
+  color:blue;
+}
+.colWhite{
+  color:white;
+}
+.colRed{
+  color:red;
 }
 </style>
 

@@ -1,346 +1,182 @@
 <template>
   <div class="content-body">
-    <el-form ref="form" :model="form" size="mini" label-width="80px">
-      <el-row>
-        <span class="title-span">虚拟账单查询</span>
-      </el-row>
-      <hr>
-      <el-row class="el-row-heard2">
-          <el-col :span="4">
-            <el-form-item  label="组单号" prop="userPk">
-              <el-input v-model="userPk"></el-input>
+    <el-form ref="form" :model="form" :inline="true" size="mini" label-width="80px">
+      <div class="bg-reserve">
+            <h5 class="info-title">虚拟账单查询</h5>
+            <el-form-item  label="组单号" prop="orderNo">
+              <el-input v-model="form.orderNo"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item  label="房间号" prop="userPk">
-              <el-input v-model="userPk"></el-input>
+            <el-form-item  label="房间号" prop="userPk" >
+              <el-input v-model="form.roomNumber"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="4">
             <el-form-item  label="姓名" prop="userPk">
-              <el-input v-model="userPk"></el-input>
+              <el-input v-model="form.memName"></el-input>
             </el-form-item>
-          </el-col>
-      </el-row>
-      <div class="block">
-        <el-row class="el-row-heard2">
-          <el-form-item  label="入离时间" prop="orderDate">
+            <el-form-item  label="起始日期" prop="beginDate">
             <el-date-picker
-              v-model="orderDate"
-              type="daterange"
-              :picker-options="pickerOptions"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              format="yyyy 年 MM 月 dd 日"
-              value-format="yyyy-MM-dd"
-              @change="orderDateChange"
+              v-model="form.beginDate"
+              type="datetime"
+              placeholder="起始日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
               align="right">
             </el-date-picker>
-            <el-button @click="search" class="btn-margin" type="primary" size="mini">搜索</el-button>
           </el-form-item>
-        </el-row>
+          <el-form-item  label="截止日期" prop="endDate">
+            <el-date-picker
+              v-model="form.endDate"
+              type="datetime"
+              placeholder="截止日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              align="right">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="getVirtualList" class="btn-margin" type="primary" size="mini">搜索</el-button>
+          </el-form-item>
       </div>
+      <div class="bg-reserve">
+      <h5 class="info-title">协议单位列表</h5>
       <el-table
-        :data="tableData4"
+        :data="tableData"
         border
         fit
+        v-loading="loading"
         max-height="600"
         style="width: 100%">
         <el-table-column
           fixed
-          prop="date"
+          prop="orderNo"
           label="账单序号">
         </el-table-column>
         <el-table-column
-          fixed
-          prop="date"
-          label="日期">
-        </el-table-column>
-        <el-table-column
-          prop="name"
+          prop="memNames"
           label="姓名">
         </el-table-column>
         <el-table-column
-          prop="province"
-          label="省份">
+          prop="roomNumbers"
+          label="房号">
         </el-table-column>
         <el-table-column
-          prop="city"
-          label="市区">
+          fixed
+          prop="createTime"
+          label="日期">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址">
+          prop="createUserName"
+          label="操作员">
         </el-table-column>
         <el-table-column
-          prop="zip"
-          label="邮编">
+          prop="remark"
+          label="备注">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="dialogTableVisible = true">查看</el-button>
+            <el-button type="text" @click="getVirtualPrint(scope.row.virtualBillPk)">查看</el-button>
             <el-dialog title="虚拟账单明细" 
-              width="60%"
+              width="1200px"
               :append-to-body="true"
               :visible.sync="dialogTableVisible">
               <div class="bg-reserve">
                 <h5 class="info-title">虚拟账单明细</h5>
                 <div class="info-li">
-                  组单号：147875 房间号：0000 ,104 ,105 ,109 ,112 ,303 ,304 ,312 ,320 姓名：新客人 ,新客人 ,新客人 ,新客人 ,新客人 ,新客人 ,新客人 ,新客人 ,新客人 人数：9 房价：0.0,0.0,0.0,0.0,0.0,0.0,0.0,500.0,500.0 日期：2018-01-31 10:39:50.0
+                  组单号：{{virOrder.pmsVirtualBillPo.orderNo}} 房间号：{{virOrder.pmsVirtualBillPo.roomNumbers}} 姓名： {{virOrder.pmsVirtualBillPo.memNames}}
+                  <!-- 人数：9 房价：0.0,0.0,0.0,0.0,0.0,0.0,0.0,500.0,500.0 日期：2018-01-31 10:39:50.0 -->
                 </div>
               </div>
               <el-table 
-                :data="gridData"
+                :data="virOrder.pmsVirtualBillDetailPos"
                 border
                 fit
-                height="300"
+                height="400"
                 style="width: 100%; margin-top:10px;">
-                <el-table-column property="date" label="项目"></el-table-column>
-                <el-table-column property="name" label="消费金额"></el-table-column>
-                <el-table-column property="name" label="结算金额"></el-table-column>
-                <el-table-column property="name" label="数量"></el-table-column>
-                <el-table-column property="name" label="房号"></el-table-column>
+                <el-table-column property="projectName" label="项目"></el-table-column>
+                <el-table-column property="consumptionAmount" width="80px" label="消费金额"></el-table-column>
+                <el-table-column property="settlementAmount" width="80px" label="结算金额"></el-table-column>
+                <el-table-column property="number" width="60px" label="数量"></el-table-column>
+                <el-table-column property="roomNumber" width="60px" label="房号"></el-table-column>
                 <el-table-column property="name" label="客单号"></el-table-column>
-                <el-table-column property="name" label="发生日期"></el-table-column>
-                <el-table-column property="name" label="操作员"></el-table-column>
-                <el-table-column property="name" label="备注"></el-table-column>
-                <el-table-column property="address" label="营业日期" show-overflow-tooltip></el-table-column>
+                <el-table-column property="createTime"  width="180px" label="发生日期"></el-table-column>
+                <el-table-column property="createUserName" label="操作员"></el-table-column>
+                <el-table-column property="remark" label="备注"></el-table-column>
+                <el-table-column property="businessDate" label="营业日期" show-overflow-tooltip></el-table-column>
               </el-table>
-              <el-row class="el-row-heard2">
-                <el-col :span="6">
-                  <el-form-item  label="消费" prop="consumption">
-                    <el-input v-model="consumption" readonly></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item  label="实收" prop="netReceipts">
-                    <el-input v-model="netReceipts" readonly></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item  label="应收" prop="receivable">
-                    <el-input v-model="receivable" readonly></el-input>
-                  </el-form-item>
-                </el-col>
-            </el-row>
+              <div style="margin-top:5px;">
+                  消费:
+                  {{consumptionAmount}}
+                  元
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  应收:
+                  {{settlementAmount}}
+                  元 &nbsp;&nbsp;&nbsp;&nbsp;
+                  应收:{{consumptionAmount-settlementAmount}}元
+              </div>
             </el-dialog>
-            <el-button type="text" @click="dialogVisible = true">删除</el-button>
-            <el-dialog
-              title="提示"
-              :visible.sync="dialogVisible"
-              width="30%"
-              :append-to-body="true"
-              :before-close="handleClose">
-              <span>确认删除此账单</span>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-              </span>
-            </el-dialog>
+            <el-button type="text" @click="delVirtualClick(scope.row.virtualBillPk)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          style="margin: 10px 20px;float:right;"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="1"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
+  import {virtualList,virtualPrint,delVirtual} from '@/api/pmsVirtualBill/pmsVirtualBill'
   export default {
     components: {},
     data() {
       return {
-        form: {},
-        radioType:'one',
-        pickerOptions1: {
-          // disabledDate(time) {
-          //   return time.getTime() < Date.now() - 3600 * 1000 * 24;
-          // },
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, {
-            text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
-            }
-          }, {
-            text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
-            }
-          }]
+        form: {
+          pageNum:1,
+          pageSize:10,
+          orderNo:'',
+          roomNumber:'',
+          memName:'',
+          beginDate:'',
+          endDate:''
         },
-        date: '',
-        userPk:'',
-        tableData4: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }],
-        //时间控件
-        pickerOptions: {
-          // disabledDate(time) {
-          //   return time.getTime() < Date.now();
-          // },
-          shortcuts: [{
-            text: '今天',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '后三天',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 3)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '一周',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '一个月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '三个月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '一年',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 365)
-              picker.$emit('pick', [start, end])
-            }
-          }]
-        },
-        orderDate:'',
-        dialogVisible:false,
+        tableData: [],
         dialogTableVisible:false,
-        gridData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-        consumption:1000,
-        netReceipts:1200,
-        receivable:1000,
+        consumptionAmount:0.00,
+        settlementAmount:0.00,
+        total:0,
+        loading: false,
+        virOrder:{
+          pmsVirtualBillDetailPos:[],
+          pmsVirtualBillPo:{}
+        },
       };
     },
     methods: {
-      search(){
-        
+      getVirtualList(){
+        this.loading = true
+        virtualList(this.form).then(res=>{
+          if(res.code == 1){
+            this.tableData = res.data.data
+            this.total = res.data.total
+          }
+          this.loading = false
+        })
       },
-      orderDateChange(value){
+      getVirtualPrint(virtualBillPk){
+        virtualPrint({virtualBillPk:virtualBillPk}).then(res=>{
+          this.virOrder = res.data
+          this.dialogTableVisible = true;
+          this.virMomeyChange();
+        })
 
-      },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
-        // this.dialogVisible = true;
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -348,7 +184,60 @@
             done();
           })
           .catch(_ => {});
+      },
+      delVirtualClick(virtualBillPk){
+        this.$confirm('确定要删除此虚拟单？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delVirtual({virtualBillPk:virtualBillPk}).then(res=>{
+            this.$message({
+            type: 'success',
+            message: '删除成功!'
+            });
+            this.getVirtualList()
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+      handleSizeChange(val) {
+        this.form.pageSize = val;
+        this.pageNum = 1;
+        this.getVirtualList();
+      },
+      handleCurrentChange(val) {
+        this.form.pageNum = val
+        this.getVirtualList();
+      },
+      virMomeyChange(){
+          var consumptionAmount = 0.00
+          var settlementAmount = 0.00
+          for(var i=0;i<this.virOrder.pmsVirtualBillDetailPos.length;i++){
+            consumptionAmount = consumptionAmount + parseFloat(this.virOrder.pmsVirtualBillDetailPos[i].consumptionAmount)
+            settlementAmount = settlementAmount + parseFloat(this.virOrder.pmsVirtualBillDetailPos[i].settlementAmount)
+          }
+          this.consumptionAmount = consumptionAmount
+          this.settlementAmount = settlementAmount
       }
+    },
+    mounted() {
+      this.getVirtualList()
+    },
+    filters:{
+        consumptionAmount(list){
+            var money = 0
+            for(var i=0;i<list.length;i++){
+              if(list[i].consumptionAmount){
+                money = money + parseFloat(list[i].consumptionAmount)
+              }
+            }
+            return money.toFixed(2)
+        }
     }
   };
 </script>
@@ -370,9 +259,7 @@
 .el-row-heard {
     margin: 10px 0 0 0;
 }
-.el-row-heard2 {
-    margin: 10px 0 5px 0;
-}
+
 .title-span{
     font-size: 16px;
     font-weight: bold;
@@ -389,10 +276,11 @@
 .info-title {
   position: absolute;
   z-index: 1;
-  top: -12px;
+  top: -6px;
   display: inline-block;
   margin: 0;
   margin-left: 14px;
+  background: #f7f7f7;
 }
 .info-li {
   margin-bottom: 0 !important;
@@ -406,6 +294,13 @@
 }
 .el-table{
   margin-top: 10px;
+}
+.bg-reserve {
+  position: relative;
+  background: #f7f7f7;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding-top: 18px;
 }
 </style>
 

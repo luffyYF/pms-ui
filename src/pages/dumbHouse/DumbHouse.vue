@@ -110,7 +110,7 @@
       </el-table-column>
       <el-table-column label="状态" prop="checkoutFlag">
         <template slot-scope="scope">
-          <span>{{scope.checkoutFlag=='Y'?'已结账':'未结账'}}</span>
+          <span>{{scope.row.checkoutFlag=='Y'?'已结账':'未结账'}}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建人" prop="createUserName">
@@ -125,8 +125,8 @@
         label="操作">
         <template slot-scope="scope">
           <el-button @click="showDumbDetail(scope.row)" type="text" size="mini">查看</el-button>
-          <el-dialog :title="scope.row.orderNo" :visible.sync="dialogTableVisible" width="70%">
-            <el-button type="primary" size="mini"  @click="showOperList(scope.row.dumbPk)" class="opear-str">操作记录</el-button>
+          <el-dialog :title="dumbDetailObj.orderNo" :visible.sync="dialogTableVisible" width="1050px">
+            <!-- <el-button type="primary" size="mini"  @click="showOperList(scope.row.dumbPk)" class="opear-str">操作记录</el-button> -->
             <!-- 操作记录 -->
             <el-dialog
               title="操作记录"
@@ -425,6 +425,7 @@
       showDumbDetail(row){
         var dumPk = row.dumbPk
         this.dumbDetailObj = row;
+        this.activeName = 'first'
         setTimeout(_=>{
           this.$refs.bill.dumBill(dumPk)
         },0)

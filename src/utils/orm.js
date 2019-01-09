@@ -18,6 +18,7 @@ export const orderStatusMap = {
   CHECKIN: "在住",
   LEAVE: "结账离店",
   LEAVENOPAY: "不结账退房",
+  CANCEL:"订单取消",
   NOSHOW: "NoShow"
 }
 //外借状态

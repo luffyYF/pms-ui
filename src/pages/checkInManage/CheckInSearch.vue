@@ -36,8 +36,11 @@
         <el-form-item label="　组单号">
           <el-input v-model="chenkInSearchData.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item label="组单名称">
-          <el-input v-model="chenkInSearchData.name" placeholder="请输入组单名称" clearable style="width: 178px;"></el-input> 
+        <!-- <el-form-item label="组单名称">
+          <el-input v-model="chenkInSearchData.name" placeholder="请输入组单名称" clearable style="width: 178px;"></el-input>
+        </el-form-item> -->
+        <el-form-item label="客单号">
+          <el-input v-model="chenkInSearchData.guestNo" placeholder="请输入客单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
         <el-form-item label="客单状态">
           <el-select v-model="chenkInSearchData.orderStatus" placeholder="全部状态" clearable>
@@ -47,7 +50,7 @@
         <!-- <el-form-item label="房间数量">
           <el-input v-model="filterText" clearable></el-input>
         </el-form-item> -->
-        <el-form-item label="抵店日期"> 
+        <el-form-item label="抵店日期">
           <el-date-picker
             v-model="chenkInSearchData.beginDate"
             align="right"
@@ -81,28 +84,28 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="getList" style="margin-left:15px">搜索订单</el-button>
-          <el-button type="primary" icon="el-icon-download" @click="getList">导出excel</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList(1)" style="margin-left:15px">搜索订单</el-button>
+          <!-- <el-button type="primary" icon="el-icon-download" @click="getList">导出excel</el-button> -->
         </el-form-item>
       </el-form>
     </el-col>
     <el-col :span="4"></el-col>
     <el-table v-loading="loading" style="top: 10px;width:98%;margin:auto"
-    :data="tableData" 
-    filter-change="handlerFilterChange" 
+    :data="tableData"
+    filter-change="handlerFilterChange"
     height="450"
     border
     stripe>
     <!--  条件过滤
-    | globalFilter(chenkInSearchData.roomTypeName) 
+    | globalFilter(chenkInSearchData.roomTypeName)
     | globalFilter(chenkInSearchData.roomNumber)
-    | globalFilter(chenkInSearchData.userName) 
-    | globalFilter(chenkInSearchData.guestName) 
-    | globalFilter(chenkInSearchData.orderNo) 
-    | globalFilter(chenkInSearchData.channelTypePk) 
+    | globalFilter(chenkInSearchData.userName)
+    | globalFilter(chenkInSearchData.guestName)
+    | globalFilter(chenkInSearchData.orderNo)
+    | globalFilter(chenkInSearchData.channelTypePk)
     | globalFilter(chenkInSearchData.price)
-    | globalFilter(chenkInSearchData.name) 
-    | globalFilter(chenkInSearchData.beginDate) 
+    | globalFilter(chenkInSearchData.name)
+    | globalFilter(chenkInSearchData.beginDate)
     | globalFilter(chenkInSearchData.endDate)
      -->
       <!-- <el-table-column label="组单号" prop="orderNo">
@@ -135,21 +138,22 @@
       </el-table-column>
       <!-- <el-table-column label="预授权金额" align="center" width="100" prop="groupPayTheAmount">
       </el-table-column> -->
-      <el-table-column label="抵店日期" align="center" width="180" prop="beginDate"> 
+      <el-table-column label="抵店日期" align="center" width="180" prop="beginDate">
       </el-table-column>
       <el-table-column label="离店时间" align="center" width="180" prop="endDate">
       </el-table-column>
       <el-table-column label="状态"  align="center" width="90" prop="orderStatusName">
       </el-table-column>
-      <el-table-column label="备注"  align="center"  prop="remark">
+      <el-table-column label="备注"  align="center" width="200" prop="remark" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="120" fixed="right">
+      <el-table-column label="操作" align="center" min-width="200" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="success" v-if="scope.row.orderStatus=='LEAVE'" @click="recoverGuest(scope.row)">恢复</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div class="block checkPagination"  >
+    <div class="block checkPagination">
         <el-pagination @current-change="getchenkGird" @size-change="sizeChange"  :current-page="chenkInSearchData.pageNum" :page-sizes="[5,10,20,30,40,50]" :page-size="chenkInSearchData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
     </div>
@@ -171,6 +175,7 @@
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";
+  import {recoverGuestOrder} from '@/api/order/pmsOrderController'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
@@ -183,7 +188,7 @@
         roomTypeOptions: [],
         channelOptions: [],
         agreementOptions: [],
-        industryOptions: [], 
+        industryOptions: [],
         saleOptions: [],
         chenkInSearchData:{
           // quickSearch: '在住',
@@ -191,11 +196,12 @@
           roomTypePk: '',
           channelTypePk:'',
           roomNumber: '',
-          userName: '',  
-          guestName: '',  
+          userName: '',
+          guestName: '',
           guestPhone:'',
-          orderNo: '', 
-          beginDate: '', 
+          orderNo: '',
+          guestNo: '',
+          beginDate: '',
           endDate: '',
           orderStatus: 'CHECKIN',
           name:'',
@@ -270,7 +276,7 @@
       }
     },
     created () {
-      this.getList();
+      this.getList(1);
       this.listMastersType();
       this.selectPriceList();
       this.$nextTick(()=>{
@@ -332,10 +338,14 @@
           }
         })
       },
-      getList () {
+      getList (num) {
+        if(!this.hasPerm('pms:checkInSearch:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         this.loading = true
-        const self = this;
-        const parameters = self.chenkInSearchData;
+        this.chenkInSearchData.pageNum = num
+        const parameters = this.chenkInSearchData;
         listProject(parameters).then(res => {
           this.loading = false
           this.tableData = res.data.data;
@@ -347,23 +357,27 @@
       getchenkGird(val){
         this.loading = true;
         const self = this;
-        self.chenkInSearchData.pageNum = val;
-        self.getList();
+        // self.chenkInSearchData.pageNum = val;
+        self.getList(val);
       },
       sizeChange(val){
         this.loading = true;
         const self = this;
         self.chenkInSearchData.pageSize = val;
-        self.getList();
+        self.getList(1);
+      },
+      //恢复客单
+      recoverGuest(row) {
+        this.$confirm("是否恢复客单？","提示",{type:'warning'}).then(()=>{
+          recoverGuestOrder(row.guestOrderPk).then(res=>{
+            this.$message.success('恢复成功')
+            this.getList(1);
+          })
+        })
       }
-      ,
-      // powerJudge(id){
-      //   return powerJudge(id);
-      // }
-
     },
     mounted () {
-      bus.$on('refresh-listReserve', () => { this.getList() })
+      bus.$on('refresh-listReserve', () => { this.getList(1) })
     }
   }
 </script>

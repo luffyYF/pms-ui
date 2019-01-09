@@ -84,7 +84,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button size="mini" type="primary" @click="confirm" :disabled="islock">确认</el-button>
-      <el-button size="mini" type="primary" @click="dialogPartialCheckout = false">关闭</el-button>
+      <el-button size="mini" @click="dialogPartialCheckout = false">取消</el-button>
     </span>
   </el-dialog>
 </template>
@@ -98,7 +98,7 @@ export default {
     return {
       islock: false,
       orderPk: "",
-      type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 【废】3:豪斯菲尔退房未结 
+      type: 0, //弹窗类型 0:结账  1:退房未结  2:部分结账 【废】3:豪斯菲尔退房未结
       dialogPartialCheckout: false,
       countCheckoutDate: {},
       guestOrderSelect: [],
@@ -120,7 +120,10 @@ export default {
         payment:'0',
         remark:'',
         hfCashPledge:''
-      }
+      },
+      isDubm:false,
+      billStatus:'UN_SET',
+      dumbPk:''
     };
   },
   methods: {
@@ -129,7 +132,8 @@ export default {
      * type 弹窗类型 0:结账  1:退房未结  2:部分结账
      * billPks 部分结账的账单主键，逗号拼接
      *  */
-    init(orderPk, type, billPks,hfCashPledge) {
+    init(orderPk, type, billPks,hfCashPledge,isDubm,billStatus,dumbPk) {
+      this.isDubm = isDubm
       this.type = type;
       this.orderPk = orderPk;
       this.billPks = billPks;
@@ -142,11 +146,21 @@ export default {
       this.hfBillForm.hfCashPledge = hfCashPledge
       this.dialogPartialCheckout = true;
       this.islock = false;
+      this.guestOrderSelect = []
+      if(billStatus){
+        this.billStatus = billStatus
+      }
+      this.dumbPk = ''
+      if(dumbPk){
+        this.dumbPk = dumbPk
+      }
+      
+      // if(!isDubm){
       if(type==2){
         //部分结账
         countCheckoutBill({ billPk: billPks }).then(res => {
           this.countCheckoutDate = res.data;
-          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount) | 0;
         });
       }else if(type==1){
         // 退房未结
@@ -167,11 +181,16 @@ export default {
         });
       }
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
-        this.guestOrderSelect = res.data;
-        if(res.data.length>0){
-          this.billForm.guestOrderPk = res.data[0].guestOrderPk
+        res.data.forEach(item=>{
+          if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
+            this.guestOrderSelect.push(item)
+          }
+        })
+        if(this.guestOrderSelect.length>0){
+          this.billForm.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
         }
       });
+      // }
     },
     onlineFlagChange(value) {
       if(value){
@@ -192,6 +211,7 @@ export default {
           guestOrderPk: this.billForm.guestOrderPk,
           payment: this.billForm.payment,
           remark: this.billForm.remark,
+          billType: this.isDubm?'DUMB':'ROOM'
         };
         this.islock = true;
         checkoutauthBill(data).then(res => {
@@ -224,7 +244,8 @@ export default {
             orderPk: this.orderPk,
             guestOrderPk: this.billForm.guestOrderPk,
             onlineFlag: this.billForm.onlineFlag,
-            onlineMoney: this.billForm.onlineMoney
+            onlineMoney: this.billForm.onlineMoney,
+            billType: this.isDubm?'DUMB':'ROOM'
           };
         }else {
           data = {
@@ -247,7 +268,10 @@ export default {
           billPk:this.billPks,
           payment:this.billForm.payment,
           remark: this.billForm.remark,
-          guestOrderPk:this.billForm.guestOrderPk
+          guestOrderPk:this.billForm.guestOrderPk,
+          billType: this.isDubm?'DUMB':'ROOM',
+          billStatus:this.billStatus!=null?this.billStatus:'UN_SET',
+          dumbPk:this.dumbPk
         }
         this.islock = true;
         checkoutPart(data).then(res=>{
@@ -275,7 +299,7 @@ export default {
           this.islock = false;
         })
       }
-    }
+    },
   }
 };
 </script>
