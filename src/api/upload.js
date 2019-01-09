@@ -11,6 +11,8 @@ let imageRoot = process.env.IMAGE_ROOT
 
 let uploadRoot = process.env.UPLOAD_ROOT
 
+let apiRoot = process.env.API_ROOT
+
 /**
  * 上传公共图片
  */
@@ -87,4 +89,11 @@ export const getAudioUrl = lineNo => {
     return ''
   }
   return imageRoot + '/uploaded/audio/' + lineNo + '.mp3'
+}
+
+/**
+ * 上传预订信息（excel文件）
+ */
+export const getUploadExcelAction = () => {
+  return apiRoot + '/back/order/uploadTemplate';
 }

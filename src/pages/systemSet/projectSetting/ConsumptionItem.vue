@@ -37,7 +37,7 @@
       prop="guestShow"
       align="center">
       <template slot-scope="scope">
-         <el-checkbox true-label="Y" false-label="N" v-model="scope.row.guestRoomFlag"></el-checkbox>
+        <el-checkbox true-label="Y" false-label="N" v-model="scope.row.guestRoomFlag" @change="limitCheckCount(scope.$index,$event)"></el-checkbox>
       </template>
     </el-table-column>
     <el-table-column
@@ -45,7 +45,7 @@
       prop="dumbShow"
       align="center">
       <template slot-scope="scope">
-         <el-checkbox true-label="Y" false-label="N" v-model="scope.row.dumbRoomFlag"></el-checkbox>
+        <el-checkbox true-label="Y" false-label="N" v-model="scope.row.dumbRoomFlag" @change="limitCheckCount(scope.$index,$event)"></el-checkbox>
       </template>
     </el-table-column>
      <el-table-column
@@ -99,6 +99,9 @@ export default {
       // row.guestShow?row.guestRoomFlag = 'Y':row.guestRoomFlag = 'N';
       // row.dumbShow?row.dumbRoomFlag = 'Y':row.dumbRoomFlag = 'N';
       // console.log(row)
+      // if(!this.limitCheckCount()){
+      //   return
+      // }
       updateConsumerOrSettlement(row).then(res => {
         this.$message.success('保存成功')
         this.selectList();
@@ -108,11 +111,38 @@ export default {
     //   this.$set(this.tableData,index,row)
     // },
     batchSave() {
+      // if(!this.limitCheckCount()){
+      //   return
+      // }
       batchUpdateConsOrSettl(this.tableData).then(res=>{
         this.$message.success('保存成功');
         this.selectList();
       })
-    }
+    },
+    //限制勾选个数
+    limitCheckCount(index, val){
+      let guestRoomCount = 0
+      let dumbRoomCount = 0
+      this.tableData.forEach(item=>{
+        if(item.guestRoomFlag=='Y'){
+          guestRoomCount++
+        }
+        if(item.dumbRoomFlag=='Y') {
+          dumbRoomCount++
+        }
+      })
+      if(guestRoomCount>15) {
+        this.$message.warning('你选择的客房显示数量已达到15个，请重新选择要显示的项目')
+        this.tableData[index].guestRoomFlag = 'N'
+        return false
+      }
+      if(dumbRoomCount>15) {
+        this.$message.warning('你选择的哑房显示数量已达到15个，请重新选择要显示的项目')
+        this.tableData[index].dumbRoomFlag = 'N'
+        return false
+      }
+      return true
+    },
 
   },
  
