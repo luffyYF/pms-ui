@@ -141,17 +141,17 @@ export default {
      * 初始化：根据客户手机号查找
      * @augments phone 手机号*/
     initByPhone(phone) {
-      this.resetForm();
-      this.formAGuest.memPhone = phone;
-      this.search(_ => {
-        if (this.tableAGuestData.length == 1) {
-          //只有一个，直接返回
-          this.$emit("sendGuest", this.tableAGuestData[0]);
-        } else if (this.tableAGuestData.length > 1) {
-          //有多个，弹窗选择
-          this.chooseAGuest = true;
-        }
-      });
+        this.resetForm();
+        this.formAGuest.memPhone = phone;
+        this.search(_ => {
+            if (this.tableAGuestData.length == 1) {
+            //只有一个，直接返回
+            this.$emit("sendGuest", this.tableAGuestData[0]);
+            } else if (this.tableAGuestData.length > 1) {
+            //有多个，弹窗选择
+            this.chooseAGuest = true;
+            }
+        });
     },
     resetForm() {
       this.formAGuest.cardNumber = null;
@@ -159,10 +159,12 @@ export default {
       this.formAGuest.certificateNo = null;
       this.formAGuest.memPhone = null;
     },
-    search() {
+    search(callback) {
       listMemberCondition(this.formAGuest).then(res => {
         this.tableAGuestData = res.data;
-        // callback();
+        if(callback){
+            callback();
+        }
       });
     },
     choose(row, event) {

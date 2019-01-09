@@ -31,7 +31,7 @@
                 <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.roomPk && scope.row.orderStatus=='RESERVE'">
                   <el-button size="mini" type="text" @click="guestCheckin(scope.row)">入住</el-button>
                 </p>
-                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.orderStatus=='CHECKIN' && gsCheckin>1">
+                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.orderStatus=='CHECKIN'">
                   <el-button size="mini" type="text" @click="toCheckout(scope.row.guestOrderPk)">退房</el-button>
                 </p>
                 <p class="guest-orp-item" v-if="scope.row.roomNumber && scope.row.rflLockNo">
@@ -886,9 +886,15 @@
             })
           })
         },
-        toCheckout(guestOrderPk){
-          //检测入住的客单是否超过退房时间，进行提醒
-          this.$refs.dialogTimeoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+        toCheckout(guestOrderPk) {
+          if(this.gsCheckin>1) {
+            //检测入住的客单是否超过退房时间，进行提醒
+            this.$refs.dialogTimeoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+          }else {
+            //跳转账单页面
+            bus.$emit('toCheckout')
+          }
+
           // overtimeRemind({orderPk: this.form.orderPk, guestOrderPk:guestOrderPk}).then(res=>{
           //   if(res.data.length>0) {
           //     let message = '<p>以下入住客单超过了退房时间，可能需要收取额外费用：</p>';
@@ -918,9 +924,11 @@
           //     })
           //   }
           // })
+
+        
         },
-        //退房回调
-        checkout(){
+        //单房退房
+        checkout(guestOrderPk) {
           this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
             checkoutGuest(guestOrderPk).then(res=> {
               bus.$emit('refreshOrderInfo', this.form.orderPk)
@@ -959,8 +967,6 @@
             // }
             this.$refs.chooseGuestRef.initByPhone(this.form.guestPhone)
           }
-
-
         },
         loadGuest(guest) {//回显客人
           this.form.memPk = guest.memPk

@@ -29,6 +29,7 @@ export default {
       loading: false,
       dialogVisable:false,
       tableData:[],
+      guestOrderPk:null,
     }
   },
   methods: {
@@ -37,19 +38,20 @@ export default {
      * @augments guestOrderPk 可选
      */
     showDialog(orderPk, guestOrderPk) {
+      this.guestOrderPk = guestOrderPk;
       //检测入住的客单是否超过退房时间，进行提醒
       overtimeRemind({orderPk: orderPk, guestOrderPk: guestOrderPk}).then(res=>{
         if(res.data.length>0) {
           this.dialogVisable = true
           this.tableData = res.data;
         }else{
-          this.$emit('to-notcharge');
+          this.$emit('to-notcharge',this.guestOrderPk);
         }
       })
     },
     //点击不收取，继续退房
     continueSettleClick() {
-      this.$emit('to-notcharge');
+      this.$emit('to-notcharge', this.guestOrderPk);
       this.dialogVisable = false
     },
     //点击收取，打开批量入账

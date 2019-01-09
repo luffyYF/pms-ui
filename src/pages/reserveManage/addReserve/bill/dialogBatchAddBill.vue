@@ -271,8 +271,8 @@ export default {
             });
           }
           if(this.guestPks!=null && this.guestPks.length>0) {
-            //回调打开结账页面
-            this.$emit('to-settle')
+            //回调到退房
+            this.$emit('to-settle', this.guestPks[0])
           }else{
             //普通回调
             this.$emit('callback', this.orderPk)
