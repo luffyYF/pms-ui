@@ -65,6 +65,7 @@
           :on-success="handleUploadSuccess"
           :on-error="handleUploadError"
           :before-upload="handleBeforeUpload"
+          :on-change="handleUploadProgress"
           :action="getUploadExcelAction()"
           :headers="headers"
           :show-file-list="false">
@@ -232,7 +233,11 @@
       handleUploadError (res) {
         this.loading = false
         this.$message.error('文件上传失败')
-      }
+      },
+      handleUploadProgress (event, file) {
+        console.log(event)
+        console.log(file)
+      },
     }
   }
 </script>
