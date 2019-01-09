@@ -201,7 +201,7 @@
     </el-dialog>
     
     <!-- 批量入账 -->
-    <el-dialog class="pattern-dialog height500" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
+    <!-- <el-dialog class="pattern-dialog height500" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
       <div class="pattern-dialog-container" >
         <div>
             <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
@@ -278,7 +278,7 @@
         <el-button size="mini" type="primary" @click="addBillLists(formAddBills)">确认</el-button>
         <el-button size="mini" type="primary" @click="dialogBatchEntry = false">关闭</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <!-- 入账 -->
     <el-dialog class="pattern-dialog height280" title="入账" :visible.sync="dialogAccountedFor" width="30%" :close-on-click-modal="false" :append-to-body="true">
@@ -347,6 +347,7 @@
         <el-button size="mini" type="primary" @click="dialogAccountedFor = false">关闭</el-button>
       </span>
     </el-dialog>
+
     <!-- 项目选择 -->
     <el-dialog class="pattern-dialog height600" title="项目选择" :visible.sync="projectSelectDialog" width="550px" :close-on-click-modal="false" :append-to-body="true">
             <el-form ref="serachForm" :inline="true" :model="serachForm" size="mini" label-width="70px">
@@ -502,6 +503,10 @@
     <bill-settlement ref="billSettlementRef"></bill-settlement>
     <!-- 部分结账恢复 -->
     <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
+    <!-- 退房超时提醒 -->
+    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toSettle" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <!-- 批量入账 -->
+    <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
   </div>
 </template>
 
