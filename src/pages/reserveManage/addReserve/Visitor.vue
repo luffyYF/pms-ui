@@ -31,7 +31,7 @@
                 <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.roomPk && scope.row.orderStatus=='RESERVE'">
                   <el-button size="mini" type="text" @click="guestCheckin(scope.row)">入住</el-button>
                 </p>
-                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.orderStatus=='CHECKIN' && gsCheckin>1">
+                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.orderStatus=='CHECKIN'">
                   <el-button size="mini" type="text" @click="toCheckout(scope.row.guestOrderPk)">退房</el-button>
                 </p>
                 <p class="guest-orp-item" v-if="scope.row.roomNumber && scope.row.rflLockNo">
@@ -341,7 +341,6 @@
         <el-button size="mini" @click="extendConfirm" type="primary" :disabled="submitLock">确 认</el-button>
       </span>
     </el-dialog>
-
     <!--设置二维码开门手机号-->
     <el-dialog class="agreement-body" title="设置二维码开门手机号" :visible.sync="dialogQRCodeSetting" width="30%" :append-to-body="true" :before-close="dialogQRCodeSettingClose">
       <div class="body-conten">
@@ -355,15 +354,16 @@
         <el-button size="mini" type="primary" @click="QRCodeSettingSubmit">确 认</el-button>
       </span>
     </el-dialog>
-
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
-    
     <!-- 预定管理 -->
     <reserveManager ref="reserveManagerRef"></reserveManager>
-
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
+     <!-- 退房超时提醒 -->
+    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="checkout" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <!-- 批量入账 -->
+    <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
   </div>
 </template>
 
@@ -396,10 +396,12 @@
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
+    import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
+    import dialogBatchAddBill from './bill/dialogBatchAddBill'
     
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, DialogMakeCard},
+      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind, dialogBatchAddBill},
       data() {
         return {
           submitLock:false,
@@ -884,38 +886,58 @@
             })
           })
         },
-        toCheckout(guestOrderPk){
-          //检测入住的客单是否超过退房时间，进行提醒
-          overtimeRemind({orderPk: this.form.orderPk, guestOrderPk:guestOrderPk}).then(res=>{
-            if(res.data.length>0) {
-              let message = '<p>以下入住客单超过了退房时间，可能需要收取额外费用：</p>';
-              message += "<table cellpadding='3'>"
-              message += "<tr><td>房号</td><td>客人姓名</td><td>离店日期</td></tr>";
-              for(let obj of res.data) {
-                message += "<tr style='font-weight:bold;'><td>"+obj.roomNumber+"</td><td>"+obj.guestName+"</td><td>"+obj.endDate+"</td></tr>"
-              }
-              message += "</table>"
-              this.$msgbox({
-                title: '提醒',
-                message: message,
-                showCancelButton: true,
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: '不收取，继续退房',
-                cancelButtonText: '取消',
-              }).then(action => {
-                checkoutGuest(guestOrderPk).then(res=> {
-                  bus.$emit('refreshOrderInfo', this.form.orderPk)
-                })
-              });
-            }else{
-               this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
-                checkoutGuest(guestOrderPk).then(res=> {
-                  bus.$emit('refreshOrderInfo', this.form.orderPk)
-                })
-              })
-            }
+        toCheckout(guestOrderPk) {
+          if(this.gsCheckin>1) {
+            //检测入住的客单是否超过退房时间，进行提醒
+            this.$refs.dialogTimeoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+          }else {
+            //跳转账单页面
+            bus.$emit('toCheckout')
+          }
+
+          // overtimeRemind({orderPk: this.form.orderPk, guestOrderPk:guestOrderPk}).then(res=>{
+          //   if(res.data.length>0) {
+          //     let message = '<p>以下入住客单超过了退房时间，可能需要收取额外费用：</p>';
+          //     message += "<table cellpadding='3'>"
+          //     message += "<tr><td>房号</td><td>客人姓名</td><td>离店日期</td></tr>";
+          //     for(let obj of res.data) {
+          //       message += "<tr style='font-weight:bold;'><td>"+obj.roomNumber+"</td><td>"+obj.guestName+"</td><td>"+obj.endDate+"</td></tr>"
+          //     }
+          //     message += "</table>"
+          //     this.$msgbox({
+          //       title: '提醒',
+          //       message: message,
+          //       showCancelButton: true,
+          //       dangerouslyUseHTMLString: true,
+          //       confirmButtonText: '不收取，继续退房',
+          //       cancelButtonText: '取消',
+          //     }).then(action => {
+          //       checkoutGuest(guestOrderPk).then(res=> {
+          //         bus.$emit('refreshOrderInfo', this.form.orderPk)
+          //       })
+          //     });
+          //   }else{
+          //      this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
+          //       checkoutGuest(guestOrderPk).then(res=> {
+          //         bus.$emit('refreshOrderInfo', this.form.orderPk)
+          //       })
+          //     })
+          //   }
+          // })
+
+        
+        },
+        //单房退房
+        checkout(guestOrderPk) {
+          this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
+            checkoutGuest(guestOrderPk).then(res=> {
+              bus.$emit('refreshOrderInfo', this.form.orderPk)
+            })
           })
-          
+        },
+        //弹出批量入账转入账
+        timeoutRemindToAddBill(guestPks) {
+          this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, guestPks)
         },
         guestTableClick(row, event, column) {//点击客单table
           this.currGuestList.forEach((guest,index)=>{
@@ -945,8 +967,6 @@
             // }
             this.$refs.chooseGuestRef.initByPhone(this.form.guestPhone)
           }
-
-
         },
         loadGuest(guest) {//回显客人
           this.form.memPk = guest.memPk

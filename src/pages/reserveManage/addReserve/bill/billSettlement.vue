@@ -40,7 +40,7 @@
                 </el-form-item>
                 <el-form-item label="客单：">
                   <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                    <el-option v-for="(item,index) in getAddBillFilter(guestOrderSelect)" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                    <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -55,7 +55,7 @@
               </el-form-item>
               <el-form-item label="客单：" v-if="billForm.onlineFlag">
                 <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
-                  <el-option v-for="(item,index) in getAddBillFilter(guestOrderSelect)" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
+                  <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -84,7 +84,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button size="mini" type="primary" @click="confirm" :disabled="islock">确认</el-button>
-      <el-button size="mini" type="primary" @click="dialogPartialCheckout = false">关闭</el-button>
+      <el-button size="mini" @click="dialogPartialCheckout = false">取消</el-button>
     </span>
   </el-dialog>
 </template>
@@ -146,6 +146,7 @@ export default {
       this.hfBillForm.hfCashPledge = hfCashPledge
       this.dialogPartialCheckout = true;
       this.islock = false;
+      this.guestOrderSelect = []
       if(billStatus){
         this.billStatus = billStatus
       }
@@ -153,37 +154,42 @@ export default {
       if(dumbPk){
         this.dumbPk = dumbPk
       }
+      
       // if(!isDubm){
-        if(type==2){
-          //部分结账
-          countCheckoutBill({ billPk: billPks }).then(res => {
-            this.countCheckoutDate = res.data;
-            this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount) | 0;
-          });
-        }else if(type==1){
-          // 退房未结
-          countCheckoutBill({ orderPk: orderPk }).then(res => {
-            this.countCheckoutDate = res.data;
-            this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
-            if(this.countCheckoutDate.payType==='Y' && this.countCheckoutDate.cashPledge>0){
-              this.onlineVisible = true
-              this.billForm.onlineFlag = true;
-              this.billForm.onlineMoney=this.countCheckoutDate.cashPledge
-            }
-          });
-        }else if(type==0){
-          // 结账
-          countCheckoutBill({ orderPk: orderPk }).then(res => {
-            this.countCheckoutDate = res.data;
-            this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
-          });
-        }
-        selectGuestOrderBill({ orderPk: orderPk }).then(res => {
-          this.guestOrderSelect = res.data;
-          if(res.data.length>0){
-            this.billForm.guestOrderPk = res.data[0].guestOrderPk
+      if(type==2){
+        //部分结账
+        countCheckoutBill({ billPk: billPks }).then(res => {
+          this.countCheckoutDate = res.data;
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount) | 0;
+        });
+      }else if(type==1){
+        // 退房未结
+        countCheckoutBill({ orderPk: orderPk }).then(res => {
+          this.countCheckoutDate = res.data;
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
+          if(this.countCheckoutDate.payType==='Y' && this.countCheckoutDate.cashPledge>0){
+            this.onlineVisible = true
+            this.billForm.onlineFlag = true;
+            this.billForm.onlineMoney=this.countCheckoutDate.cashPledge
           }
         });
+      }else if(type==0){
+        // 结账
+        countCheckoutBill({ orderPk: orderPk }).then(res => {
+          this.countCheckoutDate = res.data;
+          this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
+        });
+      }
+      selectGuestOrderBill({ orderPk: orderPk }).then(res => {
+        res.data.forEach(item=>{
+          if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
+            this.guestOrderSelect.push(item)
+          }
+        })
+        if(this.guestOrderSelect.length>0){
+          this.billForm.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
+        }
+      });
       // }
     },
     onlineFlagChange(value) {
@@ -294,16 +300,6 @@ export default {
         })
       }
     },
-    //过滤出下拉客单
-    getAddBillFilter(select) {
-      let temp = []
-      select.forEach(item=>{
-        if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
-          temp.push(item)
-        }
-      })
-      return temp;
-    }
   }
 };
 </script>
