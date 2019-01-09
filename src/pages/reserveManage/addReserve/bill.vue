@@ -73,7 +73,8 @@
           财务处理：
           <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">拆账</el-button>
           <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">冲减</el-button>
-          <!-- <el-button size="mini" @click="dialogTransferAccounts = true" v-if="powerJudge('402004')">转账</el-button> -->
+          <el-button size="mini" @click="transferAccountsClick()" >转账</el-button>
+          <!-- v-if="powerJudge('402004')" -->
           <el-button size="mini" @click="dialogAccountedFor = true" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">入账</el-button>
           <el-button size="mini" @click="dialogBatchEntryClick()"  :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">批量入账</el-button>
           <!-- <el-button size="mini" @click="dialogPreLicensing = true">预授权<span>0</span>笔</el-button> -->
@@ -107,7 +108,7 @@
       <el-col :span="8">
         <el-row :gutter="24">
           <el-tabs v-model="summary" >
-            <el-tab-pane label="财务信息" name="first" style="max-height:144px;overflow:hidden;">
+            <el-tab-pane label="财务信息" name="first" style="max-height:144px;overflow:auto;">
                 <el-col class="colGreen bgBlue" :span="8">所选消费</el-col>
                 <el-col class="colBlue bgBlue" :span="8">所选结算</el-col>
                 <el-col class="colRed bgBlue" :span="8">所选余额</el-col>
@@ -133,7 +134,7 @@
                 <el-col class="colBlue" :span="8">0</el-col>
                 <el-col class="colRed" :span="8">0</el-col> -->
             </el-tab-pane>
-            <el-tab-pane label="消费汇总" name="tow"  style="max-height:144px;overflow:hidden;">
+            <el-tab-pane label="消费汇总" name="tow"  style="max-height:144px;overflow:auto;">
               <el-col class="colWhite bgGreen" :span="12">项目名称</el-col>
               <el-col class="colWhite bgGreen" :span="12">金额</el-col>
               <el-row :gutter="24" v-for="obj in consumptionSummary(billsList)" :key="obj.billPk">
@@ -141,7 +142,7 @@
                 <el-col style="border-bottom:1px dashed #666666;" :span="12">{{obj.consumptionAmount}}</el-col>
               </el-row>
             </el-tab-pane>
-            <el-tab-pane label="结算汇总" name="last"  style="max-height:144px;overflow:hidden;">
+            <el-tab-pane label="结算汇总" name="last"  style="max-height:144px;overflow:auto;">
               <el-col class="colWhite bgBlue" :span="12">项目名称</el-col>
               <el-col class="colWhite bgBlue" :span="12">金额</el-col>
               <el-row :gutter="24" v-for="obj in settlementAmountSummary(billsList)" :key="obj.billPk">
@@ -201,11 +202,13 @@
     </el-dialog>
     
     <!-- 批量入账 -->
+     <!-- v-if="addBillMultipleSelection.length > 0"  -->
     <!-- <el-dialog class="pattern-dialog height500" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
       <div class="pattern-dialog-container" >
         <div>
             <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
-            <el-button size="mini" type="text" v-if="addBillMultipleSelection.length > 0" @click="delFormAddBillsClicks()">删除</el-button>
+           
+            <el-button size="mini" type="text" @click="delFormAddBillsClicks()">删除</el-button>
         </div>
         <el-form ref="formAddBills" size="mini" label-width="80px">
           <el-table ref="multipleTable" size="mini" :data="formAddBills" @selection-change="addBillHandleSelectionChange" tooltip-effect="dark" border height="430" style="width: 100%">
@@ -264,7 +267,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                 <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
+                <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
                  <el-button size="mini" type="text" v-if="formAddBills.length > 1" @click="delFormAddBillsClick(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
@@ -495,6 +498,7 @@
           </span>
     </el-dialog>
 
+    <transferAccounts ref="transferAccountsRef" @callback="transferAccounts"></transferAccounts>
     <!-- 外借 -->
     <dialog-borrow ref="dialogBorrowRef" ></dialog-borrow>
     <!-- 打印组件 -->

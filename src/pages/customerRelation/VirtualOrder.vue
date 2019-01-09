@@ -113,19 +113,7 @@
                   应收:{{consumptionAmount-settlementAmount}}元
               </div>
             </el-dialog>
-            <el-button type="text" @click="dialogVisible = true">删除</el-button>
-            <el-dialog
-              title="提示"
-              :visible.sync="dialogVisible"
-              width="30%"
-              :append-to-body="true"
-              :before-close="handleClose">
-              <span>确认删除此账单</span>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-              </span>
-            </el-dialog>
+            <el-button type="text" @click="delVirtualClick(scope.row.virtualBillPk)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -145,7 +133,7 @@
 </template>
 
 <script>
-  import {virtualList,virtualPrint} from '@/api/pmsVirtualBill/pmsVirtualBill'
+  import {virtualList,virtualPrint,delVirtual} from '@/api/pmsVirtualBill/pmsVirtualBill'
   export default {
     components: {},
     data() {
@@ -160,7 +148,6 @@
           endDate:''
         },
         tableData: [],
-        dialogVisible:false,
         dialogTableVisible:false,
         consumptionAmount:0.00,
         settlementAmount:0.00,
@@ -197,6 +184,26 @@
             done();
           })
           .catch(_ => {});
+      },
+      delVirtualClick(virtualBillPk){
+        this.$confirm('确定要删除此虚拟单？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delVirtual({virtualBillPk:virtualBillPk}).then(res=>{
+            this.$message({
+            type: 'success',
+            message: '删除成功!'
+            });
+            this.getVirtualList()
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
       handleSizeChange(val) {
         this.form.pageSize = val;

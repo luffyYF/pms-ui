@@ -4,7 +4,8 @@
       <div class="pattern-dialog-container" >
         <div>
             <el-button size="mini" type="text" @click="addFormAddBillsClick()">添加</el-button>
-            <el-button size="mini" type="text" v-if="addBillMultipleSelection.length > 0" @click="delFormAddBillsClicks()">删除</el-button>
+             <!-- v-if="addBillMultipleSelection.length > 0" -->
+            <el-button size="mini" type="text" @click="delFormAddBillsClicks()">删除</el-button>
         </div>
         <el-form ref="formAddBills" size="mini" label-width="80px">
           <el-table ref="multipleTable" size="mini" :data="formAddBills" @selection-change="addBillHandleSelectionChange" tooltip-effect="dark" border height="430" style="width: 100%">
@@ -63,8 +64,9 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                 <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
-                 <el-button size="mini" type="text" v-if="formAddBills.length > 1" @click="delFormAddBillsClick(scope.$index)">删除</el-button>
+                 <!-- <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button> -->
+                  <!-- v-if="formAddBills.length > 1"  -->
+                 <el-button size="mini" type="text" @click="delFormAddBillsClick(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -82,7 +84,7 @@
 
 <script>
 import {paymentMap} from '@/utils/orm'
-import {addBills, selectGuestOrderBill} from '@/api/bill'
+import {addBills, selectGuestOrderBill,addDumbBills } from '@/api/bill'
 import { listByProjectType } from '@/api/systemSet/pmsProjectController'
 
 export default {

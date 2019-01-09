@@ -11,12 +11,14 @@
   import dialogRecoverBill from './bill/dialogRecoverBill'
   import dialogTimeoutRemind from './bill/dialogTimeoutRemind'
   import dialogBatchAddBill from './bill/dialogBatchAddBill'
+  //转账组单选择
+  import transferAccounts from './transferAccounts'
   // API
   import {findOrder} from '@/api/order/pmsOrderController'
   import {getDumbByPk} from '@/api/conferenceRoom/mtgRoomController'
   import {gmCount} from "@/api/goods/goodsManageController"
   import { listByProjectType } from '@/api/systemSet/pmsProjectController'
-  
+
   import {
     addBill,
     // addBills,
@@ -39,11 +41,12 @@
       props:['dumbObj'],
       components:{
         dialogBorrow,
-        commentPrint, 
-        billSettlement, 
+        commentPrint,
+        billSettlement,
         dialogRecoverBill,
         dialogTimeoutRemind,
-        dialogBatchAddBill
+        dialogBatchAddBill,
+        transferAccounts
       },
       data() {
         return {
@@ -156,6 +159,9 @@
           },
           // addBillsConsumptionAmount:0,
           // addBillsSettlementAmount:0,
+          tagetTransferAccounts:{
+
+          }
         }
 
       },
@@ -830,7 +836,7 @@
             return false;
           }
         },
-		    //恢复客单
+		//恢复客单
         toDialogRecoverBill() {
           this.$refs.dialogRecoverBillRef.showDialog(this.currOrderInfo.order.orderPk)
 		    },
@@ -907,7 +913,7 @@
         },
         settlementAmountSummary(list){
           var tempList = []
-          list.forEach((item,index) => {
+          list.forEach((item,index) => { 
             if(item.settlementAmount != 0 && item.number >0){
               tempList.push({
                 projectName:item.projectName,
@@ -929,6 +935,23 @@
               }
           })
           return temp2
+        },
+        transferAccountsClick(){
+          if(this.serachForm.state!='UN_SET'){
+            this.$message({type:'warning', message:'请选择未结账的账单'})
+            return;
+          }
+          let select = this.multipleSelection;
+          let pks = []
+          if(select.length<=0){
+            this.$message({type:'warning', message:'请至少选择一条未结账的账单'})
+            return;
+          }
+          this.$refs.transferAccountsRef.choseGroup()
+        },
+        transferAccounts(row,isDubm){
+          this.tagetTransferAccounts = row
+          console.log(this.tagetTransferAccounts+"  " +isDubm)
         }
       },
       mounted() {
