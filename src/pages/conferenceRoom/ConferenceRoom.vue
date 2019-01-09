@@ -1065,7 +1065,7 @@ export default {
 }
 .info-title {
   position: absolute;
-  z-index: 1;
+  /* z-index: 1; */
   top: -10px;
   display: inline-block;
   margin: 0;

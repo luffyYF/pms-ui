@@ -9,6 +9,8 @@
   import commentPrint from '@/components/PrintPage/commonPrintPage'
   import billSettlement from './bill/billSettlement'
   import dialogRecoverBill from './bill/dialogRecoverBill'
+  //转账组单选择
+  import transferAccounts from './transferAccounts'
   // API
   import {findOrder} from '@/api/order/pmsOrderController'
   import {getDumbByPk} from '@/api/conferenceRoom/mtgRoomController'
@@ -34,7 +36,7 @@
   import Moment from 'moment'
     export default {
       props:['dumbObj'],
-      components:{dialogBorrow, commentPrint, billSettlement, dialogRecoverBill},
+      components:{dialogBorrow, commentPrint, billSettlement, dialogRecoverBill,transferAccounts},
       data() {
         return {
           //当前订单信息
@@ -146,6 +148,9 @@
           },
           addBillsConsumptionAmount:0,
           addBillsSettlementAmount:0,
+          tagetTransferAccounts:{
+
+          }
         }
 
       },
@@ -841,7 +846,7 @@
             return false;
           }
         },
-		//恢复客单
+		    //恢复客单
         toDialogRecoverBill() {
           this.$refs.dialogRecoverBillRef.showDialog(this.currOrderInfo.order.orderPk)
 		  },
@@ -936,6 +941,23 @@
               }
           })
           return temp2
+        },
+        transferAccountsClick(){
+          if(this.serachForm.state!='UN_SET'){
+            this.$message({type:'warning', message:'请选择未结账的账单'})
+            return;
+          }
+          let select = this.multipleSelection;
+          let pks = []
+          if(select.length<=0){
+            this.$message({type:'warning', message:'请至少选择一条未结账的账单'})
+            return;
+          }
+          this.$refs.transferAccountsRef.choseGroup()
+        },
+        transferAccounts(row,isDubm){
+          this.tagetTransferAccounts = row
+          console.log(this.tagetTransferAccounts+"  " +isDubm)
         }
       },
       computed: {

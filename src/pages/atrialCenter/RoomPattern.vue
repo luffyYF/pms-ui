@@ -8,7 +8,7 @@
             <el-button class="screhbtn" @click="init">搜索</el-button>
           </el-form-item>
         </el-form>
-        
+
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item title="房间筛选" name="1" class="cllapse-list">
             <div class="check-list-group">
@@ -93,7 +93,7 @@
                     <el-option v-for="y in channelArr" :label="y.typeName" :value="y.typePk" :key="y.typePk"></el-option>
                   </el-select> -->
                 </el-form-item>
-              </el-form>  
+              </el-form>
             </div>
           </el-collapse-item>
 
@@ -126,7 +126,7 @@
 
           <el-collapse-item title="图标说明" name="3" class="cllapse-list">
             <div class="icon-explain">
-              <div class="real-state-li">      
+              <div class="real-state-li">
                 <div class="half50"><span class="bg-icon empty"></span>空房</div>
                 <div class="half50"><span class="bg-icon occupy"></span>占用</div>
               </div>
@@ -211,7 +211,7 @@
                       房号：{{g.roomNumber}} <br/>
                       房型：{{g.roomTypeName}} <br/>
                       状态：{{orderStatusMap[g.orderStatus]}} <br/>
-                      抵店：{{g.beginDate}} <br/> 
+                      抵店：{{g.beginDate}} <br/>
                       离店：{{g.endDate}} <br/>
                     </div>
                   </div>
@@ -259,7 +259,7 @@
                       房号：{{g.roomNumber}} <br/>
                       房型：{{g.roomTypeName}} <br/>
                       状态：{{orderStatusMap[g.orderStatus]}} <br/>
-                      抵店：{{g.beginDate}} <br/> 
+                      抵店：{{g.beginDate}} <br/>
                       离店：{{g.endDate}} <br/>
                     </div>
                   </div>
@@ -277,12 +277,12 @@
                 <!-- <label slot="reference" class="detailsinfo arrears " v-if="item.arrearsAmount<0"></label> -->
                 <label slot="reference" class="detailsinfo arrears " v-if="item.owePirce"></label>
               </el-popover>
-              
+
               <label class="detailsinfo clockroom" v-if="item.checkInType==1" title="钟点房"></label>
               <label class="detailsinfo special" v-if="item.checkInType==2" title="特殊房"></label>
               <label class="detailsinfo selfuse" v-if="item.checkInType==3" title="自用房"></label>
               <label class="detailsinfo freeroom" v-if="item.checkInType==4" title="接待房"></label>
-              
+
               <!-- 预离 -->
               <el-popover
                 placement="bottom"
@@ -293,13 +293,13 @@
                 <label slot="reference" class="detailsinfo reserve_leave" v-if="item.leaveFlag"></label>
               </el-popover>
             </div>
-            
+
             <!-- 下拉菜单 -->
             <el-dropdown trigger="click" class="pattern-dropdown" placement="bottom">
               <div style="width:100%; height:100%"></div>
               <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li">
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED' 
-                                                                      || item.roomStatus=='CLEAN_NOCHECK' 
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED'
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'
                                                                       || item.roomStatus=='DIRTY' )
                                                                       && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item)">办理入住</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:saveContinue')">办理续住</el-button></el-dropdown-item>
@@ -315,13 +315,13 @@
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DIRTY'
                                                                       || item.roomStatus=='CLEAN_NOCHECK'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:cleanCheck')" @click="changeRoomStatus(item, 'CLEAN_CHECKED', index)">清洁检查房</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='DIRTY'
-                                                                      || item.roomStatus=='CLEAN_NOCHECK' 
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'
                                                                       || item.roomStatus=='CLEAN_CHECKED'
                                                                       || item.roomStatus=='SELF_USE'
                                                                       || item.roomStatus=='FREE_ROOM') && !item.guestOrderPk"><el-button type="text" :disabled="!hasPerm('pms:roomPattern:toRepair')" @click="showRepair(item)">转维修房</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='DIRTY'
-                                                                      || item.roomStatus=='CLEAN_NOCHECK' 
-                                                                      || item.roomStatus=='CLEAN_CHECKED' 
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'
+                                                                      || item.roomStatus=='CLEAN_CHECKED'
                                                                       || item.roomStatus=='SELF_USE'
                                                                       || item.roomStatus=='FREE_ROOM' ) && !item.guestOrderPk"><el-button :disabled="!hasPerm('pms:roomPattern:toDisable')" type="text" @click="showDisable(item)">转停用房</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='REPAIR_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:showRepair')" @click="seeRoomReason(item, 'REPAIR')">查看维修房</el-button></el-dropdown-item>
@@ -465,7 +465,7 @@
         </span>
       </el-dialog>
       <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="closeOrderDialog($event)"/>
-      
+
     </el-container>
 </template>
 <script>
@@ -481,7 +481,7 @@
     currentRoomList,
     updateRoomStatus,
     addRoomReason,
-    delRoomReason, 
+    delRoomReason,
     findRoomReason,
     loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
@@ -519,9 +519,9 @@
         disableForm: {},// 停用房表单
         dialogRepairRoom: false,
         dialogDisableRoom: false,
-        
+
         dialogBatchOccupancy: false,
-        dialogContinuedLive: false, 
+        dialogContinuedLive: false,
         dialogGroupManag: false,
         groupSelections: false,
         dialogReservations: false,
@@ -529,12 +529,12 @@
         dialogReservationManag: false,
         dialogChoiceRoomNumber: false,
         dialogHoldHisCard: false,
-        
+
         batchOccupancy: 'fastRoom',
         activeContract: 'addContract',
         WakeData:[{
-          Wakenumber:'',  
-          Wakedate: '', 
+          Wakenumber:'',
+          Wakedate: '',
           Wakecaozuo: ''
         }],
         commodityAddTo: false,
@@ -786,7 +786,7 @@
       //     }else{
       //       //办理入住
       //       setTimeout(() => {
-      //         this.$refs.checkinDialogRef.initEmpty(room); 
+      //         this.$refs.checkinDialogRef.initEmpty(room);
       //       },0)
       //     }
       //   })
@@ -800,7 +800,7 @@
         }else{
           //办理入住
           setTimeout(() => {
-            this.$refs.checkinDialogRef.initEmpty(room); 
+            this.$refs.checkinDialogRef.initEmpty(room);
           },0)
         }
       },
@@ -826,14 +826,14 @@
           }
 
           if(condition.indexOf('empty')!=-1){//勾选空房
-            if((room.roomStatus=='DIRTY' 
+            if((room.roomStatus=='DIRTY'
               || room.roomStatus=='CLEAN_NOCHECK'
-              || room.roomStatus=='CLEAN_CHECKED') 
+              || room.roomStatus=='CLEAN_CHECKED')
               && room.futureFlag!='Y') {
               return room
             }
           }
-          
+
           if(condition.indexOf('OCCUPY')!=-1 && room.roomStatus=='OCCUPY'){//勾选占用
             return room
           }
@@ -846,7 +846,7 @@
           if(condition.indexOf('CLEAN_CHECKED')!=-1 && room.roomStatus=='CLEAN_CHECKED'){//勾选清洁已检查
             return room
           }
-          if(condition.indexOf('leaveFlag')!=-1 && room.leaveFlag=='Y'){//勾选预离
+          if(condition.indexOf('leaveFlag')!=-1 && room.leaveFlag){//勾选预离
             return room
           }
           if(condition.indexOf('REPAIR_ROOM')!=-1 && room.roomStatus=='REPAIR_ROOM'){//勾选维修房
@@ -909,7 +909,7 @@
             if(item.orderPk==room.orderPk || item.orderPk==room.arrivalOrderPk){
               this.$set(room, 'connectRoom', true);
             }
-          } 
+          }
           if(item.arrivalOrderPk){
             if(item.arrivalOrderPk==room.arrivalOrderPk || item.arrivalOrderPk==room.orderPk){
               this.$set(room, 'connectRoom', true);
@@ -1057,7 +1057,7 @@
   width: 16px;
   height: 16px;
 }
-.empty{ 
+.empty{
   /* 空房 */
   background: #01cce6;
 }
@@ -1068,7 +1068,7 @@
 .dirty{
   /* 脏房 */
   background: #b2b2b2;;
-}  
+}
 .clean_nocheck{
   /* 清洁未检查 */
   background: #6699ff;
@@ -1159,7 +1159,7 @@
   height: 15px; */
 }
 .room_team{
-  /* 团队 */ 
+  /* 团队 */
   background: url('../../assets/image/room-status/room_status.png');
   background-repeat:no-repeat;
   background-position: -119px -18px;
@@ -1402,10 +1402,10 @@
 .batchOccupancy-content .el-date-editor.el-input,
 .batchOccupancy-content .el-date-editor.el-input__inner{
   width: 100%;
-} 
+}
 .bs-tishi{
   background-color: #fdf7f7;
-  border-color: #eed3d7;  
+  border-color: #eed3d7;
   margin: 10px 0;
   padding: 10px;
   border-left: 3px solid #eee;
