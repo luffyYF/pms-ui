@@ -59,6 +59,11 @@ export const transBill = params => {
   return request.post('/back/bill/trans', params)
 }
 
+//账单转账处理
+export const transferAccountsBill = params => {
+  return request.post('/back/bill/transferAccounts', params)
+}
+
 //查找客单下拉框列表
 export const selectGuestOrderBill = params => {
   return request.get('/back/bill/guestOrder/select', {params:params})

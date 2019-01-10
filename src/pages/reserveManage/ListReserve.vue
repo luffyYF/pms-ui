@@ -80,8 +80,17 @@
         <el-form-item label="组单号:">
           <el-input v-model="formInline.orderNo" placeholder="请输入组单号" clearable style="width: 178px;"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="">
           <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
+          <el-button type="primary" @click="createExcel" size="mini" >下载预订模板</el-button>
+          <el-button size="mini" type="primary" @click="reserveClick">上传预订信息</el-button>
+          <!-- <el-upload
+            style="display: inline-block;margin-left: 10px"
+            :action="getUploadExcelAction()"
+            :headers="headers"
+            :show-file-list="false">
+            <el-button size="mini" type="primary" @click="yuClick">上传预订信息</el-button>
+          </el-upload> -->
         </el-form-item>
       <!-- </el-col> -->
     </el-form>
@@ -204,6 +213,8 @@
       </div>
     </el-dialog> -->
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
+    <!-- 预订信息编辑页面 -->
+    <reserve-edit ref="reserveEditRef" @callback="list"></reserve-edit>
   </section>
 </template>
 <script>
@@ -215,10 +226,12 @@
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
   import {listChannelType} from '../../api/systemSet/type/typeController'
   import {listType} from '@/api/utils/pmsTypeController'
+  import downloadUserInfoExcel from '@/components/download/downloadUserInfoExcel'
+  import reserveEdit from './reserveEdit'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
-    components: {DialogCheckinVisible,invoiceEdit},
+    components: {DialogCheckinVisible,invoiceEdit,reserveEdit},
     data () {
       return {
         orderStatusMap:orderStatusMap,
@@ -522,7 +535,14 @@
           }
         })
         return name
-      }
+      },
+      // 生成excel
+      createExcel () {
+        downloadUserInfoExcel("/back/order/downloadTemplate");
+      },
+      reserveClick () {
+        this.$refs.reserveEditRef.showDialog()
+      },
     },
     filters: {
 
