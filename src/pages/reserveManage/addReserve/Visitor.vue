@@ -175,7 +175,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="离店日期：" required>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -567,10 +567,14 @@
             this.$message({type:'warning', message:'请先选择客单'})
             return;
           }
-          if(this.form.orderStatus!='CHECKIN'){
-            this.$message({type:'warning', message:'客单入住后才能添加客人'})
-            return;
+          if(this.form.mainFlag!='Y') {
+             this.$message({type:'warning', message:'请选中主客单后进行录入'})
+             return;
           }
+          // if(this.form.orderStatus!='CHECKIN'){
+          //   this.$message({type:'warning', message:'客单入住后才能添加客人'})
+          //   return;
+          // }
           this.memberFlag = false
           this.currFormType = 'add-guest'
           this.form.memPk = undefined
