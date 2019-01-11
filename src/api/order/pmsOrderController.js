@@ -134,8 +134,12 @@ export const checkoutGuest = params => {
     return request.post('/back/order/checkoutGuest/'+params)
 }
 //恢复退房客单
-export const recoverGuestOrder = params => {
-    return request.post('/back/order/recoverGuestOrder/'+params)
+export const recoverCheckoutGuestOrder = params => {
+    return request.post('/back/order/recoverCheckoutGuestOrder/'+params)
+}
+//恢复取消预定的客单
+export const recoverReserveGuestOrder = params => {
+    return request.post('/back/order/recoverReserveGuestOrder/'+params)
 }
 
 
