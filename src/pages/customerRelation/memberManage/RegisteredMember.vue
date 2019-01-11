@@ -94,7 +94,7 @@
         <el-form-item label="协议单位：">
           <el-input v-model="form.unitName"></el-input>
           <!-- <el-input v-model="form.agreementPk"></el-input> -->
-          <span class="el-icon-search" @click="showAgreementFlag = true" title="查询协议单位"></span>
+          <span class="el-icon-search" @click="openAgreement()" style="cursor:pointer;" title="查询协议单位"></span>
         </el-form-item>
         <el-form-item label="收取方式" prop="chargeTypePk">
           <el-select v-model="form.chargeTypePk" @visible-change="chargeTypeChange" placeholder="请选收取方式">
@@ -121,11 +121,12 @@
     </div>
 
     <!-- 协议单位 -->
-    <el-dialog class="agreement-body" title="协议单位" :visible.sync="showAgreementFlag" width="50%" :append-to-body="true">
-      <div class="body-conten">
-        <agreement/>
-      </div>
-    </el-dialog>
+    <!-- <el-dialog class="agreement-body" title="协议单位" :visible.sync="showAgreementFlag" width="50%" :append-to-body="true">
+      <div class="body-conten"> -->
+        <!-- 协议单位 -->
+      <Agreement ref="agreementRef" @sendData="agreementCallback($event)"></Agreement>
+      <!-- </div>
+    </el-dialog> -->
 
     <el-dialog
       title="选择组单"
@@ -384,7 +385,7 @@ export default {
   mounted(){
     this.memberCertificateType();
     bus.$on('memberGrade', (res) => { this.memberLevelChange(res) });
-    bus.$on('agreementPo', (res) => { this.chooseAgreement(res) });
+    bus.$on('agreementPo', (res) => { this.agreementCallback(res) });
   },
   methods: {
     // powerJudge(id){
@@ -395,12 +396,24 @@ export default {
       this.memberCertificateType()
       // this.getMemberGradeList();
     },
-    //选中协议单位
-    chooseAgreement(res){
-      this.form.agreementUnitPk = res.agreementPk;
-      this.form.unitName = res.unitName;
-      this.showAgreementFlag = false;
+    agreementCallback(data) {
+      // this.form.agreementUnitPk = data.agreementPk;
+      // this.form.unitName = data.unitName;
+      //实时绑定失败  重新渲染
+      this.$set(this.form,"agreementUnitPk", data.agreementPk)
+      this.$set(this.form,"unitName", data.unitName)
+      console.log(this.form.unitName)
     },
+    //打开选择协议单位
+    openAgreement() {
+      this.$refs.agreementRef.init();
+    },
+    // //选中协议单位
+    // chooseAgreement(res){
+    //   this.form.agreementUnitPk = res.agreementPk;
+    //   this.form.unitName = res.unitName;
+    //   this.showAgreementFlag = false;
+    // },
     memberLevelChange(res){
       this.form.gradePk = res.form.memberGrade
       this.form.cardFee=res.form.cardFee;
