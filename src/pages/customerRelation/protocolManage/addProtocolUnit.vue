@@ -301,6 +301,8 @@ export default {
           }
         }
         if(i){
+          var now = new Date();
+          now.setFullYear(now.getFullYear()+1);
             self.form =  {//查询表单数据
                 address: '',
                 agreementCode: '',
@@ -313,7 +315,7 @@ export default {
                 contactName: '',
                 contactPhone: '',
                 contactPost: '',
-                endDate:  moment().format("YYYY-MM-DD"),
+                endDate:  moment(now).format("YYYY-MM-DD"),
                 fax: '',
                 industryTypePk: self.industryOptions.length>0?self.industryOptions[0].typePk:null,
                 priceSchemePk: 'fanganyi',

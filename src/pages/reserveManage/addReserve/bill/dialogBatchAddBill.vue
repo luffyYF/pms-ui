@@ -207,7 +207,9 @@ export default {
     },
     addFormAddBillsClick(index){
       if(index != null){
-        this.formAddBills.push(this.formAddBills[index])
+        var temp = JSON.parse(JSON.stringify(this.formAddBills[index]))
+        temp.t = '122'
+        this.formAddBills.push(temp)
         return
       }
       this.formAddBills.push({

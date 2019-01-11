@@ -486,28 +486,34 @@ export default {
           this.getCurrentRoomList();
           return
         }
-        this.ydList = []
         var ydList2 = []
-
+        //备份当前数据
+        var tempYdList = JSON.parse(JSON.stringify(this.ydList))
+        this.ydList = []
         roomList.forEach(item=> {
           //预抵且没显示过
           if(item.arrivalOrderPk && item.arrivalGuestPk && !item.showFlag){
             this.ydList.push(item)
           }
           // //预抵且显示过
-          // if(item.arrivalOrderPk && item.arrivalGuestPk && item.showFlag){
-          //     ydList2.push(item)
-          // }
-          // this.$set(item,"showFlag","N")
+          if(item.arrivalOrderPk && item.arrivalGuestPk && item.showFlag){
+              ydList2.push(item)
+          }
+          this.$set(item,"showFlag","N")
         })
+        console.log(this.ydList.length);
+        console.log(ydList2.length)
+        localStorage.setItem("roomList",JSON.stringify(roomList))
+        // this.ydDialogVisible = false
+        if(!this.ydDialogVisible){
+          this.ydDialogVisible = this.ydList.length>0?true:false
+        }
         //有新的预抵订单，显示全部
-        // if(this.ydList.length > 0){
-        //     this.ydList = this.ydList.concat(ydList2)
-        // }
-        // localStorage.setItem("roomList",JSON.stringify(roomList))
-        this.ydDialogVisible = false
-        if(this.ydList.length>0){
-          this.ydDialogVisible = true
+        if(this.ydList.length > 0){
+            this.ydList = this.ydList.concat(ydList2)
+            this.ydDialogVisible = true
+        }else{
+          this.ydList = ydList2
         }
       },
       alertMessage(){
@@ -594,7 +600,7 @@ export default {
             localStorage.setItem("roomList",JSON.stringify(res.data))
           }
           //设置最后查询时间
-          localStorage.setItem("queryTime",moment().format('YYYY-MM-DD HH:MM:ss'))
+          localStorage.setItem("queryTime",moment().format('YYYY-MM-DD HH:mm:ss'))
         })
       },
       toCheckin(room) {

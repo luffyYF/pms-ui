@@ -584,7 +584,7 @@
               this.$set(item, 'leaveFlag', null)
             }
           })
-          localStorage.setItem("roomList",JSON.stringify(this.roomList))
+          // localStorage.setItem("roomList",JSON.stringify(this.roomList))
         })
       }
       ,
