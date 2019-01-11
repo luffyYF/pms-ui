@@ -175,7 +175,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="离店日期：" required>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -567,10 +567,14 @@
             this.$message({type:'warning', message:'请先选择客单'})
             return;
           }
-          if(this.form.orderStatus!='CHECKIN'){
-            this.$message({type:'warning', message:'客单入住后才能添加客人'})
-            return;
+          if(this.form.mainFlag!='Y') {
+             this.$message({type:'warning', message:'请选中主客单后进行录入'})
+             return;
           }
+          // if(this.form.orderStatus!='CHECKIN'){
+          //   this.$message({type:'warning', message:'客单入住后才能添加客人'})
+          //   return;
+          // }
           this.memberFlag = false
           this.currFormType = 'add-guest'
           this.form.memPk = undefined
@@ -894,46 +898,27 @@
             //跳转账单页面
             bus.$emit('toCheckout')
           }
-
-          // overtimeRemind({orderPk: this.form.orderPk, guestOrderPk:guestOrderPk}).then(res=>{
-          //   if(res.data.length>0) {
-          //     let message = '<p>以下入住客单超过了退房时间，可能需要收取额外费用：</p>';
-          //     message += "<table cellpadding='3'>"
-          //     message += "<tr><td>房号</td><td>客人姓名</td><td>离店日期</td></tr>";
-          //     for(let obj of res.data) {
-          //       message += "<tr style='font-weight:bold;'><td>"+obj.roomNumber+"</td><td>"+obj.guestName+"</td><td>"+obj.endDate+"</td></tr>"
-          //     }
-          //     message += "</table>"
-          //     this.$msgbox({
-          //       title: '提醒',
-          //       message: message,
-          //       showCancelButton: true,
-          //       dangerouslyUseHTMLString: true,
-          //       confirmButtonText: '不收取，继续退房',
-          //       cancelButtonText: '取消',
-          //     }).then(action => {
-          //       checkoutGuest(guestOrderPk).then(res=> {
-          //         bus.$emit('refreshOrderInfo', this.form.orderPk)
-          //       })
-          //     });
-          //   }else{
-          //      this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
-          //       checkoutGuest(guestOrderPk).then(res=> {
-          //         bus.$emit('refreshOrderInfo', this.form.orderPk)
-          //       })
-          //     })
-          //   }
-          // })
-
-        
         },
-        //单房退房
+        //单房退房，提交
         checkout(guestOrderPk) {
-          this.$confirm('确认退房吗','提示', {type:'warning'}).then(()=>{
-            checkoutGuest(guestOrderPk).then(res=> {
-              bus.$emit('refreshOrderInfo', this.form.orderPk)
-            })
-          })
+          this.$confirm("确认退房吗？", "提示", {
+            type:'warning',
+            beforeClose: (action, instance, done) =>{
+              if (action === 'confirm')  {
+                instance.confirmButtonLoading = true;
+                checkoutGuest(guestOrderPk).then(res=> {
+                  bus.$emit('refreshOrderInfo', this.form.orderPk)
+                }).finally(()=>{
+                  instance.confirmButtonLoading = false;
+                  done();
+                })
+              } else {
+                if(instance.confirmButtonLoading==false) {
+                done();
+                }
+              }
+            }
+          }).then(()=>{});
         },
         //弹出批量入账转入账
         timeoutRemindToAddBill(guestPks) {

@@ -23,6 +23,7 @@
   import {
     addBill,
     // addBills,
+    transferAccountsBill,
     addDumbBill,
     addDumbBills,
     authBill,
@@ -842,13 +843,13 @@
             return false;
           }
         },
-		//恢复客单
+		    //恢复客单
         toDialogRecoverBill() {
           this.$refs.dialogRecoverBillRef.showDialog(this.currOrderInfo.order.orderPk)
 		    },
         //批量入账
         dialogBatchEntryClick() {
-          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm)
+          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm,null,this.dumbPk)
         },
         //退房超时提醒,跳转批量入账
         timeoutRemindToAddBill(guestPks) {
@@ -955,10 +956,60 @@
           }
           this.$refs.transferAccountsRef.choseGroup()
         },
-        transferAccounts(row,isDubm){
-          this.tagetTransferAccounts = row
-          console.log(this.tagetTransferAccounts+"  " +isDubm)
+        transferAccounts(row,isDumb){
+            this.tagetTransferAccounts = row
+            var msg = ''
+            if(isDumb){
+              msg = '确认转到组单号为:'+row.orderNo+' 的哑房账:'+row.name+'下?'
+            }else{
+              msg = '确认转到:'+(row.roomNumber | 0)+'号房 客人'+row.guestName+' 所在的组单:'+row.orderNo+'下?'
+            }
+            this.$prompt(msg, '转账备注', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(({ value }) => {
+              //旧数据
+              let oldList = this.multipleSelection;
+              var data = {
+                oldList:oldList,
+                remark:value,
+                isDumb:isDumb?'Y':'N',
+                thirdPk:isDumb?row.dumbPk:row.orderPk
+              }
+              transferAccountsBill(data).then(res => {
+                if(res.code == 1){
+                  this.$message({
+                    message: res.sub_msg,
+                    type: 'success'
+                  });
+                  this.listBill()
+                }
+              })
+              // var targetList = [];
+              
+              // for(var i=0;i<oldList.length;i++){
+              //   //目标对象
+              //   var tempObj = this.clone(oldList[i]);
+              //   //标识转账
+              //   oldList[i].billClassify = 'FORWARD'
+
+              //   tempObj.dumbPk = isDubm?row.dumbPk:null
+              //   tempObj.orderPk = isDubm?null:row.orderPk
+              //   tempObj.billType = isDubm?'DUMB':'ROOM'
+              //   tempObj.billStatus = 'UN_SET'
+              //   targetList.push(tempObj)
+              // }
+
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '取消转账'
+              });       
+            });
         }
+      },
+      clone(obj){
+        return JSON.parse(JSON.stringify(obj))
       },
       mounted() {
         bus.$on('billload', () => { this.listBill() })

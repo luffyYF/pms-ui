@@ -110,6 +110,7 @@ export default {
       settlProjectList:[],
       orderPk:null,
       guestPks:null,
+      dumbPk:''
     }
   },
   methods: {
@@ -119,11 +120,12 @@ export default {
      * @augments isDubm (必传)  true是哑房账  false不是哑房账
      * @augments guestPks (可选)
      */
-    showDialog(orderPk, isDubm, guestPks) {
+    showDialog(orderPk, isDubm, guestPks,dumbPk) {
       this.orderPk = orderPk
       this.guestPks = guestPks
       this.dialogBatchEntry = true
       this.isDubm = isDubm
+      this.dumbPk = dumbPk
       this.loadGuestSelect(orderPk)
       let cons = this
       this.loadProject(function(){
