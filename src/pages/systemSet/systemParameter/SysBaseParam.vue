@@ -12,6 +12,11 @@
                     <el-time-picker v-model="form.checkoutTime" value-format="HH:mm:ss" placeholder="请选择">
                     </el-time-picker>
                   </el-form-item>
+                  <el-form-item label="退房结束时间前：">
+                    <el-input type="text" v-model="form.checkoutReminderTime">
+                    </el-input>
+                    提醒有客人要退房
+                  </el-form-item>
                   <el-form-item label="客单可恢复：">
                     <el-input type="text" v-model="form.checkoutRecoverMinute">
                     </el-input>
@@ -21,10 +26,10 @@
                 </div>
               </el-col>
               <el-col :span="7" :offset="1">
-                
+
               </el-col>
               <el-col :span="7" :offset="1">
-                
+
               </el-col>
             </el-row>
             <el-row>
@@ -32,7 +37,7 @@
                 <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
               </el-col>
             </el-row>
-          </el-col>  
+          </el-col>
         </el-row>
       </div>
     </el-form>

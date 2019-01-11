@@ -48,7 +48,7 @@
       </el-table-column>
       <el-table-column prop="createTime" label="申请时间">
         <template slot-scope="scope">
-          {{moment(scope.row.createTime).format('YYYY-MM-DD HH:MM:ss')}}
+          {{moment(scope.row.createTime).format('YYYY-MM-DD HH:mm:ss')}}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="350">
@@ -84,7 +84,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">操作人：{{currApplyForm.userName}} </el-col>
-          <el-col :span="12">申请时间：{{moment(currApplyForm.createTime).format('YYYY-MM-DD HH:MM:ss')}}</el-col>
+          <el-col :span="12">申请时间：{{moment(currApplyForm.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
         </el-row>
       </div>
       <el-table :data="detailTableData" height="250" border style="width: 100%">

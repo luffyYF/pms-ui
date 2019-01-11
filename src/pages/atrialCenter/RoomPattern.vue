@@ -87,7 +87,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <channel-select ref="channelRef" class="selectWidth" v-model="selectForm.channel"/>
+                  <channel-select ref="channelRef" class="selectWidth" @callback="init" v-model="selectForm.channel"/>
                   <!-- <el-select class="selectWidth" v-model="selectForm.channel" placeholder="请选择渠道">
                     <el-option label="全部渠道" value=""></el-option>
                     <el-option v-for="y in channelArr" :label="y.typeName" :value="y.typePk" :key="y.typePk"></el-option>
@@ -486,6 +486,7 @@
     loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
   import {listType} from '@/api/utils/pmsTypeController'
+  import {find} from '@/api/systemSet/pmsSysParamController'
   export default {
     components: {DialogCheckinVisible},
     data() {
@@ -546,38 +547,47 @@
           label: 'label'
         },
         btnlock:false,
+        timer:null,
+        timer2:null
       };
     },
     methods: {
       /**
        * 初始化调用，查找房间数据
        * @augments */
-      init() {
+      init(val) {
+        // if(val){
+        //   this.selectForm.channel = val
+        // }
         let data = {
           buildingPk: this.selectForm.building,
           roomTypePk: this.selectForm.roomType,
           floorPk: this.selectForm.floor,
           checkInType: this.selectForm.checkInType,
+          channelPk:this.selectForm.channel
         }
         currentRoomList(data).then(res=>{
           this.roomList = res.data
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
           })
-          this.$refs.channelRef.load(false);
-
+          this.$refs.channelRef.load(true);
           //标识预离
           let now = moment().hour() >= nightTrialTime ? moment() : moment().subtract(1, 'days');
           this.roomList.forEach(item=> {
+            if(item.arrivalOrderPk && item.arrivalGuestPk){
+              this.$set(item, 'futureFlag', "Y")
+            }
             if(item.guestEndDate && moment(item.guestEndDate).format('YYYY-MM-DD') <= now.format('YYYY-MM-DD') ){
               this.$set(item, 'leaveFlag', true)
             }else{
               this.$set(item, 'leaveFlag', null)
             }
           })
-
+          // localStorage.setItem("roomList",JSON.stringify(this.roomList))
         })
-      },
+      }
+      ,
       handleClose(done) { //11
         this.$confirm('确认关闭？')
           .then(_ => {
@@ -936,7 +946,13 @@
       })
       this.init();
       bus.$on('closeOrder', () => {this.closeOrderDialog() })
+      // this.initAlert()
     },
+    beforeDestroy(){
+      // clearInterval(this.timer);
+      // clearInterval(this.timer2);
+      // this.$notify.closeAll()
+    }
   }
 </script>
 <style>

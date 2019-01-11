@@ -70,7 +70,7 @@
       <el-row>
         <el-col :span="23" style="margin: 20px 12px 0 12px;">
           <p v-for="(item, index) in companyIds" :key="index">
-            {{item.companyName}}：<span v-for="(y, index) in classIds" :key="index" v-if="y.companyPk == item.companyPk">{{classMap[y.classId]}}（{{nameMap[y.classId]}}）{{timeMap[y.classId]}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            {{item.companyName}}：<span v-for="(y, index) in classIds" :key="index"><span v-if="y.companyPk == item.companyPk">{{classMap[y.classId]}}（{{nameMap[y.classId]}}）{{timeMap[y.classId]}}&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
           </p>
         </el-col>
       </el-row>
@@ -203,8 +203,8 @@
           }
           attendancePlanDelete(data).then(res=>{
             this.$message({type: 'success',message: '删除成功!'});
+            this.listSearch()
           })
-          this.listSearch()
         })
       },
       // 分页相关

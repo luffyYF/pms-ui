@@ -90,10 +90,17 @@ export default {
         // })
         // console.log(res.data)
         this.activeShift = shift.shiftPk;
+        
+        if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != this.activeCompany.companyPk){
+          localStorage.removeItem("roomList")
+          localStorage.removeItem("statisticsData")
+          localStorage.removeItem("sysParm")
+        }
         Cookies.set('select_company_pk',this.activeCompany.companyPk)
         Cookies.set('select_shift_pk',this.activeShift)
         localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
         localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
+
         // this.$router.push({ path: this.getRPath("/",0) });
         this.$router.push('/')
       })

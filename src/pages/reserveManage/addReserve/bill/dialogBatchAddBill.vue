@@ -64,7 +64,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                 <!-- <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button> -->
+                 <el-button size="mini" type="text" @click="addFormAddBillsClick(scope.$index)" >添加</el-button>
                   <!-- v-if="formAddBills.length > 1"  -->
                  <el-button size="mini" type="text" @click="delFormAddBillsClick(scope.$index)">删除</el-button>
               </template>
@@ -205,7 +205,13 @@ export default {
       })
       
     },
-    addFormAddBillsClick(){
+    addFormAddBillsClick(index){
+      if(index != null){
+        var temp = JSON.parse(JSON.stringify(this.formAddBills[index]))
+        temp.t = '122'
+        this.formAddBills.push(temp)
+        return
+      }
       this.formAddBills.push({
         projectPk:'',
         guestOrderPk: null,

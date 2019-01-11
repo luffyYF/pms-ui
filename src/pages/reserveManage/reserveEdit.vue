@@ -90,7 +90,6 @@
         dialogVisible: false,
         loading: false,
         dataForm: {
-          orderPk: null,
           name: null,
           agreementPk: null,
           agreementName: null,
@@ -139,6 +138,25 @@
     methods: {
       showDialog (id) {
         this.dialogVisible = true
+        this.dataForm = {
+          name: null,
+          agreementPk: null,
+          agreementName: null,
+          channelTypePk: null,
+          reserveCardNo: null,
+          payment: "-1",
+          keepTime: null,
+          isTeam: "Y",
+          remark: null,
+          beginDate: null,
+          endDate: null,
+          companyPk: null
+        }
+        this.form = {
+          beginDate: null,
+          channelTypePk: null,
+          endDate: null,
+        }
         this.$nextTick(() => {
           this.$refs.channelRef.load(true);
         })
@@ -153,8 +171,8 @@
         }
 
         this.dataForm.companyPk = this.companyInfo.companyPk
-        this.dataForm.beginDate = moment(this.beginEndPicker[0]).format('YYYY-MM-DD')
-        this.dataForm.endDate = moment(this.beginEndPicker[1]).format('YYYY-MM-DD')
+        this.dataForm.beginDate = this.beginEndPicker[0]
+        this.dataForm.endDate = this.beginEndPicker[1]
 
         this.loading = true
         this.dialogVisibleBox = true
