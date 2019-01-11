@@ -386,13 +386,12 @@
       continuedRoom,
       editOrderMember,
       addReserveGuest,
-      qrCodePhoneSetting,
-      checkoutGuest,
+      qrCodePhoneSetting
     } from '@/api/order/pmsOrderController'
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
-    import {overtimeRemind} from '@/api/bill'
+    import {overtimeRemind,checkoutGuest} from '@/api/bill'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
