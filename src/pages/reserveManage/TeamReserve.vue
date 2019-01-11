@@ -97,7 +97,8 @@
                 </el-table-column> -->
                 <el-table-column prop="roomCount" label="预定数量">
                   <template slot-scope="scope">
-                    <el-input-number size="mini" v-model="scope.row.roomCount" :min="0" :max="scope.row.bookableCount"></el-input-number>
+                    <!-- :max="scope.row.bookableCount" -->
+                    <el-input-number size="mini" v-model="scope.row.roomCount" :min="0" ></el-input-number>
                   </template>
                 </el-table-column>
                 <el-table-column prop="bookableCount" label="可预订数量">

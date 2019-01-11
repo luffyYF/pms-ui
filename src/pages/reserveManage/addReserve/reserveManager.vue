@@ -19,9 +19,9 @@
                 </el-table>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" type="primary" @click="checkin">批量入住</el-button>
+                <el-button size="mini" type="primary" @click="checkin">入住</el-button>
                 <!--<el-button size="mini" type="primary" >全部入住</el-button>-->
-                <el-button size="mini" type="primary" @click="cancelReserve">批量取消预订</el-button>
+                <el-button size="mini" type="primary" @click="cancelReserve">取消预订</el-button>
                 <!--<el-button size="mini" type="primary" @click="batchCancelReserve">取消所有预订</el-button>-->
                 <!--<el-button size="mini" type="primary">延时入住</el-button>-->
                 <el-button size="mini" @click="dialogReservationManag = false">关闭</el-button>

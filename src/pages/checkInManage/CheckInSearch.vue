@@ -149,7 +149,10 @@
       <el-table-column label="操作" align="center" min-width="200" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
-          <el-button size="mini" type="success" v-if="scope.row.orderStatus=='LEAVE'" @click="recoverGuest(scope.row)">恢复</el-button>
+          <template v-if="scope.row.mainFlag=='Y'">
+            <el-button size="mini" type="success" v-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY'" @click="recoverGuest(scope.row)">恢复</el-button>
+            <el-button size="mini" type="success" v-if="scope.row.orderStatus=='CANCEL'" @click="recoverReserveGuest(scope.row)">恢复</el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -175,7 +178,7 @@
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";
-  import {recoverGuestOrder} from '@/api/order/pmsOrderController'
+  import {recoverCheckoutGuestOrder, recoverReserveGuestOrder} from '@/api/order/pmsOrderController'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
   export default {
@@ -366,14 +369,61 @@
         self.chenkInSearchData.pageSize = val;
         self.getList(1);
       },
-      //恢复客单
+      //恢复退房的客单
       recoverGuest(row) {
-        this.$confirm("是否恢复客单？","提示",{type:'warning'}).then(()=>{
-          recoverGuestOrder(row.guestOrderPk).then(res=>{
-            this.$message.success('恢复成功')
-            this.getList(1);
-          })
-        })
+        // this.$confirm("是否恢复客单？","提示",{type:'warning'}).then(()=>{
+        //   recoverCheckoutGuestOrder(row.guestOrderPk).then(res=>{
+        //     this.$message.success('恢复成功')
+        //     this.getList(1);
+        //   })
+        // })
+        //确认消息框加入loading控制
+        this.$confirm("是否恢复客单？", "提示", {
+          type:'warning',
+          beforeClose: (action, instance, done) =>{
+            if (action === 'confirm')  {
+              instance.confirmButtonLoading = true;
+              //执行异步内容...
+              recoverCheckoutGuestOrder(row.guestOrderPk).then(res=>{
+                this.$message.success('恢复成功')
+                this.getList(1);
+              }).finally(()=>{
+                //异步返回，调用停止loding，并关闭实体
+                instance.confirmButtonLoading = false;
+                done();
+              })
+            } else {
+              if(instance.confirmButtonLoading==false) {
+                done();
+              }
+            }
+          }
+        }).then(()=>{});
+
+      },
+      //恢复取消预订的客单
+      recoverReserveGuest(row) {
+        this.$confirm("是否恢复客单？", "提示", {
+          type:'warning',
+          beforeClose: (action, instance, done) =>{
+            if (action === 'confirm')  {
+              instance.confirmButtonLoading = true;
+              //执行异步内容...
+              recoverReserveGuestOrder(row.guestOrderPk).then(res=>{
+                this.$message.success('恢复成功')
+                this.getList(1);
+              }).finally(()=>{
+                //异步返回，调用停止loding，并关闭实体
+                instance.confirmButtonLoading = false;
+                done();
+              })
+            } else {
+              if(instance.confirmButtonLoading==false) {
+                done();
+              }
+            }
+          }
+        }).then(()=>{});
       }
     },
     mounted () {

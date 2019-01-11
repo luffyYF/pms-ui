@@ -226,7 +226,7 @@
   import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
   import {listChannelType} from '../../api/systemSet/type/typeController'
   import {listType} from '@/api/utils/pmsTypeController'
-  import downloadUserInfoExcel from '@/components/download/downloadUserInfoExcel'
+  import exportExcel from '@/components/download/exportExcel'
   import reserveEdit from './reserveEdit'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
@@ -315,6 +315,7 @@
         },
         typeMaster: 'CHANNEL',
         total: 0,
+        companyPk: JSON.parse(localStorage.getItem("current_logon_company")).companyPk,
       }
     },
     created () {
@@ -538,7 +539,7 @@
       },
       // 生成excel
       createExcel () {
-        downloadUserInfoExcel("/back/order/downloadTemplate");
+        exportExcel("/back/order/downloadTemplate?companyPk=" + this.companyPk);
       },
       reserveClick () {
         this.$refs.reserveEditRef.showDialog()

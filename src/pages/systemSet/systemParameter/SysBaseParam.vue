@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="24">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="8">
                 <div class="bg-reserve">
                   <h5 class="info-title">房间设置</h5>
                   <el-form-item label="退房结束时间：">
@@ -17,27 +17,27 @@
                     </el-input>
                     提醒有客人要退房
                   </el-form-item>
-                  <el-form-item label="退房可恢复：">
+                  <el-form-item label="客单可恢复：">
                     <el-input type="text" v-model="form.checkoutRecoverMinute">
                     </el-input>
                     分钟内可恢复
-                    <span style="color:red">（注：夜审后不允许恢复）</span>
+                    <span style="color:red">（注：夜审过后不可恢复）</span>
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8" :offset="1">
-                
+              <el-col :span="7" :offset="1">
+
               </el-col>
               <el-col :span="7" :offset="1">
-                
+
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="24" style="text-align:center">
-                  <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
+                <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
               </el-col>
             </el-row>
-          </el-col>  
+          </el-col>
         </el-row>
       </div>
     </el-form>
