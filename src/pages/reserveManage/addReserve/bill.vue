@@ -92,6 +92,7 @@
         <el-col :span="24" class="bill-opr">
           打印处理：
           <el-button size="mini" @click="clickPrint">打印</el-button>
+          <el-button size="mini" @click="exportClick">导出账单</el-button>
           <!-- <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button> -->
         </el-col>
       </el-col>

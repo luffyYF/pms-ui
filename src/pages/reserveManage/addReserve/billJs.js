@@ -18,6 +18,7 @@
   import {getDumbByPk} from '@/api/conferenceRoom/mtgRoomController'
   import {gmCount} from "@/api/goods/goodsManageController"
   import { listByProjectType } from '@/api/systemSet/pmsProjectController'
+  import exportExcel from '@/components/download/exportExcel'
 
   import {
     addBill,
@@ -817,6 +818,11 @@
         //虚拟订单打印
         virPringClick(){
           window.open(this.PRINT_ROOT+'#/virtualBill?virtualBillPk='+this.virPk+"&beginDate="+this.virtualBill.beginDate+"&endDate="+this.virtualBill.beginDate+"&currPrice="+this.virtualBill.currPrice)
+        },
+        //导出账单
+        exportClick () {
+          exportExcel("/back/bill/export?orderPk=" + this.orderPk + (this.serachForm.state == undefined ? "" : "&billStatus=" + this.serachForm.state) + (this.serachForm.currentData == null ? "" : "&businessDate=" + this.serachForm.currentData) + "&roomPk=" + 
+          this.serachForm.roomPk + "&guestOrderPk=" + this.serachForm.guestOrderPk + (this.dumbPk == undefined ? "" : "&dumbPk=" + this.dumbPk));
         },
         //过滤出下拉客单
         getAddBillFilter(select) {
