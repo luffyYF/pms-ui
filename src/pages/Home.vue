@@ -167,13 +167,13 @@
     <div class="asd">
     <el-dialog title="抵店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;height:400px;margin-bottom: 160px;" top="0" 
     :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="ydDialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
-      <el-table :data="ydList" height="200px">
+      <el-table :data="ydList" height="200px" @row-click="toCheckin">
         <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
-        <el-table-column prop="guestName" label="会员名称" width="80"></el-table-column>
-        <el-table-column prop="guestEndDate" label="预离时间"  width="200"></el-table-column>
+        <el-table-column prop="arrivalGuestName" label="会员名称" width="80"></el-table-column>
+        <el-table-column prop="guestEndDate" label="预抵时间"  width="200"></el-table-column>
         <el-table-column label="操作"  width="80">
               <template slot-scope="scope">
-                 <el-button size="mini" type="primary" @click="toCheckin(scope.row)">查看</el-button>
+                 <el-button size="mini" type="text" @click="toCheckin(scope.row)">查看</el-button>
               </template>
           </el-table-column>
       </el-table>
@@ -181,13 +181,13 @@
     
       <el-dialog title="离店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;" top="0" 
       :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
-        <el-table :data="ylList" height="200px">
+        <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
           <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
           <el-table-column prop="guestName" label="会员名称" width="0"></el-table-column>
           <el-table-column prop="guestEndDate" label="预离时间"  width="200"></el-table-column>
           <el-table-column label="操作"  width="80">
               <template slot-scope="scope">
-                 <el-button size="mini" type="primary" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
+                 <el-button size="mini" type="text" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
               </template>
           </el-table-column>
           
@@ -487,11 +487,24 @@ export default {
           return
         }
         this.ydList = []
+        var ydList2 = []
+
         roomList.forEach(item=> {
-          if(item.arrivalOrderPk && item.arrivalGuestPk){
+          //预抵且没显示过
+          if(item.arrivalOrderPk && item.arrivalGuestPk && !item.showFlag){
             this.ydList.push(item)
           }
+          // //预抵且显示过
+          // if(item.arrivalOrderPk && item.arrivalGuestPk && item.showFlag){
+          //     ydList2.push(item)
+          // }
+          // this.$set(item,"showFlag","N")
         })
+        //有新的预抵订单，显示全部
+        // if(this.ydList.length > 0){
+        //     this.ydList = this.ydList.concat(ydList2)
+        // }
+        // localStorage.setItem("roomList",JSON.stringify(roomList))
         this.ydDialogVisible = false
         if(this.ydList.length>0){
           this.ydDialogVisible = true
@@ -598,16 +611,10 @@ export default {
         }
       }
       ,
-      toDialogVisible(item, type) {//打开订单弹窗
-        if(type=='info'){
+      toDialogVisible(item) {
           setTimeout(() => {
             this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'visitor', item.guestOrderPk)
           },0)
-        }else if(type=='settle'){
-          setTimeout(() => {
-            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'bill', item.guestOrderPk)
-          },0)
-        }
       }
   },
   mounted() {
