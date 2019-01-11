@@ -7,6 +7,8 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <span @click="logout">[退出系统]</span>
+        <!-- <span @click="dialogVisible = true">[预离显示]</span> -->
+        <!-- <span @click="logout">[退出系统]</span> -->
       </div>
     </el-col>
     <!--头部2-->
@@ -162,7 +164,40 @@
       {{footerData.currTime}}
       <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
     </el-col>
+    <div class="asd">
+    <el-dialog title="抵店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;height:400px;margin-bottom: 160px;" top="0" 
+    :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="ydDialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
+      <el-table :data="ydList" height="200px">
+        <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
+        <el-table-column prop="guestName" label="会员名称" width="80"></el-table-column>
+        <el-table-column prop="guestEndDate" label="预离时间"  width="200"></el-table-column>
+        <el-table-column label="操作"  width="80">
+              <template slot-scope="scope">
+                 <el-button size="mini" type="primary" @click="toCheckin(scope.row)">查看</el-button>
+              </template>
+          </el-table-column>
+      </el-table>
+    </el-dialog>
+    
+      <el-dialog title="离店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;" top="0" 
+      :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
+        <el-table :data="ylList" height="200px">
+          <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
+          <el-table-column prop="guestName" label="会员名称" width="0"></el-table-column>
+          <el-table-column prop="guestEndDate" label="预离时间"  width="200"></el-table-column>
+          <el-table-column label="操作"  width="80">
+              <template slot-scope="scope">
+                 <el-button size="mini" type="primary" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
+              </template>
+          </el-table-column>
+          
+        </el-table>
+      </el-dialog>
+    </div> 
+    <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="getCurrentRoomList()" />
   </div>
+
+  
 </template>
 
 <script>
@@ -173,11 +208,21 @@ import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
+import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
 // import {logout,refreshTokenUpms }from '@/api/login'
 import {logout,refreshTokenUpms,validateToken }from '@/api/upmsApi'
-
+import {
+    currentRoomList,
+    updateRoomStatus,
+    addRoomReason,
+    delRoomReason,
+    findRoomReason,
+    loadOrderInfo,
+  } from '@/api/roomStatus/pmsRoomStatusController'
+import {find} from '@/api/systemSet/pmsSysParamController'
 
 export default {
+  components:{DialogCheckinVisible},
   created() {
     var test = window.localStorage.getItem("current_logon_company");
     if(test){
@@ -218,7 +263,14 @@ export default {
         bussinessDate: null,
         upmsRealName: null,
         currTime: null,
-      }
+      },
+      timer:null,
+      timer2:null,
+      timer3:null,
+      ylList:[],
+      ydList:[],
+      dialogVisible:false,
+      ydDialogVisible:false
     };
   },
   methods: {
@@ -399,7 +451,164 @@ export default {
         //token无效，跳转登录页
         this.$router.push('/login')
       })
-    }
+    },
+    //预离查询等
+      sysParmInit() {
+        var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
+        //每天只获取一次
+        if(tempSysParm == null || tempSysParm.queryTime != moment().format('YYYY-MM-DD')){
+          find().then(res=>{
+            var sysParm =  res.data
+            sysParm.queryTime = moment().format('YYYY-MM-DD')
+            localStorage.setItem("sysParm",JSON.stringify(sysParm))
+            this.getCurrentRoomList()
+          })
+        }
+      },
+      initAlert(){
+        //预离提示
+        this.timer = setInterval(() => {
+          this.alertMessage()
+          this.sysParmInit()
+        },1000 * 10)
+        //房态信息
+        this.timer2 =setInterval(() => {
+          this.getCurrentRoomList()
+        },1000 * 20)
+         this.timer3 =setInterval(() => {
+          this.ydAlert()
+        },1000 * 20)
+      },
+      ydAlert(){
+        console.log("预抵提醒")
+        var roomList = JSON.parse(localStorage.getItem("roomList"))
+        if(roomList == null){
+          this.getCurrentRoomList();
+          return
+        }
+        this.ydList = []
+        roomList.forEach(item=> {
+          if(item.arrivalOrderPk && item.arrivalGuestPk){
+            this.ydList.push(item)
+          }
+        })
+        this.ydDialogVisible = false
+        if(this.ydList.length>0){
+          this.ydDialogVisible = true
+        }
+      },
+      alertMessage(){
+        var sysParm = JSON.parse(localStorage.getItem("sysParm"))
+        //提醒时间
+        var statisticsData = localStorage.getItem("statisticsData")
+        if(sysParm){
+          //今天已提醒
+          if(statisticsData != null && statisticsData == moment().format('YYYY-MM-DD')){
+            console.log("今天已提醒")
+            return
+          }
+          //系统设置退房结束时间
+          var tempDate = moment().format('YYYY-MM-DD')+" "+sysParm.checkoutTime
+          //当前时间
+          var checkoutTime = new Date(tempDate);
+          var now = new Date()
+          //系统设置退房时间-当前时间
+          if(now<checkoutTime){
+            if(parseInt(checkoutTime- now)/ 1000 / 60 < sysParm.checkoutReminderTime){
+              var roomList = JSON.parse(localStorage.getItem("roomList"))
+              if(roomList == null){
+                this.getCurrentRoomList()
+                return
+              }
+              var i = 0;
+              this.ylList = []
+              roomList.forEach(item=> {
+                if(item.leaveFlag){
+                  this.ylList.push(item)
+                  // i++;
+                  // setTimeout(() => {
+                  //   this.$notify({
+                  //     title: '预离提醒',
+                  //     message: item.roomNumber+'号房客人:'+item.guestName+'即将离店',
+                  //     position: 'bottom-right',
+                  //     duration:0
+                  //   });
+                  // },1000 * i)
+                }
+              })
+              this.dialogVisible = false
+              if(this.ylList.length>0){
+                this.dialogVisible = true
+              }
+              var data = moment().format('YYYY-MM-DD')
+              console.log(moment().format('YYYY-MM-DD')+"提醒客人退房")
+              localStorage.setItem("statisticsData",data)
+            }
+          }
+        }
+      },
+      getCurrentRoomList(){
+        let data = {
+        }
+        if(localStorage.getItem("queryTime") && localStorage.getItem("roomList")){
+          data.queryTime = localStorage.getItem("queryTime")
+        }
+        //根据最后访问时间  查询最后查询之后修改过的数据
+        currentRoomList(data).then(res=>{
+          res.data.forEach(item=> {
+            //标识预离
+          let now = moment().hour() >= nightTrialTime ? moment() : moment().subtract(1, 'days');
+            if(item.guestEndDate && moment(item.guestEndDate).format('YYYY-MM-DD') <= now.format('YYYY-MM-DD') ){
+              this.$set(item, 'leaveFlag', true)
+            }else{
+              this.$set(item, 'leaveFlag', null)
+            }
+          })
+          //后续访问
+          if(localStorage.getItem("roomList")){
+            var roomList = JSON.parse(localStorage.getItem("roomList"))
+            for(var i=0;i<res.data.length;i++){
+              for(var j=0;j<roomList.length;j++){
+                if(res.data[i].roomStatePk == roomList[j].roomStatePk){
+                  roomList[j] = res.data[i]
+                  break;
+                }
+              }
+            }
+            localStorage.setItem("roomList",JSON.stringify(roomList))
+            //第一次访问
+          }else{
+            localStorage.setItem("roomList",JSON.stringify(res.data))
+          }
+          //设置最后查询时间
+          localStorage.setItem("queryTime",moment().format('YYYY-MM-DD HH:MM:ss'))
+        })
+      },
+      toCheckin(room) {
+        if(room.arrivalOrderPk) {
+          //回显订单
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initOrderInfo(room.arrivalOrderPk, 'visitor',room.arrivalGuestPk)
+          },0)
+        }else{
+          //办理入住
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initEmpty(room);
+          },0)
+        }
+      }
+      ,
+      toDialogVisible(item, type) {//打开订单弹窗
+        if(type=='info'){
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'visitor', item.guestOrderPk)
+          },0)
+        }else if(type=='settle'){
+          setTimeout(() => {
+            this.$refs.checkinDialogRef.initOrderInfo(item.orderPk, 'bill', item.guestOrderPk)
+          },0)
+        }
+      }
   },
   mounted() {
     window.onresize = () => {
@@ -418,17 +627,43 @@ export default {
     //选中第一个显示的目录
     let herf= this.$refs.dirRef.getElementsByTagName('a')[0].getAttribute('href')
     this.$router.push(herf.substring(1))
+    this.initAlert()
   },
   watch: {
     screenWidth(val) {
       this.screenWidth = val;
     }
-  }
+  },
+    beforeDestroy(){
+      clearInterval(this.timer);
+      clearInterval(this.timer2);
+      clearInterval(this.timer3);
+      // this.$notify.closeAll()
+    }
 };
 </script>
 
+<style>
+.ylDialog{
+  bottom: 0;
+  width:300px;
+}
+.ylDialog .el-dialog__body{
+  padding: 0 20px;
+}
+.ylDialog .el-dialog__title{
+  font-size: 15px;
+  line-height: 15px;
+}
+</style>
+
+
 <style lang="scss" scoped rel="stylesheet/scss" type="text/css">
 @import "../assets/scss/main.scss";
+body{
+  height: 100%;
+}
+
 .right .router-link-active {
   background: rgba(225, 102, 0, 0.6);
 }

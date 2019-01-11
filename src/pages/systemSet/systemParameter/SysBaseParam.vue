@@ -12,6 +12,11 @@
                     <el-time-picker v-model="form.checkoutTime" value-format="HH:mm:ss" placeholder="请选择">
                     </el-time-picker>
                   </el-form-item>
+                  <el-form-item label="退房结束时间前：">
+                    <el-input type="text" v-model="form.checkoutReminderTime">
+                    </el-input>
+                    提醒有客人要退房
+                  </el-form-item>
                   <el-form-item label="退房可恢复：">
                     <el-input type="text" v-model="form.checkoutRecoverMinute">
                     </el-input>

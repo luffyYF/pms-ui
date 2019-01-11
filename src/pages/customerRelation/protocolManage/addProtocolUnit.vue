@@ -86,8 +86,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="11">
-              <el-form-item label="挂账限额" prop="billPrice">
+              <el-form-item label="挂账限额" prop="billPrice" style="margin-bottom: 0;">
                 <el-input v-model="form.billPrice" :disabled="form.billFlag == 'N' ? true : false" style="width:178px"></el-input>
+                <span style="color:red;">注:0标识不限制额度</span>
               </el-form-item>
             </el-col>
           </el-col>
@@ -188,9 +189,9 @@ export default {
         priceSchemePk: [
           { required: true, message: '请选择价格方案', trigger: 'change' }
         ],   
-        agreementCode: [
-          { required: true, message: '请输入协议号', trigger: 'blur' }
-        ],
+        // agreementCode: [
+        //   { required: true, message: '请输入协议号', trigger: 'blur' }
+        // ],
         beginDate: [
           {type: 'string',  required: true, message: '选择日期', trigger: 'change' }
         ],
@@ -246,7 +247,6 @@ export default {
     },
     preservationUnit(formName,proDialogTitle) {
       const self = this;
-      debugger
       this.$refs.form2.validate((valid) => {
         if (valid) {
           if(proDialogTitle == '添加协议单位'){
