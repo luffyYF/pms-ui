@@ -58,7 +58,7 @@
     <el-dialog title="提示" :visible.sync="dialogVisibleBox" width="420px" top="30vh" :close-on-click-modal="false" :append-to-body="true" class="msg-box">
       <span>若已确定所填数据无误，请点击确定提交excel</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelClick" size="mini">取 消</el-button>
+        <el-button @click="dialogVisibleBox = false" size="mini">取 消</el-button>
         <el-upload
           style="display: inline-block;margin-left: 10px"
           :data="{order: JSON.stringify([dataForm]), guest: JSON.stringify([form])}"
@@ -174,7 +174,6 @@
         this.dataForm.beginDate = this.beginEndPicker[0]
         this.dataForm.endDate = this.beginEndPicker[1]
 
-        this.loading = true
         this.dialogVisibleBox = true
       },
       // 表单验证
@@ -222,20 +221,14 @@
       changeChannel(channelPk){
         this.form.channelTypePk = channelPk
       },
-      // 取消点击
-      cancelClick() {
-        this.dialogVisibleBox = false
-        this.loading = false
-      },
       // 上传文件成功回调
       handleUploadSuccess (res, file) {
-        if (res.code == 1) {
           this.loading = false
+        if (res.code == 1) {
           this.dialogVisible = false
           this.$message.success("提交预订信息成功")
           this.$emit('freshback')
         } else {
-          this.loading = false
           this.$message.error(res.sub_msg)
         }
       },
@@ -245,6 +238,8 @@
         if (!isXLS) {
           this.loading = false
           this.$message.error('上传的文件只能是 xls 格式!')
+        } else {
+          this.loading = true
         }
         return isXLS
       },
