@@ -1,8 +1,8 @@
 // 预订信息编辑
 <template>
-  <el-dialog class="add-reserve" title="编辑预订信息" :visible.sync="dialogVisible" width="620px"
+  <el-dialog class="add-reserve" title="编辑预订信息" :visible.sync="dialogVisible" width="660px"
              :close-on-click-modal="false" :before-close="handleClose">
-    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="80px" :inline="true">
+    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="100px" :inline="true">
       <div class="bg-reserve">
         <el-row>
           <el-col :span="24" class="book-info">
@@ -39,7 +39,7 @@
               <el-input v-model="dataForm.remark"></el-input>
             </el-form-item>
             <el-form-item label="抵店离店" required>
-              <el-date-picker v-model="beginEndPicker" @change="changePicker" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="抵店日期" end-placeholder="离店日期" :clearable="false">
+              <el-date-picker v-model="beginEndPicker" :default-time="['14:00:00', '12:00:00']" @change="changePicker" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="抵店日期" end-placeholder="离店日期" :clearable="false">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -213,6 +213,11 @@
           this.form.beginDate = null
           this.form.endDate = null
         } else {
+          if (picker[0] > picker[1]) {
+            this.$message.warning("抵店日期不能大于离店日期")
+            this.beginEndPicker = []
+            return
+          }
           this.form.beginDate = picker[0]
           this.form.endDate = picker[1]
         }
