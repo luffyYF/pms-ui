@@ -2,8 +2,6 @@
   import bus from '@/utils/bus'
   //全局变量
   import {paymentMap, billStatusMap} from '@/utils/orm'
-  // 权限
-  // import {powerJudge} from '@/utils/permissionsOperation.js'
   // 组件
   import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
   import commentPrint from '@/components/PrintPage/commonPrintPage'
@@ -11,6 +9,7 @@
   import dialogRecoverBill from './bill/dialogRecoverBill'
   import dialogTimeoutRemind from './bill/dialogTimeoutRemind'
   import dialogBatchAddBill from './bill/dialogBatchAddBill'
+  import dialogSingleSettl from './bill/dialogSingleSettl'
   //转账组单选择
   import transferAccounts from './transferAccounts'
   // API
@@ -48,7 +47,8 @@
         dialogRecoverBill,
         dialogTimeoutRemind,
         dialogBatchAddBill,
-        transferAccounts
+        transferAccounts,
+        dialogSingleSettl
       },
       data() {
         return {
@@ -1006,6 +1006,10 @@
                 message: '取消转账'
               });       
             });
+        },
+        //打开单房结账
+        toSingleSettle() {
+          this.$refs.dialogSingleSettlRef.showDialog(this.currOrderInfo.order.orderPk)
         }
       },
       clone(obj){
@@ -1050,6 +1054,6 @@
         consumptionSummary(list){
           console.log(list.length)
           return list
-        }
+        },
       }
     }
