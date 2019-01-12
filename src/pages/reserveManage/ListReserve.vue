@@ -214,7 +214,7 @@
     </el-dialog> -->
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
-    <reserve-edit ref="reserveEditRef" @callback="list"></reserve-edit>
+    <reserve-edit ref="reserveEditRef" @freshback="list"></reserve-edit>
   </section>
 </template>
 <script>

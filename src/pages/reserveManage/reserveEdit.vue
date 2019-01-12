@@ -65,7 +65,6 @@
           :on-success="handleUploadSuccess"
           :on-error="handleUploadError"
           :before-upload="handleBeforeUpload"
-          :on-change="handleUploadProgress"
           :action="getUploadExcelAction()"
           :headers="headers"
           :show-file-list="false">
@@ -90,7 +89,7 @@
         dialogVisible: false,
         loading: false,
         dataForm: {
-          name: null,
+          name: 'excel团队预订',
           agreementPk: null,
           agreementName: null,
           channelTypePk: null,
@@ -139,7 +138,7 @@
       showDialog (id) {
         this.dialogVisible = true
         this.dataForm = {
-          name: null,
+          name: 'excel团队预订',
           agreementPk: null,
           agreementName: null,
           channelTypePk: null,
@@ -157,6 +156,7 @@
           channelTypePk: null,
           endDate: null,
         }
+        this.beginEndPicker = []
         this.$nextTick(() => {
           this.$refs.channelRef.load(true);
         })
@@ -233,6 +233,7 @@
           this.loading = false
           this.dialogVisible = false
           this.$message.success("提交预订信息成功")
+          this.$emit('freshback')
         } else {
           this.loading = false
           this.$message.error(res.sub_msg)
@@ -251,10 +252,6 @@
       handleUploadError (res) {
         this.loading = false
         this.$message.error('文件上传失败')
-      },
-      handleUploadProgress (event, file) {
-        console.log(event)
-        console.log(file)
       },
     }
   }
