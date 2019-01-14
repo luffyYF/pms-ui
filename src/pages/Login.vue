@@ -1,5 +1,5 @@
 <template>
-  <div class="login_background"> 
+  <div class="login_background">
     <div class="login_houseimg">
       <div class="login_formBackground">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-position="right" label-width="0px"
@@ -18,7 +18,7 @@
         </el-form>
       </div>
     </div>
-      <p class="login_text">Copyright @ 2016 深圳市前海豪斯菲尔信息科技有限公司 ALL Rights Reserved <br>粤ICP备15099667号</p>      
+      <p class="login_text">Copyright @ 2016 深圳市前海豪斯菲尔信息科技有限公司 ALL Rights Reserved <br>粤ICP备15099667号</p>
   </div>
 </template>
 

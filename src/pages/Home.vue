@@ -7,7 +7,7 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <span @click="logout">[退出系统]</span>
-        <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span>
+        <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
         <!-- <span @click="logout">[退出系统]</span> -->
       </div>
     </el-col>
