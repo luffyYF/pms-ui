@@ -7,7 +7,7 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <span @click="logout">[退出系统]</span>
-        <!-- <span @click="dialogVisible = true">[预离显示]</span> -->
+        <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span>
         <!-- <span @click="logout">[退出系统]</span> -->
       </div>
     </el-col>
@@ -165,15 +165,15 @@
       <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
     </el-col>
     <div class="asd">
-    <el-dialog title="抵店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;height:400px;margin-bottom: 160px;" top="0" 
+    <el-dialog title="抵店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;margin-bottom: 285px;" top="0" 
     :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="ydDialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
-      <el-table :data="ydList" height="200px" @row-click="toCheckin">
-        <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
-        <el-table-column prop="arrivalGuestName" label="会员名称" width="80"></el-table-column>
-        <el-table-column prop="guestEndDate" label="预抵时间"  width="200"></el-table-column>
-        <el-table-column label="操作"  width="80">
+      <el-table :data="ydList" height="200px" @row-click="showOrderInfo">
+        <el-table-column prop="guestName" label="会员名称" width="80"></el-table-column>
+        <el-table-column prop="guestPhone" label="联系电话" width="120"></el-table-column>
+        <el-table-column prop="beginDate" label="预抵时间"  width="180"></el-table-column>
+        <el-table-column label="操作"  width="60">
               <template slot-scope="scope">
-                 <el-button size="mini" type="text" @click="toCheckin(scope.row)">查看</el-button>
+                 <el-button size="mini" type="text" @click="showOrderInfo(scope.row)">查看</el-button>
               </template>
           </el-table-column>
       </el-table>
@@ -183,7 +183,7 @@
       :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
         <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
           <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
-          <el-table-column prop="guestName" label="会员名称" width="0"></el-table-column>
+          <el-table-column prop="guestName" label="会员名称" width="80"></el-table-column>
           <el-table-column prop="guestEndDate" label="预离时间"  width="200"></el-table-column>
           <el-table-column label="操作"  width="80">
               <template slot-scope="scope">
@@ -220,6 +220,7 @@ import {
     loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
 import {find} from '@/api/systemSet/pmsSysParamController'
+import {getNewGuestOrder} from '@/api/order/pmsOrderController'
 
 export default {
   components:{DialogCheckinVisible},
@@ -270,7 +271,7 @@ export default {
       ylList:[],
       ydList:[],
       dialogVisible:false,
-      ydDialogVisible:false
+      ydDialogVisible:false,
     };
   },
   methods: {
@@ -281,8 +282,10 @@ export default {
     newOrder(){
       var self = this;
       setInterval(()=>{ 
+        console.log("123")
         if(window.localStorage.getItem('pms_token')){
           timerCheckNew().then((data)=>{
+            
             if(data.data>0){
               if(self.contInterval != null){
                 self.contInterval.close();
@@ -317,6 +320,8 @@ export default {
             localStorage.setItem('current_logon_company','');
             localStorage.setItem('pms_userinfo', '')
             localStorage.setItem('pms_token','');
+            sessionStorage.removeItem("orderIsNew")
+            sessionStorage.removeItem("isTime")
             this.$router.push("/login");
           })
         })
@@ -474,9 +479,12 @@ export default {
         //房态信息
         this.timer2 =setInterval(() => {
           this.getCurrentRoomList()
+          this.getNewGuestOrder()
         },1000 * 20)
-         this.timer3 =setInterval(() => {
-          this.ydAlert()
+
+        this.timer3 =setInterval(() => {
+          console.log("333")
+          // this.getNewGuestOrder()
         },1000 * 20)
       },
       ydAlert(){
@@ -501,8 +509,6 @@ export default {
           }
           this.$set(item,"showFlag","N")
         })
-        console.log(this.ydList.length);
-        console.log(ydList2.length)
         localStorage.setItem("roomList",JSON.stringify(roomList))
         // this.ydDialogVisible = false
         if(!this.ydDialogVisible){
@@ -566,12 +572,36 @@ export default {
           }
         }
       },
+      getNewGuestOrder(){
+         var now =  moment().format('YYYY-MM-DD HH:mm:ss')
+          var data = {
+            queryTime : now
+          }
+          if(localStorage.getItem("orderQueryTime")){
+            data.queryTime = localStorage.getItem("orderQueryTime")
+          }
+          if(sessionStorage.getItem("orderIsNew") == null){
+            data.isNew = 'Y'
+          }
+          getNewGuestOrder(data).then(res=>{
+            this.ydList = res.data.data;
+            if(res.data.isNew == "Y"){
+              this.ydDialogVisible = true
+            }
+            if(this.ydList.length == 0){
+              this.ydDialogVisible = false
+            }
+            sessionStorage.setItem("orderIsNew","N")
+            localStorage.setItem("orderQueryTime",now)
+          })
+      },
       getCurrentRoomList(){
         let data = {
         }
-        if(localStorage.getItem("queryTime") && localStorage.getItem("roomList")){
+        if(localStorage.getItem("queryTime") && localStorage.getItem("roomList") && sessionStorage.getItem("isTime")){
           data.queryTime = localStorage.getItem("queryTime")
         }
+        sessionStorage.setItem("isTime",true)
         //根据最后访问时间  查询最后查询之后修改过的数据
         currentRoomList(data).then(res=>{
           res.data.forEach(item=> {
@@ -589,7 +619,7 @@ export default {
             for(var i=0;i<res.data.length;i++){
               for(var j=0;j<roomList.length;j++){
                 if(res.data[i].roomStatePk == roomList[j].roomStatePk){
-                  roomList[j] = res.data[i]
+                  roomList[j] = JSON.parse(JSON.stringify(res.data[i]))
                   break;
                 }
               }
@@ -603,18 +633,11 @@ export default {
           localStorage.setItem("queryTime",moment().format('YYYY-MM-DD HH:mm:ss'))
         })
       },
-      toCheckin(room) {
-        if(room.arrivalOrderPk) {
-          //回显订单
-          setTimeout(() => {
-            this.$refs.checkinDialogRef.initOrderInfo(room.arrivalOrderPk, 'visitor',room.arrivalGuestPk)
-          },0)
-        }else{
-          //办理入住
-          setTimeout(() => {
-            this.$refs.checkinDialogRef.initEmpty(room);
-          },0)
-        }
+      showOrderInfo(room) {
+        //回显订单
+        setTimeout(() => {
+          this.$refs.checkinDialogRef.initOrderInfo(room.orderPk, 'visitor', room.guestOrderPk)
+        },0)
       }
       ,
       toDialogVisible(item) {

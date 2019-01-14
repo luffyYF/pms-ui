@@ -16,7 +16,7 @@
           <div class="class-list fl">
               <span v-if="activeCompany.companyPk == ''">请先选择店面</span>
               <span v-if="shiftList.length == 0 && activeCompany.companyPk != ''" style="text-decoration: underline;" @click="toHome">暂未设置班次，进入系统</span>
-              <span @click="toHome(shift)" v-for="(shift,index) of shiftList" :key="index">{{shift.shiftName}}（{{shift.beginTime}} - {{shift.endTime}}）</span>
+              <span @click="toHome(shift)" v-for="(shift,index) of shiftList" :key="index">{{shift.className}}（{{shift.beginTime}} - {{shift.endTime}}）</span>
           </div>
       </div>
     </div>
@@ -90,11 +90,12 @@ export default {
         // })
         // console.log(res.data)
         this.activeShift = shift.shiftPk;
-        
         if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != this.activeCompany.companyPk){
           localStorage.removeItem("roomList")
           localStorage.removeItem("statisticsData")
           localStorage.removeItem("sysParm")
+          sessionStorage.removeItem("orderIsNew")
+          sessionStorage.removeItem("isTime")
         }
         Cookies.set('select_company_pk',this.activeCompany.companyPk)
         Cookies.set('select_shift_pk',this.activeShift)

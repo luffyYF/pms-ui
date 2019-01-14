@@ -142,6 +142,10 @@ export const recoverReserveGuestOrder = params => {
     return request.post('/back/order/recoverReserveGuestOrder/'+params)
 }
 
+//定时查看新客单
+export const getNewGuestOrder = params => {
+    return request.get('/back/order/getNewGuestOrder',{params,params})
+}
 
 
 
