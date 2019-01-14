@@ -192,6 +192,10 @@ export default {
       this.memberListData(1);
     },
     memberListData(val) {
+      if(!this.hasPerm("pms:memberManage:list")){
+        this.$message({type:'warning', message:'权限不足'})
+        return
+      }
       this.loading = true;
       this.form.pageNum = val;
       listMember(this.form).then(res => {

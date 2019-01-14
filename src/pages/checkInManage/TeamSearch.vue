@@ -91,7 +91,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" v-if="hasPerm('pms:teamSearch:viewOrder')" @click="showOrderInfo(scope.row)">查看订单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -228,6 +228,10 @@
         // return items.slice(offset, offset + size)
       },
       getList () {
+        if(!this.hasPerm('pms:teamSearch:list')){
+          this.$message({type:'warning', message:'权限不足'})
+          return
+        }
         const self = this;
         var parameters = self.form;
         this.loading = true

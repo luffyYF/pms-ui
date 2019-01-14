@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" ref='checkTabs'>
-      <el-tab-pane label="注册会员" name="registeredMember">
+      <el-tab-pane label="注册会员" name="registeredMember" v-if="hasPerm('pms:memberManage:regMember')">
         <registered-member ref="registeredMember"/>
       </el-tab-pane>
-      <el-tab-pane label="会员管理" name="membeManagement">
+      <el-tab-pane label="会员管理" name="membeManagement" v-if="hasPerm('pms:memberManage:memberManage')">
         <membe-management ref="membeManagement"/>
       </el-tab-pane>
       <el-tab-pane label="恢复删除会员" name="resumeDeletingMembers">
