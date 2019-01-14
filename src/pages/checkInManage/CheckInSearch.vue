@@ -146,7 +146,7 @@
       </el-table-column>
       <el-table-column label="备注"  align="center" width="200" prop="remark" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="操作" align="center" min-width="200" fixed="right">
+      <el-table-column label="操作"  min-width="200" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
           <template v-if="scope.row.mainFlag=='Y'">
