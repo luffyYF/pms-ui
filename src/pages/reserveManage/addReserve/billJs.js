@@ -322,66 +322,6 @@
             })
           }
         },
-        //批量入账计算金额
-        // addBillMomeyChange(){
-        //     var money = 0
-        //     for(var i=0;i<this.formAddBills.length;i++){
-        //       if(this.formAddBills[i].consumptionAmount){
-        //         money = money + parseFloat(this.formAddBills[i].consumptionAmount)
-        //       }
-        //     }
-        //     this.addBillsConsumptionAmount = money.toFixed(2)
-        // },
-        // addBillLists(formAddBills){
-        //   for(var i=0;i<formAddBills.length;i++){
-        //     if(!formAddBills[i].projectPk){
-        //       this.$message({type:'warning', message:'请选择账单'+(i+1)+"的项目"})
-        //       return
-        //     }
-        //     if(!formAddBills[i].guestOrderPk && !this.isDubm){
-        //       this.$message({type:'warning', message:'请选择账单'+(i+1)+"的客单"})
-        //       return
-        //     }
-        //     if(!formAddBills[i].payment){
-        //       this.$message({type:'warning', message:'请选择账单'+(i+1)+"的支付方式"})
-        //       return
-        //     }
-        //     if(!formAddBills[i].consumptionAmount){
-        //       this.$message({type:'warning', message:'请输入账单'+(i+1)+"的消费金额"})
-        //       return
-        //     }
-        //     if(Number(formAddBills[i].consumptionAmount)<=0){
-        //       this.$message({type:'warning', message:'请输入正确的账单'+(i+1)+"的消费金额"})
-        //       return
-        //     }
-        //     formAddBills[i].orderPk = this.orderPk
-        //     formAddBills[i].dumbPk = this.dumbPk,
-        //     formAddBills[i].billType =  this.isDubm?'DUMB':'ROOM'
-        //   }
-        //   if(!this.isDubm){
-        //     addBills(formAddBills).then(res => {
-        //       if(res.code == 1){
-        //         this.$message({
-        //           message: '入账成功！',
-        //           type: 'success'
-        //         });
-        //       }
-        //       this.dialogBatchEntry = false;
-        //       this.lookupBillList(this.orderPk);
-        //     })
-        //   }else{
-        //     addDumbBills(formAddBills).then(res => {
-        //       if(res.code == 1){
-        //         this.$message({
-        //           message: '入账成功！',
-        //           type: 'success'
-        //         });
-        //       }
-        //       this.listBill()
-        //       this.dialogBatchEntry = false;
-        //     })
-        //   }
-        // },
         filterRoom(guestOrderSelect) {
           var temp = []
           guestOrderSelect.forEach(guest => {
@@ -482,6 +422,7 @@
           this.$refs.commentPrintRef.printBill(this.multipleSelection, beginDate, endDate)
         },
         initProject(){
+          // this.isDubm
           //SETTLEMENT,CONSUMER
           this.allProjectList = []
           listByProjectType({projectType:'CONSUMER'}).then(res => {

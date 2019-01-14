@@ -100,11 +100,27 @@
       <el-col :span="8" class="bill-el-button">
         <!-- 消费项目列表 -->
         <el-col :span="24" class="marginTop10">
-          <el-button v-for="item in conProjectList" :key="item.projectPk" type="success" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
+          <el-button 
+          v-for="item in conProjectList"
+          v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
+          :key="item.projectPk" 
+          type="success" 
+          plain 
+          size="mini" 
+          @click="openAddBill(item)" 
+          class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
         <!-- 结算项目列表 -->
         <el-col :span="24">
-          <el-button v-for="item in roomProjectList" :key="item.projectPk" type="primary" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
+          <el-button 
+          v-for="item in roomProjectList" 
+          v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
+          :key="item.projectPk" 
+          type="primary" 
+          plain 
+          size="mini" 
+          @click="openAddBill(item)" 
+          class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
       </el-col>
       <el-col :span="8">
