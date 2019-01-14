@@ -128,7 +128,7 @@
       </el-table-column>
       <el-table-column label="房型" min-width="180" show-overflow-tooltip>
         <template slot-scope="scope">
-          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.roomTypeName}}</p>
+          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index"><span v-if="y.mainFlag == 'Y'">{{y.roomTypeName}}</span></p>
         </template>
       </el-table-column>
       <el-table-column label="房价">
@@ -214,7 +214,7 @@
     </el-dialog> -->
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
-    <reserve-edit ref="reserveEditRef" @callback="list"></reserve-edit>
+    <reserve-edit ref="reserveEditRef" @freshback="list"></reserve-edit>
   </section>
 </template>
 <script>
@@ -467,23 +467,25 @@
         let noRowRooms = 0
         var roomNumber = '无';
         guestDots.forEach(guest => {
-          if(guest['roomPk'] && guest['roomNumber']){
-            if(guest['roomNumber']!= roomNumber  ){
-              rowRooms.push(guest.roomNumber);
-              roomNumber = guest['roomNumber']
+          if (guest['mainFlag'] == 'Y') {
+            if(guest['roomPk'] && guest['roomNumber']){
+              if(guest['roomNumber']!= roomNumber  ){
+                rowRooms.push(guest.roomNumber);
+                roomNumber = guest['roomNumber']
+              }
+            }else{
+              noRowRooms++
             }
-          }else{
-            noRowRooms++
           }
         });
         return {rowRooms:rowRooms.join(','), noRowRooms: noRowRooms}
       },
       roomCount(guestDots){
         var count = 0;
-        var roomNumber = null;
+        // var roomNumber = null;
         for(var i=0 ;i<guestDots.length;i++){
-          if(roomNumber != guestDots[i].roomNumber || guestDots[i].roomNumber==null){
-            roomNumber = guestDots[i].roomNumber;
+          if(guestDots[i].mainFlag == "Y"){
+            // roomNumber = guestDots[i].roomNumber;
             count = count+1;
           }
         }

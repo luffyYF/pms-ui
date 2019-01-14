@@ -108,3 +108,8 @@ export const findBillEndRecordOfRoom = params => {
 export const recoverBillEndRecord = params => {
   return request.post('/back/bill/endRecord/recoverBillEndRecord', params)
 }
+
+//客单单房退房
+export const checkoutGuest = params => {
+  return request.post('/back/bill/checkoutGuest/'+params)
+}

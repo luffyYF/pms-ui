@@ -1,8 +1,8 @@
 // 预订信息编辑
 <template>
-  <el-dialog class="add-reserve" title="编辑预订信息" :visible.sync="dialogVisible" width="620px"
+  <el-dialog class="add-reserve" title="编辑预订信息" :visible.sync="dialogVisible" width="660px"
              :close-on-click-modal="false" :before-close="handleClose">
-    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="80px" :inline="true">
+    <el-form ref="dataForm" size="small" :rules="rules" :model="dataForm" label-width="100px" :inline="true">
       <div class="bg-reserve">
         <el-row>
           <el-col :span="24" class="book-info">
@@ -39,7 +39,7 @@
               <el-input v-model="dataForm.remark"></el-input>
             </el-form-item>
             <el-form-item label="抵店离店" required>
-              <el-date-picker v-model="beginEndPicker" @change="changePicker" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="抵店日期" end-placeholder="离店日期" :clearable="false">
+              <el-date-picker v-model="beginEndPicker" :default-time="['14:00:00', '12:00:00']" @change="changePicker" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="抵店日期" end-placeholder="离店日期" :clearable="false">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -58,14 +58,13 @@
     <el-dialog title="提示" :visible.sync="dialogVisibleBox" width="420px" top="30vh" :close-on-click-modal="false" :append-to-body="true" class="msg-box">
       <span>若已确定所填数据无误，请点击确定提交excel</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelClick" size="mini">取 消</el-button>
+        <el-button @click="dialogVisibleBox = false" size="mini">取 消</el-button>
         <el-upload
           style="display: inline-block;margin-left: 10px"
           :data="{order: JSON.stringify([dataForm]), guest: JSON.stringify([form])}"
           :on-success="handleUploadSuccess"
           :on-error="handleUploadError"
           :before-upload="handleBeforeUpload"
-          :on-change="handleUploadProgress"
           :action="getUploadExcelAction()"
           :headers="headers"
           :show-file-list="false">
@@ -90,7 +89,7 @@
         dialogVisible: false,
         loading: false,
         dataForm: {
-          name: null,
+          name: 'excel团队预订',
           agreementPk: null,
           agreementName: null,
           channelTypePk: null,
@@ -139,7 +138,7 @@
       showDialog (id) {
         this.dialogVisible = true
         this.dataForm = {
-          name: null,
+          name: 'excel团队预订',
           agreementPk: null,
           agreementName: null,
           channelTypePk: null,
@@ -157,6 +156,7 @@
           channelTypePk: null,
           endDate: null,
         }
+        this.beginEndPicker = []
         this.$nextTick(() => {
           this.$refs.channelRef.load(true);
         })
@@ -174,7 +174,6 @@
         this.dataForm.beginDate = this.beginEndPicker[0]
         this.dataForm.endDate = this.beginEndPicker[1]
 
-        this.loading = true
         this.dialogVisibleBox = true
       },
       // 表单验证
@@ -214,6 +213,11 @@
           this.form.beginDate = null
           this.form.endDate = null
         } else {
+          if (picker[0] > picker[1]) {
+            this.$message.warning("抵店日期不能大于离店日期")
+            this.beginEndPicker = []
+            return
+          }
           this.form.beginDate = picker[0]
           this.form.endDate = picker[1]
         }
@@ -222,19 +226,14 @@
       changeChannel(channelPk){
         this.form.channelTypePk = channelPk
       },
-      // 取消点击
-      cancelClick() {
-        this.dialogVisibleBox = false
-        this.loading = false
-      },
       // 上传文件成功回调
       handleUploadSuccess (res, file) {
-        if (res.code == 1) {
           this.loading = false
+        if (res.code == 1) {
           this.dialogVisible = false
           this.$message.success("提交预订信息成功")
+          this.$emit('freshback')
         } else {
-          this.loading = false
           this.$message.error(res.sub_msg)
         }
       },
@@ -244,6 +243,8 @@
         if (!isXLS) {
           this.loading = false
           this.$message.error('上传的文件只能是 xls 格式!')
+        } else {
+          this.loading = true
         }
         return isXLS
       },
@@ -251,10 +252,6 @@
       handleUploadError (res) {
         this.loading = false
         this.$message.error('文件上传失败')
-      },
-      handleUploadProgress (event, file) {
-        console.log(event)
-        console.log(file)
       },
     }
   }

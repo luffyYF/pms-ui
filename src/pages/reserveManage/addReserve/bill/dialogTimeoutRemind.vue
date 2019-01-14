@@ -8,7 +8,7 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%">
-        <el-table-column label="房号"  prop="roomNumber"></el-table-column>
+        <el-table-column label="房间号"  prop="roomNumber"></el-table-column>
         <el-table-column label="客人姓名"  prop="guestName"></el-table-column>
         <el-table-column label="离店日期"  prop="endDate"></el-table-column>
       </el-table>
