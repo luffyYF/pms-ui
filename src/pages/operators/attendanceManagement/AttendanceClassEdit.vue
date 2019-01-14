@@ -51,6 +51,20 @@
         </el-input>
         <span style="color: red">*允许下班打卡可延后的时间</span>
       </el-form-item>
+      <el-form-item label="客服班次" class="min-input">
+        <el-switch
+          style="display: block"
+          size="small"
+          v-model="dataForm.isCustomerService"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="是"
+          inactive-text="否">
+        </el-switch>
+      </el-form-item>
+
       <el-form-item label="排序" prop="orderNum">
         <el-input-number v-model="dataForm.orderNum" :min="0"></el-input-number>
       </el-form-item>
@@ -79,6 +93,7 @@
       this.orderNum = null
       this.beginMin = 30
       this.endMin = 120
+      this.isCustomerService = 0
     }
 
     set attendanceGroup (attendanceGroup) {
@@ -91,6 +106,7 @@
       this.orderNum = attendanceGroup.orderNum
       this.beginMin = attendanceGroup.beginMin
       this.endMin = attendanceGroup.endMin
+      this.isCustomerService = attendanceGroup.isCustomerService
     }
   }
 

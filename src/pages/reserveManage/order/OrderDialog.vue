@@ -38,8 +38,13 @@
                 </el-form-item>
               </el-col>
               <el-col class="dialog-li">
-                <el-form-item label="协议单位">
-                  <el-input v-model="form.agreementName" :disabled="true"></el-input>
+                <!-- <el-form-item label="协议单位">
+                  <el-input v-model="form.agreementName" ></el-input>
+                </el-form-item> -->
+                 <el-form-item label="协议单位" >
+                  <el-input v-model="form.agreementName" :readonly="true">
+                    <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col class="dialog-li">
@@ -272,7 +277,8 @@
     <dialogPriceChangeHistory ref="dialogPriceChangeHistoryRef"></dialogPriceChangeHistory>
     <!-- 客单管理 -->
     <GuestManagerDialog ref="guestManagerDialogRef" @refresh="initOrderInfo"></GuestManagerDialog>
-
+    <!-- 协议单位 -->
+    <Agreement ref="agreementRef" @sendData="agreementCallback($event)"></Agreement>
   </div>
 </template>
 <script>
@@ -301,8 +307,7 @@ import dialogNote from '@/pages/reserveManage/addReserve/dialogNote'
 import dialogDeposit from '@/pages/reserveManage/addReserve/dialogDeposit'
 import RowRoomDialog from './RowRoomDialog'
 import GuestManagerDialog from './GuestManagerDialog'
-
-
+import Agreement from "@/components/Agreement/Agreement";
 export default {
   components: {
     VisitorTag,
@@ -315,6 +320,7 @@ export default {
     dialogPriceChangeHistory,
     RowRoomDialog,
     GuestManagerDialog,
+    Agreement
   },
   data() {
     return {
@@ -446,7 +452,8 @@ export default {
           payment: res.data.order.payment+'',
           keepTime: res.data.order.keepTime,
           remark: res.data.order.remark,
-          orderNo: res.data.order.orderNo
+          orderNo: res.data.order.orderNo,
+          agreementName: res.data.order.agreementName
         }
         this.reserveTime = new Date(res.data.order.createTime)
         this.dialogVisibleTitle = '组单号：'+this.form.orderNo 
@@ -798,7 +805,9 @@ export default {
         let data = {
           orderPk: this.form.orderPk,
           payment: this.form.payment,
-          remark: this.form.remark
+          remark: this.form.remark,
+          agreementName:this.form.agreementName,
+          AgreementPk:this.form.agreementName,
         }
 
         editOrder(data).then(res=>{})
@@ -851,7 +860,16 @@ export default {
     },
     toDialogGuestManger() {
       this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
-    }
+    },//打开选择协议单位
+      openAgreement() {
+        this.$refs.agreementRef.init();
+      },//选择协议回调
+      agreementCallback(data) {
+        this.$set(this.form,"agreementPk",data.agreementPk)
+        this.$set(this.form,"agreementName",data.unitName)
+        // this.form.agreementPk = data.agreementPk;
+        // this.form.agreementName = data.unitName;
+      },
   },
   mounted() {
     bus.$on('toCheckout', () => { this.toBillTab() })
