@@ -148,10 +148,10 @@
       </el-table-column>
       <el-table-column label="操作"  min-width="200" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" v-if="hasPerm('pms:checkInSearch:viewOrder')" @click="showOrderInfo(scope.row)">查看订单</el-button>
           <template v-if="scope.row.mainFlag=='Y'">
-            <el-button size="mini" type="success" v-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY'" @click="recoverGuest(scope.row)">恢复</el-button>
-            <el-button size="mini" type="success" v-if="scope.row.orderStatus=='CANCEL'" @click="recoverReserveGuest(scope.row)">恢复</el-button>
+            <el-button size="mini" type="success" v-if="(scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY') && hasPerm('pms:checkInSearch:recoveryOrder')" @click="recoverGuest(scope.row)">恢复</el-button>
+            <el-button size="mini" type="success" v-if="scope.row.orderStatus=='CANCEL' && hasPerm('pms:checkInSearch:recoveryOrder')" @click="recoverReserveGuest(scope.row)">恢复</el-button>
           </template>
         </template>
       </el-table-column>
