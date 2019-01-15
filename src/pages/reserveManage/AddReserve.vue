@@ -27,6 +27,13 @@
               </el-form-item>
             </el-col> 
             <el-col :span="4">
+              <el-form-item label="协议单位" >
+                <el-input v-model="form.agreementName" :readonly="true">
+                  <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
+                </el-input>
+              </el-form-item>
+            </el-col> 
+            <el-col :span="4">
               <el-form-item label="是否团体">
                 <el-select v-model="form.isTeam" :disabled="true">
                   <el-option label="否" value="N"></el-option>
@@ -93,6 +100,8 @@
         </el-col>
       </el-row>
     </el-form>
+    <!-- 协议单位 -->
+    <Agreement ref="agreementRef" @sendData="agreementCallback($event)"></Agreement>
   </div>
 </template>
 <script>
@@ -101,9 +110,10 @@
   import {validatePhone} from '@/utils/validate'
   import {formatDate, copyObj} from '@/utils/index'
   import {reserveOrder} from '@/api/order/pmsOrderController'
+  import Agreement from "@/components/Agreement/Agreement";
   
   export default {
-    components: {VisitorTag},
+    components: {VisitorTag,Agreement},
     data() {
       return {
         submitLock:false,//提交表单锁
@@ -122,6 +132,8 @@
           rentCount: '',
           userName: '',
           userPhone: '',
+          agreementName:'',
+          agreementPk:''
         },
         reserveTime: new Date(),
         // fullscreenLoading:false,
@@ -234,6 +246,15 @@
         }).catch(()=>{
           this.submitLock=false;
         })
+      },//打开选择协议单位
+      openAgreement() {
+        this.$refs.agreementRef.init();
+      },//选择协议回调
+      agreementCallback(data) {
+        this.$set(this.form,"agreementPk",data.agreementPk)
+        this.$set(this.form,"agreementName",data.unitName)
+        // this.form.agreementPk = data.agreementPk;
+        // this.form.agreementName = data.unitName;
       },
     },
     mounted() {

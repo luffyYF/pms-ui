@@ -207,11 +207,6 @@
     <!-- 订单页面 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
 
-    <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
-      <div class="pattern-dialog-container">
-        <DialogCheckinVisible ref="checkinDialogRef" />
-      </div>
-    </el-dialog> -->
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
     <reserve-edit ref="reserveEditRef" @freshback="list"></reserve-edit>
@@ -351,7 +346,9 @@
         }).then(() => {
           let guestOrderPks = []
           row.guestDtos.forEach(guest => {
-            guestOrderPks.push(guest.guestOrderPk)
+            if(guest.mainFlag=='Y') {
+              guestOrderPks.push(guest.guestOrderPk)
+            }
           })
           cancelGuestOrder({guestOrderPks: guestOrderPks}).then(res=>{
           this.$message({

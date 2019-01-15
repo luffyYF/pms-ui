@@ -86,6 +86,7 @@
           <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
           <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
           <el-button size="mini" @click="toDialogRecoverBill" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
+          <el-button size="mini" @click="toSingleSettle" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || currOrderInfo.order.hfFlag=='Y'">单房结账</el-button>
 
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
@@ -99,11 +100,27 @@
       <el-col :span="8" class="bill-el-button">
         <!-- 消费项目列表 -->
         <el-col :span="24" class="marginTop10">
-          <el-button v-for="item in conProjectList" :key="item.projectPk" type="success" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
+          <el-button 
+          v-for="item in conProjectList"
+          v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
+          :key="item.projectPk" 
+          type="success" 
+          plain 
+          size="mini" 
+          @click="openAddBill(item)" 
+          class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
         <!-- 结算项目列表 -->
         <el-col :span="24">
-          <el-button v-for="item in roomProjectList" :key="item.projectPk" type="primary" plain size="mini" @click="openAddBill(item)" class="buttonsRight">{{item.projectName}}</el-button>
+          <el-button 
+          v-for="item in roomProjectList" 
+          v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
+          :key="item.projectPk" 
+          type="primary" 
+          plain 
+          size="mini" 
+          @click="openAddBill(item)" 
+          class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
       </el-col>
       <el-col :span="8">
@@ -504,7 +521,7 @@
     <dialog-borrow ref="dialogBorrowRef" ></dialog-borrow>
     <!-- 打印组件 -->
     <comment-print ref="commentPrintRef"></comment-print>
-    <!-- 结算弹出 -->
+    <!-- 结账 -->
     <bill-settlement ref="billSettlementRef"></bill-settlement>
     <!-- 部分结账恢复 -->
     <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
@@ -512,6 +529,8 @@
     <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toSettle" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
+    <!-- 单房结账 -->
+    <dialog-singleSettl ref="dialogSingleSettlRef" @callback="listBill" @to-settle="toSettle"></dialog-singleSettl>
   </div>
 </template>
 

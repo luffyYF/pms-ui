@@ -190,7 +190,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="客人名称：" required>
-                  <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称"></el-input>
+                  <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称" @keyup.enter.native="chooseEmptyGuest(form.guestName)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="1">
@@ -200,7 +200,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="手机号码：" :required="currFormType=='room-info'">
-                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange"></el-input>
+                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -338,9 +338,10 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="extendClose">取 消</el-button>
-        <el-button size="mini" @click="extendConfirm" type="primary" :disabled="submitLock">确 认</el-button>
+        <el-button size="mini" @click="extendConfirm" type="primary" :loading="submitLock">确 认</el-button>
       </span>
     </el-dialog>
+
     <!--设置二维码开门手机号-->
     <el-dialog class="agreement-body" title="设置二维码开门手机号" :visible.sync="dialogQRCodeSetting" width="30%" :append-to-body="true" :before-close="dialogQRCodeSettingClose">
       <div class="body-conten">
@@ -357,7 +358,7 @@
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
     <!-- 预定管理 -->
-    <reserveManager ref="reserveManagerRef"></reserveManager>
+    <reserveManager ref="reserveManagerRef" @callback="reserveManagerCallback"></reserveManager>
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
      <!-- 退房超时提醒 -->
@@ -617,10 +618,9 @@
           }
           addGuest(data).then(res=>{
             this.$message({type:'success', message:'添加客人成功'})
-            // this.form.currTitle = '客单信息'
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
           }).finally(()=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
           })
         },
         //添加预定初始化（外部调用）
@@ -635,20 +635,21 @@
         addReserveGuest() {
           addReserveGuest(this.form).then(res=>{
             this.$message({type:'success', message:'添加预定成功'})
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
           }).finally(()=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
-        editGuestInfo() {//修改客人信息（外部调用）a
+        //修改客人信息（外部调用）
+        editGuestInfo() {
           if(this.form.pmsCancelFlag=='Y'){
             return;
           }
           editOrderMember(this.form).then(res=>{
             this.$message({type:'success', message: '客人信息修改成功'})
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
           }).finally(()=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
         formReset() {//重置表单
@@ -771,7 +772,7 @@
               this.$message({type:'warning', message:'请先选择抵店日期！'})
               return
             }
-           
+            
             let data = {
               roomTypePk: this.form.roomTypePk,
               beginDate: this.form.beginDate,
@@ -855,11 +856,9 @@
             payment: this.extendForm.payment
           }
           continuedRoom(data).then(res=>{
-            this.$message({
-              type: 'success',
-              message: '续住成功!'
-            })
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$message({type: 'success', message: '续住成功!'})
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
             this.dialogExtend = false
             this.submitLock = false;
           }).catch(()=>{
@@ -945,10 +944,6 @@
               this.$message({type:'warning', message:'手机号不合法'})
               return
             }
-            // if(!phoneReg.test(val)){
-            //   this.$message({type:'warning', message:'手机号不合法'})
-            //   return
-            // }
             this.$refs.chooseGuestRef.initByPhone(this.form.guestPhone)
           }
         },
@@ -974,10 +969,16 @@
             this.memberFlag = false              
           }
         },
-        reserveManager() {//打开预定管理
+        //打开预定管理
+        reserveManager() {
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
-        toDialogAgreement(buttonType) {//打开选择协议单位
+        //预定回调
+        reserveManagerCallback() {
+          this.$emit("callback")
+        },
+        //打开选择协议单位
+        toDialogAgreement(buttonType) {
           if(buttonType == 'registMember'){
             this.regisType = buttonType
           }
