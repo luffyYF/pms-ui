@@ -4,7 +4,7 @@
             <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
             <el-button type="primary" size="mini">PDF预览</el-button>
             <!-- 导出EXCEL -->
-              <el-button type="primary" size="mini" ><a class="exportLink" :href="baseUrl+ziurl" target="_blank">导出EXCEL</a></el-button>
+            <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
             <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
             <el-button type="primary" size="mini" @click="print">打印预览</el-button> 
         </div>
@@ -38,6 +38,7 @@
 import common from "@/api/common"
 import {reportZaiiZhuKeRenCaiWuMingXi,zaiZhuKeRenCaiWuMingXiExcel} from "@/api/reportCenter/pmsReportFormController"
 import moment from "moment"
+import exportExcel from '@/components/download/exportExcel'
 export default {
   data() {
     return {
@@ -50,7 +51,7 @@ export default {
         'text-align':'center'
       },
       baseUrl:common.baseUrl,
-      ziurl:"/pms/report/zaiZhuKeRenCaiWuMingXiExcel"
+      ziurl:"/report/zaiZhuKeRenCaiWuMingXiExcel"
     };
   },
   created() {
@@ -95,7 +96,10 @@ export default {
       f.contentDocument.write(bodyhtml);
       f.contentDocument.close();
       f.contentWindow.print();
-    }
+    },
+    exportReport() {
+      exportExcel(this.baseUrl + this.ziurl);
+    },
   }
 };
 </script>

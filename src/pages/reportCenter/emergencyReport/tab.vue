@@ -19,6 +19,12 @@
       <el-tab-pane label="在住客人报表" name="CheckInGuest" style="height:100%;">
           <check-in-guest  style="height:100%;" ref="CheckInGuest"/>
       </el-tab-pane>
+      <el-tab-pane label="当日预抵报表" name="TodayArrivals" style="height:100%;">
+          <today-arrivals  style="height:100%;" ref="TodayArrivals"/>
+      </el-tab-pane>
+      <el-tab-pane label="当日预离报表" name="TodayDueOut" style="height:100%;">
+          <today-due-out  style="height:100%;" ref="TodayDueOut"/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -30,6 +36,8 @@
   import RoomStatus from './roomStatus'
   import TodayRowHousesBook from './todayRowHousesBook'
   import CheckInGuest from './checkInGuest'
+  import TodayDueOut from './todayDueOut'
+  import TodayArrivals from './todayArrivals'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
@@ -38,7 +46,9 @@
         RealTimeRoomStatus,
         RoomStatus,
         TodayRowHousesBook,
-        CheckInGuest
+        CheckInGuest,
+        TodayDueOut,
+        TodayArrivals
     },
     data () {
       return {

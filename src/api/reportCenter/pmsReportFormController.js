@@ -270,5 +270,25 @@ export const narpCheck = params =>{
     return request.get('/pms/report/nightAuditRentPriceCheck',{params:params})
 }
 
+/**
+ * 在住客人报表
+ */
+export const reportZaiZhuKeRen = params =>{
+    return request.get('/pms/report/zaiZhuKeRen',{params:params})
+}
+
+/**
+ * 当日预离报表
+ */
+export const reportDangRiYuLi = params =>{
+    return request.get('/pms/report/dangRiYuLi',{params:params})
+}
+
+/**
+ * 当日预抵报表
+ */
+export const reportDangRiYuDi = params =>{
+    return request.get('/pms/report/dangRiYuDi',{params:params})
+}
 
 
