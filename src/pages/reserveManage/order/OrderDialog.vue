@@ -713,9 +713,9 @@ export default {
     },
     //复制入住
     copyCheckin(){
-      // this.popoverVisible = false
-      // this.currConfirmType = 'add-checkin-guest'
-      // this.$refs.visitorForm.parentClearAddCheckinGuest()
+      this.popoverVisible = false
+      this.currConfirmType = 'add-checkin-guest'
+      this.$refs.visitorForm.parentClearAddCheckinGuest("copy")
     },
     //添加入住
     addCheckin() {

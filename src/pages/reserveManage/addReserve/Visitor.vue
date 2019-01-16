@@ -578,15 +578,24 @@
           });
         },
         //添加入住初始化
-        parentClearAddCheckinGuest() {
-          this.loadRoomType(_=>{
-            this.formReset()
+        parentClearAddCheckinGuest(type) {
+          if(type=='copy') {
             this.currFormType='add-checkin-guest'
-            this.form.currTitle = '添加入住'
+            this.form.currTitle = '复制入住'
+            this.form.roomPk = null
+            this.form.roomNumber = null
             this.loadPrice()
-            // this.getBookableCount()
             this.$refs.channelRef.load(true)
-          })
+          }else {
+            this.loadRoomType(_=>{
+              this.formReset()
+              this.currFormType='add-checkin-guest'
+              this.form.currTitle = '添加入住'
+              this.loadPrice()
+              this.$refs.channelRef.load(true)
+            })
+          }
+          
         },
         //添加客人初始化（外部调用）
         parentClearGuest() {
