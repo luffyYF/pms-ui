@@ -807,7 +807,7 @@ export default {
           payment: this.form.payment,
           remark: this.form.remark,
           agreementName:this.form.agreementName,
-          AgreementPk:this.form.agreementName,
+          AgreementPk:this.form.agreementPk,
         }
 
         editOrder(data).then(res=>{})
@@ -861,15 +861,15 @@ export default {
     toDialogGuestManger() {
       this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
     },//打开选择协议单位
-      openAgreement() {
-        this.$refs.agreementRef.init();
-      },//选择协议回调
-      agreementCallback(data) {
-        this.$set(this.form,"agreementPk",data.agreementPk)
-        this.$set(this.form,"agreementName",data.unitName)
-        // this.form.agreementPk = data.agreementPk;
-        // this.form.agreementName = data.unitName;
-      },
+    openAgreement() {
+      this.$refs.agreementRef.init();
+    },//选择协议回调
+    agreementCallback(data) {
+      this.$set(this.form,"agreementPk",data.agreementPk)
+      this.$set(this.form,"agreementName",data.unitName)
+      // this.form.agreementPk = data.agreementPk;
+      // this.form.agreementName = data.unitName;
+    },
   },
   mounted() {
     bus.$on('toCheckout', () => { this.toBillTab() })

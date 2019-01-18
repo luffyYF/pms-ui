@@ -7,7 +7,7 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <span @click="logout">[退出系统]</span>
-        <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
+        <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span>
         <!-- <span @click="logout">[退出系统]</span> -->
       </div>
     </el-col>
@@ -165,31 +165,43 @@
       <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
     </el-col>
     <div class="asd">
-    <el-dialog title="抵店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;margin-bottom: 285px;" top="0" 
-    :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="ydDialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
+      <!-- margin-bottom: 285px; -->
+    <el-dialog title="预定提醒" :center="true" style="position: absolute;width:480px;left: calc(100% - 480px);top: auto;padding:0;" top="0" 
+    :modal="false" custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="ydDialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
       <el-table :data="ydList" height="200px" @row-click="showOrderInfo">
-        <el-table-column prop="guestName" label="会员名称" width="80"></el-table-column>
-        <el-table-column prop="guestPhone" label="联系电话" width="120"></el-table-column>
-        <el-table-column prop="beginDate" label="预抵时间"  width="180"></el-table-column>
-        <el-table-column label="操作"  width="60">
+        <el-table-column align="center" prop="channelTypeName" label="渠道" width="80"></el-table-column>
+        <el-table-column align="center" prop="guestName" label="客人" width="60"></el-table-column>
+        <el-table-column align="center" label="预定时间" >
+          <template slot-scope="scope">
+            {{scope.row.createTime | dateFormat('YYYY-MM-DD HH:mm')}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="roomTypeName" label="房型" ></el-table-column>
+        <el-table-column align="center" prop="currPrice" label="价格" width="60"></el-table-column>
+        <!-- <el-table-column label="操作"  width="60">
               <template slot-scope="scope">
                  <el-button size="mini" type="text" @click="showOrderInfo(scope.row)">查看</el-button>
               </template>
-          </el-table-column>
+          </el-table-column> -->
       </el-table>
     </el-dialog>
-    
-      <el-dialog title="离店提醒" style="position: absolute;width:480px;left: calc(100% - 490px);top: auto;padding:0;" top="0" 
+      <el-dialog title="离店提醒" :center="true" style="position: absolute;width:480px;left: calc(100% - 480px);top: auto;padding:0;" top="0" 
       :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
         <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
-          <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
-          <el-table-column prop="guestName" label="会员名称" width="80"></el-table-column>
-          <el-table-column prop="guestEndDate" label="预离时间"  width="200"></el-table-column>
-          <el-table-column label="操作"  width="80">
+          <el-table-column align="center"  prop="channelName" label="渠道" width="80"></el-table-column>
+          <el-table-column align="center" prop="guestName" label="客人" width="80"></el-table-column>
+          <el-table-column align="center" prop="roomNumber" label="房号" width="80"></el-table-column>
+          <el-table-column align="center" prop="roomTypeName" label="房型" width="80"></el-table-column>
+          <el-table-column align="center" label="预离时间" >
+            <template slot-scope="scope">
+            {{scope.row.guestEndDate | dateFormat('YYYY-MM-DD HH:mm')}}
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="操作"  width="80">
               <template slot-scope="scope">
                  <el-button size="mini" type="text" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
               </template>
-          </el-table-column>
+          </el-table-column> -->
           
         </el-table>
       </el-dialog>
@@ -483,7 +495,6 @@ export default {
         },1000 * 20)
 
         this.timer3 =setInterval(() => {
-          console.log("333")
           // this.getNewGuestOrder()
         },1000 * 20)
       },
@@ -585,11 +596,9 @@ export default {
           }
           getNewGuestOrder(data).then(res=>{
             this.ydList = res.data.data;
-            if(res.data.isNew == "Y"){
+            this.ydDialogVisible = false
+            if(res.data.isNew == "Y" && this.ydList.length > 0){
               this.ydDialogVisible = true
-            }
-            if(this.ydList.length == 0){
-              this.ydDialogVisible = false
             }
             sessionStorage.setItem("orderIsNew","N")
             localStorage.setItem("orderQueryTime",now)
@@ -670,12 +679,18 @@ export default {
       this.screenWidth = val;
     }
   },
-    beforeDestroy(){
-      clearInterval(this.timer);
-      clearInterval(this.timer2);
-      clearInterval(this.timer3);
-      // this.$notify.closeAll()
+  filters:{
+    dateFormat(val,parm){
+      return moment(new Date(val)).format(parm)
     }
+  }
+  ,
+  beforeDestroy(){
+    clearInterval(this.timer);
+    clearInterval(this.timer2);
+    clearInterval(this.timer3);
+    // this.$notify.closeAll()
+  }
 };
 </script>
 
@@ -685,11 +700,15 @@ export default {
   width:300px;
 }
 .ylDialog .el-dialog__body{
-  padding: 0 20px;
+  padding: 0 0px;
 }
 .ylDialog .el-dialog__title{
   font-size: 15px;
   line-height: 15px;
+}
+.ylDialog .el-table .cell{
+  font-size: 12px;
+  padding: 0;
 }
 </style>
 
