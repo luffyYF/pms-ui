@@ -271,6 +271,26 @@ export const narpCheck = params =>{
 }
 
 /**
+ * 在住客人报表
+ */
+export const reportZaiZhuKeRen = params =>{
+    return request.get('/pms/report/zaiZhuKeRen',{params:params})
+}
+
+/**
+ * 当日预离报表
+ */
+export const reportDangRiYuLi = params =>{
+    return request.get('/pms/report/dangRiYuLi',{params:params})
+}
+
+/**
+ * 当日预抵报表
+ */
+export const reportDangRiYuDi = params =>{
+    return request.get('/pms/report/dangRiYuDi',{params:params})
+}
+/**
  * 销售分析报表 - 渠道
  */
 export const channelSaleAnalysis = params =>{

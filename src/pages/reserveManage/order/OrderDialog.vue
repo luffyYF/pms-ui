@@ -1,10 +1,10 @@
 // 订单弹窗
 <template>
   <div>
-    <el-dialog class="dialogVisibleClass" top="5vh" 
-    :title="dialogVisibleTitle" 
-    :visible.sync="dialogVisible" 
-    :close-on-click-modal="false" 
+    <el-dialog class="dialogVisibleClass" top="5vh"
+    :title="dialogVisibleTitle"
+    :visible.sync="dialogVisible"
+    :close-on-click-modal="false"
     :before-close="dialogVisibleClose"
     width="1120px" >
     <!-- :append-to-body="true" -->
@@ -18,7 +18,7 @@
                   <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
                 </el-form-item>
               </el-col>
-              
+
               <el-col class="dialog-li">
                 <el-form-item label="预订人">
                   <el-input v-model="form.userName" :disabled="true"></el-input>
@@ -111,8 +111,8 @@
               <!-- <el-button size="mini" @click="dialogBusinessCard = true">制门卡</el-button> -->
             </div>
             <el-tabs type="border-card" class="card-tabs"  v-model="activeName" @tab-click="handleClick">
-              <el-tab-pane label="客单" name="visitor">
-                <visitor-tag ref="visitorForm" @changeCurrGuest="changeCurrGuest"/>
+              <el-tab-pane label="客单" name="visitor" >
+                <visitor-tag ref="visitorForm" @changeCurrGuest="changeCurrGuest" @callback="loadOrderInfo" @unlock="loading=false"/>
                 <div class="cardtabs-visitor-button">
                   <!-- ========底部按钮操作======== -->
                   <template v-if="currConfirmType=='leave-info'">
@@ -121,21 +121,19 @@
                   <template v-else-if="currConfirmType=='add-checkin'">
                     <!-- <el-button size="mini" @click="dialogBatchOccupancy = true">批量入住</el-button> -->
                     <!-- <el-button size="mini" @click="dialogHoldHisCard = true">持他卡入住</el-button> -->
-                    <el-button size="mini" @click="saveCheckin" :disabled="islock">保存入住</el-button>
+                    <el-button size="mini" @click="saveCheckin" :loading="islock">保存入住</el-button>
                   </template>
                   <template v-else-if="currOrderInfo.order.auditStatus==null || currOrderInfo.order.auditStatus==1">
-                    <!-- this.currGuest.orderStatus=='RESERVE' || -->
-                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' ||  this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">添加客人</el-button>
-                    <el-popover ref="occupancySort" placement="top">
-                      <el-button type="primary" size="mini">复制入住</el-button>
-                      <el-button type="primary" size="mini">添加入住</el-button>
-                      <el-button type="primary" size="mini" @click="dialogContinuedLive = true">续住</el-button>
-                      <el-button type="primary" size="mini" @click="dialogGroupManag = true">组单管理</el-button>
-                      <el-button type="primary" size="mini">减少客人</el-button>
+                    <el-popover ref="occupancySort" placement="top" v-model="popoverVisible">
+                      <el-button  size="mini" @click="copyCheckin">复制入住</el-button>
+                      <el-button  size="mini" @click="addCheckin">添加入住</el-button>
+                      <el-button  size="mini" @click="batchContinueClick">批量续住</el-button>
+                      <!-- <el-button type="primary" size="mini" @click="dialogGroupManag = true">组单管理</el-button> -->
+                      <!-- <el-button type="primary" size="mini">减少客人</el-button> -->
                     </el-popover>
-                    <!-- <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button> -->
+                    <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button>
+                    <el-button size="mini" @click="addGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' ||  this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">添加客人</el-button>
                     <el-button size="mini" @click="addReserveGuest" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
-                    <!-- <el-button size="mini" @click="reserveRowRoom" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button> -->
                     <el-button size="mini" @click="reserveRowRoom2" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
                     <el-button size="mini" @click="toDialogModifyHomePrice" :disabled=" currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
                     <el-button size="mini" @click="toDialogGuestManger" :disabled="!(this.currGuest.orderStatus=='CHECKIN' || this.currGuest.orderStatus=='RESERVE')">客单管理</el-button>
@@ -154,6 +152,7 @@
       </div>
     </el-dialog>
 
+    <!-- 换房 -->
     <el-dialog class="son-dialog" top="8vh" title="换房" :visible.sync="dialogChangeRoom" width="600px" :append-to-body="true">
       <!--<div class="pattern-dialog-container">-->
         <h4>当前房型：{{roomFilterObj.roomTypeName}}</h4>
@@ -198,71 +197,8 @@
       </span>
     </el-dialog>
 
-    <!-- 预定排房 废，后续去除 -->
-    <!-- <el-dialog class="son-dialog" title="预定排房" :visible.sync="dialogRowRoom" width="50%" :append-to-body="true" :before-close="handleCloseRowRoom">
-      <div class="pattern-dialog-container" style="padding: 0px 4px;">
-        <el-table
-          ref="rowRoomTable"
-          :data="rowRoomTableData"
-          tooltip-effect="dark"
-          style="width: 100%"
-          height="300"
-          size="mini">
-          <el-table-column prop="roomNumber" label="房号" width="90" align="center">
-            <template slot-scope="scope">
-              <span v-if="scope.row.roomPk">{{scope.row.roomNumber}}</span>
-              <el-button size="mini" type="primary" @click="clickForRowRoom(scope.row)" v-else>排房</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column prop="roomTypeName" label="类型" width="100" align="center">
-          </el-table-column>
-          <el-table-column prop="beginDate" label="预抵日期" width="110" align="center">
-          </el-table-column>
-          <el-table-column prop="endDate" label="预离日期" width="110" align="center">
-          </el-table-column>
-          <el-table-column label="状态" align="center">
-            <template slot-scope="scope">
-              <span v-if="scope.row.roomPk" style="color:blue">已排房</span>
-              <span v-else style="color:red">未排房</span>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="handleCloseRowRoom">关闭</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog class="son-dialog" title="选择房间" :visible.sync="dialogSelectRoom" width="30%" :append-to-body="true">
-      <div class="pattern-dialog-container" style="padding: 0px 4px;">
-        <div class="select-title">可选房型：{{select_room_type_name}}</div>
-        <el-table
-          :data="selectRoomTableData"
-          tooltip-effect="dark"
-          style="width: 100%"
-          height="300"
-          border
-          size="mini">
-          <el-table-column prop="roomNumber" label="房号" width="90" align="center">
-          </el-table-column>
-          <el-table-column prop="roomTypeName" label="类型" width="120" align="center">
-          </el-table-column>
-          <el-table-column prop="roomStatusName" label="房态" align="center">
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="submitRowRoom(scope.row)">选择房间</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="dialogSelectRoom = false">关闭</el-button>
-      </span>
-    </el-dialog> -->
-    <!-- 预定排房 end 废，后续去除  -->
-
     <!-- 预定排房 新 -->
-    <RowRoomDialog ref="rowRoomRef" @refresh="initOrderInfo"></RowRoomDialog>
+    <RowRoomDialog ref="rowRoomRef" @refresh="loadOrderInfo"></RowRoomDialog>
     <!-- 外借 -->
     <dialogBorrow ref="dialogBorrowRef" ></dialogBorrow>
     <!-- 寄存 -->
@@ -272,13 +208,15 @@
     <!-- 操作记录 -->
     <dialogOperationLog ref="dialogOperationLogRef"></dialogOperationLog>
     <!-- 修改房价 -->
-    <dialogModifyHomePrice ref="dialogModifyHomePriceRef"></dialogModifyHomePrice>
+    <dialogModifyHomePrice ref="dialogModifyHomePriceRef" @callback="loadOrderInfo"></dialogModifyHomePrice>
     <!-- 价格变更记录 -->
     <dialogPriceChangeHistory ref="dialogPriceChangeHistoryRef"></dialogPriceChangeHistory>
     <!-- 客单管理 -->
-    <GuestManagerDialog ref="guestManagerDialogRef" @refresh="initOrderInfo"></GuestManagerDialog>
+    <GuestManagerDialog ref="guestManagerDialogRef" @refresh="loadOrderInfo"></GuestManagerDialog>
     <!-- 协议单位 -->
     <Agreement ref="agreementRef" @sendData="agreementCallback($event)"></Agreement>
+    <!-- 批量续住 -->
+    <dialog-batch-continue-room ref="dialogBatchContinueRoomRef" @callback="loadOrderInfo"></dialog-batch-continue-room>
   </div>
 </template>
 <script>
@@ -292,7 +230,7 @@ import {validatePhone} from '@/utils/validate'
 
 // API
 import {gmCount} from "@/api/goods/goodsManageController";
-import {saveCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder} from '@/api/order/pmsOrderController'
+import {saveCheckin, addCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder} from '@/api/order/pmsOrderController'
 import {listProject,addBill,authBill,checkoutauthBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill,transBill} from '@/api/bill'
 import {listType} from '@/api/utils/pmsTypeController'
 
@@ -305,22 +243,24 @@ import dialogOperationLog from '@/pages/reserveManage/addReserve/dialogOperation
 import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
 import dialogNote from '@/pages/reserveManage/addReserve/dialogNote'
 import dialogDeposit from '@/pages/reserveManage/addReserve/dialogDeposit'
+import DialogBatchContinueRoom from './dialogBatchContinueRoom'
 import RowRoomDialog from './RowRoomDialog'
 import GuestManagerDialog from './GuestManagerDialog'
 import Agreement from "@/components/Agreement/Agreement";
 export default {
   components: {
     VisitorTag,
-    bill, 
-    dialogBorrow, 
-    dialogDeposit, 
+    bill,
+    dialogBorrow,
+    dialogDeposit,
     dialogNote,
-    dialogOperationLog, 
+    dialogOperationLog,
     dialogModifyHomePrice,
     dialogPriceChangeHistory,
     RowRoomDialog,
     GuestManagerDialog,
-    Agreement
+    Agreement,
+    DialogBatchContinueRoom
   },
   data() {
     return {
@@ -330,7 +270,8 @@ export default {
        * edit-guest : 修改客人信息
        * add-guest : 添加客人操作
        * add-reserve : 添加预定操作
-       * add-checkin : 保存入住操作
+       * add-checkin : 房态图打开保存入住操作
+       * add-checkin-guest : 添加入住
        */
       currConfirmType: '',
       activeName: '',
@@ -343,6 +284,7 @@ export default {
       goodsManageCountMap: {},
       currGuestIndex: 0,//当前客单下标
       currOrderPk: '',//当前主订单
+      currGuestPk: '',//当前选中的客单Pk
       currOrderInfo: {order:{}, guestList:[]},
       reserveTime: new Date(),
       currGuest: {},//当前选中的客单
@@ -353,11 +295,12 @@ export default {
         children: 'children',
         label: 'label'
       },
+      popoverVisible:false,
       dialogVisible:false,
       dialogCommodity: false,
       dialogRegimentPayment: false,
       batchModification: false,
-      dialogWake: false, 
+      dialogWake: false,
       dialogGroupPrinting: false,
       dialogBusinessCard: false,
       dialogChangeRoom: false,
@@ -401,10 +344,10 @@ export default {
     initEmpty(room) {
       this.dialogVisibleTitle = '办理入住'
       this.dialogVisible = true
-      this.form={
-        orderNo:null,
+      this.form = {
+        orderNo: null,
         orderPk: null,
-        name:'新散客入住',
+        name: '新散客入住',
         reserveCardNo: '',
         userPhone: '',
         isTeam: 'N',
@@ -430,15 +373,31 @@ export default {
     /**
       初始化订单数据
       @augments orderPk 主订单主键
-      @augments guestOrderPk 客单主键 （可选）
+      @augments activeName 显示标签  visitor:客单  bill:账单
+      @augments guestOrderPk 客单主键 (可选，用于选中客单)
      */
     initOrderInfo(orderPk, activeName, guestOrderPk) {
       this.dialogVisible = true
-      this.loading = false;
-      this.currOrderPk = orderPk;
+      this.loading = false
+      this.currOrderPk = orderPk
+      this.currGuestPk = guestOrderPk
       this.activeName = activeName
       this.disabledBill = false
-      findOrder({orderPk: orderPk}).then(res=>{
+      //加载订单信息
+      this.loadOrderInfo();
+      //查找物品管理数量
+      this.goodsManageCount()
+      //加载账单数据
+      if(this.activeName=='bill'){
+        this.$nextTick(()=>{
+           this.$refs.billTagForm.lookupBillList(orderPk);
+        })
+      }
+    },
+    //加载订单信息
+    loadOrderInfo() {
+      this.loading = false
+      findOrder({orderPk: this.currOrderPk}).then(res=>{
         this.currOrderInfo = res.data;
         this.form = {
           orderPk: res.data.order.orderPk,
@@ -456,7 +415,7 @@ export default {
           agreementName: res.data.order.agreementName
         }
         this.reserveTime = new Date(res.data.order.createTime)
-        this.dialogVisibleTitle = '组单号：'+this.form.orderNo 
+        this.dialogVisibleTitle = '组单号：'+this.form.orderNo
         if(this.currOrderInfo.order.auditStatus==0){
           this.dialogVisibleTitle += " (审批中...)";
         }else if(this.currOrderInfo.order.auditStatus==1){
@@ -470,11 +429,11 @@ export default {
         }else{
           this.currConfirmType = 'edit-guest'
         }
-          
+
         //设置下标
-        if(guestOrderPk!=null && guestOrderPk!=undefined && guestOrderPk!=''){
+        if(this.currGuestPk){
           res.data.guestList.forEach((guest,index)=>{
-            if(guest.guestOrderPk == guestOrderPk){
+            if(guest.guestOrderPk == this.currGuestPk){
               this.currGuestIndex = index
             }
           })
@@ -488,29 +447,7 @@ export default {
         //设置当前选中的客单,默认第一个
         this.currGuest = res.data.guestList[this.currGuestIndex]
       });
-      //查找物品管理数量
-      this.goodsManageCount()
-      //加载账单数据
-      if(this.activeName=='bill'){
-        this.$nextTick(()=>{
-           this.$refs.billTagForm.lookupBillList(orderPk);
-        })
-      }
     },
-    // /**
-    //  * 打开结账退房
-    //  * @augments */
-    // initOrderBill(orderPk) {
-    //   // this.initOrderInfo(orderPk)
-    //   // this.dialogVisible = true
-    //   // this.disabledBill = false
-    //   // this.activeName = 'bill'
-    //   // this.$nextTick(()=>{
-    //   //   this.$refs.billTagForm.lookupBillList(orderPk);
-    //   // })
-    //   // this.activeName = 'bill'
-    //   this.initOrderInfo(orderPk, 'bill')
-    // },
     goodsManageCount() {
       gmCount({orderPk: this.currOrderPk}).then(res=>{
         this.goodsManageCountMap = res.data
@@ -543,22 +480,20 @@ export default {
         changeRoom(data).then(res=>{
           this.dialogChangeRoom = false
           //更新客单
-          this.initOrderInfo(this.currGuest.orderPk, 'visitor')
-          this.$message({
-            type: 'success',
-            message: '更换成功!'
-          });
+          this.loadOrderInfo()
+          // this.initOrderInfo(this.currGuest.orderPk, 'visitor')
+          this.$message({type: 'success',message: '更换成功!' });
         })
-        
+
       })
     },
     saveCheckin() {//保存入住
-      if(this.islock){ 
-        return;
-      }
+      this.islock = true
       if(!this.formValidate()){
+        this.islock = false
         return;
       }
+      this.form.orderPk = null
       const orderPo = this.form
       const guestOrderPo = this.$refs.visitorForm.form
       var submitData = {
@@ -571,12 +506,11 @@ export default {
       data.order.keepTime = submitData.order.keepTime ? submitData.order.keepTime : null
       data.guestOrder.beginDate = submitData.guestOrder.beginDate
       data.guestOrder.endDate = submitData.guestOrder.endDate
-      this.islock = true
-      saveCheckin(data).then(res=>{
+
+      addCheckin(data).then(res=>{
         this.$message({type:'success', message:'入住成功'})
         this.initOrderInfo(res.data, 'visitor')
-        this.islock = false;
-      }).catch(error=>{
+      }).finally(()=>{
         this.islock = false;
       })
     },
@@ -630,7 +564,7 @@ export default {
           return false
         }
       }
-     
+
       //TODO 协议单位校验
       // if(orderPo.isTeam=='Y'){
       //   if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
@@ -777,26 +711,44 @@ export default {
         this.openCloseTree = '收起';
       }
     },
-    addGuest() {//添加客人
+    //复制入住
+    copyCheckin(){
+      this.popoverVisible = false
+      this.currConfirmType = 'add-checkin-guest'
+      this.$refs.visitorForm.parentClearAddCheckinGuest("copy")
+    },
+    //添加入住
+    addCheckin() {
+      this.popoverVisible = false
+      this.currConfirmType = 'add-checkin-guest'
+      this.$refs.visitorForm.parentClearAddCheckinGuest()
+    },
+    //添加客人
+    addGuest() {
       this.currConfirmType = 'add-guest'
       this.$refs.visitorForm.parentClearGuest()
     },
-    addReserveGuest() {//添加预定
+    //添加预定
+    addReserveGuest() {
       this.currConfirmType='add-reserve'
       this.$refs.visitorForm.cleanAddReserveGuest()
     },
-    changeCurrGuest(guest, index) {//点击客单改变
+    //点击客单改变
+    changeCurrGuest(guest, index) {
       this.currGuest = guest
       this.currGuestIndex = index
       if(this.currConfirmType !='leave-info'){
         this.currConfirmType='edit-guest'
       }
     },
+
+    //点击确定
     confirmClick() {
-      //点击确定  
+      this.loading = true;
       if(this.currConfirmType=='edit-guest'){
         //修改客人信息
          if(!this.formValidate()){
+          this.loading = false;
           return;
         }
         this.loading = true;
@@ -811,22 +763,28 @@ export default {
         }
 
         editOrder(data).then(res=>{})
-      }
-      if(this.currConfirmType=='add-guest'){
+      } else if(this.currConfirmType=='add-guest'){
         //添加客人操作
         if(!this.formValidate()){
+          this.loading = false;
           return;
         }
-        this.loading = true;
         this.$refs.visitorForm.parentAddGuest()
-      }
-      if(this.currConfirmType=='add-reserve'){
+      }else if(this.currConfirmType=='add-reserve'){
         //添加预定操作
-         if(!this.formValidate()){
+        if(!this.formValidate()){
+          this.loading = false;
           return;
         }
-        this.loading = true;
         this.$refs.visitorForm.addReserveGuest()
+      }else if(this.currConfirmType=='add-checkin-guest') {
+        if(!this.formValidate()) {
+          this.loading = false;
+          return;
+        }
+        this.$refs.visitorForm.addCheckin(this.currOrderPk)
+      }else {
+        this.loading = false;
       }
     },
     toReserveManager() {//预定管理
@@ -860,16 +818,22 @@ export default {
     },
     toDialogGuestManger() {
       this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
-    },//打开选择协议单位
+    },
+    //打开选择协议单位
     openAgreement() {
       this.$refs.agreementRef.init();
-    },//选择协议回调
+    },
+    //选择协议回调
     agreementCallback(data) {
       this.$set(this.form,"agreementPk",data.agreementPk)
       this.$set(this.form,"agreementName",data.unitName)
       // this.form.agreementPk = data.agreementPk;
       // this.form.agreementName = data.unitName;
     },
+    batchContinueClick(){
+      this.popoverVisible = false
+      this.$refs.dialogBatchContinueRoomRef.showDialog(this.currOrderInfo.order.orderPk)
+    }
   },
   mounted() {
     bus.$on('toCheckout', () => { this.toBillTab() })
@@ -967,7 +931,7 @@ export default {
 .batchOccupancy-content .el-date-editor.el-input,
 .batchOccupancy-content .el-date-editor.el-input__inner{
   width: 100%;
-} 
+}
 .el-select--mini,.el-input--mini{
   width: 130px;
 }
