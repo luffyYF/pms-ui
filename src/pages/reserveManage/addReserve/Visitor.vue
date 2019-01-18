@@ -118,7 +118,7 @@
                   <el-input-number size="mini" :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='add-checkin'|| currFormType=='add-guest' || currFormType=='add-checkin-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
-              <el-col :span="7" v-if="currFormType=='add-reserve' || currFormType=='add-checkin'">
+              <el-col :span="7" v-if="currFormType=='add-reserve' || currFormType=='add-checkin' || currFormType=='add-checkin-guest' ">
                 &nbsp;&nbsp;<span style="color:red">剩余{{bookableCount}}间</span>
               </el-col>
             </el-col>
@@ -592,6 +592,7 @@
             }
             this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
             this.loadPrice()
+            this.getBookableCount()
             this.$refs.channelRef.load(true)
           }else {
             this.loadRoomType(_=>{
@@ -599,10 +600,10 @@
               this.currFormType='add-checkin-guest'
               this.form.currTitle = '添加入住'
               this.loadPrice()
+              this.getBookableCount()
               this.$refs.channelRef.load(true)
             })
           }
-          
         },
         //添加客人初始化（外部调用）
         parentClearGuest() {

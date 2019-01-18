@@ -5,7 +5,12 @@
     <el-dialog class="son-dialog" title="预订管理" :visible.sync="dialogReservationManag" width="900px" :append-to-body="true">
       <el-table ref="reservationManagTableRef" :data="reservationManagTable" border tooltip-effect="dark" height="450" style="width: 100%" @selection-change="changeCheck">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="roomNumber" label="房号"></el-table-column>
+        <el-table-column prop="roomNumber" label="房号" width="150">
+          <template slot-scope="scope">
+            <span>{{scope.row.roomNumber}} </span>
+            <span v-if="scope.row.roomStatus">({{roomStatusMap[scope.row.roomStatus]}})</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="guestName" label="客人姓名"></el-table-column>
         <el-table-column prop="roomTypeName" label="房间类型"></el-table-column>
         <el-table-column prop="beginDate" label="预抵日期" width="180"></el-table-column>
@@ -30,7 +35,7 @@
 
 <script>
 import bus from "@/utils/bus";
-import { orderStatusMap } from "@/utils/orm";
+import { orderStatusMap,roomStatusMap } from "@/utils/orm";
 import {
   findReserveGuest,
   checkin,
@@ -42,6 +47,7 @@ export default {
     return {
       currOrderPk: "", //当前主订单主键
       orderStatusMap: orderStatusMap,
+      roomStatusMap: roomStatusMap,
       dialogReservationManag: false,
       reservationManagTable: [],
       selectionRows: [] //已勾选的数据
