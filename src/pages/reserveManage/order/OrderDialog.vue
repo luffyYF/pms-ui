@@ -31,7 +31,7 @@
               </el-col>
               <el-col class="dialog-li">
                 <el-form-item label="是否团体">
-                  <el-select v-model="form.isTeam" :disabled="true">
+                  <el-select v-model="form.isTeam" :disabled="currConfirmType!='add-checkin'">
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
                   </el-select>
@@ -41,7 +41,7 @@
                 <!-- <el-form-item label="协议单位">
                   <el-input v-model="form.agreementName" ></el-input>
                 </el-form-item> -->
-                 <el-form-item label="协议单位" >
+                <el-form-item label="协议单位" >
                   <el-input v-model="form.agreementName" :readonly="true">
                     <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
                   </el-input>
@@ -115,11 +115,11 @@
                 <visitor-tag ref="visitorForm" @changeCurrGuest="changeCurrGuest" @callback="loadOrderInfo" @unlock="loading=false"/>
                 <div class="cardtabs-visitor-button">
                   <!-- ========底部按钮操作======== -->
+                  <el-button size="mini" @click="batchCheckin">批量入住</el-button>
                   <template v-if="currConfirmType=='leave-info'">
-
+                  
                   </template>
                   <template v-else-if="currConfirmType=='add-checkin'">
-                    <!-- <el-button size="mini" @click="dialogBatchOccupancy = true">批量入住</el-button> -->
                     <!-- <el-button size="mini" @click="dialogHoldHisCard = true">持他卡入住</el-button> -->
                     <el-button size="mini" @click="saveCheckin" :loading="islock">保存入住</el-button>
                   </template>
@@ -217,6 +217,8 @@
     <Agreement ref="agreementRef" @sendData="agreementCallback($event)"></Agreement>
     <!-- 批量续住 -->
     <dialog-batch-continue-room ref="dialogBatchContinueRoomRef" @callback="loadOrderInfo"></dialog-batch-continue-room>
+    <!-- 批量入住 -->
+    <dialog-batch-add-checkin ref="dialogBatchAddCheckin" @callback="initOrderInfo"></dialog-batch-add-checkin>
   </div>
 </template>
 <script>
@@ -247,6 +249,7 @@ import DialogBatchContinueRoom from './dialogBatchContinueRoom'
 import RowRoomDialog from './RowRoomDialog'
 import GuestManagerDialog from './GuestManagerDialog'
 import Agreement from "@/components/Agreement/Agreement";
+import DialogBatchAddCheckin from './dialogBatchAddCheckin'
 export default {
   components: {
     VisitorTag,
@@ -260,7 +263,8 @@ export default {
     RowRoomDialog,
     GuestManagerDialog,
     Agreement,
-    DialogBatchContinueRoom
+    DialogBatchContinueRoom,
+    DialogBatchAddCheckin
   },
   data() {
     return {
@@ -270,7 +274,7 @@ export default {
        * edit-guest : 修改客人信息
        * add-guest : 添加客人操作
        * add-reserve : 添加预定操作
-       * add-checkin : 房态图打开保存入住操作
+       * add-checkin : 房态图添加入住，添加新订单
        * add-checkin-guest : 添加入住
        */
       currConfirmType: '',
@@ -358,6 +362,7 @@ export default {
         keepTime: '',
         remark: ''
       },
+      this.currOrderInfo = {order:{}, guestList:[]}
       this.activeName = 'visitor'
       this.disabledBill = true
       this.reserveTime = new Date()
@@ -460,7 +465,8 @@ export default {
       this.roomFilterObj.roomTypeName = this.currGuest.roomTypeName
       this.listRowRoomList(this.currGuest.roomTypePk)
     },
-    listRowRoomList(roomTypePk) { //查找可更换的房间
+    //查找可更换的房间
+    listRowRoomList(roomTypePk) { 
       let data = {
         roomTypePk: roomTypePk,
         beginDateTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -470,7 +476,8 @@ export default {
         this.changeRoomTableData=res.data
       })
     },
-    toChangeRoom(roomPk) {//确认更换房间
+    //确认更换房间
+    toChangeRoom(roomPk) {
       this.$confirm('是否更换到该房间?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -487,33 +494,7 @@ export default {
         
       })
     },
-    saveCheckin() {//保存入住
-      this.islock = true
-      if(!this.formValidate()){
-        this.islock = false
-        return;
-      }
-      this.form.orderPk = null
-      const orderPo = this.form
-      const guestOrderPo = this.$refs.visitorForm.form
-      var submitData = {
-        order: orderPo,
-        guestOrder: guestOrderPo
-      }
-      let data = copyObj(submitData)
-      //请求参数做特殊处理
-      data.order.guaranteeType = submitData.order.guaranteeType ? submitData.order.guaranteeType : null
-      data.order.keepTime = submitData.order.keepTime ? submitData.order.keepTime : null
-      data.guestOrder.beginDate = submitData.guestOrder.beginDate
-      data.guestOrder.endDate = submitData.guestOrder.endDate
-     
-      addCheckin(data).then(res=>{
-        this.$message({type:'success', message:'入住成功'})
-        this.initOrderInfo(res.data, 'visitor')
-      }).finally(()=>{
-        this.islock = false;
-      })
-    },
+    
     //表单校验
     formValidate(){
       const orderPo = this.form
@@ -579,33 +560,6 @@ export default {
     toCheckout() {
        this.$refs.billTagForm.lookupBillList(this.currOrderPk);
     },
-    //预定排房 【旧，后续去除】
-    // reserveRowRoom() {
-    //   this.rowRoomTableData = []
-    //   this.currOrderInfo.guestList.forEach(guest=>{
-    //     if(guest.orderStatus=='RESERVE' && !guest.roomPk){
-    //       let obj = {
-    //         guestOrderPk: guest.guestOrderPk,
-    //         roomPk: guest.roomPk,
-    //         roomTypePk: guest.roomTypePk,
-    //         roomNumber: guest.roomNumber,
-    //         roomTypeName: guest.roomTypeName,
-    //         beginDate: guest.beginDate,
-    //         endDate: guest.endDate
-    //       }
-    //       if(typeof guest.beginDate == 'object'){
-    //         obj.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
-    //         guest.beginDate = formatDate(guest.beginDate, 'yyyy-MM-dd hh:mm:ss')
-    //       }
-    //       if(typeof guest.endDate == 'object'){
-    //         obj.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
-    //         guest.endDate = formatDate(guest.endDate, 'yyyy-MM-dd hh:mm:ss')
-    //       }
-    //       this.rowRoomTableData.push(obj)
-    //     }
-    //   })
-    //   this.dialogRowRoom = true
-    // },
     reserveRowRoom2() {
       this.$refs.rowRoomRef.showDialog(this.currOrderPk, this.currOrderInfo.guestList);
 
@@ -634,7 +588,8 @@ export default {
       // })
       // this.dialogRowRoom = true
     },
-    clickForRowRoom(row) {//查找可排房的房间列表
+    //查找可排房的房间列表
+    clickForRowRoom(row) {
       this.selectRoomTableData = []
       this.select_room_type_name = row.roomTypeName
       this.rowRoomSelectGuestPk = row.guestOrderPk
@@ -710,6 +665,38 @@ export default {
         this.regimentPaymentTree = true;
         this.openCloseTree = '收起';
       }
+    },
+    //保存入住
+    saveCheckin() {
+      this.islock = true
+      if(!this.formValidate()){
+        this.islock = false
+        return;
+      }
+      this.form.orderPk = null
+      const orderPo = this.form
+      const guestOrderPo = this.$refs.visitorForm.form
+      var submitData = {
+        order: orderPo,
+        guestOrder: guestOrderPo
+      }
+      let data = copyObj(submitData)
+      //请求参数做特殊处理
+      data.order.guaranteeType = submitData.order.guaranteeType ? submitData.order.guaranteeType : null
+      data.order.keepTime = submitData.order.keepTime ? submitData.order.keepTime : null
+      data.guestOrder.beginDate = submitData.guestOrder.beginDate
+      data.guestOrder.endDate = submitData.guestOrder.endDate
+     
+      addCheckin(data).then(res=>{
+        this.$message({type:'success', message:'入住成功'})
+        this.initOrderInfo(res.data, 'visitor')
+      }).finally(()=>{
+        this.islock = false;
+      })
+    },
+    //批量入住
+    batchCheckin(){
+      this.$refs.dialogBatchAddCheckin.showDialog(this.currOrderInfo.order)
     },
     //复制入住
     copyCheckin(){

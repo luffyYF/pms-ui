@@ -174,14 +174,15 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="抵店日期：" required>
-                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined || currFormType=='add-checkin'" :clearable="false"></el-date-picker>
+                  <!-- form.guestOrderPk!==undefined ||  -->
+                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='guest-info' || currFormType=='add-guest'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="离店日期：" required>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -584,6 +585,12 @@
             this.form.currTitle = '复制入住'
             this.form.roomPk = null
             this.form.roomNumber = null
+            if(moment().hour()<6){
+              this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+            }else{
+              this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
+            }
+            this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
             this.loadPrice()
             this.$refs.channelRef.load(true)
           }else {
@@ -756,8 +763,6 @@
             this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
           }
           this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-          // this.form.beginDate = formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss')
-          // this.form.endDate = formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss')
           this.form.pmsCancelFlag = 'N'
           this.memberFlag = false
         },
@@ -1128,6 +1133,9 @@
               temp.push(ele)
             })
             cb(temp);
+            if(res.data.length<=0){
+              this.$message.warning('该房型没有可入住的房间')
+            }
           })
         },
         handleRoomSelect(item) {

@@ -330,8 +330,11 @@ export default {
           tempGuestLit.push(g)
         }
       }
-      this.form.beginDate = moment(this.beginEndPicker[0]).format('YYYY-MM-DD')
-      this.form.endDate = moment(this.beginEndPicker[1]).format('YYYY-MM-DD')
+      this.form.beginDate = this.beginEndPicker[0]
+      this.form.endDate = this.beginEndPicker[1]
+      console.log(this.form.beginDate)
+      console.log(this.form.endDate)
+      // return;
       // //提交
       let data = {
         order: this.form,

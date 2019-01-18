@@ -1,5 +1,6 @@
+// 单房结账
 <template>
-  <!-- 入账 -->
+  <!-- 单房结账 -->
   <el-dialog class="pattern-dialog single-settl" title="单房结账" :visible.sync="dialogVisible" width="600px" :close-on-click-modal="false" :append-to-body="true">
     <div class="pattern-dialog-container" style="padding: 10px 4px;">
       <el-table
@@ -20,35 +21,34 @@
 
       <el-form ref="billForm" :inline="true" :model="billForm" size="mini" label-width="90px">
         <el-form-item label="消费金额：">
-          <el-input type="text" v-model="billForm.consumptionAmount" style="width:170px" :disabled="true"></el-input>
+          <el-input type="text" v-model="billForm.consumptionAmount" style="width:110px" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="实收：">
-          <el-input type="text" v-model="billForm.settlementAmount" style="width:170px" :disabled="true"></el-input>
+        <el-form-item label="实收：" label-width="70">
+          <el-input type="text" v-model="billForm.settlementAmount" style="width:110px" :disabled="true"></el-input>
         </el-form-item>
-
-        <el-form-item :label="billForm.diffAmount<=0? '找零': '应收'" class="diff-class">
-          <el-input type="text" v-model="billForm.diffShow" style="width:170px;" :disabled="true"></el-input>
+        <el-form-item :label="billForm.diffAmount<=0? '找零：': '应收：'" label-width="70" class="diff-class">
+          <el-input type="text" v-model="billForm.diffShow" style="width:110px;" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="结算项目：">
-          <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出" style="width:170px">
+          <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出" style="width:178px">
             <el-option label="现金" value="shanghai"></el-option>
             <el-option label="银行卡" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="支付方式" required>
-          <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:170px">
+        <el-form-item label="支付方式：" required>
+          <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:178px">
             <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客单：">
-          <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:170px">
+          <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:460px">
             <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input type="text" v-model="billForm.remark" style="width:446px"></el-input>
+          <el-input type="text" v-model="billForm.remark" style="width:460px"></el-input>
         </el-form-item>
       </el-form>
     </div>

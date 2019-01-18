@@ -157,6 +157,12 @@ export const getNewGuestOrder = params => {
 export const addCheckin = params => {
     return request.post('/back/order/addCheckin', params)
 }
-
-
+//批量添加入住
+export const batchAddCheckin = params => {
+    return request.post('/back/order/batchAddCheckin', params)
+}
+//查找空房列表
+export const listEmptyRoom = params => {
+    return request.get('/back/order/listEmptyRoom', {params: params})
+}
 
