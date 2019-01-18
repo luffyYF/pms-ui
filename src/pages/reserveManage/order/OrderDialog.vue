@@ -1,10 +1,10 @@
 // 订单弹窗
 <template>
   <div>
-    <el-dialog class="dialogVisibleClass" top="5vh" 
-    :title="dialogVisibleTitle" 
-    :visible.sync="dialogVisible" 
-    :close-on-click-modal="false" 
+    <el-dialog class="dialogVisibleClass" top="5vh"
+    :title="dialogVisibleTitle"
+    :visible.sync="dialogVisible"
+    :close-on-click-modal="false"
     :before-close="dialogVisibleClose"
     width="1120px" >
     <!-- :append-to-body="true" -->
@@ -18,7 +18,7 @@
                   <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
                 </el-form-item>
               </el-col>
-              
+
               <el-col class="dialog-li">
                 <el-form-item label="预订人">
                   <el-input v-model="form.userName" :disabled="true"></el-input>
@@ -253,11 +253,11 @@ import DialogBatchAddCheckin from './dialogBatchAddCheckin'
 export default {
   components: {
     VisitorTag,
-    bill, 
-    dialogBorrow, 
-    dialogDeposit, 
+    bill,
+    dialogBorrow,
+    dialogDeposit,
     dialogNote,
-    dialogOperationLog, 
+    dialogOperationLog,
     dialogModifyHomePrice,
     dialogPriceChangeHistory,
     RowRoomDialog,
@@ -304,7 +304,7 @@ export default {
       dialogCommodity: false,
       dialogRegimentPayment: false,
       batchModification: false,
-      dialogWake: false, 
+      dialogWake: false,
       dialogGroupPrinting: false,
       dialogBusinessCard: false,
       dialogChangeRoom: false,
@@ -420,7 +420,7 @@ export default {
           agreementName: res.data.order.agreementName
         }
         this.reserveTime = new Date(res.data.order.createTime)
-        this.dialogVisibleTitle = '组单号：'+this.form.orderNo 
+        this.dialogVisibleTitle = '组单号：'+this.form.orderNo
         if(this.currOrderInfo.order.auditStatus==0){
           this.dialogVisibleTitle += " (审批中...)";
         }else if(this.currOrderInfo.order.auditStatus==1){
@@ -434,7 +434,7 @@ export default {
         }else{
           this.currConfirmType = 'edit-guest'
         }
-          
+
         //设置下标
         if(this.currGuestPk){
           res.data.guestList.forEach((guest,index)=>{
@@ -491,7 +491,7 @@ export default {
           // this.initOrderInfo(this.currGuest.orderPk, 'visitor')
           this.$message({type: 'success',message: '更换成功!' });
         })
-        
+
       })
     },
     
@@ -545,7 +545,7 @@ export default {
           return false
         }
       }
-     
+
       //TODO 协议单位校验
       // if(orderPo.isTeam=='Y'){
       //   if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
@@ -729,7 +729,6 @@ export default {
       }
     },
 
-    //点击确定  
     confirmClick() {
       this.loading = true;
       if(this.currConfirmType=='edit-guest'){
@@ -746,7 +745,7 @@ export default {
           payment: this.form.payment,
           remark: this.form.remark,
           agreementName:this.form.agreementName,
-          AgreementPk:this.form.agreementName,
+          AgreementPk:this.form.agreementPk,
         }
 
         editOrder(data).then(res=>{})
@@ -918,7 +917,7 @@ export default {
 .batchOccupancy-content .el-date-editor.el-input,
 .batchOccupancy-content .el-date-editor.el-input__inner{
   width: 100%;
-} 
+}
 .el-select--mini,.el-input--mini{
   width: 130px;
 }

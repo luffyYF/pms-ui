@@ -290,5 +290,24 @@ export const reportDangRiYuLi = params =>{
 export const reportDangRiYuDi = params =>{
     return request.get('/pms/report/dangRiYuDi',{params:params})
 }
+/**
+ * 销售分析报表 - 渠道
+ */
+export const channelSaleAnalysis = params =>{
+    return request.get('/pms/report/channelSaleAnalysis',{params:params})
+}
+/**
+ * 销售分析报表 - 协议单位
+ */
+export const agreementSaleAnalysis = params =>{
+    return request.get('/pms/report/agreementSaleAnalysis',{params:params})
+}
+
+/**
+ * 销售员发展协议单位消费明细
+ */
+export const saleAgreementConsumptionDetails = params =>{
+    return request.get('/pms/report/getSaleAgreementConsumptionDetails',{params:params})
+}
 
 
