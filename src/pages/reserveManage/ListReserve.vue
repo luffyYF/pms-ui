@@ -133,7 +133,7 @@
       </el-table-column>
       <el-table-column label="房价">
         <template slot-scope="scope">
-          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">￥ {{y.currPrice}}</p>
+          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index"><span v-if="y.mainFlag == 'Y'">￥ {{y.currPrice}}</span></p>
         </template>
       </el-table-column>
       <el-table-column label="抵店日期" width="180">
@@ -207,11 +207,6 @@
     <!-- 订单页面 -->
     <DialogCheckinVisible ref="checkinDialogRef" />
 
-    <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
-      <div class="pattern-dialog-container">
-        <DialogCheckinVisible ref="checkinDialogRef" />
-      </div>
-    </el-dialog> -->
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
     <reserve-edit ref="reserveEditRef" @freshback="list"></reserve-edit>
@@ -351,7 +346,9 @@
         }).then(() => {
           let guestOrderPks = []
           row.guestDtos.forEach(guest => {
-            guestOrderPks.push(guest.guestOrderPk)
+            if(guest.mainFlag=='Y') {
+              guestOrderPks.push(guest.guestOrderPk)
+            }
           })
           cancelGuestOrder({guestOrderPks: guestOrderPks}).then(res=>{
           this.$message({
@@ -502,29 +499,31 @@
         let leaveNoPayCount = 0;
         let obligAtionCount = 0;
         guestDots.forEach(guest => {
-          if(guest['orderStatus'] == "RESERVE"){
-            reserveCount++;
-          }
-          if(guest['orderStatus'] == "CHECKIN"){
-            checkinCount++;
-          }
-          if(guest['orderStatus'] == "PAYMENT"){
-            paymentCount++;
-          }
-          if(guest['orderStatus'] == "LEAVE"){
-            leaveCount++;
-          }
-          if(guest['orderStatus'] == "CANCEL"){
-            cancelCount++;
-          }
-          if(guest['orderStatus'] == "NOSHOW"){
-            noShowCount++;
-          }
-          if(guest['orderStatus'] == "LEAVENOPAY"){
-            leaveNoPayCount++;
-          }
-          if(guest['orderStatus'] == "OBLIGATION"){
-            obligAtionCount++;
+          if (guest.mainFlag == "Y") {
+            if(guest['orderStatus'] == "RESERVE"){
+              reserveCount++;
+            }
+            if(guest['orderStatus'] == "CHECKIN"){
+              checkinCount++;
+            }
+            if(guest['orderStatus'] == "PAYMENT"){
+              paymentCount++;
+            }
+            if(guest['orderStatus'] == "LEAVE"){
+              leaveCount++;
+            }
+            if(guest['orderStatus'] == "CANCEL"){
+              cancelCount++;
+            }
+            if(guest['orderStatus'] == "NOSHOW"){
+              noShowCount++;
+            }
+            if(guest['orderStatus'] == "LEAVENOPAY"){
+              leaveNoPayCount++;
+            }
+            if(guest['orderStatus'] == "OBLIGATION"){
+              obligAtionCount++;
+            }
           }
         });
         return {reserveCount: reserveCount,checkinCount: checkinCount,paymentCount: paymentCount,leaveCount: leaveCount,cancelCount: cancelCount,noShowCount: noShowCount,leaveNoPayCount: leaveNoPayCount,obligAtionCount: obligAtionCount}

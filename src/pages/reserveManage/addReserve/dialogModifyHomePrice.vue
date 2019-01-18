@@ -162,7 +162,8 @@ export default {
      * @augments */
     handleClose(done) {
       this.dialogModifyHomePrice = false;
-      bus.$emit("refreshOrderInfo", this.currOrderPk);
+      this.$emit("callback")
+      // bus.$emit("refreshOrderInfo", this.currOrderPk);
     },
     initTable() {
       listContract({ orderPk: this.currOrderPk, guestOrderPk: this.currGuestOrderPk }).then(res => {

@@ -72,8 +72,8 @@
         <el-form ref="form" :model="form" size="mini" label-width="100px">
           <el-col :span="24">
             <el-form-item label="入住类型：">
-              <!-- :disabled="currFormType!='room-info'" -->
-              <el-radio-group v-model="form.checkInType" :disabled="currFormType!='room-info'">
+              <!-- :disabled="currFormType!='add-checkin'" -->
+              <el-radio-group v-model="form.checkInType" :disabled="currFormType!='add-checkin'">
                 <el-radio label="0">普通</el-radio>
                 <el-radio label="1">钟点房</el-radio>
                 <!-- <el-radio label="2">特殊房</el-radio> -->
@@ -96,7 +96,7 @@
              <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="房间类型：" required>
-                  <el-select v-model="form.roomTypePk" @change="roomTypeChange" placeholder="请选择房间类型" :disabled="currFormType=='guest-info' || currFormType=='room-info' || currFormType=='add-guest'">
+                  <el-select v-model="form.roomTypePk" @change="roomTypeChange" placeholder="请选择房间类型" :disabled="currFormType=='guest-info' || currFormType=='add-checkin' || currFormType=='add-guest'">
                     <el-option :label="r.typeName" :value="r.typePk" v-for="r in roomTypeArr" :key="r.typePk"></el-option>
                   </el-select>
                 </el-form-item>
@@ -114,12 +114,11 @@
             <el-col :span="10">
               <el-col :span="15">
                 <el-form-item label="房间数量：" required>
-                  <!-- TODO 适应豪斯菲尔预定，暂时禁用  -->
                   <!-- @change="loadPrice" -->
-                  <el-input-number size="mini" :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='room-info'|| currFormType=='add-guest'"></el-input-number>
+                  <el-input-number size="mini" :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='add-checkin'|| currFormType=='add-guest' || currFormType=='add-checkin-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
-              <el-col :span="7" v-if="currFormType=='empty' || currFormType=='room-info'">
+              <el-col :span="7" v-if="currFormType=='add-reserve' || currFormType=='add-checkin'">
                 &nbsp;&nbsp;<span style="color:red">剩余{{bookableCount}}间</span>
               </el-col>
             </el-col>
@@ -158,8 +157,15 @@
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="房间号码：">
-                  <el-input v-model="form.roomNumber" :disabled="true"></el-input>
+                <el-form-item label="房间号码：" :required="currFormType=='add-checkin-guest'">
+                  <!-- <el-input v-model="form.roomNumber" :disabled="currFormType!='add-checkin-guest'"></el-input> -->
+                  <el-autocomplete
+                    v-model="form.roomNumber"
+                    @select="handleRoomSelect"
+                    :fetch-suggestions="queryCheckinRoomAsync"
+                    placeholder="请输入房间号"
+                    :disabled="currFormType!='add-checkin-guest'">
+                  </el-autocomplete>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -168,7 +174,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="抵店日期：" required>
-                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined || currFormType=='room-info'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="form.guestOrderPk!==undefined || currFormType=='add-checkin'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -190,7 +196,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="客人名称：" required>
-                  <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称"></el-input>
+                  <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称" @keyup.enter.native="chooseEmptyGuest(form.guestName)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="1">
@@ -199,8 +205,8 @@
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="手机号码：" :required="currFormType=='room-info'">
-                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange"></el-input>
+                <el-form-item label="手机号码：" :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'">
+                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -338,9 +344,10 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="extendClose">取 消</el-button>
-        <el-button size="mini" @click="extendConfirm" type="primary" :disabled="submitLock">确 认</el-button>
+        <el-button size="mini" @click="extendConfirm" type="primary" :loading="submitLock">确 认</el-button>
       </span>
     </el-dialog>
+
     <!--设置二维码开门手机号-->
     <el-dialog class="agreement-body" title="设置二维码开门手机号" :visible.sync="dialogQRCodeSetting" width="30%" :append-to-body="true" :before-close="dialogQRCodeSettingClose">
       <div class="body-conten">
@@ -357,7 +364,7 @@
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
     <!-- 预定管理 -->
-    <reserveManager ref="reserveManagerRef"></reserveManager>
+    <reserveManager ref="reserveManagerRef" @callback="reserveManagerCallback"></reserveManager>
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
      <!-- 退房超时提醒 -->
@@ -386,7 +393,9 @@
       continuedRoom,
       editOrderMember,
       addReserveGuest,
-      qrCodePhoneSetting
+      qrCodePhoneSetting,
+      addCheckin,
+      getCheckinAbleRoom
     } from '@/api/order/pmsOrderController'
     import {listType, listPriceScheme} from '@/api/utils/pmsTypeController'
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
@@ -403,12 +412,20 @@
       components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind, dialogBatchAddBill},
       data() {
         return {
+          /**
+           * 当前表单状态： 
+           * add-reserve（添加预定） 
+           * guest-info（客单信息） 
+           * add-checkin（房态图办理入住） 
+           * add-guest（添加客人）
+           * add-checkin-guest （添加入住）
+           */
+          currFormType:'',
           submitLock:false,
           gsReserve:0,
           gsCheckin:0,
           gsLeave:0,
           memberFlag: false,//是否是会员标识
-          currFormType:'',//当前表单状态： empty（空） guest-info（客单信息） room-info（保存入住）  add-guest（添加客人）
           currGuestList: [],//当前所有客单信息
           credentialsMap: credentialsMap,
           orderStatusMap: orderStatusMap,
@@ -508,8 +525,8 @@
         initEmpty() {
           this.loadRoomType(_=>{
             this.formReset()
-            this.form.currTitle = '添加客单'
-            this.currFormType='empty'
+            this.form.currTitle = '添加预定'
+            this.currFormType='add-reserve'
             this.roomTable=[]
             this.currGuestList = []
             this.contractTableData = []
@@ -520,13 +537,13 @@
         },
 
         /**
-         * 初始化带房间的表单（办理入住）（外部调用）
+         * （房态图办理入住）（外部调用）
          * @augments room 当前选择的房间*/
         initRoomData(room) {
           this.loadRoomType(_=>{
             this.formReset()
-            this.currFormType='room-info'
-            this.form.currTitle = '添加客单'
+            this.currFormType='add-checkin'
+            this.form.currTitle = '办理入住'
             this.form.roomPk = room.roomPk
             this.form.roomNumber = room.roomNumber
             this.form.roomTypePk = room.roomTypePk
@@ -541,6 +558,7 @@
             this.$refs.channelRef.load(true);
           })
         },
+
         /**
          * 初始化回显客单数据（外部调用）
          * @augments guestList 客单列表
@@ -559,7 +577,26 @@
             this.$refs.channelRef.load(false)
           });
         },
-        
+        //添加入住初始化
+        parentClearAddCheckinGuest(type) {
+          if(type=='copy') {
+            this.currFormType='add-checkin-guest'
+            this.form.currTitle = '复制入住'
+            this.form.roomPk = null
+            this.form.roomNumber = null
+            this.loadPrice()
+            this.$refs.channelRef.load(true)
+          }else {
+            this.loadRoomType(_=>{
+              this.formReset()
+              this.currFormType='add-checkin-guest'
+              this.form.currTitle = '添加入住'
+              this.loadPrice()
+              this.$refs.channelRef.load(true)
+            })
+          }
+          
+        },
         //添加客人初始化（外部调用）
         parentClearGuest() {
           if(!this.form.guestOrderPk){
@@ -592,7 +629,7 @@
           this.form.nativePlace = ''
           this.form.detailAddress = ''
         },
-        //添加客人（外部调用）
+        //添加客人初始化（外部调用）
         parentAddGuest() {
           if(this.form.currTitle != '添加客人'){
             return;
@@ -617,44 +654,75 @@
           }
           addGuest(data).then(res=>{
             this.$message({type:'success', message:'添加客人成功'})
-            // this.form.currTitle = '客单信息'
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
           }).finally(()=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
           })
         },
         //添加预定初始化（外部调用）
         cleanAddReserveGuest() {
           this.formReset();
           this.form.currTitle = '添加预定'
-          this.currFormType = 'empty'
+          this.currFormType = 'add-reserve'
           this.getBookableCount()
           this.loadPrice();
         },
-        //添加预定（外部调用）
+        //提交添加预定（外部调用）
         addReserveGuest() {
           addReserveGuest(this.form).then(res=>{
             this.$message({type:'success', message:'添加预定成功'})
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
           }).finally(()=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('unlock')
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
-        editGuestInfo() {//修改客人信息（外部调用）a
+        //提交修改客人信息（外部调用）
+        editGuestInfo() {
           if(this.form.pmsCancelFlag=='Y'){
             return;
           }
           editOrderMember(this.form).then(res=>{
             this.$message({type:'success', message: '客人信息修改成功'})
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
           }).finally(()=>{
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('unlock')
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
           })
         },
-        formReset() {//重置表单
+        //添加入住（外部调用）
+        addCheckin(orderPk){
+          if(!orderPk) {
+            this.$message.warning('没有主订单')
+            this.$emit('unlock')
+            return
+          }
+          if(!this.form.roomPk) {
+            this.$message.warning('请输入房间号')
+            this.$emit('unlock')
+            return
+          }
+          if(!this.form.guestPhone) {
+            this.$message.warning('请输入手机号')
+            this.$emit('unlock')
+            return
+          }
+          let data = {
+            order: {orderPk: orderPk},
+            guestOrder: this.form
+          }
+          addCheckin(data).then(res=>{
+            this.$message.success('添加入住成功')
+            this.$emit('callback')
+          }).finally(()=>{
+            this.$emit('unlock')
+          })
+        },
+        //重置表单
+        formReset() {
           this.form.currTitle = ''
-          this.form.memPk = undefined
-          this.form.guestOrderPk = undefined
+          this.form.memPk = null
+          this.form.guestOrderPk = null
           this.form.count = 1
           this.form.checkinDays = 1
           this.form.deposit = 0
@@ -662,7 +730,7 @@
           this.form.currPromotionPrice = 0
           this.form.roomNumber = null
           this.form.roomTypePk = this.roomTypeArr[0].typePk
-          this.form.roomPk = undefined
+          this.form.roomPk = null
           this.form.checkInType = '0'
           this.form.memberCarNo = null
           this.form.isSecret = 'N'
@@ -743,6 +811,14 @@
             this.memberFlag = false
           }
         },
+        registeredMemberClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        },
+        //加载房型数据
         loadRoomType(callback) {
           // 获取房型
           listType({typeMaster:'ROOM_TYPE'}).then(res=>{
@@ -754,15 +830,9 @@
             })
           })
         },
-        registeredMemberClose(done) {
-          this.$confirm('确认关闭？')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {});
-        },
-        loadPrice() {//动态加载当前房租 
-          if(this.currFormType == 'empty' || this.currFormType == 'room-info'){
+        //动态加载当前房租 
+        loadPrice() {
+          // if(this.currFormType == 'add-reserve' || this.currFormType == 'add-checkin'){
             if(!this.form.roomTypePk){
               this.$message({type:'warning', message:'请先选择房间类型！'})
               return
@@ -771,7 +841,7 @@
               this.$message({type:'warning', message:'请先选择抵店日期！'})
               return
             }
-           
+            
             let data = {
               roomTypePk: this.form.roomTypePk,
               beginDate: this.form.beginDate,
@@ -780,13 +850,15 @@
             calcMoney(data).then(res=>{
               this.form.currPrice = MyToFixed(res.data*this.form.count, 2)
             })
-          }
+          // }
         },
+        //加载合约
         loadContract(){
           listContract({ orderPk: this.form.orderPk }).then(res=>{//加载合约列表
             this.contractTableData = res.data
           })
         },
+        //统计客单状态数量
         calcGuest() {
           this.gsReserve = 0
           this.gsCheckin = 0
@@ -829,12 +901,14 @@
           this.calcDays()
           this.getBookableCount()
         },
-        extendClose() {//取消续房
+        //取消续房
+        extendClose() {
           this.dialogExtend = false
           this.form.endDate = this.tempEndDate
           this.calcDays()
         },
-        extendConfirm() {//确认续房
+        //确认续房
+        extendConfirm() {
           if(!this.extendForm.payment){
             this.$message({type:'warning', message:'请选择付款方式'})
             return
@@ -855,11 +929,9 @@
             payment: this.extendForm.payment
           }
           continuedRoom(data).then(res=>{
-            this.$message({
-              type: 'success',
-              message: '续住成功!'
-            })
-            bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$message({type: 'success', message: '续住成功!'})
+            // bus.$emit('refreshOrderInfo', this.form.orderPk)
+            this.$emit('callback')
             this.dialogExtend = false
             this.submitLock = false;
           }).catch(()=>{
@@ -906,7 +978,8 @@
               if (action === 'confirm')  {
                 instance.confirmButtonLoading = true;
                 checkoutGuest(guestOrderPk).then(res=> {
-                  bus.$emit('refreshOrderInfo', this.form.orderPk)
+                  this.$emit('callback')
+                  // bus.$emit('refreshOrderInfo', this.form.orderPk)
                 }).finally(()=>{
                   instance.confirmButtonLoading = false;
                   done();
@@ -945,10 +1018,6 @@
               this.$message({type:'warning', message:'手机号不合法'})
               return
             }
-            // if(!phoneReg.test(val)){
-            //   this.$message({type:'warning', message:'手机号不合法'})
-            //   return
-            // }
             this.$refs.chooseGuestRef.initByPhone(this.form.guestPhone)
           }
         },
@@ -974,10 +1043,16 @@
             this.memberFlag = false              
           }
         },
-        reserveManager() {//打开预定管理
+        //打开预定管理
+        reserveManager() {
           this.$refs.reserveManagerRef.init(this.form.orderPk)
         },
-        toDialogAgreement(buttonType) {//打开选择协议单位
+        //预定回调
+        reserveManagerCallback() {
+          this.$emit("callback")
+        },
+        //打开选择协议单位
+        toDialogAgreement(buttonType) {
           if(buttonType == 'registMember'){
             this.regisType = buttonType
           }
@@ -1038,12 +1113,33 @@
             this.$message.success('设置成功')
           })
         },
+        // 查找可入住的房间
+        queryCheckinRoomAsync(queryString, cb){
+          let data = {
+            roomTypePk: this.form.roomTypePk,
+            roomNumber: queryString,
+            beginDate: moment(this.form.beginDate).format("YYYY-MM-DD"),
+            endDate: moment(this.form.endDate).format("YYYY-MM-DD"),
+          }
+          getCheckinAbleRoom(data).then(res=>{
+            let temp = []
+            res.data.forEach(ele=>{
+              ele.value = ele.roomNumber + '   ' + ele.roomStatusName
+              temp.push(ele)
+            })
+            cb(temp);
+          })
+        },
+        handleRoomSelect(item) {
+          this.form.roomPk = item.roomPk
+          this.form.roomNumber = item.roomNumber
+        },
 
         //制卡
         makeCard(room){
           this.$refs.dialogMakeCardRef.showDialog(room.roomPk,room.endDate,room.orderGuestNo,room.roomNumber,room.guestName);
-        }
-
+        },
+        
       },
       mounted() {
         // bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })

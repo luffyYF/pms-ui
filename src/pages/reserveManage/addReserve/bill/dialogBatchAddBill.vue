@@ -77,7 +77,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="addBillLists(formAddBills)">确认</el-button>
-        <el-button size="mini" type="primary" @click="dialogBatchEntry = false">关闭</el-button>
+        <el-button size="mini" @click="dialogBatchEntry = false">关闭</el-button>
       </span>
     </el-dialog>
 </template>

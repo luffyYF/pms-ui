@@ -7,9 +7,9 @@
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
         </div>
-        <div class="table-container" id="print-checkInguest">
+        <div class="table-container" id="print-todaydueout">
             <h3>{{activeCompany.companyName}}</h3>
-            <h4>在住客人报表</h4>
+            <h4>当日预离报表</h4>
             <span style="padding-right:20px">打印日期：{{sDate}}</span>
             <span style="padding-right:20px">打印时间：{{sTime}}</span>
             <span>营业日期：{{sDate}}</span>
@@ -21,18 +21,11 @@
               border 
               style="width: 100%; margin:0 auto;">
               <el-table-column prop="memName" align="center" label="客人姓名" ></el-table-column>
-              <el-table-column prop="memSex" align="center" label="性别" >
-                  <template slot-scope="scope">
-                      <span>{{scope.row.memSex == 'M' ? '男' : '女'}}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column prop="certificateTypeName" align="center" label="证件类型" ></el-table-column>
               <el-table-column prop="certificateNo" align="certificateNo" label="证件号码">
                   <template slot-scope="scope">
                       <span>{{scope.row.certificateNo == 'null' ? '' : scope.row.certificateNo}}</span>
                   </template>
               </el-table-column>
-              <el-table-column prop="channelName" align="center" label="渠道" ></el-table-column>
               <el-table-column prop="roomNumber" align="center" label="房号">
                   <template slot-scope="scope">
                       <span>{{scope.row.roomNumber == 'null' ? '' : scope.row.roomNumber}}</span>
@@ -44,13 +37,10 @@
                       <span>{{scope.row.price == 'null' ? '' : scope.row.price}}</span>
                   </template>
               </el-table-column>
+              <el-table-column prop="consumptionAmount" align="center" label="消费金额" ></el-table-column>
+              <el-table-column prop="settlementAmount" align="center" label="结算金额" ></el-table-column>
               <el-table-column prop="beginDate" align="center" label="入住时间" ></el-table-column>
               <el-table-column prop="endDate" align="center" label="预离时间"></el-table-column>
-              <el-table-column prop="remark" align="center" label="备注">
-                  <template slot-scope="scope">
-                      <span>{{scope.row.remark == 'null' ? '' : scope.row.remark}}</span>
-                  </template>
-              </el-table-column>
             </el-table>
         </div>
     <!-- 打印填充 iframe-->
@@ -60,7 +50,7 @@
 
 <script>
 import common from "@/api/common"
-import {roomStatus,reportZaiZhuKeRen} from "@/api/reportCenter/pmsReportFormController"
+import {roomStatus,reportDangRiYuLi} from "@/api/reportCenter/pmsReportFormController"
 import moment from "moment"
 import exportExcel from '@/components/download/exportExcel'
 export default {
@@ -75,7 +65,7 @@ export default {
         padding: '8px',
         'text-align':'center'
       },baseUrl:common.baseUrl,
-      ziurl:"/report/zaiZhuKeRenExcel"
+      ziurl:"/report/dangRiYuLiExcel"
     };
   },
   created() {
@@ -103,7 +93,7 @@ export default {
     },
     getList(){
       let self = this
-      reportZaiZhuKeRen().then((data)=>{
+      reportDangRiYuLi().then((data)=>{
         console.log(data.data)
         if(data.code == 1){
           self.tableData =  data.data
@@ -112,7 +102,7 @@ export default {
     },
     //打印预览
     print(){
-      let bodyhtml = document.getElementById("print-checkInguest").innerHTML;
+      let bodyhtml = document.getElementById("print-todaydueout").innerHTML;
       var f = document.getElementById("printIframe");
       f.contentDocument.write(bodyhtml);
       f.contentDocument.close();
