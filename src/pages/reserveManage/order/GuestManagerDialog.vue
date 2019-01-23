@@ -26,13 +26,14 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="certificateNo" label="证件号码" align="center">
+      <el-table-column prop="certificateNo" label="证件号码" width="160" align="center">
         <template slot-scope="scope"> 
           <el-input type="text" size="mini" v-model="scope.row.certificateNo"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
+          <IDCardScan @callback="getIDCardInfo(scope.$index, $event)"></IDCardScan>
           <el-button size="mini" type="text" @click="submitItem(scope.row)">修改</el-button>
         </template>
       </el-table-column>
@@ -51,7 +52,10 @@
 import {credentialsMap} from '@/utils/orm'
 import {validatePhone} from '@/utils/validate'
 import {listSimpleGuestMemberInfo, editOrderMemberBatch} from '@/api/order/pmsOrderController'
+import IDCardScan from '@/components/Idcard/IDCardScan'
+
 export default {
+  components:{IDCardScan},
   data() {
     return {
       loading: false,
@@ -85,7 +89,7 @@ export default {
         this.loading = false;
         return
       }
-      editOrderMemberBatch({guestList:this.multipleSelection}).then(res=>{
+      editOrderMemberBatch(this.multipleSelection).then(res=>{
         this.$message.success('修改成功')
       }).finally(()=>{
         this.loading = false;
@@ -95,7 +99,7 @@ export default {
       if(!this.validate([row])){
         return
       }
-      editOrderMemberBatch({guestList:[row]}).then(res=>{
+      editOrderMemberBatch([row]).then(res=>{
         this.$message.success('修改成功')
       })
     },
@@ -110,6 +114,18 @@ export default {
       }
       
       return true;
+    },
+    //获取身份证信息
+    getIDCardInfo(index, data){
+      console.log('table下标', index)
+      console.log('返回数据',data)
+      this.$set(this.guestTable[index], 'guestName', data.guestName)
+      this.$set(this.guestTable[index], 'certificateNo', data.certificateNo)
+      this.$set(this.guestTable[index], 'birthday', data.bornDate)
+      this.$set(this.guestTable[index], 'address', data.detailAddress)
+      this.$set(this.guestTable[index], 'memSex', data.guestGender)
+      this.$set(this.guestTable[index], 'nationality', data.nationality)
+      this.$set(this.guestTable[index], 'certificateType', 'TWO_IDENTITY')
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
