@@ -71,29 +71,29 @@
         <el-col :span="24"> <br> </el-col>
         <el-col :span="24" class="bill-opr">
           财务处理：
-          <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">拆账</el-button>
-          <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">冲减</el-button>
-          <el-button size="mini" @click="transferAccountsClick()" >转账</el-button>
+          <el-button size="mini" @click="splitBillOperation" v-if="hasPerm('pms:billAss:splitBill')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">拆账</el-button>
+          <el-button size="mini" @click="offsetBillOperation" v-if="hasPerm('pms:billAss:offsetBill')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">冲减</el-button>
+          <el-button size="mini" @click="transferAccountsClick()" v-if="hasPerm('pms:billAss:transBill')" >转账</el-button>
           <!-- v-if="powerJudge('402004')" -->
-          <el-button size="mini" @click="dialogAccountedFor = true" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">入账</el-button>
+          <el-button size="mini" @click="openAddBill()" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">入账</el-button>
           <el-button size="mini" @click="dialogBatchEntryClick()"  :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">批量入账</el-button>
           <!-- <el-button size="mini" @click="dialogPreLicensing = true">预授权<span>0</span>笔</el-button> -->
           <el-button size="mini" v-if="!isDubm" @click="virtualBillClick()">虚拟账单</el-button>
         </el-col>
         <el-col :span="24" class="bill-opr">
           结账处理：
-          <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)  ">结账</el-button>
-          <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
-          <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
-          <el-button size="mini" @click="toDialogRecoverBill" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
-          <el-button size="mini" @click="toSingleSettle" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || currOrderInfo.order.hfFlag=='Y'">单房结账</el-button>
+          <el-button size="mini" @click="settlement(0)" v-if="(currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm) && hasPerm('pms:billAss:billSettle')" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)  ">结账</el-button>
+          <el-button size="mini" @click="settlement(1)" v-if="hasPerm('pms:billAss:checkOut')" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
+          <el-button size="mini" @click="settlement(2)" v-if="hasPerm('pms:billAss:partialCheckout')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
+          <el-button size="mini" @click="toDialogRecoverBill" v-if="hasPerm('pms:billAss:partialCheckoutRec')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
+          <el-button size="mini" @click="toSingleSettle" v-if="hasPerm('pms:billAss:singleCheckOut')" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || currOrderInfo.order.hfFlag=='Y'">单房结账</el-button>
 
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
         <el-col :span="24" class="bill-opr">
           打印处理：
-          <el-button size="mini" @click="clickPrint">打印</el-button>
-          <el-button size="mini" @click="exportClick">导出账单</el-button>
+          <el-button size="mini" v-if="hasPerm('pms:billAss:printBill')" @click="clickPrint">打印</el-button>
+          <el-button size="mini" v-if="hasPerm('pms:billAss:exportBill')" @click="exportClick">导出账单</el-button>
           <!-- <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button> -->
         </el-col>
       </el-col>

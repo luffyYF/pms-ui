@@ -7,7 +7,7 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <span @click="logout">[退出系统]</span>
-        <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span>
+        <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
         <!-- <span @click="logout">[退出系统]</span> -->
       </div>
     </el-col>
@@ -698,13 +698,27 @@ export default {
 .ylDialog{
   bottom: 0;
   width:300px;
+  border: 1px solid #F60;
+}
+.ylDialog .el-dialog__header{
+    color: white;
+    background-color: #F60;
+    padding: 10px;
 }
 .ylDialog .el-dialog__body{
-  padding: 0 0px;
+    padding: 0 0px;
 }
 .ylDialog .el-dialog__title{
-  font-size: 15px;
-  line-height: 15px;
+    color: white;
+    font-size: 15px;
+    line-height: 15px;
+}
+.ylDialog .el-dialog__headerbtn .el-dialog__close{
+  color: white;
+}
+.ylDialog .el-dialog__headerbtn{
+    top: 10px;
+    right: 10px;
 }
 .ylDialog .el-table .cell{
   font-size: 12px;

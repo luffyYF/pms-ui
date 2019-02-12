@@ -158,7 +158,7 @@
       <el-main>
         <el-row>
           <!-- 房间item begin -->
-          <div class="pattern-li" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)">
+          <div class="pattern-li" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
             <!-- 房间号 渠道 -->
             <div class="pattern-li-item">
               <label class="rm">{{item.roomNumber}}</label>
@@ -191,7 +191,7 @@
 
               <!-- 入住关联类型 -->
               <el-popover
-                ref="popover1"
+                ref="popover2"
                 placement="bottom"
                 title=""
                 :width="item.orderInfo && item.orderInfo.guestList.length>1 ? 420 : 236"
@@ -216,9 +216,13 @@
                     </div>
                   </div>
                 </div>
-                <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1"></label>
-                <label slot="reference" class="detailsinfo relation" v-if="item.roomRelationType==2"></label>
-                <label slot="reference" class="detailsinfo room_team" v-if="item.roomRelationType==3"></label>
+                
+                <el-button slot="reference" size="mini" :class="{'displayNone':item.roomRelationType !=1 }" v-popover:item.guestOrderPk class="detailsinfo reserve_single" type="text"></el-button>
+                <el-button slot="reference" size="mini" :class="{'displayNone':item.roomRelationType !=2 }" v-popover:item.guestOrderPk class="detailsinfo relation" type="text"></el-button>
+                <el-button slot="reference" size="mini" :class="{'displayNone':item.roomRelationType !=3}" v-popover:item.guestOrderPk class="detailsinfo room_team" type="text"></el-button>
+                <!-- <label slot="reference" class="detailsinfo reserve_single" v-if="item.roomRelationType==1">1</label>
+                <label slot="reference" class="detailsinfo relation"   v-if="item.roomRelationType==2">2</label>
+                <label slot="reference" class="detailsinfo room_team"  v-if="item.roomRelationType==3">3</label> -->
               </el-popover>
 
               <!-- 预抵关联类型 -->
@@ -567,13 +571,16 @@
           channelPk:this.selectForm.channel
         }
         currentRoomList(data).then(res=>{
-          this.roomList = res.data
+          console.log("12345");
+          // this.roomList = res.data
+          this.roomList = JSON.parse(JSON.stringify(res.data));
           listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
             this.roomType = res2.data.data
           })
           this.$refs.channelRef.load(true);
           //标识预离
           let now = moment().hour() >= nightTrialTime ? moment() : moment().subtract(1, 'days');
+
           this.roomList.forEach(item=> {
             if(item.arrivalOrderPk && item.arrivalGuestPk){
               this.$set(item, 'futureFlag', "Y")
@@ -584,6 +591,8 @@
               this.$set(item, 'leaveFlag', null)
             }
           })
+          this.$nextTick()
+          this.$forceUpdate();
           // localStorage.setItem("roomList",JSON.stringify(this.roomList))
         })
       }
@@ -896,6 +905,7 @@
       //关联图标信息
       relationIconHover(index) {
         if(!this.roomList[index].orderInfo) {
+          console.log(index);
           loadOrderInfo({guestOrderPk:this.roomList[index].guestOrderPk}).then(res=>{
             this.$set(this.roomList[index], 'orderInfo',res.data);
           })
@@ -905,6 +915,7 @@
       arrivalIconHover(index) {
         if(!this.roomList[index].arrivalInfo) {
           loadOrderInfo({guestOrderPk:this.roomList[index].arrivalGuestPk}).then(res=>{
+            console.log(index);
             this.$set(this.roomList[index], 'arrivalInfo',res.data);
           })
         }
@@ -956,6 +967,9 @@
   }
 </script>
 <style>
+.displayNone{
+  display: none;
+}
 .el-popover{
   text-align: left !important;
 }

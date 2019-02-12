@@ -1,7 +1,7 @@
 // 结账弹窗
 <template>
   <!-- 结账 -->
-  <el-dialog class="pattern-dialog height280" title="结账" :visible.sync="dialogPartialCheckout" width="45%" :close-on-click-modal="false" :append-to-body="true">
+  <el-dialog class="pattern-dialog height280" title="结账" :visible.sync="dialogPartialCheckout" width="650px" :close-on-click-modal="false" :append-to-body="true">
     <div class="pattern-dialog-container" style="padding: 25px 4px;">
       <el-col :span="24">
         <el-col :span="12">
@@ -27,7 +27,7 @@
           <el-form ref="billForm" :model="billForm" size="mini" label-width="90px">
             <div v-if="type==0 || type==2">
                 <el-form-item label="结算项目：">
-                  <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出">
+                  <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出" style="width:100%">
                     <el-option label="现金" value="shanghai"></el-option>
                     <el-option label="银行卡" value="beijing"></el-option>
                   </el-select>
@@ -39,13 +39,13 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="客单：">
-                  <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单">
+                  <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:100%">
                     <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="备注：">
-                  <el-input type="textarea" v-model="billForm.remark"></el-input>
+                  <el-input type="textarea" rows="4" v-model="billForm.remark" style="width:100%"></el-input>
                 </el-form-item>
             </div>
             <div v-if="type==1">
