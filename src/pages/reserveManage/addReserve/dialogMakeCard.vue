@@ -105,7 +105,7 @@ export default {
         return;
       }
 
-      let temp = 'guestCard,'+
+      let temp = 'RFL,guestCard,'+
           this.form.rflCoid+','+
           '0,'+
           this.form.lLock+','+
@@ -124,18 +124,18 @@ export default {
     readCard() {
       this.loadFun();
       // window.open("Webshell://Z2V0Q2FyZE5vSW5mbyUyQzM4NzA0NDc=", "_self");
-      let params = base64.Base64.encode('getCardNoInfo,'+this.form.rflCoid);
+      let params = base64.Base64.encode('RFL,getCardNoInfo,'+this.form.rflCoid);
       window.open("Webshell://"+params, "_self");
     },
     destoryCard(){
       this.loadFun();
-      let params = base64.Base64.encode('cardErase,'+this.form.rflCoid);
+      let params = base64.Base64.encode('RFL,cardErase,'+this.form.rflCoid);
       window.open("Webshell://"+params, "_self");
     },
     checkDdl() {
       this.loadFun();
       //检测版本号，若没有版本号，则表示缺失ddl文件
-      let params = base64.Base64.encode('getDLLVersion');
+      let params = base64.Base64.encode('RFL,getDLLVersion');
       window.open("Webshell://"+params, "_self");
     }
   }

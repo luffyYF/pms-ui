@@ -118,7 +118,7 @@
                   <el-input-number size="mini" :min="1" v-model="form.count" :disabled="currFormType=='guest-info' || currFormType=='add-checkin'|| currFormType=='add-guest' || currFormType=='add-checkin-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
-              <el-col :span="7" v-if="currFormType=='add-reserve' || currFormType=='add-checkin'">
+              <el-col :span="7" v-if="currFormType=='add-reserve' || currFormType=='add-checkin' || currFormType=='add-checkin-guest' ">
                 &nbsp;&nbsp;<span style="color:red">剩余{{bookableCount}}间</span>
               </el-col>
             </el-col>
@@ -196,8 +196,8 @@
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="客人名称：" required>
-                  <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称" @keyup.enter.native="chooseEmptyGuest(form.guestName)"></el-input>
+                <el-form-item label="会员卡号：">
+                  <el-input v-model="form.memberCarNo" :disabled="memberFlag"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="1">
@@ -206,15 +206,15 @@
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="手机号码：" :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'">
-                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
+                <el-form-item label="客人名称：" required>
+                  <el-input v-model="form.guestName" :disabled="memberFlag" placeholder="请填写客人名称" @keyup.enter.native="chooseEmptyGuest(form.guestName)"></el-input>
                 </el-form-item>
               </el-col>
             </el-col>
             <el-col :span="12">
               <el-col :span="18">
-                <el-form-item label="会员卡号：">
-                  <el-input v-model="form.memberCarNo" :disabled="memberFlag"></el-input>
+                <el-form-item label="手机号码：" :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'">
+                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="5">
@@ -230,7 +230,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <span class="iconCertificate" @click="seeCompany" title="身份证扫描"></span>
+                <!-- <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" :loading="idcLoading"></el-button> -->
+                <IDCardScan @callback="getIDCardInfo"></IDCardScan>
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -407,10 +408,10 @@
     import DialogMakeCard from './dialogMakeCard'
     import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
     import dialogBatchAddBill from './bill/dialogBatchAddBill'
-    
+    import IDCardScan from '@/components/Idcard/IDCardScan'
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind, dialogBatchAddBill},
+      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind, dialogBatchAddBill,IDCardScan},
       data() {
         return {
           /**
@@ -510,6 +511,9 @@
             },
           },
           regisType: '',
+          // idcLoading:false,
+          // idcTime:null,
+          // timer:null,
         }
       },
       methods: {
@@ -592,6 +596,7 @@
             }
             this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
             this.loadPrice()
+            this.getBookableCount()
             this.$refs.channelRef.load(true)
           }else {
             this.loadRoomType(_=>{
@@ -599,10 +604,10 @@
               this.currFormType='add-checkin-guest'
               this.form.currTitle = '添加入住'
               this.loadPrice()
+              this.getBookableCount()
               this.$refs.channelRef.load(true)
             })
           }
-          
         },
         //添加客人初始化（外部调用）
         parentClearGuest() {
@@ -1147,7 +1152,16 @@
         makeCard(room){
           this.$refs.dialogMakeCardRef.showDialog(room.roomPk,room.endDate,room.orderGuestNo,room.roomNumber,room.guestName);
         },
-        
+        //获取身份证信息
+        getIDCardInfo(data){
+          this.form.guestName = data.guestName
+          this.form.certificateNo = data.certificateNo
+          this.form.bornDate = data.bornDate
+          this.form.detailAddress = data.detailAddress
+          this.form.guestGender = data.guestGender
+          this.form.nationality = data.nationality
+          this.form.certificateType = 'TWO_IDENTITY'
+        }
       },
       mounted() {
         // bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })

@@ -145,3 +145,12 @@ export const attendanceTypeMap = {
   'FIXED': '固定排班',
   'TURN': '轮班排班',
 }
+//房态状态
+export const roomStatusMap = {
+  'OCCUPY': "占用房",
+  'DIRTY': "脏房",
+  'CLEAN_NOCHECK': "清洁未检查",
+  'CLEAN_CHECKED': "清洁已检查",
+  'DISABLE_ROOM': "停用房",
+  'REPAIR_ROOM': "维修房"
+}
