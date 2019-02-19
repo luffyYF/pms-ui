@@ -8,3 +8,7 @@ export const generatorCode = params => {
 export const getIDCardInfo = params => {
     return request.get('/api/cvr/getIDCardInfo', {params:params})
 }
+//保存身份证读取记录
+export const saveCvrRecord = params => {
+    return request.post('/api/cvr/saveRecord', params)
+}

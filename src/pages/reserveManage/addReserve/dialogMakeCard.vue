@@ -28,7 +28,9 @@
 <script>
 import base64 from 'js-base64'
 import moment from "moment";
+import {makeCard} from '@/components/hfplugin/index'
 import { getRflRoomInfo } from "@/api/systemSet/roomSetting/floorRoom";
+import { saveRflRecord } from '@/api/roomStatus/pmsRoomStatusController'
 export default {
   data() {
     return {
@@ -78,6 +80,7 @@ export default {
       },1000)
     },
     makeCard() {
+      this.lazyFlag = true
       /**
        * 酒店标识
        * 卡号：暂时给0
@@ -87,56 +90,129 @@ export default {
        * 退房时间
        * 锁号
       */
-      this.loadFun();
+      // this.loadFun();
       if(!this.form.rflCoid){
         this.$message.warning('酒店标识不能为空');
+        this.lazyFlag = false;
         return;
       }
       if(!this.form.lLock){
         this.$message.warning('反锁标志不能为空');
+        this.lazyFlag = false;
         return;
       }
       if(!this.form.endDate){
         this.$message.warning('离店日期不能为空');
+        this.lazyFlag = false;
         return;
       }
       if(!this.form.rflLockNo){
         this.$message.warning('锁号不能为空');
+        this.lazyFlag = false;
         return;
       }
 
-      let temp = 'RFL,guestCard,'+
-          this.form.rflCoid+','+
-          '0,'+
-          this.form.lLock+','+
-          '1,'+
-          moment().format("YYMMDDHHmm")+','+
-          moment(this.form.endDate).format("YYMMDDHHmm")+','+
-          this.form.rflLockNo+','+
-          this.form.orderGuestNo+','+
-          this.form.roomNumber+','+
-          this.form.guestName+','+
-          this.userinfo.upmsUserId+','+
-          this.userinfo.upmsUserName;
-      let params = base64.Base64.encode(temp);
-      window.open("Webshell://"+params, "_self");
+      // let params = 'guestCard,'+
+      //     this.form.rflCoid+','+
+      //     '0,'+
+      //     '0,'+
+      //     this.form.lLock+','+
+      //     '1,'+
+      //     moment().format("YYMMDDHHmm")+','+
+      //     moment(this.form.endDate).format("YYMMDDHHmm")+','+
+      //     this.form.rflLockNo+','+
+      //     this.form.orderGuestNo+','+
+      //     this.form.roomNumber+','+
+      //     this.form.guestName+','+
+      //     this.userinfo.upmsUserId+','+
+      //     this.userinfo.upmsUserName;
+
+      let params =  {
+        rflCoid: this.form.rflCoid,
+        cardNo: '0',
+        dai: '0',
+        llock: this.form.lLock,
+        pdoors: '1',
+        beginDate: moment().format("YYMMDDHHmm"),
+        endDate: moment(this.form.endDate).format("YYMMDDHHmm"),
+        rflLockNo: this.form.rflLockNo,
+        orderGuestNo: this.form.orderGuestNo,
+        roomNumber: this.form.roomNumber,
+        guestName: this.form.guestName,
+        createUserId: this.userinfo.upmsUserId,
+        createUserName: this.userinfo.upmsUserName
+      }
+      let data = {
+        joinParam: 'guestCard,'+ base64.Base64.encode(JSON.stringify(params))
+      }
+      console.log(data);
+      makeCard(data, res=>{
+        if(res.code==0){
+          this.$alert(res.data, '读卡器信息', {confirmButtonText: '确定'});
+          params.successFlag='1'
+        }else {
+          params.successFlag='0'
+          this.$message.error(res.msg);
+        }
+        //保存制卡记录
+        saveRflRecord(params).then(res=>{})
+      }, ()=>{
+        this.lazyFlag = false;
+      })
     },
     readCard() {
-      this.loadFun();
+      // this.loadFun();
       // window.open("Webshell://Z2V0Q2FyZE5vSW5mbyUyQzM4NzA0NDc=", "_self");
-      let params = base64.Base64.encode('RFL,getCardNoInfo,'+this.form.rflCoid);
-      window.open("Webshell://"+params, "_self");
+      // let params = base64.Base64.encode('RFL,getCardNoInfo,'+this.form.rflCoid);
+      // window.open("Webshell://"+params, "_self");
+      this.lazyFlag = true;
+
+      let params = 'getCardNoInfo,'+this.form.rflCoid;
+      makeCard({joinParam: params}, res=>{
+        if(res.code==0){
+          this.$alert(res.data, '读卡器信息', {dangerouslyUseHTMLString: true});
+        }else {
+          this.$message.error(res.msg);
+        }
+      }, ()=>{
+        this.lazyFlag = false;
+      })
     },
     destoryCard(){
-      this.loadFun();
-      let params = base64.Base64.encode('RFL,cardErase,'+this.form.rflCoid);
-      window.open("Webshell://"+params, "_self");
+      // this.loadFun();
+      // let params = base64.Base64.encode('RFL,cardErase,'+this.form.rflCoid);
+      // window.open("Webshell://"+params, "_self");
+      this.lazyFlag = true;
+
+      let params = 'cardErase,'+this.form.rflCoid;
+      makeCard({joinParam: params}, res=>{
+        if(res.code==0){
+          this.$alert(res.data, '读卡器信息', {confirmButtonText: '确定'});
+        }else {
+          this.$message.error(res.msg);
+        }
+      }, ()=>{
+        this.lazyFlag = false;
+      })
     },
     checkDdl() {
-      this.loadFun();
+      // this.loadFun();
       //检测版本号，若没有版本号，则表示缺失ddl文件
-      let params = base64.Base64.encode('RFL,getDLLVersion');
-      window.open("Webshell://"+params, "_self");
+      // let params = base64.Base64.encode('RFL,getDLLVersion');
+      // window.open("Webshell://"+params, "_self");
+      this.lazyFlag = true;
+
+      let params = 'getDLLVersion';
+      makeCard({joinParam: params}, res=>{
+        if(res.code==0){
+          this.$alert(res.data, '读卡器信息', {confirmButtonText: '确定'});
+        }else {
+          this.$message.error(res.msg);
+        }
+      }, ()=>{
+        this.lazyFlag = false;
+      })
+
     }
   }
 };
@@ -151,7 +227,7 @@ export default {
 }
 
 .make-card-class .el-dialog__footer{
-    padding: 10px 0px 20px !important;
-    text-align: center !important;
+  padding: 10px 0px 20px !important;
+  text-align: center !important;
 }
 </style>
