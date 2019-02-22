@@ -57,16 +57,21 @@ export const commonReport = [{
   label: '财务稽核',
   pointer: 'pms:reportCenter:financial',
   children: [
-  // {
-  //   label: '历史换房报表',
-  //   path: '/reportCenter/historicalRoomExchange',
-  //   pointer: '500205'
-  // }, 
-  // {
-  //   label: '冲减明细报表',
-  //   path: '/reportCenter/offsetDetail',
-  //   pointer: '500403'
-  // },
+  {
+    label: '历史换房报表',
+    path: '/reportCenter/historicalRoomExchange',
+    pointer: 'pms:reportCenter:roomExchange'
+  }, 
+  {
+    label: '冲减明细报表',
+    path: '/reportCenter/offsetDetail',
+    pointer: 'pms:reportCenter:offsetDetail'
+  },
+  {
+    label: '历史房价信息报表',
+    path: '/reportCenter/historyHousePriceInfo',
+    pointer: 'pms:reportCenter:housePriceInfo'
+  }, 
   //  {
   //   label: '房租合约报表',
   //   path: '/reportCenter/rentContract',
@@ -77,16 +82,21 @@ export const commonReport = [{
   //   path: '/reportCenter/hourRoomCancel',
   //   pointer: '500414'
   // }, 
-  // {
-  //   label: '历史离店报表',
-  //   path: '/reportCenter/historyStore',
-  //   pointer: '500208'
-  // },
+  {
+    label: '历史离店报表',
+    path: '/reportCenter/historyStore',
+    pointer: 'pms:reportCenter:historyStore'
+  },
   //  {
   //   label: '自用房免费房报表',
   //   path: '/reportCenter/historicalRoomExchange',
   //   pointer: '500518'
   // }, 
+  {
+    label: '接待房报表',
+    path: '/reportCenter/receptionRoom',
+    pointer: 'pms:reportCenter:receptionRoom'
+  },
   {
     label: '营业收入报表',
     path: '/reportCenter/turnoverOfBusinessIncome',
