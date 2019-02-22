@@ -89,6 +89,8 @@ import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
 import ManagSalesGuests from '@/pages/reportCenter/managementSales/SalesGuests.vue'
+import ManagSalesAgreement from '@/pages/reportCenter/managementSales/SalesAgreement.vue'
+import ManagSalesAgreementConsumptionDetails from '@/pages/reportCenter/managementSales/SalesAgreementConsumptionDetails.vue'
 import HistoricalRoomExchange from '@/pages/reportCenter/financialAuditing/HistoricalRoomExchange.vue'
 import OffsetDetail from '@/pages/reportCenter/financialAuditing/offsetDetail.vue'
 import RentContract from '@/pages/reportCenter/financialAuditing/RentContract.vue'
@@ -229,6 +231,8 @@ export const constantRouterMap = [
           {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表'},
           {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况'},
           {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源'},
+          {path: '/reportCenter/salesAgreement', component: ManagSalesAgreement, label: '销售分析报表-协议单位'},
+          {path: '/reportCenter/salesAgreementConsumptionDetails', component: ManagSalesAgreementConsumptionDetails, label: '销售分析报表-协议单位'},
           {path: '/reportCenter/historicalRoomExchange', component: HistoricalRoomExchange, label: '历史换房报表'},
           {path: '/reportCenter/offsetDetail', component: OffsetDetail, label: '冲减明细报表'},
           {path: '/reportCenter/rentContract', component: RentContract, label: '房租合约报表'},

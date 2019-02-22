@@ -36,23 +36,26 @@ export const commonReport = [{
     }
   ]
 },
-/*{
+{
     label: '管理层和销售',
     pointer: '500540',
     children: [{
       label: '销售分析报表-客人来源',
       path: '/reportCenter/salesGuests',
       pointer: '500540'
-    }, {
+    }
+    , {
       label: '销售分析报表-协议单位',
-      path: '/reportCenter/salesGuests',
+      path: '/reportCenter/salesAgreement',
       pointer: '500540'
-    }, {
+    }
+    , {
       label: '销售员发展协议单位明细报表',
-      path: '/reportCenter/salesGuests',
+      path: '/reportCenter/salesAgreementConsumptionDetails',
       pointer: '500540'
-    }]
-  },*/
+    }
+  ]
+  },
 {
   label: '财务稽核',
   pointer: 'pms:reportCenter:financial',

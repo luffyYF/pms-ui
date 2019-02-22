@@ -2,8 +2,21 @@
   <div>
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
-
-        营业日期： <date-picker v-model="begenAndEnd"></date-picker>
+        
+        <el-form :inline="true" size="mini" class="demo-form-inline">
+          <el-form-item label="营业日期：" prop="begenAndEnd">
+          <date-picker v-model="begenAndEnd"></date-picker>
+          </el-form-item>
+            <el-form-item label="协议类型:">
+            <el-select v-model="printDate.agreementTypePk" placeholder="选择协议类型">
+              <el-option
+              v-for="item in typeList"
+              :key="item.typePk"
+              :label="item.typeName"
+              :value="item.typePk"></el-option>
+            </el-select>     
+          </el-form-item>
+        </el-form>
         <!-- <el-date-picker v-model="begenAndEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini"></el-date-picker> -->
         <el-button type="primary" size="mini" @click="init">网页预览</el-button>
         <el-button type="primary" size="mini">PDF预览</el-button>
@@ -16,13 +29,13 @@
       <div class="tabs">
         <div class="tavs-title">
           <h3>深圳市前海豪斯菲尔信息科技有限公司</h3>
-          <h3>销售分析报表 - 渠道</h3>
+          <h3>销售分析报表 - 协议单位</h3>
         </div>
         <div class="tabs-contetn">
           <p style="margin: 0px">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span></p>
           <!-- show-summary :summary-method="getSummaries" -->
           <el-table :data="tableData" v-loading="loading" border height="450"  style="width: 100%; margin-top: 5px">
-            <el-table-column prop="channelName" label="渠道"></el-table-column>
+            <el-table-column prop="agreementName" label="协议单位"></el-table-column>
             <el-table-column prop="rentalRoomNum" label="房晚数" width="70"></el-table-column>
             <el-table-column label="房晚数%" width="90">
               <template slot-scope="scope">
@@ -81,7 +94,8 @@
 </template>
 <script>
 import DatePicker from '@/components/DateComponent/DatePicker';
-import {channelSaleAnalysis} from '@/api/reportCenter/pmsReportFormController'
+import {agreementSaleAnalysis} from '@/api/reportCenter/pmsReportFormController'
+import {listType} from '@/api/systemSet/type/typeController'
 import moment from 'moment'
 export default {
   components:{moment,DatePicker},
@@ -92,6 +106,7 @@ export default {
         end:moment().subtract(1, "days").format("YYYY-MM-DD")
       },
       tableData: [],
+      typeList:[],
       loading:false,
       queryObj:{
         begin:moment().subtract(2, "days").format("YYYY-MM-DD"),
@@ -104,8 +119,9 @@ export default {
         beginDate:moment().subtract(2, "days").format("YYYY-MM-DD"),
         endDate:moment().subtract(1, "days").format("YYYY-MM-DD"),
         now:moment().format("YYYY-MM-DD hh:mm:ss"),
+        agreementTypePk:""
       },
-      userInfo:JSON.parse(localStorage.getItem("pms_userinfo"))
+      userInfo:JSON.parse(localStorage.getItem("pms_userinfo")),
     }
   },
   watch:{
@@ -154,9 +170,10 @@ export default {
         beginDate : this.queryObj.begin,
         endDate : this.queryObj.end,
         now:moment().format("YYYY-MM-DD hh:mm:ss"),
+        agreementTypePk:this.printDate.agreementTypePk
       }
       this.loading = true;
-      channelSaleAnalysis(data).then(res=>{
+      agreementSaleAnalysis(data).then(res=>{
         if(res.code == 1){
           this.tableData = res.data
           this.sumObj = res.data[res.data.length-1]
@@ -164,10 +181,26 @@ export default {
         }
         this.loading = false
       });
+    },
+    getListType(){
+      var data = {
+        typeMaster:"AGREEMENT",
+        pageSize:0,
+      }
+      
+      listType(data).then(res=>{
+        if(res.code == 1){
+          this.typeList = [{
+            typePk:"",
+            typeName:"全部"
+          }]
+          this.typeList = this.typeList.concat(res.data.data)
+        }
+        this.loading = false
+      });
     }
   },
   filters:{
-
     moneyFilter(row,sumObj,type){
       // type 1 房晚% 2 人晚% 3房租收入% 4 消费合计% 5平均房价 6房均消费 7 人均消费
       if(type == 1){
@@ -217,6 +250,7 @@ export default {
   },
   created() {
     this.init()
+    this.getListType();
   },
   mounted() {
     

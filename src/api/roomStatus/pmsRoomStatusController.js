@@ -28,3 +28,7 @@ export const findRoomReason = params => {
 export const loadOrderInfo = params => {
     return request.get('/back/room/status/orderInfo', {params: params})
 }
+//制卡记录
+export const saveRflRecord = params => {
+    return request.post('/api/rfl/saveRecord', params)
+}

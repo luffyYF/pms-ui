@@ -46,9 +46,17 @@ export const saveCheckin = params => {
 export const findOrder = params => {
     return request.get('/back/order/findByPk', {params:params})
 }
+//查找客单列表信息
+export const listGuest = params => {
+    return request.get('/back/order/listGuest', {params:params})
+}
 //续房
 export const continuedRoom = params => {
     return request.post('/back/order/continuedRoom', params)
+}
+//批量续房
+export const continuedRoomBatch = params => {
+    return request.post('/back/order/continuedRoomBatch', params)
 }
 //换房
 export const changeRoom = params => {
@@ -57,6 +65,10 @@ export const changeRoom = params => {
 //查找一段时间可以排的房间
 export const rowRoomList = params => {
     return request.get('/back/order/rowRoom/list', {params:params})
+}
+//查找一段时间可以入住的房间
+export const getCheckinAbleRoom = params => {
+    return request.get('/back/order/getCheckinAbleRoom', {params:params})
 }
 //查找今天预抵的主订单pk
 export const findToday = params => {
@@ -137,11 +149,20 @@ export const recoverCheckoutGuestOrder = params => {
 export const recoverReserveGuestOrder = params => {
     return request.post('/back/order/recoverReserveGuestOrder/'+params)
 }
-
 //定时查看新客单
 export const getNewGuestOrder = params => {
     return request.get('/back/order/getNewGuestOrder',{params,params})
 }
-
-
+//添加入住
+export const addCheckin = params => {
+    return request.post('/back/order/addCheckin', params)
+}
+//批量添加入住
+export const batchAddCheckin = params => {
+    return request.post('/back/order/batchAddCheckin', params)
+}
+//查找空房列表
+export const listEmptyRoom = params => {
+    return request.get('/back/order/listEmptyRoom', {params: params})
+}
 

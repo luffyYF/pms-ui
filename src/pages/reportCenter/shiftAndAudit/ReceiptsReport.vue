@@ -100,7 +100,8 @@ export default {
         border: '1px solid #ebeef5',
         padding: '8px',
         'text-align':'center'
-      },begenAndEnd:{
+      },
+      begenAndEnd:{
         begin:moment().format("YYYY-MM-DD"),
         end:moment().format("YYYY-MM-DD")
       },
@@ -116,7 +117,7 @@ export default {
   watch:{
     begenAndEnd: function () {
       if (this.begenAndEnd) {
-        this.queryObj.begin =this.begenAndEnd.begin;
+        this.queryObj.begin = this.begenAndEnd.begin;
         this.queryObj.end = this.begenAndEnd.end;
       }
     }

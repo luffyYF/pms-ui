@@ -115,7 +115,7 @@ export default {
     chooseAgreement(row, event) {
       if (!row.priceSchemePk) {
         this.$message({
-          type: "danger",
+          type: "info",
           message: "此协议单位未绑定价格方案，请绑定后重试！"
         });
         return;
