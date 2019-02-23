@@ -145,7 +145,6 @@ export default {
       let data = {
         joinParam: 'guestCard,'+ base64.Base64.encode(JSON.stringify(params))
       }
-      console.log(data);
       makeCard(data, res=>{
         if(res.code==0){
           this.$alert(res.data, '读卡器信息', {confirmButtonText: '确定'});
