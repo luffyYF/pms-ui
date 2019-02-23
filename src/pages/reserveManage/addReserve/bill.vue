@@ -93,6 +93,7 @@
         <el-col :span="24" class="bill-opr">
           打印处理：
           <el-button size="mini" @click="clickPrint">打印</el-button>
+          <el-button size="mini" @click="clickDepositPrint">押金打印</el-button>
           <el-button size="mini" @click="exportClick">导出账单</el-button>
           <!-- <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button> -->
         </el-col>
@@ -531,6 +532,8 @@
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
     <!-- 单房结账 -->
     <dialog-singleSettl ref="dialogSingleSettlRef" @callback="listBill" @to-settle="toSettle"></dialog-singleSettl>
+    <!-- 押金打印 -->
+    <dialog-deposit-print ref="dialogDepositPrintRef"></dialog-deposit-print>
   </div>
 </template>
 

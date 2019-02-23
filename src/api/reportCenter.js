@@ -37,4 +37,8 @@ export const rentContract = params => {
 export const turnoverOfBusinessIncome = params => {   
     return request.get('/pms/report/turnoverOfBusinessIncome', {params:params})
 }
+// 接待房报表
+export const receptionRoom = params => {   
+    return request.get('/pms/report/receptionRoom', {params:params})
+}
 

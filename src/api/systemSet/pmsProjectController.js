@@ -33,6 +33,10 @@ export const updateConsumerOrSettlement = params => {
 export const listByProjectType = params => {
     return request.get('/back/project/listByProjectType',{params:params})
 }
+//根据类型查找 目类别： 消费项、结算项
+export const listProjects = params => {
+    return request.get('/back/project/listProjects',{params:params})
+}
 //批量更新结算项、消费项
 export const batchUpdateConsOrSettl = params => {
     return request.post('/back/project/batchUpdateConsOrSettl', params)
