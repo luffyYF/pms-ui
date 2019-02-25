@@ -13,7 +13,7 @@
     </el-col>
     <!--头部2-->
     <el-col :span="24" class="header2">
-      <div class="left"><img src="../assets/image/home_logo.png" /></div>
+      <div class="left"><img src="../assets/image/home_logo1.png" /></div>
       <!--<el-col class="right">-->
       <div class="right" ref="dirRef">
         <!-- getRPath('/atrialCenter',1) -->
