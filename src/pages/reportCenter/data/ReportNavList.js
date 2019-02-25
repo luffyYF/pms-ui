@@ -38,7 +38,7 @@ export const commonReport = [{
 },
 {
     label: '管理层和销售',
-    pointer: 'pms:reportCenter：manageAndsale',
+    pointer: 'pms:reportCenter:manageAndsale',
     children: [{
       label: '销售分析报表-客人来源',
       path: '/reportCenter/salesGuests',

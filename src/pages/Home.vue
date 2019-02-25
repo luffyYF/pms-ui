@@ -17,6 +17,7 @@
       <!--<el-col class="right">-->
       <div class="right" ref="dirRef">
         <!-- getRPath('/atrialCenter',1) -->
+        
         <router-link to="/atrialCenter" v-if="hasPerm('pms:dir:roomCenter')">
           <div class="nav-li">
             <div class="nav-icon atrial-center-icon"></div>
@@ -32,6 +33,7 @@
 
         <!-- getRPath控制路由  hasPerm控制显示 -->
         <!-- getRPath('/reserveManage', 1) -->
+        
         <router-link to="/reserveManage" v-if="hasPerm('pms:dir:reserveManage')">
           <div class="nav-li">
             <div class="nav-icon reserve-manage-icon"></div>
@@ -42,6 +44,12 @@
           <div class="nav-li">
             <div class="nav-icon check-manage-icon"></div>
             <div class="nav-txt">入住管理</div>
+          </div>
+        </router-link>
+        <router-link to="/zl" >
+          <div class="nav-li">
+            <div class="nav-icon reserve-manage-icon"></div>
+            <div class="nav-txt">直连</div>
           </div>
         </router-link>
         <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
@@ -234,6 +242,8 @@ import {
 import {find} from '@/api/systemSet/pmsSysParamController'
 import {getNewGuestOrder} from '@/api/order/pmsOrderController'
 
+import { allTypeList } from '@/api/utils/pmsTypeController'
+
 export default {
   components:{DialogCheckinVisible},
   created() {
@@ -321,6 +331,13 @@ export default {
       },5000);
     },
     // 退出登录
+    getAllTypeList(){
+      allTypeList().then(res=>{
+        if(res.code == 1){
+          localStorage.setItem("pms_type",JSON.stringify(res.data));
+        }
+      })
+    },
     logout() {
       this.$confirm("确认退出吗?", "提示", {
         type: "warning"
@@ -656,6 +673,7 @@ export default {
       }
   },
   mounted() {
+    this.getAllTypeList()
     window.onresize = () => {
       return (() => {
         window.screenWidth = document.body.clientWidth;

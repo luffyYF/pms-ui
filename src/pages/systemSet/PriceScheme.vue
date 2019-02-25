@@ -451,20 +451,31 @@ export default {
         }
         console.log(self.addSchemeNeedList);
       });
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
       //查找渠道
-      listType({ typeMaster: "CHANNEL" }).then(res => {
-        if (res.code == 1) {
-          self.channelList = res.data;
-          console.log(self.channelList);
-          self.screenForm.checkedChannel = self.channelList;
-        }
-      });
+      // listType({ typeMaster: "CHANNEL" }).then(res => {
+      //   if (res.code == 1) {
+      //     self.channelList = res.data;
+      //     console.log(self.channelList);
+      //     self.screenForm.checkedChannel = self.channelList;
+      //   }
+      // });
       //查找房型
-      listType({ typeMaster: "ROOM_TYPE" }).then(res => {
-        if (res.code == 1) {
-          self.roomTypeList = res.data;
+      // listType({ typeMaster: "ROOM_TYPE" }).then(res => {
+      //   if (res.code == 1) {
+      //     self.roomTypeList = res.data;
+      //   }
+      // });
+      self.roomTypeList = []
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          self.roomTypeList.push(item);
+        }else if(item.typeMaster == "CHANNEL"){
+          self.channelList.push(item);
         }
-      });
+      })
+      self.screenForm.checkedChannel = self.channelList;
+
       //查找会员等级
       listGrade().then(res => {
         if (res.code == 1) {

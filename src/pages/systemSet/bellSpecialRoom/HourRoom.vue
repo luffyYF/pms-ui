@@ -221,11 +221,18 @@ export default {
       });
     },
     selectRoomType() {
-      listType({ typeMaster: "ROOM_TYPE" }).then(res => {
-        if (res.code == 1) {
-          this.roomTypeList = res.data;
+      // listType({ typeMaster: "ROOM_TYPE" }).then(res => {
+      //   if (res.code == 1) {
+      //     this.roomTypeList = res.data;
+      //   }
+      // });
+      this.roomTypeList = []
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          this.roomTypeList.push(item);
         }
-      });
+      })
     },
     submitRuleHour() {
       this.checkExceedTime

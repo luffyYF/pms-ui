@@ -83,23 +83,30 @@ export default {
     init() {
       this.dialogAgreement = true;
       //获取协议类型
-      listType({ typeMasters: "AGREEMENT" }).then(res => {
-        let resData = res.data.data;
+      // listType({ typeMasters: "AGREEMENT" }).then(res => {
+        // let resData = res.data.data;
         var arr = [];
         var item = {
           typePk: "",
           typeName: "全部"
         };
         arr.push(item);
-        for (let index = 0; index < resData.length; index++) {
-          const element = resData[index];
-          arr.push(element);
-        }
+        // for (let index = 0; index < resData.length; index++) {
+        //   const element = resData[index];
+        //   arr.push(element);
+        // }
+        var typeList = JSON.parse(localStorage.getItem("pms_type"))
+        typeList.forEach(item=> {
+          if(item.typeMaster == "AGREEMENT"){
+            arr.push(item);
+          }
+        })
         this.typeList = arr;
         this.proForm.typePk = "";
+        
 
         this.search();
-      });
+      // });
     },
     addClick(){
       this.$refs.addProtocolUnitRef.init()

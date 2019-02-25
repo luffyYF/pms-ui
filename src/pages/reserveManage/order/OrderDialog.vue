@@ -830,9 +830,18 @@ export default {
     bus.$on('togmcount', () => { this.goodsManageCount() })
     bus.$on('refreshOrderInfo', (orderPk) => { this.initOrderInfo(orderPk, 'visitor') })
     bus.$on('dialogVisibleClose', () => { this.dialogVisibleClose() })
-    listType({typeMaster:'ROOM_TYPE'}).then(res=>{
-      this.roomTypeArr = res.data.data;
-    }).catch(error=>{
+    // listType({typeMaster:'ROOM_TYPE'}).then(res=>{
+    //   this.roomTypeArr = res.data.data;
+    // }).catch(error=>{
+    // })
+    this.roomTypeArr = []
+    var typeList = JSON.parse(localStorage.getItem("pms_type"))
+    this.roomType = []
+    console.log(typeList.length)
+    typeList.forEach(item=> {
+      if(item.typeMaster == "ROOM_TYPE"){
+        this.roomTypeArr.push(item);
+      }
     })
   }
 }

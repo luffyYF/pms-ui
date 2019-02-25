@@ -571,12 +571,21 @@
           channelPk:this.selectForm.channel
         }
         currentRoomList(data).then(res=>{
-          console.log("12345");
           // this.roomList = res.data
           this.roomList = JSON.parse(JSON.stringify(res.data));
-          listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
-            this.roomType = res2.data.data
+
+          var typeList = JSON.parse(localStorage.getItem("pms_type"))
+          this.roomType = []
+          console.log(typeList.length)
+          typeList.forEach(item=> {
+            if(item.typeMaster == "ROOM_TYPE"){
+              this.roomType.push(item);
+            }
           })
+          // listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
+          //   this.roomType = res2.data.data
+          // })
+
           this.$refs.channelRef.load(true);
           //标识预离
           let now = moment().hour() >= nightTrialTime ? moment() : moment().subtract(1, 'days');
@@ -940,15 +949,30 @@
       }
     },
     mounted() {
-      listType({typeMaster:'REPAIR'}).then(res=>{
-        this.repairType = res.data.data
+      this.repairType = []
+      this.disableRoomType = []
+      this.channelArr = []
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      typeList.forEach(item=> {
+        if(item.typeMaster == "REPAIR"){
+          this.repairType.push(item);
+        }
+        if(item.typeMaster == "DISABLE"){
+          this.disableRoomType.push(item);
+        }
+        if(item.typeMaster == "CHANNEL"){
+          this.channelArr.push(item);
+        }
       })
-      listType({typeMaster:'DISABLE'}).then(res=>{
-        this.disableRoomType = res.data.data
-      })
-      listType({typeMaster:'CHANNEL'}).then(res=>{
-        this.channelArr = res.data.data
-      })
+      // listType({typeMaster:'REPAIR'}).then(res=>{
+      //   this.repairType = res.data.data
+      // })
+      // listType({typeMaster:'DISABLE'}).then(res=>{
+      //   this.disableRoomType = res.data.data
+      // })
+      // listType({typeMaster:'CHANNEL'}).then(res=>{
+      //   this.channelArr = res.data.data
+      // })
       listStorey().then(res=>{
         this.floorArr = res.data
       })

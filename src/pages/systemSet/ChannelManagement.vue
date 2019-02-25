@@ -14,12 +14,20 @@
         style="margin:10px auto;">
         <!-- <el-table-column prop="icon" label="图标" align="center" width="100"></el-table-column> -->
         <el-table-column prop="typeName" label="渠道名称" align="center"></el-table-column>
+        <el-table-column prop="channelCode" label="渠道编码" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.editCodeFlag==false">{{scope.row.channelCode}}</span>
+            <el-button v-if="scope.row.editCodeFlag==false" type="text" class="el-icon-edit" @click="codeEditClick(scope.row)"></el-button>
+            <el-input type="text" v-if="scope.row.editCodeFlag==true" size="mini" v-model="scope.row.channelCode" placeholder="渠道编码" clearable> </el-input>
+            <el-button v-if="scope.row.editCodeFlag==true" type="primary" size="mini" @click="codeEditSaveClick(scope.row)">保存</el-button>
+            <el-button v-if="scope.row.editCodeFlag==true" size="mini" @click="codeEditCancelClick(scope.row)">取消</el-button>
+          </template>
+        </el-table-column>
         <el-table-column prop="commissionRate" label="佣金率%" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.editFlag==false">{{scope.row.commissionRate}}</span>
             <el-button v-if="scope.row.editFlag==false" type="text" class="el-icon-edit" @click="columEditClick(scope.row)"></el-button>
             <el-input-number v-if="scope.row.editFlag==true" v-model="scope.row.tempCommissionRate" :controls="false" :min="0" size="mini"></el-input-number>
-
             <el-button v-if="scope.row.editFlag==true" type="primary" size="mini" @click="raleEditSaveClick(scope.row)">保存</el-button>
             <el-button v-if="scope.row.editFlag==true" size="mini" @click="raleEditCancelClick(scope.row)">取消</el-button>
           </template>
@@ -73,7 +81,8 @@ import {
   addChannelype,
   updateChannelRate,
   updateChannelUsing,
-  updateChannelSortNum
+  updateChannelSortNum,
+  updateChannelCode
 } from '../../api/systemSet/type/typeController'
 import {listSysChannel} from '@/api/upmsApi'
 
@@ -123,6 +132,7 @@ export default {
           /*
             定义初始化列表字段
           */
+          this.$set(row,'editCodeFlag',false)
           this.$set(row,'editFlag',false)
           this.$set(row,'editFlag2',false)
           this.$set(row,'tempCommissionRate',0)
@@ -152,6 +162,24 @@ export default {
       updateChannelRate(data).then(res=>{
         this.$message.success('佣金已更改');
         this.$set(row,'editFlag', false)
+      })
+    },
+    codeEditCancelClick(row){
+      this.$set(row,'editCodeFlag',false)
+    },
+    codeEditClick(row){
+      this.$set(row,'editCodeFlag',true)
+      this.$set(row,'channelCode',row.channelCode)
+    },
+    codeEditSaveClick(row){
+      this.$set(row,'channelCode',row.channelCode)
+      let data={
+        typePk:row.typePk,
+        channelCode: row.channelCode
+      }
+      updateChannelCode(data).then(res=>{
+        this.$message.success('编码已更改');
+        this.$set(row,'editCodeFlag', false)
       })
     },
     columEditSort(row){

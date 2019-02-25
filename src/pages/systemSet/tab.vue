@@ -66,6 +66,12 @@
       <el-menu-item index="/systemSet/priceSetting" v-if="hasPerm('pms:systemSet:priceSetting')">
         <span slot="title">价格设置</span>
       </el-menu-item>
+      <!-- <el-menu-item index="/systemSet/zlRoomStatusSetting" >
+        <span slot="title">直连房态</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/zlPriceSetting" >
+        <span slot="title">直连房价</span>
+      </el-menu-item> -->
     </el-menu>
     <el-col class="menu-content" :span="24">
       <transition name="el-fade-in-linear">

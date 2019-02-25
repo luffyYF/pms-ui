@@ -7,7 +7,7 @@
       <el-tab-pane label="会员管理" name="membeManagement" v-if="hasPerm('pms:memberManage:memberManage')">
         <membe-management ref="membeManagement"/>
       </el-tab-pane>
-      <el-tab-pane label="恢复删除会员" name="resumeDeletingMembers">
+      <el-tab-pane label="恢复删除会员" name="resumeDeletingMembers" v-if="hasPerm('pms:memberManage:recoveryDelMem')">
         <resume-deleting-members ref="resumeDeletingMembers"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="激活会员" name="activatingMember" v-if="powerJudge('150104')">
