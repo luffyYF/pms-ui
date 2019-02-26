@@ -14,7 +14,7 @@
         <el-radio v-model="form.lLock" label="0">不能开反锁</el-radio>
       </el-form-item>
     </el-form>
-    <span style="color:red">检测：若操作无反应或检测不到版本号，则可能没有安装插件，或缺失DLL文件，请<a href="https://www.housefeel.cn/file/PRO_RFL.rar">点击下载</a>解压、运行初始化文件即可</span>
+    <span style="color:red">检测：若操作无反应或检测不到版本号，则可能没有安装插件，或缺失DLL文件，请<a href="https://www.housefeel.cn/file/HFPlugin.rar">点击下载</a>插件，根据教程安装</span>
     <span slot="footer">
       <el-button type="primary" @click="makeCard" size="mini" :disabled="!form.rflLockNo || !form.rflCoid ||lazyFlag" >制卡</el-button>
       <el-button type="primary" @click="readCard" size="mini" :disabled="!form.rflLockNo || !form.rflCoid || lazyFlag" >读取卡信息</el-button>

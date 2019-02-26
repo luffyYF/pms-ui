@@ -163,6 +163,8 @@
       营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
       {{footerData.currTime}}
       <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
+      <span style="float:right"><a href="https://www.housefeel.cn/file/HFPlugin.rar">[插件下载]</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      
     </el-col>
     <div class="asd">
       <!-- margin-bottom: 285px; -->
