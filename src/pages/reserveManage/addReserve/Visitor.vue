@@ -173,15 +173,21 @@
           <el-col :span="24">
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="抵店日期：" required>
-                  <!-- form.guestOrderPk!==undefined ||  -->
-                  <el-date-picker v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='guest-info' || currFormType=='add-guest'" :clearable="false"></el-date-picker>
+                <el-form-item label="入住日期：" required v-if="form.orderStatus=='CHECKIN' || form.orderStatus=='LEAVE' || form.orderStatus=='LEAVENOPAY'">
+                  <el-date-picker style="color:black" v-model="form.checkinDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='guest-info' || currFormType=='add-guest'" :clearable="false"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="抵店日期：" required v-else>
+                  <el-date-picker style="color:black" v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='guest-info' || currFormType=='add-guest'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
-                <el-form-item label="离店日期：" required>
+                <el-form-item label="离店日期：" required v-if="form.orderStatus=='LEAVE' || form.orderStatus=='LEAVENOPAY'">
+                  <!-- 实际离店日期 -->
+                  <el-date-picker v-model="form.checkoutDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="离店日期：" required v-else>
                   <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
@@ -479,6 +485,8 @@
             beginDate: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             endDate: formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss'),
             pmsCancelFlag: null,
+            checkinDate:null,
+            checkoutDate:null,
             diyPriceFlag: 'N'
           },
           qrcodeForm:{
@@ -762,6 +770,7 @@
           this.form.mealTicketNoon = 0
           this.form.mealTicketNight = 0
           this.form.bornDate = null
+          this.form.orderStatus=null
           if(moment().hour()<6){
             this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
           }else{
@@ -814,6 +823,8 @@
           this.form.mealTicketMorn = guest.mealTicketMorn
           this.form.mealTicketNoon = guest.mealTicketNoon
           this.form.mealTicketNight = guest.mealTicketNight
+          this.form.checkinDate = guest.checkinDate
+          this.form.checkoutDate = guest.checkoutDate
 
           if(guest.memType=='MEMBER'){//是会员
             this.memberFlag = true
@@ -1361,6 +1372,9 @@
 .visitorGuestOrder .el-input--mini .el-input__inner {
     /* height: 25px !important; */
     line-height: 25px;
+}
+.el-input.is-disabled .el-input__inner{
+  color: #737373 !important;
 }
 </style>
 
