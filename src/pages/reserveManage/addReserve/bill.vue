@@ -17,8 +17,8 @@
               <el-form-item label="房间号" label-width="55px">
                 <el-select v-model="serachForm.roomPk" placeholder="请选择房间号" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option 
-                    v-for="y in filterRoom(guestOrderSelect)" 
+                  <el-option
+                    v-for="y in filterRoom(guestOrderSelect)"
                     :key="y.roomPk"
                     :label="y.roomNumber"
                     :value="y.roomPk"></el-option>
@@ -27,9 +27,9 @@
               <el-form-item label="客人姓名">
                 <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option 
-                    v-for="y in guestOrderSelect" 
-                    :key="y.guestOrderPk" 
+                  <el-option
+                    v-for="y in guestOrderSelect"
+                    :key="y.guestOrderPk"
                     :label="y.memName+' ('+ifRoomNumber(y.roomNumber)+')'"
                     :value="y.guestOrderPk"></el-option>
                 </el-select>
@@ -100,26 +100,26 @@
       <el-col :span="8" class="bill-el-button">
         <!-- 消费项目列表 -->
         <el-col :span="24" class="marginTop10">
-          <el-button 
+          <el-button
           v-for="item in conProjectList"
           v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
-          :key="item.projectPk" 
-          type="success" 
-          plain 
-          size="mini" 
-          @click="openAddBill(item)" 
+          :key="item.projectPk"
+          type="success"
+          plain
+          size="mini"
+          @click="openAddBill(item)"
           class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
         <!-- 结算项目列表 -->
         <el-col :span="24">
-          <el-button 
-          v-for="item in roomProjectList" 
+          <el-button
+          v-for="item in roomProjectList"
           v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
-          :key="item.projectPk" 
-          type="primary" 
-          plain 
-          size="mini" 
-          @click="openAddBill(item)" 
+          :key="item.projectPk"
+          type="primary"
+          plain
+          size="mini"
+          @click="openAddBill(item)"
           class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
       </el-col>
@@ -218,14 +218,14 @@
         <el-button size="mini" type="primary" @click="dialogOffset = false">取消</el-button>
       </span>
     </el-dialog>
-    
+
     <!-- 批量入账 -->
      <!-- v-if="addBillMultipleSelection.length > 0"  -->
     <!-- <el-dialog class="pattern-dialog height500" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
       <div class="pattern-dialog-container" >
         <div>
             <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
-           
+
             <el-button size="mini" type="text" @click="delFormAddBillsClicks()">删除</el-button>
         </div>
         <el-form ref="formAddBills" size="mini" label-width="80px">
@@ -531,6 +531,8 @@
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
     <!-- 单房结账 -->
     <dialog-singleSettl ref="dialogSingleSettlRef" @callback="listBill" @to-settle="toSettle"></dialog-singleSettl>
+    <!-- 押金打印 -->
+    <dialog-deposit-print ref="dialogDepositPrintRef"></dialog-deposit-print>
   </div>
 </template>
 

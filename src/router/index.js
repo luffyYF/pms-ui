@@ -94,8 +94,10 @@ import ManagSalesAgreementConsumptionDetails from '@/pages/reportCenter/manageme
 import HistoricalRoomExchange from '@/pages/reportCenter/financialAuditing/HistoricalRoomExchange.vue'
 import OffsetDetail from '@/pages/reportCenter/financialAuditing/offsetDetail.vue'
 import RentContract from '@/pages/reportCenter/financialAuditing/RentContract.vue'
+import HistoryHousePriceInfo from '@/pages/reportCenter/financialAuditing/HistoryHousePriceInfo.vue'
 import HourRoomCancel from '@/pages/reportCenter/financialAuditing/HourRoomCancel.vue'
 import HistoryStore from '@/pages/reportCenter/financialAuditing/HistoryStore.vue'
+import ReceptionRoom from '@/pages/reportCenter/financialAuditing/ReceptionRoom.vue'
 import TurnoverOfBusinessIncome from '@/pages/reportCenter/financialAuditing/TurnoverOfBusinessIncome.vue'
 import GoodsConsumeList from '@/pages/reportCenter/otherCommonReports/GoodsConsumeList.vue'
 import BookingAnalysisReportPage from '@/pages/reportCenter/reservationReport/BookingAnalysisReport.vue'
@@ -246,8 +248,10 @@ export const constantRouterMap = [
           {path: '/reportCenter/historicalRoomExchange', component: HistoricalRoomExchange, label: '历史换房报表'},
           {path: '/reportCenter/offsetDetail', component: OffsetDetail, label: '冲减明细报表'},
           {path: '/reportCenter/rentContract', component: RentContract, label: '房租合约报表'},
+          {path: '/reportCenter/historyHousePriceInfo', component: HistoryHousePriceInfo, label: '历史房价信息报表'},
           {path: '/reportCenter/hourRoomCancel', component: HourRoomCancel, label: '日租钟点取消报表'},
           {path: '/reportCenter/historyStore', component: HistoryStore, label: '历史离店报表'},
+          {path: '/reportCenter/receptionRoom', component: ReceptionRoom, label: '接待房报表'},
           {path: '/reportCenter/turnoverOfBusinessIncome', component: TurnoverOfBusinessIncome, label: '历史离店报表'},
           {path: '/reportCenter/goodsConsumeList', component: GoodsConsumeList, label: '商品部商品消费明细表'},
           {path: '/reportCenter/bookingAnalysisReport', component: BookingAnalysisReportPage, label: '预订分析报表'},

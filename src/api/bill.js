@@ -113,3 +113,8 @@ export const recoverBillEndRecord = params => {
 export const checkoutGuest = params => {
   return request.post('/back/bill/checkoutGuest/'+params)
 }
+
+// 查找押金
+export const findDepositFromBills = params => {
+  return request.get('/back/bill/findDepositFromBills', {params:params})
+}

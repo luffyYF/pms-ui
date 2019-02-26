@@ -10,6 +10,7 @@
   import dialogTimeoutRemind from './bill/dialogTimeoutRemind'
   import dialogBatchAddBill from './bill/dialogBatchAddBill'
   import dialogSingleSettl from './bill/dialogSingleSettl'
+  import dialogDepositPrint from './bill/dialogDepositPrint'
   //转账组单选择
   import transferAccounts from './transferAccounts'
   // API
@@ -48,7 +49,8 @@
         dialogTimeoutRemind,
         dialogBatchAddBill,
         transferAccounts,
-        dialogSingleSettl
+        dialogSingleSettl,
+        dialogDepositPrint
       },
       data() {
         return {
@@ -163,7 +165,9 @@
           // addBillsSettlementAmount:0,
           tagetTransferAccounts:{
 
-          }
+          },
+          companyObj: JSON.parse(localStorage.getItem("current_logon_company")),
+          userObj: JSON.parse(localStorage.getItem('pms_userinfo'))
         }
 
       },
@@ -425,7 +429,15 @@
           }
           let beginDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].beginDate:new Date()
           let endDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].endDate:new Date()
-          this.$refs.commentPrintRef.printBill(this.multipleSelection, beginDate, endDate)
+          let billPks = ""
+          this.multipleSelection.forEach(item => {
+            billPks += item.billPk + ","
+          })
+          billPks = billPks.substring(0, (billPks.length - 1))
+          // this.$refs.commentPrintRef.printBill(this.multipleSelection, beginDate, endDate)
+          
+          window.open(process.env.PRINT_ROOT+"/#/consumptionPrint?shopName="+this.companyObj.companyName
+          +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName);
         },
         initProject(){
           // this.isDubm
@@ -959,8 +971,18 @@
             });
         },
         //打开单房结账
-        toSingleSettle() {
+        toSingleSettle() {  
           this.$refs.dialogSingleSettlRef.showDialog(this.currOrderInfo.order.orderPk)
+        },
+        clickDepositPrint() {
+          let pks = ''
+          let userInfo = []
+          this.currOrderInfo.guestList.forEach(item => {
+            pks += item.guestOrderPk + ","
+            userInfo.push({roomNumber: item.roomNumber, memName: item.guestName, guestOrderPk: item.guestOrderPk})
+          })
+          pks = pks.substring(0, (pks.length - 1))
+          this.$refs.dialogDepositPrintRef.showDialog(this.currOrderInfo.order.orderPk, pks, userInfo)
         }
       },
       clone(obj){
