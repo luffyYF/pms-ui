@@ -107,7 +107,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="当天房租：" required>
-                  <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                  <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!=undefined"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
