@@ -199,6 +199,14 @@
         }).catch(() => {
           self.loading = false
         })
+        // var typeList = JSON.parse(localStorage.getItem("pms_type"))
+        // self.tableData = []
+        // typeList.forEach(item=> {
+        //   if(item.typeMaster == self.typeMaster){
+        //     self.tableData.push(item);
+        //   }
+        // })
+        // self.loading = false
       }
     }
   }

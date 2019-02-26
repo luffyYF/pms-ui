@@ -17,8 +17,8 @@
               <el-form-item label="房间号" label-width="55px">
                 <el-select v-model="serachForm.roomPk" placeholder="请选择房间号" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option 
-                    v-for="y in filterRoom(guestOrderSelect)" 
+                  <el-option
+                    v-for="y in filterRoom(guestOrderSelect)"
                     :key="y.roomPk"
                     :label="y.roomNumber"
                     :value="y.roomPk"></el-option>
@@ -27,9 +27,9 @@
               <el-form-item label="客人姓名">
                 <el-select v-model="serachForm.guestOrderPk" placeholder="请选择客人姓名" @change="listBill" style="width: 140px;">
                   <el-option label="全部" value=""></el-option>
-                  <el-option 
-                    v-for="y in guestOrderSelect" 
-                    :key="y.guestOrderPk" 
+                  <el-option
+                    v-for="y in guestOrderSelect"
+                    :key="y.guestOrderPk"
                     :label="y.memName+' ('+ifRoomNumber(y.roomNumber)+')'"
                     :value="y.guestOrderPk"></el-option>
                 </el-select>
@@ -71,56 +71,55 @@
         <el-col :span="24"> <br> </el-col>
         <el-col :span="24" class="bill-opr">
           财务处理：
-          <el-button size="mini" @click="splitBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">拆账</el-button>
-          <el-button size="mini" @click="offsetBillOperation" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">冲减</el-button>
-          <el-button size="mini" @click="transferAccountsClick()" >转账</el-button>
+          <el-button size="mini" @click="splitBillOperation" v-if="hasPerm('pms:billAss:splitBill')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">拆账</el-button>
+          <el-button size="mini" @click="offsetBillOperation" v-if="hasPerm('pms:billAss:offsetBill')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">冲减</el-button>
+          <el-button size="mini" @click="transferAccountsClick()" v-if="hasPerm('pms:billAss:transBill')" >转账</el-button>
           <!-- v-if="powerJudge('402004')" -->
-          <el-button size="mini" @click="dialogAccountedFor = true" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">入账</el-button>
+          <el-button size="mini" @click="openAddBill()" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">入账</el-button>
           <el-button size="mini" @click="dialogBatchEntryClick()"  :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">批量入账</el-button>
           <!-- <el-button size="mini" @click="dialogPreLicensing = true">预授权<span>0</span>笔</el-button> -->
           <el-button size="mini" v-if="!isDubm" @click="virtualBillClick()">虚拟账单</el-button>
         </el-col>
         <el-col :span="24" class="bill-opr">
           结账处理：
-          <el-button size="mini" @click="settlement(0)" v-if="currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)  ">结账</el-button>
-          <el-button size="mini" @click="settlement(1)" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
-          <el-button size="mini" @click="settlement(2)" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
-          <el-button size="mini" @click="toDialogRecoverBill" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
-          <el-button size="mini" @click="toSingleSettle" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || currOrderInfo.order.hfFlag=='Y'">单房结账</el-button>
+          <el-button size="mini" @click="settlement(0)" v-if="(currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm) && hasPerm('pms:billAss:billSettle')" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)  ">结账</el-button>
+          <el-button size="mini" @click="settlement(1)" v-if="hasPerm('pms:billAss:checkOut')" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
+          <el-button size="mini" @click="settlement(2)" v-if="hasPerm('pms:billAss:partialCheckout')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
+          <el-button size="mini" @click="toDialogRecoverBill" v-if="hasPerm('pms:billAss:partialCheckoutRec')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
+          <el-button size="mini" @click="toSingleSettle" v-if="hasPerm('pms:billAss:singleCheckOut')" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || currOrderInfo.order.hfFlag=='Y'">单房结账</el-button>
 
           <!-- <el-button size="mini" @click="dialogPartialCheckout = true">个人结账</el-button> -->
         </el-col>
         <el-col :span="24" class="bill-opr">
           打印处理：
-          <el-button size="mini" @click="clickPrint">打印</el-button>
-          <el-button size="mini" @click="clickDepositPrint">押金打印</el-button>
-          <el-button size="mini" @click="exportClick">导出账单</el-button>
+          <el-button size="mini" v-if="hasPerm('pms:billAss:printBill')" @click="clickPrint">打印</el-button>
+          <el-button size="mini" v-if="hasPerm('pms:billAss:exportBill')" @click="exportClick">导出账单</el-button>
           <!-- <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button> -->
         </el-col>
       </el-col>
       <el-col :span="8" class="bill-el-button">
         <!-- 消费项目列表 -->
         <el-col :span="24" class="marginTop10">
-          <el-button 
+          <el-button
           v-for="item in conProjectList"
           v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
-          :key="item.projectPk" 
-          type="success" 
-          plain 
-          size="mini" 
-          @click="openAddBill(item)" 
+          :key="item.projectPk"
+          type="success"
+          plain
+          size="mini"
+          @click="openAddBill(item)"
           class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
         <!-- 结算项目列表 -->
         <el-col :span="24">
-          <el-button 
-          v-for="item in roomProjectList" 
+          <el-button
+          v-for="item in roomProjectList"
           v-if="(item.guestRoomFlag=='Y' && !isDubm) || (item.dumbRoomFlag=='Y' && isDubm)"
-          :key="item.projectPk" 
-          type="primary" 
-          plain 
-          size="mini" 
-          @click="openAddBill(item)" 
+          :key="item.projectPk"
+          type="primary"
+          plain
+          size="mini"
+          @click="openAddBill(item)"
           class="buttonsRight">{{item.projectName}}</el-button>
         </el-col>
       </el-col>
@@ -219,14 +218,14 @@
         <el-button size="mini" type="primary" @click="dialogOffset = false">取消</el-button>
       </span>
     </el-dialog>
-    
+
     <!-- 批量入账 -->
      <!-- v-if="addBillMultipleSelection.length > 0"  -->
     <!-- <el-dialog class="pattern-dialog height500" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
       <div class="pattern-dialog-container" >
         <div>
             <el-button size="mini" type="text" @click="addFormAddBillsClick()" >添加</el-button>
-           
+
             <el-button size="mini" type="text" @click="delFormAddBillsClicks()">删除</el-button>
         </div>
         <el-form ref="formAddBills" size="mini" label-width="80px">

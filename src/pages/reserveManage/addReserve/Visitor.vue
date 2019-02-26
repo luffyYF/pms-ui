@@ -842,14 +842,21 @@
         //加载房型数据
         loadRoomType(callback) {
           // 获取房型
-          listType({typeMaster:'ROOM_TYPE'}).then(res=>{
-            this.roomTypeArr = res.data;
+          // listType({typeMaster:'ROOM_TYPE'}).then(res=>{
+          //   this.roomTypeArr = res.data;
+          var typeList = JSON.parse(localStorage.getItem("pms_type"))
+          this.roomTypeArr = []
+          typeList.forEach(item=> {
+            if(item.typeMaster == "ROOM_TYPE"){
+              this.roomTypeArr.push(item);
+            }
+          })
             //获取价格方案
             listPriceScheme().then(res=>{
               this.priceSchemeArr = res.data
               callback()
             })
-          })
+          // })
         },
         //动态加载当前房租 
         loadPrice() {
@@ -1106,10 +1113,17 @@
         },
         loadRoomType(callback) {
           // 获取房型
-          listType({typeMaster:'ROOM_TYPE'}).then(res=>{
-            this.roomTypeArr = res.data.data;
-            callback()
+          this.roomTypeArr = []
+          var typeList = JSON.parse(localStorage.getItem("pms_type"))
+          typeList.forEach(item=> {
+            if(item.typeMaster == "ROOM_TYPE"){
+              this.roomTypeArr.push(item);
+            }
           })
+          // listType({typeMaster:'ROOM_TYPE'}).then(res=>{
+          //   this.roomTypeArr = res.data.data;
+            callback()
+          // })
         },
         //设置二维码开门手机号
         dialogQRCodeSettingOpen(row){

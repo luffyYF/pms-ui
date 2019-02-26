@@ -208,22 +208,38 @@ export default {
     },
     //加载渠道类型
     getChannelList() {
-      listType({ typeMaster: "CHANNEL" })
-        .then(res => {
-          this.channelArr = res.data;
-        })
-        .catch(error => {});
+      this.channelArr = []
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      typeList.forEach(item=> {
+        if(item.typeMaster == "CHANNEL"){
+          this.channelArr.push(item);
+        }
+      })
+      // listType({ typeMaster: "CHANNEL" })
+      //   .then(res => {
+      //     this.channelArr = res.data;
+      //   })
+      //   .catch(error => {});
     },
     //加载房间类型
     getRoomTypeList() {
-      listType({ typeMaster: "ROOM_TYPE" })
-        .then(res => {
-          this.roomTypeArr = res.data;
-          console.log(this.roomTypeArr);
-          this.form.roomTypePk = this.roomTypeArr[0].typePk;
-          this.chooseRoomType(this.form.roomTypePk);
-        })
-        .catch(error => {});
+      // listType({ typeMaster: "ROOM_TYPE" })
+      //   .then(res => {
+      //     this.roomTypeArr = res.data;
+      //     console.log(this.roomTypeArr);
+          // this.form.roomTypePk = this.roomTypeArr[0].typePk;
+          // this.chooseRoomType(this.form.roomTypePk);
+      //   })
+      //   .catch(error => {});
+      this.roomTypeArr = []
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          this.roomTypeArr.push(item);
+        }
+      })
+      this.form.roomTypePk = this.roomTypeArr[0].typePk;
+      this.chooseRoomType(this.form.roomTypePk);
     },
     //选中协议单位
     chooseAgreement(res) {

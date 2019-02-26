@@ -84,7 +84,7 @@
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <!-- 操作 -->
           <template slot-scope="scope">
-            <el-button @click="recoverMangerClick(scope.row)" type="text" size="mini">恢复会员</el-button>
+            <el-button @click="recoverMangerClick(scope.row)" v-if="hasPerm('pms:memberManage:recoveryMember')" type="text" size="mini">恢复会员</el-button>
             <!-- <el-button @click="editMangerClick(scope.row)" type="text" size="mini">修改资料</el-button> -->
           </template>
         </el-table-column>

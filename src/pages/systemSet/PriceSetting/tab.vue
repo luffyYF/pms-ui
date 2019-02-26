@@ -49,12 +49,20 @@
       listRoomType(){
         const self = this
         this.loading = true;
-        listType({typeMaster: 'ROOM_TYPE'}).then(result => {
-          self.tableData = result.data.data;
-          self.loading = false
-        }).catch(() => {
-          self.loading = false
+        // listType({typeMaster: 'ROOM_TYPE'}).then(result => {
+        //   self.tableData = result.data.data;
+        //   self.loading = false
+        // }).catch(() => {
+        //   self.loading = false
+        // })
+        var typeList = JSON.parse(localStorage.getItem("pms_type"))
+        self.tableData = []
+        typeList.forEach(item=> {
+          if(item.typeMaster == "ROOM_TYPE"){
+            self.tableData.push(item);
+          }
         })
+        self.loading = false
       },
       //打开初始化价格设置
       initPrice(typePk) {

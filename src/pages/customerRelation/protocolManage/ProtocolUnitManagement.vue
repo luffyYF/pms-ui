@@ -580,20 +580,35 @@ export default {
       self.agreementOptions = [];
       self.industryOptions = [];
       self.saleOptions = [];
-      listType({typeMasters: 'ROOM_TYPE,AGREEMENT,INDUSTRY,SALE'}).then(result => {
-        const listTypeData = result.data.data;
-        for (let index = 0; index < listTypeData.length; index++) {
-          const element = listTypeData[index].typeMaster;
-          if(element == 'ROOM_TYPE'){
-            self.roomTypeOptions.push(listTypeData[index])
-          }else if(element == 'AGREEMENT'){
-            self.agreementOptions.push(listTypeData[index]);
-          }else if(element == 'INDUSTRY'){
-            self.industryOptions.push(listTypeData[index]);
-          }else{
-            self.saleOptions.push(listTypeData[index]);
-          }
+      // listType({typeMasters: 'ROOM_TYPE,AGREEMENT,INDUSTRY,SALE'}).then(result => {
+      //   const listTypeData = result.data.data;
+      // for (let index = 0; index < listTypeData.length; index++) {
+      //   const element = listTypeData[index].typeMaster;
+      //   if(element == 'ROOM_TYPE'){
+      //     self.roomTypeOptions.push(listTypeData[index])
+      //   }else if(element == 'AGREEMENT'){
+      //     self.agreementOptions.push(listTypeData[index]);
+      //   }else if(element == 'INDUSTRY'){
+      //     self.industryOptions.push(listTypeData[index]);
+      //   }else{
+      //     self.saleOptions.push(listTypeData[index]);
+      //   }
+      // }
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          self.roomTypeOptions.push(item);
         }
+        else if(item.typeMaster == "AGREEMENT"){
+          self.agreementOptions.push(item);
+        }
+        else if(item.typeMaster == "INDUSTRY"){
+          self.industryOptions.push(item);
+        }
+        else if(item.typeMaster == "SALE"){
+          self.saleOptions.push(item);
+        }
+      })
         if(i){
           // self.form.beginDate = moment(new Date()).format("YYYY-MM-DD")
           // self.form.endDate = moment(new Date()).format("YYYY-MM-DD")
@@ -606,7 +621,7 @@ export default {
         }
         
         // console.log(self.roomTypeOptions)
-      })
+      // })
     },
     protocolSearch() {//搜索
       const self = this;

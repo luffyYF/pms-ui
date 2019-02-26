@@ -7,16 +7,17 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <span @click="logout">[退出系统]</span>
-        <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span>
+        <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
         <!-- <span @click="logout">[退出系统]</span> -->
       </div>
     </el-col>
     <!--头部2-->
     <el-col :span="24" class="header2">
-      <div class="left"><img src="../assets/image/home_logo.png" /></div>
+      <div class="left"><img src="../assets/image/home_logo1.png" /></div>
       <!--<el-col class="right">-->
       <div class="right" ref="dirRef">
         <!-- getRPath('/atrialCenter',1) -->
+        
         <router-link to="/atrialCenter" v-if="hasPerm('pms:dir:roomCenter')">
           <div class="nav-li">
             <div class="nav-icon atrial-center-icon"></div>
@@ -32,6 +33,7 @@
 
         <!-- getRPath控制路由  hasPerm控制显示 -->
         <!-- getRPath('/reserveManage', 1) -->
+        
         <router-link to="/reserveManage" v-if="hasPerm('pms:dir:reserveManage')">
           <div class="nav-li">
             <div class="nav-icon reserve-manage-icon"></div>
@@ -44,6 +46,12 @@
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
+        <!-- <router-link to="/zl" >
+          <div class="nav-li">
+            <div class="nav-icon reserve-manage-icon"></div>
+            <div class="nav-txt">直连</div>
+          </div>
+        </router-link> -->
         <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
@@ -236,6 +244,8 @@ import {
 import {find} from '@/api/systemSet/pmsSysParamController'
 import {getNewGuestOrder} from '@/api/order/pmsOrderController'
 
+import { allTypeList } from '@/api/utils/pmsTypeController'
+
 export default {
   components:{DialogCheckinVisible},
   created() {
@@ -323,6 +333,13 @@ export default {
       },5000);
     },
     // 退出登录
+    getAllTypeList(){
+      allTypeList().then(res=>{
+        if(res.code == 1){
+          localStorage.setItem("pms_type",JSON.stringify(res.data));
+        }
+      })
+    },
     logout() {
       this.$confirm("确认退出吗?", "提示", {
         type: "warning"
@@ -658,6 +675,7 @@ export default {
       }
   },
   mounted() {
+    this.getAllTypeList()
     window.onresize = () => {
       return (() => {
         window.screenWidth = document.body.clientWidth;
@@ -700,13 +718,27 @@ export default {
 .ylDialog{
   bottom: 0;
   width:300px;
+  border: 1px solid #F60;
+}
+.ylDialog .el-dialog__header{
+    color: white;
+    background-color: #F60;
+    padding: 10px;
 }
 .ylDialog .el-dialog__body{
-  padding: 0 0px;
+    padding: 0 0px;
 }
 .ylDialog .el-dialog__title{
-  font-size: 15px;
-  line-height: 15px;
+    color: white;
+    font-size: 15px;
+    line-height: 15px;
+}
+.ylDialog .el-dialog__headerbtn .el-dialog__close{
+  color: white;
+}
+.ylDialog .el-dialog__headerbtn{
+    top: 10px;
+    right: 10px;
 }
 .ylDialog .el-table .cell{
   font-size: 12px;

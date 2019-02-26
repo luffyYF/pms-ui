@@ -158,12 +158,23 @@
       },
       listRoomType(){
         const self = this
-        listType({typeMaster: 'ROOM_TYPE'}).then(result => {
-          self.options = result.data
-          self.options.unshift({
-            typePk: '',
-            typeName: '所有房间'
-          })
+        // listType({typeMaster: 'ROOM_TYPE'}).then(result => {
+        //   self.options = result.data
+        //   self.options.unshift({
+        //     typePk: '',
+        //     typeName: '所有房间'
+        //   })
+        // })
+        var typeList = JSON.parse(localStorage.getItem("pms_type"))
+        self.options = []
+        typeList.forEach(item=> {
+          if(item.typeMaster == "ROOM_TYPE"){
+            self.options.push(item);
+          }
+        })
+        self.options.unshift({
+          typePk: '',
+          typeName: '所有房间'
         })
       }
     }

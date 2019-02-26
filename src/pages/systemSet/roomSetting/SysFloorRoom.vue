@@ -418,11 +418,21 @@ export default {
     listType(){
       const self = this
       self.listTypeDataView = {}
-      listType({typeMaster: 'ROOM_TYPE'}).then(result => {
-        self.listTypeData = result.data.data
-        self.listTypeData.forEach((value,key)=>{
-          self.listTypeDataView[value.typePk] = value;
-        })
+      // listType({typeMaster: 'ROOM_TYPE'}).then(result => {
+      //   self.listTypeData = result.data.data
+      //   self.listTypeData.forEach((value,key)=>{
+      //     self.listTypeDataView[value.typePk] = value;
+      //   })
+      // })
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      self.listTypeData = []
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          self.listTypeData.push(item);
+        }
+      })
+      self.listTypeData.forEach((value,key)=>{
+        self.listTypeDataView[value.typePk] = value;
       })
     },
     listStorey(){

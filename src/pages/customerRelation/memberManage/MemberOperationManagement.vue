@@ -1,10 +1,10 @@
 <template>
   <div>
-      <el-button size="mini" type="primary" @click="dialogModifyMembeInfo = true">修改资料</el-button>
+      <el-button size="mini" type="primary" v-if="hasPerm('pms:memberManage:menInfoManage')" @click="dialogModifyMembeInfo = true">修改资料</el-button>
       <!-- <el-button size="mini" type="primary">入住历史</el-button>
       <el-button size="mini" type="primary">换 卡</el-button>
       <el-button size="mini" type="primary">加入黑名单</el-button> -->
-      <el-button size="mini" type="primary" @click="delMemberType(message.memPk)">删除会员</el-button>
+      <el-button size="mini" type="primary" v-if="hasPerm('pms:memberManage:delMember')" @click="delMemberType(message.memPk)">删除会员</el-button>
 
       <!-- 修改会员资料 dialog -->
       <el-dialog title="会员管理" :visible.sync="dialogModifyMembeInfo" width="50%" :append-to-body="true">

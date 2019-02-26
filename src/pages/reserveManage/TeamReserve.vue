@@ -211,9 +211,16 @@ export default {
       this.guestList = [];
       this.beginEndPicker = [];
       this.$refs.channelRef.load(true);
-      listType({ typeMaster: "ROOM_TYPE" }).then(res => {
-        this.roomTypeArr = res.data.data;
-      });
+      // listType({ typeMaster: "ROOM_TYPE" }).then(res => {
+      //   this.roomTypeArr = res.data.data;
+      // });
+      this.roomTypeArr = []
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          this.roomTypeArr.push(item);
+        }
+      })
     },
     //打开选择协议单位
     openAgreement() {

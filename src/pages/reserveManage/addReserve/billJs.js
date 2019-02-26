@@ -234,9 +234,15 @@
           this.formAddBill.payment = '0'
         },
         openAddBill(p) {//打开添加入账
+          if(!this.hasPerm('pms:billAss:ruBill')){
+            this.$message({type:'warning', message:'权限不足'})
+            return
+          }
           this.initAddBill()
-          this.formAddBill.projectPk = p.projectPk
-          this.formAddBill.projectName = p.projectName
+          if(p){
+            this.formAddBill.projectPk = p.projectPk
+            this.formAddBill.projectName = p.projectName
+          }
           if(!this.isDubm){
             let arr = this.getAddBillFilter(this.guestOrderSelect);
             if(arr!=null && arr.length>0) {
@@ -802,6 +808,10 @@
 		    },
         //批量入账
         dialogBatchEntryClick() {
+          if(!this.hasPerm('pms:billAss:batCkRuBill')){
+            this.$message({type:'warning', message:'权限不足'})
+            return
+          }
           this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm,null,this.dumbPk)
         },
         //退房超时提醒,跳转批量入账

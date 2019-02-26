@@ -16,3 +16,15 @@ export const calendarPrice = params => {
 export const editPrice = params => {
   return request.post('/back/roomTypePrice/editPrice',params);
 }
+//获取直连房态设置数据
+export const getRoomStatusSetting = params => {
+  return request.get('/back/roomTypePrice/getRoomStatusSetting',{params: params});
+}
+//修改每天房态，房量
+export const settingRoomStatus = params => {
+  return request.post('/back/roomTypePrice/settingRoomStatus',params);
+}
+//修改每天房价
+export const settingPrice = params => {
+  return request.post('/back/roomTypePrice/settingPrice',params);
+}

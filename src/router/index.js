@@ -134,6 +134,18 @@ import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
 import ChannelManagement from '@/pages/systemSet/ChannelManagement'
 import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
+// import zlRoomStatusSetting from '@/pages/systemSet/zlRoomStatusSetting/tab'
+// import zlPriceSetting from '@/pages/systemSet/zlRoomStatusSetting/zlPriceSetting'
+
+//直连
+import zl from '@/pages/zl/tab'
+import zlRoomStatusSetting from '@/pages/zl/zlRoomStatusSetting'
+import zlPriceSetting from '@/pages/zl/zlPriceSetting'
+
+import zlCtripConfig from '@/pages/zl/ZlCtripConfig/ZlCtripConfigList'
+import zlFliggyConfig from '@/pages/zl/ZlFliggyConfig/ZlFliggyConfigList'
+import zlOpenConfig from '@/pages/zl/zlOpenConfig/zlOpenConfigList'
+
 
 // 财务稽核
 import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
@@ -325,6 +337,22 @@ export const constantRouterMap = [
           {path: '/systemSet/channelManage', component: ChannelManagement, label: '渠道管理'},
           {path: '/systemSet/projectSetting', component: ProjectSetting, label: '入账项目显示设置'},
           {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},
+          // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
+          // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
+        ]
+      },
+      {
+        path: '/zl',
+        perm:'',
+        component: zl, 
+        name: '直连', 
+        hidden: false,
+        children: [
+          {path: '/zl/zlOpenConfig', component: zlOpenConfig, label: '直连配置'},
+          {path: '/zl/zlCtripConfig', component: zlCtripConfig, label: '携程直连配置'},
+          {path: '/zl/zlFliggyConfig', component: zlFliggyConfig, label: '飞猪直连配置'},
+          {path: '/zl/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
+          {path: '/zl/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
         ]
       },
       {path: '/linen', component: LinenTag, name: '布草', hidden: false}

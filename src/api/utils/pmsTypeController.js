@@ -36,6 +36,15 @@ export const listType = params => {
 }
 
 /**
+ * 查找公司的所有类型
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const allTypeList = params => {
+  return request.get('/back/type/allTypeList', {params: params})
+}
+
+/**
  * 查找价格方案
  * @param params
  * @returns {AxiosPromise<any>}

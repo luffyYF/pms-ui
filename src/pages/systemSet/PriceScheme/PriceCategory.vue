@@ -645,17 +645,27 @@ var demoEvents = [
     },
 
     selectRoomType() {
-      //查找房型
-      listType({ typeMaster: "ROOM_TYPE" }).then(res => {
-        if (res.code == 1) {
-          this.roomTypeList = res.data;
+      // //查找房型
+      // listType({ typeMaster: "ROOM_TYPE" }).then(res => {
+      //   if (res.code == 1) {
+      //     this.roomTypeList = res.data;
+      //   }
+      // });
+      // listType({ typeMaster: "CHANNEL" }).then(res => {
+      //   if (res.code == 1) {
+      //     this.channelList = res.data;
+      //   }
+      // });
+      var typeList = JSON.parse(localStorage.getItem("pms_type"))
+      this.roomTypeList = []
+      this.channelList = []
+      typeList.forEach(item=> {
+        if(item.typeMaster == "ROOM_TYPE"){
+          this.roomTypeList.push(item);
+        }else if(item.typeMaster == "CHANNEL"){
+          this.channelList.push(item);
         }
-      });
-      listType({ typeMaster: "CHANNEL" }).then(res => {
-        if (res.code == 1) {
-          this.channelList = res.data;
-        }
-      });
+      })
     },
       showSchemePopover(obj) {
       this.popoverItem.schemePk = obj.row.schemePk;
