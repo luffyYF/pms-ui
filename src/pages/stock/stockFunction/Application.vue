@@ -57,6 +57,12 @@
               <el-form-item label="货物名称">
                 <el-input readonly v-model="form2.inventoryName"></el-input>
               </el-form-item>
+              <el-form-item label="单位">
+                <el-input readonly v-model="form2.unit"></el-input>
+              </el-form-item>
+              <el-form-item label="规格">
+                <el-input readonly v-model="form2.spec"></el-input>
+              </el-form-item>
               <el-form-item label="类型">
                 <el-input readonly v-model="form2.typeName"></el-input>
               </el-form-item>
