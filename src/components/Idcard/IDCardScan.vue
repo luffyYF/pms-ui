@@ -1,3 +1,4 @@
+// 读取身份证公共组件
 <template>
   <section style="display: inline-block;text-align:center;width: 24px;">
     <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" v-if="!idcLoading"></el-button>
@@ -19,14 +20,13 @@ export default {
     }
   },
   methods: {
-    //读取身份证信息
+    //调用读取身份证信息
     readIDCard() {
       //end
       const curr = this
       this.idcLoading = true
       readCVR({}, res=>{
         if(res.code==0){
-          // this.$alert(res.data, '读卡器信息', {confirmButtonText: '确定'});
           let callbackData = curr.matchingData(res.data);
           // 保存身份证读取记录
           saveCvrRecord(res.data).then(res=>{})
@@ -34,7 +34,8 @@ export default {
         }else {
           this.$message.error(res.msg);
         }
-      }, ()=>{
+      }, error=> {
+        error && this.$alert(error, '消息', {type:'error'});
         this.idcLoading = false
       })
     },

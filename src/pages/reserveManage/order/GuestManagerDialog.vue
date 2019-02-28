@@ -117,8 +117,6 @@ export default {
     },
     //获取身份证信息
     getIDCardInfo(index, data){
-      console.log('table下标', index)
-      console.log('返回数据',data)
       this.$set(this.guestTable[index], 'guestName', data.guestName)
       this.$set(this.guestTable[index], 'certificateNo', data.certificateNo)
       this.$set(this.guestTable[index], 'birthday', data.bornDate)

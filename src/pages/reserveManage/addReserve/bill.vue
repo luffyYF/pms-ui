@@ -526,7 +526,9 @@
     <!-- 部分结账恢复 -->
     <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
     <!-- 退房超时提醒 -->
-    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toSettle" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckoutRemind" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <!-- 提前退房收费提示 -->
+    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="toSettle" @to-addbill="timeoutRemindToAddBill"></dialogAdvanceCheckoutRemind>
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
     <!-- 单房结账 -->

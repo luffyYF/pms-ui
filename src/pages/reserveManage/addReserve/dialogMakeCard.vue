@@ -155,7 +155,8 @@ export default {
         }
         //保存制卡记录
         saveRflRecord(params).then(res=>{})
-      }, ()=>{
+      }, error=> {
+        error && this.$alert(error, '消息', {type:'error'});
         this.lazyFlag = false;
       })
     },
@@ -173,7 +174,8 @@ export default {
         }else {
           this.$message.error(res.msg);
         }
-      }, ()=>{
+      }, error=> {
+        error && this.$alert(error, '消息', {type:'error'});
         this.lazyFlag = false;
       })
     },
@@ -190,7 +192,8 @@ export default {
         }else {
           this.$message.error(res.msg);
         }
-      }, ()=>{
+      }, error=> {
+        error && this.$alert(error, '消息', {type:'error'});
         this.lazyFlag = false;
       })
     },
@@ -208,7 +211,8 @@ export default {
         }else {
           this.$message.error(res.msg);
         }
-      }, ()=>{
+      }, error=> {
+        error && this.$alert(error, '消息', {type:'error'});
         this.lazyFlag = false;
       })
 

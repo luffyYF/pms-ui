@@ -8,9 +8,11 @@
   import billSettlement from './bill/billSettlement'
   import dialogRecoverBill from './bill/dialogRecoverBill'
   import dialogTimeoutRemind from './bill/dialogTimeoutRemind'
+  import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
   import dialogBatchAddBill from './bill/dialogBatchAddBill'
   import dialogSingleSettl from './bill/dialogSingleSettl'
   import dialogDepositPrint from './bill/dialogDepositPrint'
+
   //转账组单选择
   import transferAccounts from './transferAccounts'
   // API
@@ -47,6 +49,7 @@
         billSettlement,
         dialogRecoverBill,
         dialogTimeoutRemind,
+        dialogAdvanceCheckoutRemind,
         dialogBatchAddBill,
         transferAccounts,
         dialogSingleSettl,
@@ -536,6 +539,10 @@
             }
           }
         },
+        //打开检测提前退房收费提醒
+        toCheckoutRemind() {
+          this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.orderPk)
+        },  
         //打开结账页面
         toSettle() {
           this.$refs.billSettlementRef.init(this.orderPk, 0)
