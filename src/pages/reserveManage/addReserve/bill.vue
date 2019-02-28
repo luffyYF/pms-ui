@@ -93,8 +93,8 @@
         <el-col :span="24" class="bill-opr">
           打印处理：
           <el-button size="mini" v-if="hasPerm('pms:billAss:printBill')" @click="clickPrint">打印</el-button>
+          <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button>
           <el-button size="mini" v-if="hasPerm('pms:billAss:exportBill')" @click="exportClick">导出账单</el-button>
-          <!-- <el-button size="mini" @click="dialogDepositPrint = true">押金打印</el-button> -->
         </el-col>
       </el-col>
       <el-col :span="8" class="bill-el-button">
