@@ -208,7 +208,6 @@ export default {
           }
         })
       })
-      
     },
     addFormAddBillsClick(index){
       if(index != null){

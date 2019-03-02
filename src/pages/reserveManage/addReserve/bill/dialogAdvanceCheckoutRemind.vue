@@ -3,7 +3,7 @@
   <!-- 提前退房，收取房费提醒 -->
   <el-dialog class="pattern-dialog advance-checkout-remind-dialog" title="提醒" :visible.sync="dialogVisable" width="600px" :before-close="handleClose" :append-to-body="true">
     <div class="pattern-dialog-container" style="padding: 10px 4px;">
-      <p style="color:#bb8c00;">以下客人是提前退房，可能需要收取额外费用</p>
+      <p style="color:#bb8c00;">以下客人是<span style="color:red;">提前退房</span>，可能需要收取额外费用</p>
       <el-table
         border
         :data="tableData"
@@ -16,8 +16,8 @@
       </el-table>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="continueSettleClick">不收取，继续退房</el-button>
       <el-button size="mini" type="primary" @click="toBillClick">收取</el-button>
+      <el-button size="mini" type="primary" @click="continueSettleClick">不收取，继续退房</el-button>
       <el-button size="mini"  @click="dialogVisable = false">取消</el-button>
     </span>
   </el-dialog>

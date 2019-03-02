@@ -35,12 +35,12 @@
             <el-option label="银行卡" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="支付方式：" required>
+        <!-- <el-form-item label="支付方式：" required>
           <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:178px">
             <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="客单：">
           <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:460px">
             <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
@@ -61,7 +61,7 @@
 
 <script>
 import {checkoutGuest, countCheckoutBill, selectGuestOrderBill, singleRoomCheckoutBill} from '@/api/bill'
-import {paymentMap} from '@/utils/orm'
+// import {paymentMap} from '@/utils/orm'
 export default {
   data() {
     return {
@@ -70,14 +70,14 @@ export default {
       tableData: [],
       guestOrderSelect: [],
       multipleSelection: [],
-      paymentMap: paymentMap,
+      // paymentMap: paymentMap,
       billForm:{
         consumptionAmount:null,
         settlementAmount:null,
         diffAmount:null,
         diffShow: null,
         guestOrderPk:null,
-        payment:null,
+        // payment:null,
         remark:null,
         orderPk:null,
 
@@ -93,7 +93,7 @@ export default {
       this.billForm.diffAmount=0
       this.billForm.diffShow=0
       this.billForm.guestOrderPk=null
-      this.billForm.payment='0'
+      // this.billForm.payment='0'
       this.billForm.remark=null
       this.tableData = []
       this.guestOrderSelect = []
@@ -134,7 +134,7 @@ export default {
         orderPk: this.billForm.orderPk,
         guestOrderPk: this.billForm.guestOrderPk,
         remark: this.billForm.remark,
-        payment: this.billForm.payment,
+        // payment: this.billForm.payment,
         guestPks: guestPks
       }
       singleRoomCheckoutBill(data).then(res=>{
