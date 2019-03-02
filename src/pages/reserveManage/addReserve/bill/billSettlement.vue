@@ -113,7 +113,7 @@ export default {
       backMoney: 0,//找零、欠费金额
       // tempBackMoney: 0,
       onlineVisible:false,//是否可以线上退款
-      settlProjectList:[],
+      settlProjectList:[],//结算项目下拉列表
       billForm: {
         // payment: "0",
         remark: null,
@@ -284,6 +284,7 @@ export default {
           // payment:this.billForm.payment,
           remark: this.billForm.remark,
           guestOrderPk:this.billForm.guestOrderPk,
+          settleProjectCode:this.billForm.settleProjectCode,
           billType: this.isDubm?'DUMB':'ROOM',
           billStatus:this.billStatus!=null?this.billStatus:'UN_SET',
           dumbPk:this.dumbPk
@@ -333,7 +334,6 @@ export default {
       this.settlProjectList = [] 
       listByProjectType({projectType:'SETTLEMENT'}).then(res => {
          res.data.forEach(item=>{
-            console.log(this.inoutFlag, item)
             if(this.inoutFlag==item.inoutFlag){
               this.settlProjectList.push(item)
             }
