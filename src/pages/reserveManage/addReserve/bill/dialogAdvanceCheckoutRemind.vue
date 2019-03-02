@@ -58,11 +58,15 @@ export default {
     },
     //点击收取，打开批量入账
     toBillClick() {
-      let guestPks = []
+      let billItems = []
       this.tableData.forEach(item=>{
-        guestPks.push(item.guestOrderPk)
+        billItems.push({
+          projectCode:104,
+          guestOrderPk:item.guestOrderPk,
+          price:item.currPrice
+        })
       })
-      this.$emit('to-addbill', guestPks);
+      this.$emit('to-addbill', billItems);
       this.dialogVisable = false;
     },
     handleClose() {

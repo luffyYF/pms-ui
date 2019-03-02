@@ -43,15 +43,16 @@
         <el-col :span="23">
           <!-- 账单列表 -->
           <el-table ref="multipleTable" size="mini" :data="billsList" @selection-change="handleSelectionChange" tooltip-effect="dark" border height="240" style="width: 100%">
-            <el-table-column type="selection" width="55" :selectable="billSelectable"></el-table-column>
+            <!-- :selectable="billSelectable" -->
+            <el-table-column type="selection" width="55" ></el-table-column>
             <el-table-column prop="projectName" label="项目" width="100"></el-table-column>
             <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
             <el-table-column prop="settlementAmount" label="结算金额"></el-table-column>
-            <el-table-column prop="payment" label="支付方式">
+            <!-- <el-table-column prop="payment" label="支付方式">
               <template slot-scope="scope">
                 <span>{{paymentMap[scope.row.payment]}}</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="number" label="数量"></el-table-column>
             <el-table-column prop="roomNumber" label="房号"></el-table-column>
             <el-table-column prop="billStatus" label="状态">
@@ -179,7 +180,7 @@
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
         <el-form ref="splitForm" :model="splitForm" size="mini" label-width="100px" class="batchOccupancy-content">
           <el-form-item label="原始金额：">
-            <el-input v-model="splitForm.consumptionAmount"></el-input>
+            <el-input v-model="splitForm.consumptionAmount" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="拆账金额：">
             <el-input v-model="splitForm.price"></el-input>
@@ -199,11 +200,11 @@
     <el-dialog class="pattern-dialog height240" title="冲减" :visible.sync="dialogOffset" width="30%" :before-close="handleClose" :append-to-body="true">
       <div class="pattern-dialog-container" style="padding: 25px 4px;">
        <el-form ref="splitForm" :model="splitForm" size="mini" label-width="100px" class="batchOccupancy-content">
-          <el-form-item label="授权员：">
+          <!-- <el-form-item label="授权员：">
             <el-input value="深圳市前海豪斯菲尔信息科技有效公司" :disabled="true"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="原始金额：">
-            <el-input v-model="splitForm.consumptionAmount"></el-input>
+            <el-input v-model="splitForm.consumptionAmount" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="冲减金额：">
             <el-input v-model="splitForm.price"></el-input>
@@ -339,7 +340,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="支付方式" required>
+          <!-- <el-form-item label="支付方式" required>
             <el-select v-model="formAddBill.payment" placeholder="请选择支付方式" style="width:100%">
               <el-option
                 v-for="(value, key) in paymentMap"
@@ -348,7 +349,7 @@
                 :value="key">
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item label="渠道类型" required v-if="formAddBill.payment=='5'">
             <channel-select ref="channelRef" v-model="formAddBill.channelTypePk" style="width:100%"></channel-select>
           </el-form-item> -->
@@ -522,13 +523,13 @@
     <!-- 打印组件 -->
     <comment-print ref="commentPrintRef"></comment-print>
     <!-- 结账 -->
-    <bill-settlement ref="billSettlementRef"></bill-settlement>
+    <bill-settlement ref="billSettlementRef" @callback="printCallback"></bill-settlement>
     <!-- 部分结账恢复 -->
     <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
     <!-- 退房超时提醒 -->
     <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckoutRemind" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
     <!-- 提前退房收费提示 -->
-    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="toSettle" @to-addbill="timeoutRemindToAddBill"></dialogAdvanceCheckoutRemind>
+    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="toSettle" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind>
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
     <!-- 单房结账 -->

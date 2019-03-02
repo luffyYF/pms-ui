@@ -378,7 +378,7 @@
      <!-- 退房超时收费提示 -->
     <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckAdvance" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
     <!-- 提前退房收费提示 -->
-    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="timeoutRemindToAddBill"></dialogAdvanceCheckoutRemind>
+    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind>
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
   </div>
@@ -1032,8 +1032,21 @@
         },
         //弹出批量入账转入账
         timeoutRemindToAddBill(guestPks) {
+          let billItems = []
+          guestPks.forEach(guestPk=>{
+            billItems.push({
+              projectCode:112,
+              guestOrderPk:guestPk,
+              price:null
+            })
+          })
           this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, guestPks)
         },
+        
+        advanceCheckoutToAddBill(billItems) {
+          this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, billItems)
+        },
+
         guestTableClick(row, event, column) {//点击客单table
           this.currGuestList.forEach((guest,index)=>{
             if(row.guestOrderPk==guest.guestOrderPk){

@@ -32,12 +32,12 @@
                     <el-option label="银行卡" value="beijing"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="支付方式" required>
+                <!-- <el-form-item label="支付方式" required>
                   <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:100%">
                     <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
                     </el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="客单：">
                   <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:100%">
                     <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
@@ -92,7 +92,7 @@
 <script>
 import bus from '@/utils/bus'
 import { countCheckoutBill, checkoutauthBill, selectGuestOrderBill, checkoutNoPay, checkoutPart, hfCheckoutNoPay } from "@/api/bill";
-import { paymentMap } from "@/utils/orm";
+// import { paymentMap } from "@/utils/orm";
 export default {
   data() {
     return {
@@ -103,12 +103,12 @@ export default {
       countCheckoutDate: {},
       guestOrderSelect: [],
       billPks: '',
-      paymentMap: paymentMap,
+      // paymentMap: paymentMap,
       backMoney: 0,//找零、欠费金额
       // tempBackMoney: 0,
       onlineVisible:false,//是否可以线上退款
       billForm: {
-        payment: "0",
+        // payment: "0",
         remark: null,
         guestOrderPk:'',
         onlineFlag:true,
@@ -117,7 +117,7 @@ export default {
       hfBillForm: {
         orderPk:'',
         consumptionAmount:null,
-        payment:'0',
+        // payment:'0',
         remark:'',
         hfCashPledge:''
       },
@@ -138,7 +138,7 @@ export default {
       this.orderPk = orderPk;
       this.billPks = billPks;
       this.billForm.guestOrderPk = '';
-      this.billForm.payment = "0";
+      // this.billForm.payment = "0";
       this.billForm.remark = null;
       this.onlineVisible = false;
       this.billForm.onlineFlag = false;
@@ -180,6 +180,7 @@ export default {
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
         });
       }
+
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
         res.data.forEach(item=>{
           if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
@@ -209,7 +210,7 @@ export default {
         let data = {
           orderPk: this.orderPk,
           guestOrderPk: this.billForm.guestOrderPk,
-          payment: this.billForm.payment,
+          // payment: this.billForm.payment,
           remark: this.billForm.remark,
           billType: this.isDubm?'DUMB':'ROOM'
         };
@@ -218,8 +219,9 @@ export default {
           this.dialogPartialCheckout = false;
           this.$message({type:'success', message:'操作成功'})
           this.islock = false;
-          bus.$emit("dialogVisibleClose");
+          // bus.$emit("dialogVisibleClose");
           bus.$emit("refresh-listReserve");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
@@ -260,13 +262,14 @@ export default {
           this.islock = false;
           bus.$emit("dialogVisibleClose");
           bus.$emit("refresh-listReserve");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
       }else if(this.type==2){
         let data = {
           billPk:this.billPks,
-          payment:this.billForm.payment,
+          // payment:this.billForm.payment,
           remark: this.billForm.remark,
           guestOrderPk:this.billForm.guestOrderPk,
           billType: this.isDubm?'DUMB':'ROOM',
@@ -279,6 +282,7 @@ export default {
           this.dialogPartialCheckout = false;
           this.islock = false;
           bus.$emit("billload");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
@@ -295,11 +299,17 @@ export default {
           this.islock = false;
           bus.$emit("dialogVisibleClose");
           bus.$emit("refresh-listReserve");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
       }
     },
+    //回调
+    remindPrint() {
+      this.$emit('callback')
+    },
+
   }
 };
 </script>

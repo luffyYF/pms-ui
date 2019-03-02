@@ -1,7 +1,7 @@
   //通讯
   import bus from '@/utils/bus'
   //全局变量
-  import {paymentMap, billStatusMap} from '@/utils/orm'
+  import {billStatusMap} from '@/utils/orm'
   // 组件
   import dialogBorrow from '@/pages/reserveManage/addReserve/dialogBorrow'
   import commentPrint from '@/components/PrintPage/commonPrintPage'
@@ -62,7 +62,7 @@
             order:{},
             guestList:[]
           },
-          paymentMap: paymentMap,
+          // paymentMap: paymentMap,
           billStatusMap: billStatusMap,
           // 房态账单 start
           orderPk: '',
@@ -75,7 +75,7 @@
             projectName: '',
             consumptionAmount: '',
             remark: '',
-            payment: '0',
+            // payment: '0',
           },
           // formAddBills:[{
           //   projectPk:'',
@@ -208,7 +208,7 @@
           }
           listBill(data).then(res => {
             this.billsList = res.data;
-            if(this.billsList){
+            if(this.billsList) {
               this.billsList.forEach((bill, index) => {
                 bill.consumptionAmount = Math.round(bill.consumptionAmount*100)/100;
                 bill.settlementAmount = Math.round(bill.settlementAmount*100)/100;
@@ -234,7 +234,7 @@
           this.formAddBill.channelTypePk=null
           this.formAddBill.consumptionAmount=null
           this.formAddBill.remark=null
-          this.formAddBill.payment = '0'
+          // this.formAddBill.payment = '0'
         },
         openAddBill(p) {//打开添加入账
           if(!this.hasPerm('pms:billAss:ruBill')){
@@ -281,10 +281,10 @@
             this.$message({type:'warning', message:'请选择客单'})
             return
           }
-          if(!formAddBill.payment){
-            this.$message({type:'warning', message:'请选择支付方式'})
-            return
-          }
+          // if(!formAddBill.payment){
+          //   this.$message({type:'warning', message:'请选择支付方式'})
+          //   return
+          // }
           // if(formAddBill.payment=='5'){//是选择AR帐
           //   if(!formAddBill.channelTypePk){
           //     this.$message({type:'warning', message:'请选择渠道类型'})
@@ -306,7 +306,7 @@
             projectName: formAddBill.projectName,
             projectPk: formAddBill.projectPk,
             channelTypePk: formAddBill.channelTypePk,
-            payment: formAddBill.payment,
+            // payment: formAddBill.payment,
             remark: formAddBill.remark,
             dumbPk:this.dumbPk,
             billType: this.isDubm?'DUMB':'ROOM',
@@ -359,15 +359,22 @@
         handleSelectionChange(val) {
           this.multipleSelection = val;
         },
-        splitBillOperation(){ //选择判断
+        splitBillOperation() { //选择判断
           const tickOptions = this.multipleSelection.length;
           const tickOptionsList = this.multipleSelection;
-          if(tickOptions == 1){
+
+          if(tickOptions == 1) {
+            if(tickOptionsList[0].billStatus!="UN_SET") {
+              this.$message.warning('请选择未结账的账单')
+              return;
+            }
+
             this.dialogTollAllocation = true;
             for (let index = 0; index < tickOptionsList.length; index++) {
               this.splitForm.billPk = tickOptionsList[0].billPk;
-              this.splitForm.consumptionAmount = tickOptionsList[0].consumptionAmount;
+              this.splitForm.consumptionAmount = tickOptionsList[0].consumptionAmount + tickOptionsList[0].settlementAmount;
             }
+
           }else if(tickOptions == 0){
             this.$message({
               message: '没有项目被选中，请选择您要拆分的项目！',
@@ -396,10 +403,15 @@
           const tickOptions = this.multipleSelection.length;
           const tickOptionsList = this.multipleSelection;
           if(tickOptions == 1){
+            if(tickOptionsList[0].billStatus!="UN_SET") {
+              this.$message.warning('请选择未结账的账单')
+              return;
+            }
+
             this.dialogOffset = true;
             for (let index = 0; index < tickOptionsList.length; index++) {
               this.splitForm.billPk = tickOptionsList[0].billPk;
-              this.splitForm.consumptionAmount = tickOptionsList[0].consumptionAmount;
+              this.splitForm.consumptionAmount = tickOptionsList[0].consumptionAmount + tickOptionsList[0].settlementAmount;
             }
           }else if(tickOptions == 0){
             this.$message({
@@ -425,7 +437,8 @@
             }
           })
         },
-        clickPrint() {//打印账单
+        //打印账单
+        clickPrint() {
           if(this.multipleSelection.length<=0){
             this.$message({type:'warning',message:'至少选择一条账单'})
             return;
@@ -442,6 +455,39 @@
           window.open(process.env.PRINT_ROOT+"/#/consumptionPrint?shopName="+this.companyObj.companyName
           +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName);
         },
+        
+        //结账后，确认是否打印
+        printCallback() {
+          this.$confirm("是否打印账单？", '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let data = {
+              orderPk: this.orderPk,
+              billStatus: null,
+              businessDate: this.serachForm.currentData,
+              roomPk: null,
+              guestOrderPk: null,
+              dumbPk: 'N'
+            }
+            listBill(data).then(res => {
+              let list = res.data;
+              let billPks='';
+              list.forEach(item => {
+                billPks += item.billPk + ","
+              })
+              billPks = billPks.substring(0, (billPks.length - 1))
+              let beginDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].beginDate:new Date()
+              let endDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].endDate:new Date()
+              window.open(process.env.PRINT_ROOT+"/#/consumptionPrint?shopName="+this.companyObj.companyName
+              +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName);
+            })
+          })
+          //刷新订单
+          this.$emit('refresh-main-order', this.orderPk, 'bill')
+        },
+
         initProject(){
           // this.isDubm
           //SETTLEMENT,CONSUMER
@@ -482,13 +528,15 @@
                 }else if(type==2){//部分结账
                   let select = this.multipleSelection;
                   let pks = []
-                  // if(this.serachForm.state!='UN_SET'){
-                  //   this.$message({type:'warning', message:'请选择未结账的账单'})
-                  //   return;
-                  // }
                   if(select.length<=0){
                     this.$message({type:'warning', message:'请至少选择一条未结账的账单'})
                     return;
+                  }
+                  for(let row of select) {
+                    if(row.billStatus!="UN_SET") {
+                      this.$message.warning('请选择未结账的账单')
+                      return;
+                    }
                   }
                   select.forEach(row=>{
                     pks.push(row.billPk)
@@ -610,7 +658,7 @@
                 roomTypeName:this.billsList[i].roomTypeName,
                 remark:this.billsList[i].remark,
                 createUserName:userInfo.upmsRealName,
-                payment:this.billsList[i].payment,
+                // payment:this.billsList[i].payment,
                 createTime:this.billsList[i].createTime,
                 channelTypePk:this.billsList[i].channelTypePk,
               })
@@ -802,13 +850,13 @@
           return temp;
         },
         //限制账单勾选，只有未结账的才可以勾选
-        billSelectable(row,index) {
-          if(row.billStatus=='UN_SET') {
-            return true;
-          }else {
-            return false;
-          }
-        },
+        // billSelectable(row,index) {
+        //   if(row.billStatus=='UN_SET') {
+        //     return true;
+        //   }else {
+        //     return false;
+        //   }
+        // },
 		    //恢复客单
         toDialogRecoverBill() {
           this.$refs.dialogRecoverBillRef.showDialog(this.currOrderInfo.order.orderPk)
@@ -823,8 +871,21 @@
         },
         //退房超时提醒,跳转批量入账
         timeoutRemindToAddBill(guestPks) {
-          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, guestPks)
+          let billItems = []
+          guestPks.forEach(guestPk=>{
+            billItems.push({
+              projectCode:112,
+              guestOrderPk:guestPk,
+              price:null
+            })
+          })
+          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, billItems)
         },
+
+        advanceCheckoutToAddBill(billItems) {
+          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, billItems)
+        },
+
         // dialogBatchEntryClick(){
         //   this.formAddBills = [{
         //     projectPk:'',
