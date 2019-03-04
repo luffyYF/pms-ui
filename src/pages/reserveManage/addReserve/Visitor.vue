@@ -107,7 +107,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="当天房租：" required>
-                  <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                  <el-input-number v-model="form.currPrice" :controls="false" :disabled="form.guestOrderPk!=undefined"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -128,7 +128,7 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="当天促销：" required>
-                  <el-input-number v-model="form.currPromotionPrice" :controls="false" :disabled="form.guestOrderPk!==undefined"></el-input-number>
+                  <el-input-number v-model="form.currPromotionPrice" :controls="false" :disabled="form.guestOrderPk!=undefined"></el-input-number>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -375,8 +375,10 @@
     <reserveManager ref="reserveManagerRef" @callback="reserveManagerCallback"></reserveManager>
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
-     <!-- 退房超时提醒 -->
-    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="checkout" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+     <!-- 退房超时收费提示 -->
+    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckAdvance" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <!-- 提前退房收费提示 -->
+    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind>
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
   </div>
@@ -413,11 +415,12 @@
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
     import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
+    import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
     import dialogBatchAddBill from './bill/dialogBatchAddBill'
     import IDCardScan from '@/components/Idcard/IDCardScan'
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind, dialogBatchAddBill,IDCardScan},
+      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind,dialogAdvanceCheckoutRemind, dialogBatchAddBill,IDCardScan},
       data() {
         return {
           /**
@@ -994,10 +997,17 @@
             //检测入住的客单是否超过退房时间，进行提醒
             this.$refs.dialogTimeoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
           }else {
+            //检测是否有提前退房，进行提醒
+  
             //跳转账单页面
             bus.$emit('toCheckout')
           }
         },
+
+        toCheckAdvance(guestOrderPk) {
+          this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+        },
+
         //单房退房，提交
         checkout(guestOrderPk) {
           this.$confirm("确认退房吗？", "提示", {
@@ -1022,8 +1032,21 @@
         },
         //弹出批量入账转入账
         timeoutRemindToAddBill(guestPks) {
+          let billItems = []
+          guestPks.forEach(guestPk=>{
+            billItems.push({
+              projectCode:112,
+              guestOrderPk:guestPk,
+              price:null
+            })
+          })
           this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, guestPks)
         },
+        
+        advanceCheckoutToAddBill(billItems) {
+          this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, billItems)
+        },
+
         guestTableClick(row, event, column) {//点击客单table
           this.currGuestList.forEach((guest,index)=>{
             if(row.guestOrderPk==guest.guestOrderPk){

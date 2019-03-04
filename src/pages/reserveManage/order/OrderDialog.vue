@@ -144,7 +144,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="账单" name="bill" :disabled="disabledBill" v-if="currConfirmType!='add-checkin'">
-                <bill ref="billTagForm"></bill>
+                <bill ref="billTagForm" @refresh-main-order="initOrderInfo"></bill>
               </el-tab-pane>
             </el-tabs>
           </el-col>

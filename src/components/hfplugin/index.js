@@ -119,7 +119,7 @@ let xyfAjax = {
 }
 
 let host = "http://localhost:10088"
-let installMsg = "未能调用成功，请检查插件是否正确安装，或联系管理员进行处理！"
+let errorMsg = "未能调用成功，请检查插件是否正确安装，或联系管理员进行处理！"
 /**
  * 身份证读卡器
  */
@@ -133,7 +133,7 @@ export function readCVR(data, callback, atlast) {
       callback(data)
     },
     error: function (status) {
-      alert(installMsg)
+      atlast && atlast(errorMsg)
     },
     finally: function() {
       atlast && atlast()
@@ -154,7 +154,7 @@ export function makeCard(data, callback, atlast) {
       callback(data)
     },
     error: function (status) {
-      alert(installMsg)
+      atlast && atlast(errorMsg)
     },
     finally: function() {
       atlast && atlast()

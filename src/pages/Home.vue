@@ -6,6 +6,7 @@
       <div class="left" @click="toSelectClass" style="cursor: pointer;">{{activeCompany.companyName}}</div>
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
+        <span><a href="https://www.housefeel.cn/file/HFPlugin.rar" style="color:#fff;text-decoration:none;">[插件下载]</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span @click="logout">[退出系统]</span>
         <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
         <!-- <span @click="logout">[退出系统]</span> -->
@@ -171,6 +172,7 @@
       营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
       {{footerData.currTime}}
       <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
+      
     </el-col>
     <div class="asd">
       <!-- margin-bottom: 285px; -->

@@ -57,6 +57,12 @@
               <el-form-item label="货物名称">
                 <el-input readonly v-model="form2.inventoryName"></el-input>
               </el-form-item>
+              <el-form-item label="单位">
+                <el-input readonly v-model="form2.unit"></el-input>
+              </el-form-item>
+              <el-form-item label="规格">
+                <el-input readonly v-model="form2.spec"></el-input>
+              </el-form-item>
               <el-form-item label="类型">
                 <el-input readonly v-model="form2.typeName"></el-input>
               </el-form-item>
@@ -208,7 +214,6 @@ export default {
     },
     //选择商品
     chooseInventory(inventoryId){
-      console.log('选择',inventoryId);
       this.inventorySelectList.forEach((v,i)=>{
         if(v.inventoryId==inventoryId){
           this.form2.inventoryId=v.inventoryId;
@@ -227,9 +232,9 @@ export default {
         }
       })
     },
-    //改变申请数量
+    //改变申请数量，计算总价
     changeAmout(value){
-      this.form2.totalPrice = Number(this.form2.price)*Number(value);
+      this.form2.totalPrice = (Number(this.form2.price)*Number(value)).toFixed(2);
     },
     //存入列表
     saveGoods(){

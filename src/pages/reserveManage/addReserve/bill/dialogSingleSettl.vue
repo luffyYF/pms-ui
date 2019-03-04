@@ -26,21 +26,25 @@
         <el-form-item label="实收：" label-width="70">
           <el-input type="text" v-model="billForm.settlementAmount" style="width:110px" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item :label="billForm.diffAmount<=0? '找零：': '应收：'" label-width="70" class="diff-class">
+        <el-form-item :label="billForm.diffAmount<=0 ? '找零：': '应收：'" label-width="70" class="diff-class">
           <el-input type="text" v-model="billForm.diffShow" style="width:110px;" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="结算项目：">
-          <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出" style="width:178px">
-            <el-option label="现金" value="shanghai"></el-option>
-            <el-option label="银行卡" value="beijing"></el-option>
+          <el-select v-model="billForm.settleProjectCode" placeholder="请选择结算项目" style="width:460px">
+           <el-option
+              v-for="item in settlProjectList"
+              :key="item.projectPk"
+              :label="item.code+' - '+item.projectName"
+              :value="item.code">
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="支付方式：" required>
+        <!-- <el-form-item label="支付方式：" required>
           <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:178px">
             <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="客单：">
           <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:460px">
             <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
@@ -61,7 +65,8 @@
 
 <script>
 import {checkoutGuest, countCheckoutBill, selectGuestOrderBill, singleRoomCheckoutBill} from '@/api/bill'
-import {paymentMap} from '@/utils/orm'
+import { listByProjectType } from '@/api/systemSet/pmsProjectController'
+// import {paymentMap} from '@/utils/orm'
 export default {
   data() {
     return {
@@ -70,17 +75,19 @@ export default {
       tableData: [],
       guestOrderSelect: [],
       multipleSelection: [],
-      paymentMap: paymentMap,
+      // paymentMap: paymentMap,
+      settlProjectList:[],//结算项目下拉列表
+      tempProjectList:[],//
       billForm:{
         consumptionAmount:null,
         settlementAmount:null,
         diffAmount:null,
         diffShow: null,
         guestOrderPk:null,
-        payment:null,
+        // payment:null,
         remark:null,
         orderPk:null,
-
+        settleProjectCode:null,
       }
     }
   },
@@ -93,24 +100,27 @@ export default {
       this.billForm.diffAmount=0
       this.billForm.diffShow=0
       this.billForm.guestOrderPk=null
-      this.billForm.payment='0'
+      // this.billForm.payment='0'
       this.billForm.remark=null
+      this.billForm.settleProjectCode = null
       this.tableData = []
       this.guestOrderSelect = []
       countCheckoutBill({ orderPk: orderPk }).then(res => {
-        console.log('返回',res.data)
         this.tableData = res.data.group
         // this.countCheckoutDate = res.data;
         // this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount) | 0;
       });
 
+      listByProjectType({projectType:'SETTLEMENT'}).then(res => {
+        this.tempProjectList = res.data;
+      });
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
         res.data.forEach(item=>{
           if(item.orderStatus=="CHECKIN" || item.orderStatus=='LEAVENOPAY') {
             this.guestOrderSelect.push(item)
           }
         })
-        if(this.guestOrderSelect.length>0){
+        if(this.guestOrderSelect.length>0) {
           this.billForm.guestOrderPk = this.guestOrderSelect[0].guestOrderPk
         }
       });
@@ -125,6 +135,10 @@ export default {
         this.$emit('to-settle')
         return
       }
+      if(!this.billForm.settleProjectCode){
+        this.$message.warning('请选择结算项目');
+        return
+      }
       this.loading = true
       let guestPks = []
       this.multipleSelection.forEach(item=>{
@@ -133,8 +147,9 @@ export default {
       let data = {
         orderPk: this.billForm.orderPk,
         guestOrderPk: this.billForm.guestOrderPk,
+        settleProjectCode: this.billForm.settleProjectCode,
         remark: this.billForm.remark,
-        payment: this.billForm.payment,
+        // payment: this.billForm.payment,
         guestPks: guestPks
       }
       singleRoomCheckoutBill(data).then(res=>{
@@ -158,6 +173,20 @@ export default {
       this.billForm.settlementAmount = settl
       this.billForm.diffAmount = diff
       this.billForm.diffShow = Math.abs(diff);
+
+      let inoutFlag = this.billForm.diffAmount<=0 ? false : true
+      this.loadProject(inoutFlag);
+    },
+
+    //加载结算项目 inoutFlag:true 收入  false支出
+    loadProject(inoutFlag){
+      this.settlProjectList = [] 
+      this.billForm.settleProjectCode = null
+      this.tempProjectList.forEach(item=>{
+        if(inoutFlag==item.inoutFlag) {
+          this.settlProjectList.push(item)
+        }
+      })
     },
     
   }

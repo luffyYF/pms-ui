@@ -30,17 +30,17 @@
             </el-table-column>
             <el-table-column label="客单" v-if="!isDubm" width="120">
               <template slot-scope="scope">
-                  <el-select size="mini" v-model="scope.row.guestOrderPk" placeholder="请选择客单" style="width:100%">
-                    <el-option
-                      v-for="(item,index) in guestOrderSelect"
-                      :key="index"
-                      :label="'房间号:'+ifRoomNumber(item.roomNumber)+' 客人姓名:'+item.memName"
-                      :value="item.guestOrderPk">
-                    </el-option>
-                  </el-select>
+                <el-select size="mini" v-model="scope.row.guestOrderPk" placeholder="请选择客单" style="width:100%">
+                  <el-option
+                    v-for="(item,index) in guestOrderSelect"
+                    :key="index"
+                    :label="'房间号:'+ifRoomNumber(item.roomNumber)+' 客人姓名:'+item.memName"
+                    :value="item.guestOrderPk">
+                  </el-option>
+                </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="settlementAmount" label="支付方式">
+            <!-- <el-table-column prop="settlementAmount" label="支付方式">
               <template slot-scope="scope">
                 <el-select size="mini" v-model="scope.row.payment" placeholder="请选择支付方式" style="width:100%">
                   <el-option
@@ -51,7 +51,7 @@
                   </el-option>
                 </el-select>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="金额">
               <template slot-scope="scope">
                  <el-input size="mini" @change="addBillMomeyChange()" v-model="scope.row.consumptionAmount"></el-input>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import {paymentMap} from '@/utils/orm'
+// import {paymentMap} from '@/utils/orm'
 import {addBills, selectGuestOrderBill,addDumbBills } from '@/api/bill'
 import { listByProjectType } from '@/api/systemSet/pmsProjectController'
 
@@ -100,36 +100,36 @@ export default {
         projectName: '',
         consumptionAmount: '',
         remark: '',
-        payment: '0',
+        // payment: '0',
       }],
-      paymentMap:paymentMap,
+      // paymentMap:paymentMap,
       isDubm:false,
       addBillsConsumptionAmount:0,
       addBillsSettlementAmount:0,
       conProjectList:[],
       settlProjectList:[],
       orderPk:null,
-      guestPks:null,
+      billItems:null,
       dumbPk:''
     }
   },
   methods: {
     /**
      * 打开初始化
-     * @augments orderPk (必传)
+     * @augments orderPk (必传) 
      * @augments isDubm (必传)  true是哑房账  false不是哑房账
-     * @augments guestPks (可选)
+     * @augments billItems (可选) 
      */
-    showDialog(orderPk, isDubm, guestPks,dumbPk) {
+    showDialog(orderPk, isDubm, billItems, dumbPk) {
       this.orderPk = orderPk
-      this.guestPks = guestPks
+      this.billItems = billItems
       this.dialogBatchEntry = true
       this.isDubm = isDubm
       this.dumbPk = dumbPk
       this.loadGuestSelect(orderPk)
-      let cons = this
-      this.loadProject(function(){
-        if(guestPks==null || guestPks.length<=0) {
+      let cons = this 
+      this.loadProject(function() {
+        if(billItems==null || billItems.length<=0) {
           //空客单
           cons.formAddBills = [{
             projectPk:'',
@@ -138,27 +138,32 @@ export default {
             projectName: '',
             consumptionAmount: '',
             remark: '',
-            payment: '0',
+            // payment: '0',
           }]
         }else {
           //回显客单
           cons.formAddBills = []
-          let projectObj = cons.selectDefaultProject(112);
-          guestPks.forEach(guestPk=>{
+          /*
+          {
+            projectCode:112,
+            guestOrderPk:,
+            price:
+          }
+          */
+          billItems.forEach(item=>{
+            let projectObj = cons.selectDefaultProject(item.projectCode);
             cons.formAddBills.push({
-              projectPk:projectObj ? projectObj.projectPk:'',
-              guestOrderPk: guestPk,
+              projectPk: projectObj ? projectObj.projectPk:'',
+              guestOrderPk: item.guestOrderPk,
               channelTypePk: null,
               projectName: projectObj ? projectObj.projectName:'',
-              consumptionAmount: '',
+              consumptionAmount: item.price,
               remark: '',
-              payment: '0',
+              // payment: '0',
             })
           })
         }
       });
-
-      
     },
     /**
      * 选中默认的消费、结算项目
@@ -203,7 +208,6 @@ export default {
           }
         })
       })
-      
     },
     addFormAddBillsClick(index){
       if(index != null){
@@ -219,7 +223,7 @@ export default {
         projectName: '',
         consumptionAmount: '',
         remark: '',
-        payment: '0',
+        // payment: '0',
       })
     },
     delFormAddBillsClick(index){
@@ -256,10 +260,10 @@ export default {
           this.$message({type:'warning', message:'请选择账单'+(i+1)+"的客单"})
           return
         }
-        if(!formAddBills[i].payment){
-          this.$message({type:'warning', message:'请选择账单'+(i+1)+"的支付方式"})
-          return
-        }
+        // if(!formAddBills[i].payment){
+        //   this.$message({type:'warning', message:'请选择账单'+(i+1)+"的支付方式"})
+        //   return
+        // }
         if(!formAddBills[i].consumptionAmount){
           this.$message({type:'warning', message:'请输入账单'+(i+1)+"的消费金额"})
           return
@@ -280,9 +284,9 @@ export default {
               type: 'success'
             });
           }
-          if(this.guestPks!=null && this.guestPks.length>0) {
+          if(this.billItems!=null && this.billItems.length>0) {
             //回调到退房
-            this.$emit('to-settle', this.guestPks[0])
+            this.$emit('to-settle', this.billItems[0])
           }else{
             //普通回调
             this.$emit('callback', this.orderPk)

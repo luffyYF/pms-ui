@@ -94,11 +94,6 @@ export const checkoutPart = params => {
   return request.post('/back/bill/checkoutPart', params)
 }
 
-//退房超时收取费用提醒
-export const overtimeRemind = params => {
-  return request.get('/back/bill/checkout/overtimeRemind', {params:params})
-}
-
 // 查找房间的结账记录
 export const findBillEndRecordOfRoom = params => {
   return request.get('/back/bill/endRecord/findBillEndRecordOfRoom', {params:params})

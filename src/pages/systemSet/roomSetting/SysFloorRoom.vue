@@ -5,13 +5,11 @@
       <el-col :span="5">
         <div class="bg-reserve book-info init_floor">
         <h5 class="info-title">楼层</h5>
-        <el-form label-width="80px" size="mini"  label-position="top" style="padding-left:10px">
-          <el-form-item label="楼层名">
-            <el-input-number v-model="storeyName" placeholder="请输入楼层名" class="block_input" :controls="false"></el-input-number>
+        <el-form label-width="px" size="mini" :inline="true"  style="padding-left:10px">
+          <el-form-item label="楼层号">
+            <el-input-number v-model="storeyName" placeholder="请输入楼层号" class="block_input" :controls="false"></el-input-number>
           </el-form-item>
-          <el-form-item>
-            <el-button @click="addStorey" type="primary">保存</el-button>
-          </el-form-item>
+          <el-button @click="addStorey" type="primary" size="mini" style="margin-bottom: 16px;">添加</el-button>
         </el-form>
         <el-table size="mini" 
           border 
@@ -158,7 +156,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addRoomDialog = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="addRoom" size="mini">确 定</el-button>
+        <el-button type="primary" @click="addRoom" size="mini" :loading="commitLoading">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 修改房间 -->
@@ -232,7 +230,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateRoomDialog = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="updateRoom" size="mini">确 定</el-button>
+        <el-button type="primary" @click="updateRoom" size="mini" :loading="commitLoading">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 批量添加房间 -->
@@ -295,7 +293,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="batchAddRoomDialog = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="addRooms()" size="mini">确 定</el-button>
+        <el-button type="primary" @click="addRooms()" size="mini" :loading="commitLoading">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -309,12 +307,13 @@ export default {
   components: {UploadAvatar},
   data() {
     return {
+      commitLoading:false,
       formLabelWidth: '120px',
       addRoomDialog: false,
       updateRoomDialog: false,
       batchAddRoomDialog: false,
       loading:false,
-      storeyName: '',
+      storeyName: undefined,
       storeyData: [],
       selectStorey:{storeyName:'未选择'},
       selectRoom: {},
@@ -446,16 +445,18 @@ export default {
       })
     },
     addStorey(){
+      if(!this.storeyName){
+        this.$message.warning("楼层号不能为空")
+        return;
+      }
       let data = {storeyName: this.storeyName}
       const self = this
       addStorey(data).then(function(result){
-        if(result.code == 1){
-          self.storeyName = '';
-          self.$message({
-            message: '添加成功',
-            type: 'success'
-          });
-        }
+        self.storeyName = undefined;
+        self.$message({
+          message: '添加成功',
+          type: 'success'
+        });
         self.listStorey();
       })
     },
@@ -467,19 +468,12 @@ export default {
         type: 'warning'
       }).then(() => {
         delStorey({storeyPk: obj.storeyPk}).then(result => {
-          if(result.code == 1){
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            });
-          }
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
           self.listStorey()
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });          
       });
       
     },
@@ -510,6 +504,7 @@ export default {
       }
     },
     addRoom() {
+      this.commitLoading = true;
       const self = this
       self.addFrom.storeyPk = this.selectStorey.storeyPk
       addRoom(self.addFrom).then(result => {
@@ -522,12 +517,15 @@ export default {
         }
         this.listRoom(this.selectStorey.storeyPk)
         self.addRoomDialog = false 
+      }).finally(()=>{
+        this.commitLoading = false;
       })
     },
     deleteRow(index, rows) {
       rows.splice(index, 1);
     },
     addRooms(){
+      this.commitLoading = true;
       const self = this
       self.addFrom.storeyPk = this.selectStorey.storeyPk
       addRooms(self.previewRoomes).then(result => {
@@ -540,6 +538,8 @@ export default {
         }
         this.listRoom(this.selectStorey.storeyPk)
         self.batchAddRoomDialog = false 
+      }).finally(()=>{
+        this.commitLoading = false;
       })
     },
     previewRoom(){
@@ -574,6 +574,7 @@ export default {
       this.updateRoomDialog = true
     },
     updateRoom(){
+      this.commitLoading = true;
       const self = this
       delete this.selectRoom.createTime;
       delete this.selectRoom.updateTime;
@@ -589,6 +590,8 @@ export default {
         }
         self.listRoom();
         self.updateRoomDialog = false
+      }).finally(()=>{
+        this.commitLoading = false;
       })
     },
     delRoom(obj){
@@ -707,9 +710,9 @@ export default {
 .colic{
   width: 120px;
 }
-.block_input{
-  width:96%;
-}
+/* .block_input{
+  width:70%;
+} */
 </style>
 <style>
 .init_floor .el-input-number .el-input__inner {

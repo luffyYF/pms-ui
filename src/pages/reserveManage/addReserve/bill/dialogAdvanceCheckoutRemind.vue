@@ -1,9 +1,9 @@
 
 <template>
-  <!-- 退房超时提醒 -->
-  <el-dialog class="pattern-dialog timeout-remind-dialog" title="提醒" :visible.sync="dialogVisable" width="600px" :before-close="handleClose" :append-to-body="true">
+  <!-- 提前退房，收取房费提醒 -->
+  <el-dialog class="pattern-dialog advance-checkout-remind-dialog" title="提醒" :visible.sync="dialogVisable" width="600px" :before-close="handleClose" :append-to-body="true">
     <div class="pattern-dialog-container" style="padding: 10px 4px;">
-      <p style="color:#bb8c00;">以下入住客单<span style="color:red;">超过了退房时间</span>，可能需要收取额外费用</p>
+      <p style="color:#bb8c00;">以下客人是<span style="color:red;">提前退房</span>，可能需要收取额外费用</p>
       <el-table
         border
         :data="tableData"
@@ -11,7 +11,8 @@
         style="width: 100%">
         <el-table-column label="房间号"  prop="roomNumber"></el-table-column>
         <el-table-column label="客人姓名"  prop="guestName"></el-table-column>
-        <el-table-column label="离店日期"  prop="endDate"></el-table-column>
+        <el-table-column label="当天合约价"  prop="currPrice"></el-table-column>
+        <el-table-column label="预计离店日期"  prop="endDate"></el-table-column>
       </el-table>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -20,10 +21,11 @@
       <el-button size="mini"  @click="dialogVisable = false">取消</el-button>
     </span>
   </el-dialog>
+
 </template>
 
 <script>
-import {overtimeRemind} from '@/api/order/pmsChargeRemindController'
+import {advanceCheckoutRemind} from '@/api/order/pmsChargeRemindController'
 export default {
   data() {
     return {
@@ -40,8 +42,7 @@ export default {
      */
     showDialog(orderPk, guestOrderPk) {
       this.guestOrderPk = guestOrderPk;
-      //检测入住的客单是否超过退房时间，进行提醒
-      overtimeRemind({orderPk: orderPk, guestOrderPk: guestOrderPk}).then(res=>{
+      advanceCheckoutRemind({orderPk: orderPk, guestOrderPk: guestOrderPk}).then(res=>{
         if(res.data.length>0) {
           this.dialogVisable = true
           this.tableData = res.data;
@@ -50,20 +51,22 @@ export default {
         }
       })
     },
-
     //点击不收取，继续退房
     continueSettleClick() {
       this.$emit('to-notcharge', this.guestOrderPk);
       this.dialogVisable = false
     },
-    
     //点击收取，打开批量入账
     toBillClick() {
-      let guestPks = []
+      let billItems = []
       this.tableData.forEach(item=>{
-        guestPks.push(item.guestOrderPk)
+        billItems.push({
+          projectCode:104,
+          guestOrderPk:item.guestOrderPk,
+          price:item.currPrice
+        })
       })
-      this.$emit('to-addbill', guestPks);
+      this.$emit('to-addbill', billItems);
       this.dialogVisable = false;
     },
     handleClose() {
@@ -74,7 +77,7 @@ export default {
 </script>
 
 <style>
-.timeout-remind-dialog .el-dialog__body{
+.advance-checkout-remind-dialog .el-dialog__body{
   height: 340px;
 }
 </style>

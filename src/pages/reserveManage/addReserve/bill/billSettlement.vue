@@ -14,8 +14,8 @@
             <span class="left price">{{countCheckoutDate.settlementAmount}}</span>
           </p>
           <p class="partialcheckout-price">
-            <span class="left" style="color: red" v-if="countCheckoutDate.settlementAmount-countCheckoutDate.consumptionAmount>=0">找零：</span>
-            <span class="left" style="color: red" v-if="countCheckoutDate.settlementAmount-countCheckoutDate.consumptionAmount<0">应收：</span>
+            <span class="left" style="color: red" v-if="inoutFlag==false">找零：</span>
+            <span class="left" style="color: red" v-if="inoutFlag==true">应收：</span>
             <span class="left price">{{this.backMoney}}</span>
           </p>
           <!--<p class="partialcheckout-price" v-if="billForm.onlineFlag">
@@ -27,17 +27,21 @@
           <el-form ref="billForm" :model="billForm" size="mini" label-width="90px">
             <div v-if="type==0 || type==2">
                 <el-form-item label="结算项目：">
-                  <el-select v-model="billForm.projectName" :disabled="true" placeholder="现金支出" style="width:100%">
-                    <el-option label="现金" value="shanghai"></el-option>
-                    <el-option label="银行卡" value="beijing"></el-option>
+                  <el-select v-model="billForm.settleProjectCode"  placeholder="请选择结算项目" style="width:100%">
+                    <el-option
+                    v-for="item in settlProjectList"
+                    :key="item.projectPk"
+                    :label="item.code+' - '+item.projectName"
+                    :value="item.code">
+                  </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="支付方式" required>
+                <!-- <el-form-item label="支付方式" required>
                   <el-select v-model="billForm.payment" placeholder="请选择支付方式" style="width:100%">
                     <el-option v-for="(value, key) in paymentMap" :key="key" :label="value" :value="key">
                     </el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="客单：">
                   <el-select v-model="billForm.guestOrderPk" placeholder="请选择客单" style="width:100%">
                     <el-option v-for="(item,index) in guestOrderSelect" :key="index" :label="'房间号:'+item.roomNumber+' 客人姓名:'+item.memName" :value="item.guestOrderPk">
@@ -92,7 +96,8 @@
 <script>
 import bus from '@/utils/bus'
 import { countCheckoutBill, checkoutauthBill, selectGuestOrderBill, checkoutNoPay, checkoutPart, hfCheckoutNoPay } from "@/api/bill";
-import { paymentMap } from "@/utils/orm";
+import { listByProjectType } from '@/api/systemSet/pmsProjectController'
+// import { paymentMap } from "@/utils/orm";
 export default {
   data() {
     return {
@@ -103,21 +108,24 @@ export default {
       countCheckoutDate: {},
       guestOrderSelect: [],
       billPks: '',
-      paymentMap: paymentMap,
+      inoutFlag: null,//应收true 找零false
+      // paymentMap: paymentMap,
       backMoney: 0,//找零、欠费金额
       // tempBackMoney: 0,
       onlineVisible:false,//是否可以线上退款
+      settlProjectList:[],//结算项目下拉列表
       billForm: {
-        payment: "0",
+        // payment: "0",
         remark: null,
         guestOrderPk:'',
         onlineFlag:true,
         onlineMoney: 0,
+        settleProjectCode:null,
       },
       hfBillForm: {
         orderPk:'',
         consumptionAmount:null,
-        payment:'0',
+        // payment:'0',
         remark:'',
         hfCashPledge:''
       },
@@ -133,16 +141,18 @@ export default {
      * billPks 部分结账的账单主键，逗号拼接
      *  */
     init(orderPk, type, billPks,hfCashPledge,isDubm,billStatus,dumbPk) {
+      this.onlineVisible = false;
       this.isDubm = isDubm
       this.type = type;
       this.orderPk = orderPk;
       this.billPks = billPks;
       this.billForm.guestOrderPk = '';
-      this.billForm.payment = "0";
+      // this.billForm.payment = "0";
       this.billForm.remark = null;
-      this.onlineVisible = false;
       this.billForm.onlineFlag = false;
       this.billForm.onlineMoney = 0
+      this.billForm.settleProjectCode = null
+      this.inoutFlag = null;
       this.hfBillForm.hfCashPledge = hfCashPledge
       this.dialogPartialCheckout = true;
       this.islock = false;
@@ -154,13 +164,13 @@ export default {
       if(dumbPk){
         this.dumbPk = dumbPk
       }
-      
       // if(!isDubm){
       if(type==2){
         //部分结账
         countCheckoutBill({ billPk: billPks }).then(res => {
           this.countCheckoutDate = res.data;
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount) | 0;
+          this.judgePositiveAndNegative()
         });
       }else if(type==1){
         // 退房未结
@@ -172,12 +182,14 @@ export default {
             this.billForm.onlineFlag = true;
             this.billForm.onlineMoney=this.countCheckoutDate.cashPledge
           }
+          this.judgePositiveAndNegative()
         });
       }else if(type==0){
         // 结账
         countCheckoutBill({ orderPk: orderPk }).then(res => {
           this.countCheckoutDate = res.data;
           this.backMoney = Math.abs(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount);
+          this.judgePositiveAndNegative()
         });
       }
       selectGuestOrderBill({ orderPk: orderPk }).then(res => {
@@ -209,7 +221,8 @@ export default {
         let data = {
           orderPk: this.orderPk,
           guestOrderPk: this.billForm.guestOrderPk,
-          payment: this.billForm.payment,
+          settleProjectCode:this.billForm.settleProjectCode,
+          // payment: this.billForm.payment,
           remark: this.billForm.remark,
           billType: this.isDubm?'DUMB':'ROOM'
         };
@@ -218,8 +231,9 @@ export default {
           this.dialogPartialCheckout = false;
           this.$message({type:'success', message:'操作成功'})
           this.islock = false;
-          bus.$emit("dialogVisibleClose");
+          // bus.$emit("dialogVisibleClose");
           bus.$emit("refresh-listReserve");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
@@ -260,15 +274,17 @@ export default {
           this.islock = false;
           bus.$emit("dialogVisibleClose");
           bus.$emit("refresh-listReserve");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
       }else if(this.type==2){
         let data = {
           billPk:this.billPks,
-          payment:this.billForm.payment,
+          // payment:this.billForm.payment,
           remark: this.billForm.remark,
           guestOrderPk:this.billForm.guestOrderPk,
+          settleProjectCode:this.billForm.settleProjectCode,
           billType: this.isDubm?'DUMB':'ROOM',
           billStatus:this.billStatus!=null?this.billStatus:'UN_SET',
           dumbPk:this.dumbPk
@@ -279,6 +295,7 @@ export default {
           this.dialogPartialCheckout = false;
           this.islock = false;
           bus.$emit("billload");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
@@ -295,11 +312,40 @@ export default {
           this.islock = false;
           bus.$emit("dialogVisibleClose");
           bus.$emit("refresh-listReserve");
+          this.remindPrint();//提示打印
         }).catch(error=>{
           this.islock = false;
         })
       }
     },
+
+    //判断应收、找零
+    judgePositiveAndNegative(){
+      if(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount>=0){
+        this.inoutFlag = false
+      }else if(this.countCheckoutDate.settlementAmount-this.countCheckoutDate.consumptionAmount<0){
+        this.inoutFlag = true
+      }
+      this.loadProject()
+    },
+
+    //加载结算项目 inoutFlag:true 收入  false支出
+    loadProject(){
+      this.settlProjectList = [] 
+      listByProjectType({projectType:'SETTLEMENT'}).then(res => {
+         res.data.forEach(item=>{
+            if(this.inoutFlag==item.inoutFlag){
+              this.settlProjectList.push(item)
+            }
+         })
+      })
+    },
+
+    //回调
+    remindPrint() {
+      this.$emit('callback')
+    },
+
   }
 };
 </script>
