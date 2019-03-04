@@ -12,7 +12,7 @@
             <el-form-item label="预订人" required>
               <el-input v-model="form.userName"></el-input>
             </el-form-item>
-            <el-form-item label="预订手机" required>
+            <el-form-item label="预订手机">
               <el-input v-model="form.userPhone"></el-input>
             </el-form-item>
             <el-form-item label="协议单位" required>
@@ -367,13 +367,15 @@ export default {
         this.$message.warning('预订人不能为空');
         return false;
       }
-      if(!this.form.userPhone){
-        this.$message.warning('预订手机不能为空');
-        return false;
-      }
-      if (!validatePhone(this.form.userPhone)) {
-        this.$message.warning('预定手机号不合法');
-        return false;
+      // if(!this.form.userPhone){
+      //   this.$message.warning('预订手机不能为空');
+      //   return false;
+      // }
+      if(this.form.userPhone) {
+        if (!validatePhone(this.form.userPhone)) {
+          this.$message.warning('预定手机号不合法');
+          return false;
+        }
       }
       if(!this.form.agreementPk || !this.form.agreementName){
         this.$message.warning('协议单位不能为空');

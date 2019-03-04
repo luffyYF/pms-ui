@@ -212,12 +212,20 @@ export default {
     // onlineMoneyChange(value){
     //   this.backMoney = Number(this.tempBackMoney) - Number(value)
     // },
+
+    /**
+     * 确认提交
+     */
     confirm() {
       if(this.islock){
         return;
       }
-      //确定
       if (this.type == 0) {
+        if(!this.billForm.settleProjectCode) {
+          this.$message.warning('请选择结算项目')
+          return
+        }
+
         let data = {
           orderPk: this.orderPk,
           guestOrderPk: this.billForm.guestOrderPk,
@@ -279,6 +287,10 @@ export default {
           this.islock = false;
         })
       }else if(this.type==2){
+        if(!this.billForm.settleProjectCode) {
+          this.$message.warning('请选择结算项目')
+          return
+        }
         let data = {
           billPk:this.billPks,
           // payment:this.billForm.payment,

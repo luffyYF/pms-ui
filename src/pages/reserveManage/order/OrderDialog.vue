@@ -537,12 +537,12 @@ export default {
         this.$message({type:'warning', message:'离店日期不能为空'})
         return false
       }
-      if(this.currConfirmType=='add-checkin' || this.currConfirmType=='add-guest'){
-        if(!guestOrderPo.guestPhone){
-          this.$message({type:'warning', message:'请填写手机号'})
-          return false
-        }
-      }
+      // if(this.currConfirmType=='add-checkin' || this.currConfirmType=='add-guest'){
+      //   if(!guestOrderPo.guestPhone){
+      //     this.$message({type:'warning', message:'请填写手机号'})
+      //     return false
+      //   }
+      // }
       if(guestOrderPo.guestPhone) {
         if(!validatePhone(guestOrderPo.guestPhone)){
           this.$message({type:'warning', message:'手机号不合法'})
