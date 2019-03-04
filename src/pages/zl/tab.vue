@@ -22,6 +22,9 @@
       <el-menu-item index="/zl/zlFliggyConfig" v-if="hasPerm('pms:zl:zlFliggyConfig')">
         <span slot="title">飞猪直连</span>
       </el-menu-item>
+      <el-menu-item index="/zl/housePriceCode" v-if="hasPerm('pms:zl:zlHousePriceCode')">
+        <span slot="title">房价代码</span>
+      </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
       <transition name="el-fade-in-linear">

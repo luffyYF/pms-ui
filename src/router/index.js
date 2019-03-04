@@ -145,6 +145,9 @@ import zlPriceSetting from '@/pages/zl/zlPriceSetting'
 import zlCtripConfig from '@/pages/zl/ZlCtripConfig/ZlCtripConfigList'
 import zlFliggyConfig from '@/pages/zl/ZlFliggyConfig/ZlFliggyConfigList'
 import zlOpenConfig from '@/pages/zl/zlOpenConfig/zlOpenConfigList'
+import housePriceCode from '@/pages/zl/housePriceCode/housePriceCode'
+
+
 
 
 // 财务稽核
@@ -353,6 +356,7 @@ export const constantRouterMap = [
           {path: '/zl/zlFliggyConfig', component: zlFliggyConfig, label: '飞猪直连配置'},
           {path: '/zl/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           {path: '/zl/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
+          {path: '/zl/housePriceCode', component: housePriceCode, label: '房价代码设置'},
         ]
       },
       {path: '/linen', component: LinenTag, name: '布草', hidden: false}
