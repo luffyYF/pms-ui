@@ -1110,6 +1110,9 @@
   font-size: 16px;
   font-weight: 600;
 }
+.room-status-calendar-box .full-calendar-header{
+  display: block;
+}
 .room-status-calendar-box .full-calendar-body .weeks {
   width: 247px;
   margin: 0 auto;
