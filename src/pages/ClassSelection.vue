@@ -89,7 +89,7 @@ export default {
           
         // })
         // console.log(res.data)
-        this.activeShift = shift.shiftPk;
+        this.activeShift = shift.shiftPk|" ";
         if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != this.activeCompany.companyPk){
           localStorage.removeItem("roomList")
           localStorage.removeItem("statisticsData")

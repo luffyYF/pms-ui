@@ -153,12 +153,21 @@
               </div>
             </div>
           </el-collapse-item>
+          <el-collapse-item v-if="currentRoom != null" :title="currentRoom.roomNumber+'号房远期房态'" name="4" class="cllapse-list">
+            <div class="room-status-calendar-box" ref="fullcalendarRef">
+              <full-calendar ref="calendar"  :events="meetingEventList"  lang="zh" @changeMonth="changeMonth" >
+                <!-- @eventClick="eventClick" 
+                @dayClick="dayClick" -->
+              </full-calendar>
+            </div>
+          </el-collapse-item>
+          
         </el-collapse>
       </el-aside>
       <el-main>
         <el-row>
           <!-- 房间item begin -->
-          <div class="pattern-li" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
+          <div class="pattern-li"  :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
             <!-- 房间号 渠道 -->
             <div class="pattern-li-item">
               <label class="rm">{{item.roomNumber}}</label>
@@ -299,7 +308,7 @@
             </div>
 
             <!-- 下拉菜单 -->
-            <el-dropdown trigger="click" class="pattern-dropdown" placement="bottom">
+            <el-dropdown trigger="click" @click="calendarRoomForwardStatus(item)"  class="pattern-dropdown" placement="bottom">
               <div style="width:100%; height:100%"></div>
               <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li">
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED'
@@ -481,6 +490,7 @@
   import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
   import {findToday} from '@/api/order/pmsOrderController'
+  import {listRoomForWordByRoomPk} from '@/api/atrialCenter/roomForwardStatus'
   import {
     currentRoomList,
     updateRoomStatus,
@@ -492,7 +502,7 @@
   import {listType} from '@/api/utils/pmsTypeController'
   import {find} from '@/api/systemSet/pmsSysParamController'
   export default {
-    components: {DialogCheckinVisible},
+    components: {DialogCheckinVisible,"full-calendar": require("vue-fullcalendar")},
     data() {
       return {
         moment:moment,
@@ -552,7 +562,10 @@
         },
         btnlock:false,
         timer:null,
-        timer2:null
+        timer2:null,
+        currentRoom:null,
+        meetingEventList:[],
+        currentDate:null
       };
     },
     methods: {
@@ -606,6 +619,41 @@
         })
       }
       ,
+      calendarRoomForwardStatus(row) {
+        this.currentRoom = row
+        if(!this.currentDate){
+          this.currentDate = moment().format("YYYY-MM-DD")
+        }
+        // if(new Date() < new Date(this.currentDate)){
+        //   return
+        // }
+        let data = {
+          roomPk: this.currentRoom.roomPk,
+          month: this.currentDate
+        }
+       
+        listRoomForWordByRoomPk(data).then(res=>{
+          this.meetingEventList = res.data
+          this.activeName = ['4']
+        })
+      },
+      //日历月份点击事件 （页面打开自动调用）
+      changeMonth(start, end, current) {
+        this.currentDate = current
+        // if(new Date(this.currentDate) < new Date()){
+        //   return
+        // }
+        let data = {
+          roomPk: this.currentRoom.roomPk,
+          month: this.currentDate
+        }
+        listRoomForWordByRoomPk(data).then(res=>{
+          this.meetingEventList = res.data
+          this.activeName = ['4']
+        })
+        // this.calendarPrice(current);
+        // this.currDate = current
+      },
       handleClose(done) { //11
         this.$confirm('确认关闭？')
           .then(_ => {
@@ -932,6 +980,7 @@
 
       //点击房间
       roomClick(item){
+        this.calendarRoomForwardStatus(item)
         this.roomList.forEach(room=>{
           this.$set(room, 'connectRoom', false);
           //标识虚线框 arrivalOrderPk
@@ -1050,7 +1099,133 @@
   width: 100%;
 }
 </style>
+<style>
+.modifyPrice .el-dialog__body {
+  padding: 0 30px;
+}
+/* 插件样式 */
+.room-status-calendar-box .full-calendar-header .header-center .prev-month,
+.room-status-calendar-box .full-calendar-header .header-center .next-month,
+.room-status-calendar-box .full-calendar-header .header-center .title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.room-status-calendar-box .full-calendar-body .weeks {
+  width: 247px;
+  margin: 0 auto;
+  background-color: #f60;
+  color: #fff;
+}
+.room-status-calendar-box .full-calendar-body .weeks .week {
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid #fff;
+  font-weight: normal
+}
+.room-status-calendar-box .full-calendar-body .weeks strong:first-child{
+  border-left: 1px solid #ebeef5;
+  
+}
+.room-status-calendar-box .full-calendar-body .weeks strong:last-child{
+  border-right: 1px solid #ebeef5;
+}
+.room-status-calendar-box .full-calendar-body .dates .week-row {
+  border-left: 1px solid #ebeef5;
+}
+.room-status-calendar-box .full-calendar-body .dates .week-row,
+.room-status-calendar-box .full-calendar-body .dates .dates-events .events-week {
+  width: 248px;
+  margin: 0 auto;
+}
+/* .calendar-box .full-calendar-body .dates .dates-events .events-week .events-day, */
+.room-status-calendar-box .full-calendar-body .dates .week-row .day-cell {
+  border-right: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
+  position: relative;
+}
+.room-status-calendar-box .full-calendar-body .event-item{
+  padding: 0 !important;
+}
+.room-status-calendar-box .full-calendar-body .event-item.festival {
+  background-color: rgb(117, 188, 255) !important;
+  color: rgb(0, 0, 0) !important;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  width: 60px;
+  left: 0;
+}
+.room-status-calendar-box .full-calendar-body .today .event-item.price {
+  background-color:transparent !important;
+  color: #fff !important;
+}
+.room-status-calendar-box .full-calendar-body .today .event-item.festival {
+  /* background-color: #fff !important; */
+  color: #f60 !important;
+}
+.room-status-calendar-box .full-calendar-body .event-item.is-start{
+    text-align: center !important;
+    margin-left: 0px !important;
+    background-color:transparent !important;
+        height: auto !important;
+    line-height: initial !important;
+}
+.room-status-calendar-box .full-calendar-body .event-item.price {
+  background-color:transparent !important;
+  color: #f60 !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  text-align: center;
+}
+.room-status-calendar-box .full-calendar-body .dates .week-row .day-cell.today .day-number {
+  color: #fff;
+}
+.room-status-calendar-box .full-calendar-body .dates .week-row .day-cell .day-number,
+.room-status-calendar-box
+  .full-calendar-body
+  .dates
+  .dates-events
+  .events-week
+  .events-day
+  .day-number {
+  text-align: center !important;
+  padding: 0px;
+  margin-top:0px;
+  
+}
 
+.room-status-calendar-box .full-calendar-body .dates .week-row .day-cell {
+  min-height: 30px;
+  overflow: hidden;
+}
+.room-status-calendar-box .full-calendar-body .dates .week-row .day-cell.today {
+  background-color: #f60;
+}
+.room-status-calendar-box
+  .full-calendar-body
+  .dates
+  .dates-events
+  .events-week
+  .events-day {
+  position: relative;
+  min-height:30px;
+}
+.comp-full-calendar{
+  padding:0;
+}
+.room-status-calendar-box .comp-full-calendar p {
+  font-size: 12px;
+}
+.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item.currentDate{
+  color:white !important;
+}
+.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item.null{
+  color:black !important;
+}
+.full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item.notNull{
+  color:#f60 !important;
+}
+</style>
 <style scoped>
 .button-status-icon{
   bottom: 3px;

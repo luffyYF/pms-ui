@@ -25,6 +25,15 @@ export const delType = params => {
 export const updateype = params => {
   return request.post('/back/type/update', params)
 }
+/**
+ * 修改价格编码
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const updateTypeHousePriceCode = params => {
+  return request.post('/back/type/updateTypeHousePriceCode', params)
+}
+
 
 /**
  * 查找类型

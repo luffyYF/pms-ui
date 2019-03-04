@@ -10,6 +10,11 @@ export const frowardRoomList = params => {
     return request.get('/back/frowardRoom/list',{params:params});
 }
 
+ //远期房态列表
+ export const listRoomForWordByRoomPk = params => {
+    return request.get('/back/frowardRoom/listRoomForWordByRoomPk',{params:params});
+}
+
 // 远期房态详情
 export const frowardRoomDetail = params => {
     return request.get('/back/frowardRoom/detail',{params:params});

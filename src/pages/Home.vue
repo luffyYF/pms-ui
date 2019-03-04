@@ -46,12 +46,12 @@
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <!-- <router-link to="/zl" >
+        <router-link to="/zl" >
           <div class="nav-li">
             <div class="nav-icon reserve-manage-icon"></div>
             <div class="nav-txt">直连</div>
           </div>
-        </router-link> -->
+        </router-link>
         <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>

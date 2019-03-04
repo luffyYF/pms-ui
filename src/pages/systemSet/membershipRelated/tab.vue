@@ -13,6 +13,9 @@
       <el-tab-pane label="会员级别管理" name="memberLevel">
         <member-level ref="memberLevel"/>
       </el-tab-pane>
+      <el-tab-pane label="会员级别管理" name="MemberIntegralRule">
+        <MemberIntegralRule ref="memberLevel"/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -22,6 +25,7 @@
   import MemberRechargeDiscount from './MemberRechargeDiscount'
   import MemberCardFee from './MemberCardFee'
   import MemberLevel from './MemberLevel'
+  import MemberIntegralRule from './MemberIntegralRule'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
@@ -29,7 +33,8 @@
       MemberIntegralCommodity,
       MemberRechargeDiscount,
       MemberCardFee,
-      MemberLevel
+      MemberLevel,
+      MemberIntegralRule
     },
     data () {
       return {
