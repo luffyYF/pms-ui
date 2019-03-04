@@ -1208,7 +1208,7 @@
   .events-week
   .events-day {
   position: relative;
-  min-height:30px;
+  min-height:35px;
 }
 .comp-full-calendar{
   padding:0;

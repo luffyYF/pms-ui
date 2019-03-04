@@ -14,7 +14,7 @@
         <member-level ref="memberLevel"/>
       </el-tab-pane>
       <el-tab-pane label="会员级别管理" name="MemberIntegralRule">
-        <MemberIntegralRule ref="memberLevel"/>
+        <MemberIntegralRule ref="MemberIntegralRule"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -59,6 +59,9 @@
           child.init()
         }else if(this.activeName == 'memberRechargeDiscount'){
           var child = this.$refs.memberRechargeDiscount
+          child.init()
+        }else if(this.activeName == 'MemberIntegralRule'){
+          var child = this.$refs.MemberIntegralRule
           child.init()
         }
       },
