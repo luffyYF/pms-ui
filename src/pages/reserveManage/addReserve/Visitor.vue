@@ -219,8 +219,10 @@
             </el-col>
             <el-col :span="12">
               <el-col :span="18">
-                <el-form-item label="手机号码：" :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'">
-                  <el-input v-model="form.guestPhone" :disabled="memberFlag" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
+                <!--  :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'" -->
+                <el-form-item label="手机号码：">
+                  <!-- :disabled="memberFlag" -->
+                  <el-input v-model="form.guestPhone" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="5">
@@ -341,11 +343,24 @@
     <el-dialog class="agreement-body" title="是否确认续房" :visible.sync="dialogExtend" width="30%" :append-to-body="true" :before-close="extendClose">
       <div class="body-conten">
         <p>离店日期改为：{{this.form.endDate}}</p>
-        <p>付款方式：
+        <!-- <p>付款方式：
           <el-select v-model="extendForm.payment" size="mini">
             <el-option v-for="(value,key) in paymentMap" :key="key" :label="value" :value="key"></el-option>
           </el-select>
+        </p> -->
+        <p>
+          结算项目：
+          <el-select v-model="extendForm.settleProjectCode" placeholder="请选择结算项目" size="mini">
+           <el-option
+              v-for="item in settlProjectList"
+              :key="item.projectPk"
+              :label="item.code+' - '+item.projectName"
+              :value="item.code">
+            </el-option>
+          </el-select>
         </p>
+
+
         <p>押&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金：
           <el-input size="mini" type="text" v-model="extendForm.settlementAmount" style="width:166px"></el-input>
         </p>
@@ -411,6 +426,8 @@
     import {listProject, findUnitName} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
     import {overtimeRemind,checkoutGuest} from '@/api/bill'
+    import { listByProjectType } from '@/api/systemSet/pmsProjectController'
+
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
@@ -438,6 +455,7 @@
           gsLeave:0,
           memberFlag: false,//是否是会员标识
           currGuestList: [],//当前所有客单信息
+          settlProjectList:[],//结算项目下拉列表
           credentialsMap: credentialsMap,
           orderStatusMap: orderStatusMap,
           contractMap: contractMap,
@@ -506,7 +524,8 @@
           },
           extendForm:{
             settlementAmount: null,
-            payment : null,
+            settleProjectCode:null,
+            // payment : null,
           },
           datepicker3: [],
           seeCompany: false,
@@ -725,11 +744,11 @@
             this.$emit('unlock')
             return
           }
-          if(!this.form.guestPhone) {
-            this.$message.warning('请输入手机号')
-            this.$emit('unlock')
-            return
-          }
+          // if(!this.form.guestPhone) {
+          //   this.$message.warning('请输入手机号')
+          //   this.$emit('unlock')
+          //   return
+          // }
           let data = {
             order: {orderPk: orderPk},
             guestOrder: this.form
@@ -924,10 +943,19 @@
         //结束日期改变 续房
         endDateChange(endDate) {
           if(this.currFormType=='guest-info'){
-            this.extendForm.payment='0'
+            // this.extendForm.payment='0'
+            this.extendForm.settleProjectCode=null
             this.extendForm.settlementAmount=0
             this.dialogExtend = true
             this.submitLock = false;
+            this.settlProjectList = []
+            listByProjectType({projectType:'SETTLEMENT'}).then(res => {
+              res.data.forEach(item=>{
+                if(true==item.inoutFlag) {
+                  this.settlProjectList.push(item)
+                }
+              })
+            });
           }
           this.calcDays()
           this.getBookableCount()
@@ -940,13 +968,17 @@
         },
         //确认续房
         extendConfirm() {
-          if(!this.extendForm.payment){
-            this.$message({type:'warning', message:'请选择付款方式'})
-            return
-          }
+          // if(!this.extendForm.payment){
+          //   this.$message({type:'warning', message:'请选择付款方式'})
+          //   return
+          // }
           if(Number(this.extendForm.settlementAmount)<0){
             this.$message({type:'warning', message:'请输入正确的押金'})
             return
+          }
+          if(this.extendForm.settlementAmount>0 && !this.extendForm.settleProjectCode) {
+            this.$message({type:'warning', message:'请选择结算项目'})
+            return 
           }
           if(this.submitLock){
             return 
@@ -957,11 +989,10 @@
             guestOrderPk: this.form.guestOrderPk,
             endDate: this.form.endDate,
             settlementAmount: this.extendForm.settlementAmount,
-            payment: this.extendForm.payment
+            settleProjectCode: this.extendForm.settleProjectCode,
           }
           continuedRoom(data).then(res=>{
             this.$message({type: 'success', message: '续住成功!'})
-            // bus.$emit('refreshOrderInfo', this.form.orderPk)
             this.$emit('callback')
             this.dialogExtend = false
             this.submitLock = false;
