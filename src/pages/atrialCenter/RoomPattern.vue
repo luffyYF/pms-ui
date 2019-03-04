@@ -1111,7 +1111,7 @@
   font-weight: 600;
 }
 .room-status-calendar-box .full-calendar-header{
-  display: block;
+  display: block !important;
 }
 .room-status-calendar-box .full-calendar-body .weeks {
   width: 247px;
@@ -1213,8 +1213,8 @@
   position: relative;
   min-height:35px;
 }
-.comp-full-calendar{
-  padding:0;
+.room-status-calendar-box .comp-full-calendar{
+  padding:0 !important;;
 }
 .room-status-calendar-box .comp-full-calendar p {
   font-size: 12px;
