@@ -1110,6 +1110,9 @@
   font-size: 16px;
   font-weight: 600;
 }
+.room-status-calendar-box .full-calendar-header{
+  display: block !important;
+}
 .room-status-calendar-box .full-calendar-body .weeks {
   width: 247px;
   margin: 0 auto;
@@ -1208,10 +1211,10 @@
   .events-week
   .events-day {
   position: relative;
-  min-height:30px;
+  min-height:35px;
 }
-.comp-full-calendar{
-  padding:0;
+.room-status-calendar-box .comp-full-calendar{
+  padding:0 !important;;
 }
 .room-status-calendar-box .comp-full-calendar p {
   font-size: 12px;

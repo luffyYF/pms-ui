@@ -1,7 +1,7 @@
 <template>
   <div class="heightOverflow100">
     <div class="bg-reserve">
-      <el-button type="primary" size="mini" class="add-pro" @click="addRows">添加规则</el-button>
+      <el-button type="primary" size="mini" class="add-pro" @click="addClick()">添加规则</el-button>
       <el-table
         size="mini" 
         border 
@@ -11,28 +11,49 @@
         style="width: 98%; margin:10px;">
         <el-table-column prop="companyName" label="所属酒店" align="center">
         </el-table-column>
-        <el-table-column prop="companyName" label="规则名称" align="center">
+        <el-table-column prop="ruleName" label="规则名称" align="center">
         </el-table-column>
-        <el-table-column prop="companyName" label="方式类型" align="center" width="90">
+        <el-table-column prop="type" label="方式类型" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="companyName" label="会员等级" align="center" width="90">
+        <el-table-column prop="gradeName" label="会员等级" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="companyName" label="天数/金额" align="center" width="90">
+        <el-table-column prop="count" label="天数/金额" align="center" width="150">
         </el-table-column>
-        <el-table-column prop="companyName" label="积多少分" align="center" width="90">
+        <el-table-column prop="integral" label="积多少分" align="center" width="150">
         </el-table-column>
-        <el-table-column prop="companyName" label="备注" align="center" width="100">
+        <el-table-column prop="remark" label="备注" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="companyName" label="操作" align="center" width="100">
+        <el-table-column label="操作" align="center" width="200">
+            <template slot-scope="scope">
+                <el-button type="primary" @click="editClick(scope.row)" 
+                        size="mini">编辑
+                </el-button>
+                <el-button type="danger" @click="deleteClick(scope.row.rulePk)"
+                    size="mini">删除
+                </el-button>
+            </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          style="margin: 10px 20px;"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageObj.pageNum"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="pageObj.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageObj.total">
+        </el-pagination>
     </div>
+    <MemberIntegralRuleEdit ref="MemberIntegralRuleEditRef" @callback="listRule"/>
   </div>
 </template>
 
 <script>
-  import {listGrade,addGrade,updateGrade} from '@/api/systemSet/member/pmsMemberIntegralRule'
+  import {listGrade,delRule,listRule } from '@/api/systemSet/member/pmsMemberIntegralRule'
+  import MemberIntegralRuleEdit from './MemberIntegralRuleEdit'
   export default {
+   components: { MemberIntegralRuleEdit },
     data() {
       return {
         options:[],
@@ -54,7 +75,7 @@
         this.listRule()
       },
       listRule(){
-        listGrade(this.pageObj).then(result => {
+        listRule(this.pageObj).then(result => {
             this.tableData = result.data.data
             this.pageObj.total = res.data.total
             self.loading = false
@@ -62,6 +83,26 @@
           self.loading = false
         }).finally(()=>{
           self.loading = false
+        })
+      },
+      addClick(){
+        this.$refs.MemberIntegralRuleEditRef.showDialog()
+      },
+      editClick(row){
+        this.$refs.MemberIntegralRuleEditRef.showDialog(row)
+      },
+      deleteClick (id) {
+        this.$confirm('确定删除数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delRule(id).then(res => {
+              if(res.code == 1){
+                  this.listRule()
+              }
+            this.$message({ type: res.code == 1?'success':'warning', message: res.sub_msg })
+          })
         })
       },
       listGrade(row){
@@ -78,7 +119,17 @@
         }).catch(() => {
         }).finally(()=>{
         })
-      }
+      },
+      // 分页相关
+      handleSizeChange (val) {
+        this.pageObj.pageSize = val
+        this.listRule()
+      },
+      // 分页相关
+      handleCurrentChange (val) {
+        this.pageObj.pageNum = val
+        this.listRule()
+      },
     }
   }
 </script> 

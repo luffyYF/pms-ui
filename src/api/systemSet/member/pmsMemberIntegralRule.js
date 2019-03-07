@@ -15,7 +15,7 @@ export const listGrade = params => {
 }
 
 export const addRule = params => {
-   return request.post('/back/integralRule/add', params)
+   return request.post('/back/integralRule/save', params)
 }
 
 export const updateRule = params => {
@@ -23,5 +23,5 @@ export const updateRule = params => {
 }
 //
 export const delRule = params => {
-   return request.post('/back/integralRule/delete'+params)
+   return request.post('/back/integralRule/delete/'+params)
 }
