@@ -73,7 +73,7 @@
           <el-col :span="24">
             <el-form-item label="入住类型：">
               <!-- :disabled="currFormType!='add-checkin'" -->
-              <el-radio-group v-model="form.checkInType" :disabled="currFormType!='add-checkin'">
+              <el-radio-group v-model="form.checkInType" :disabled="currFormType=='guest-info' || currFormType=='add-guest'" @change="loadPrice">
                 <el-radio label="0">普通</el-radio>
                 <el-radio label="1">钟点房</el-radio>
                 <!-- <el-radio label="2">特殊房</el-radio> -->
@@ -891,6 +891,10 @@
             if(!this.form.beginDate){
               this.$message({type:'warning', message:'请先选择抵店日期！'})
               return
+            }
+            if(this.form.checkInType==4) {
+              this.form.currPrice = 0
+              return;
             }
             
             let data = {
