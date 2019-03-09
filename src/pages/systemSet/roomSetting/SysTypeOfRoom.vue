@@ -122,6 +122,7 @@
               });
             }
             self.listRoomType();
+            this.refreshType();
             this.submitLock = false
           }).catch(()=>{
             this.submitLock = false
@@ -141,6 +142,7 @@
                 message: '修改成功',
                 type: 'success'
               });
+              this.refreshType();
             }
             self.listRoomType();
             this.submitLock = false
@@ -163,6 +165,7 @@
                 message: '删除成功',
                 type: 'success'
               })
+              this.refreshType();
             }
             self.listRoomType();
           })

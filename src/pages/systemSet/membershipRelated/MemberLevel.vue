@@ -7,6 +7,7 @@
         border 
         highlight-current-row
         :data="tableData" 
+        max-height="650"
         v-loading="loading"
         style="width: 98%; margin:10px;">
         <el-table-column prop="gradeLevel" label="级别" align="center" width="90">
@@ -20,14 +21,14 @@
             <el-input v-model="scope.row.gradeName" class="claName" size="mini" placeholder="请输入会员级别名称"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="autoUpgradeFlag" label="自动升级" align="center" width="110">
+        <!-- <el-table-column prop="autoUpgradeFlag" label="自动升级" align="center" width="110">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.autoUpgradeFlag">
               <el-radio size="mini" label="Y">自动升级</el-radio>
               <el-radio size="mini" label="N">手工升级</el-radio>
             </el-radio-group>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="upgradeMemPk" label="升级后级别" align="center" width="150">
           <template slot-scope="scope">
             <el-select v-model="scope.row.upgradeMemPk" size="mini" placeholder="请选择状态">
@@ -132,6 +133,7 @@
         this.listGrade()
       },
       saveClick(row) {
+        row.autoUpgradeFlag = (row.upgradeMemPk == null || row.upgradeMemPk == "")?"N":"Y"
         console.log(row)
         const self = this
         if(row.gradePk == ''){
@@ -192,6 +194,9 @@
           self.tableData = result.data
           self.options = [];
           self.tableData.forEach(element => {
+            if(element.upgradeMemPk == null){
+              element.upgradeMemPk =""
+            }
             self.options.push({
               "gradeName": element.gradeName,
               "gradePk": element.gradePk

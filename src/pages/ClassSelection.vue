@@ -103,7 +103,7 @@ export default {
           for(var i = 0; i<this.companyShift.length; i++) {
             for(var j = 0; j < res.data.length; j++) {
               if(this.companyShift[i].cityName == res.data[j].cityName) {
-                this.companyShift[i].arr.push(res.data[j])  
+                this.companyShift[i].arr.push(res.data[j])
               }
             }
           }
@@ -119,7 +119,7 @@ export default {
             this.activeCompany = JSON.parse(spm);
             this.shiftList = this.activeCompany.shiftPos;
           }
-          
+
         }
       });
     },
@@ -134,7 +134,7 @@ export default {
         if (value == element.cityName) {
           arr_obj.cityName = '';
           arr_obj.flag = false;
-        } 
+        }
       });
       return arr_obj;
     },

@@ -512,6 +512,7 @@ export default {
                   message: '添加成功',
                   type: 'success'
                 });
+                this.refreshType()
                 this.dialogProtocolVisible = false;
                 this.$refs[formName].resetFields();
                 this.agreementList(self.conditionalQuery.pageNum);
@@ -525,6 +526,7 @@ export default {
                   message: '修改成功',
                   type: 'success'
                 });
+                this.refreshType()
                 this.dialogProtocolVisible = false;
                 this.$refs[formName].resetFields();
                 this.agreementList(self.conditionalQuery.pageNum);
@@ -563,6 +565,7 @@ export default {
               type: 'success',
               message: '删除成功'
             });
+            this.refreshType();
             this.dialogProtocolVisible = false;
             this.agreementList(self.conditionalQuery.pageNum);
           }

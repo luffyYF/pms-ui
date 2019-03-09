@@ -6,6 +6,7 @@
       <div class="left" @click="toSelectClass" style="cursor: pointer;">{{activeCompany.companyName}}</div>
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
+        <!-- <span style="cursor:pointer;" @click="getAllTypeList()">[刷新类型]</span>&nbsp;&nbsp;&nbsp;&nbsp; -->
         <span><a href="https://www.housefeel.cn/file/HFPlugin.rar" style="color:#fff;text-decoration:none;">[插件下载]</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span @click="logout">[退出系统]</span>
         <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
@@ -334,11 +335,7 @@ export default {
     },
     // 退出登录
     getAllTypeList(){
-      allTypeList().then(res=>{
-        if(res.code == 1){
-          localStorage.setItem("pms_type",JSON.stringify(res.data));
-        }
-      })
+      this.refreshType()
     },
     logout() {
       this.$confirm("确认退出吗?", "提示", {
