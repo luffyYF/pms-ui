@@ -7,11 +7,11 @@ import request from '@/utils/requestJson'
 * @returns {AxiosPromise<any>}
 */
 export const listRule = params => {
-   return request.get('/back/integralRule/list')
+   return request.get('/back/integralRule/list',{params:params})
 }
 
 export const listGrade = params => {
-    return request.get('/back/integralRule/getGradeList')
+    return request.get('/back/integralRule/getGradeList',{params:params})
 }
 
 export const addRule = params => {

@@ -141,9 +141,7 @@
 <script>
   import Moment from 'moment'
   import DatePicker from '@/components/DateComponent/DatePicker';
-  import {
-  getRoomStatusSetting,settingPrice
-} from "@/api/systemSet/pmsRoomTypePriceController";
+  import {getRoomStatusSetting,settingPrice} from "@/api/systemSet/pmsRoomTypePriceController";
 
   export default {
     components:{Moment,DatePicker},

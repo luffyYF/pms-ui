@@ -1,8 +1,7 @@
-//会员积分规则
 <template>
   <div class="heightOverflow100">
     <div class="bg-reserve">
-      <el-button type="primary" size="mini" class="add-pro" v-if="hasPerm('pms:memberIntegralRule:add')" @click="addClick()">添加规则</el-button>
+      <el-button type="primary" size="mini" class="add-pro" v-if="hasPerm('pms:rechargeGiveRule:add')" @click="addClick()">添加规则</el-button>
       <el-table
         size="mini" 
         border 
@@ -10,31 +9,28 @@
         :data="tableData" 
         v-loading="loading"
         style="width: 98%; margin:10px;">
-        <el-table-column prop="companyName" label="所属酒店" align="center" show-overflow-tooltip>
-        </el-table-column>
         <el-table-column prop="ruleName" label="规则名称" align="center">
         </el-table-column>
-        <el-table-column prop="type" label="方式类型" align="center" width="200">
-           <template slot-scope="scope">
-                <span v-if="scope.row.type == 0 ">按房费</span>
-                <span v-else-if="scope.row.type == 1 ">按房夜数</span>
-                <span v-else-if="scope.row.type == 2 ">按总消费</span>
+        <el-table-column prop="gradeName" label="卡类型" align="center">
+        </el-table-column>
+        <el-table-column prop="count" label="规则类型" align="center">
+            <template slot-scope="scope">
+                <span v-if="scope.row.type == 1 ">活动赠送</span>
+                <span v-else>常规赠送</span>
             </template>
         </el-table-column>
-        <el-table-column prop="gradeName" label="会员等级" align="center" width="200">
-        </el-table-column>
-        <el-table-column prop="count" label="天数/金额" align="center" width="150">
-        </el-table-column>
-        <el-table-column prop="integral" label="积多少分" align="center" width="150">
-        </el-table-column>
-        <el-table-column prop="remark" label="备注" align="center" width="200">
+        <el-table-column prop="integral" label="生效时间" align="center">
+            <template slot-scope="scope">
+                <span v-if="scope.row.type == 1 ">{{scope.row.beginDate}}至{{scope.row.endDate}}</span>
+                <span v-else>***至***</span>
+            </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="200" fixed="right">
             <template slot-scope="scope">
-                <el-button type="primary" v-if="hasPerm('pms:memberIntegralRule:update')" @click="editClick(scope.row)" 
+                <el-button type="primary" v-if="hasPerm('pms:rechargeGiveRule:update')" @click="editClick(scope.row)" 
                         size="mini">编辑
                 </el-button>
-                <el-button type="danger" v-if="hasPerm('pms:memberIntegralRule:delete')" @click="deleteClick(scope.row.rulePk)"
+                <el-button type="danger" v-if="hasPerm('pms:rechargeGiveRule:delete')" @click="deleteClick(scope.row.rulePk)"
                     size="mini">删除
                 </el-button>
             </template>
@@ -51,15 +47,15 @@
           :total="pageObj.total">
         </el-pagination>
     </div>
-    <MemberIntegralRuleEdit ref="MemberIntegralRuleEditRef" @callback="listRule"/>
+    <MemberRechargeGiveRuleEdit ref="MemberRechargeGiveRuleEditRef" @callback="listRule"/>
   </div>
 </template>
 
 <script>
-  import {listGrade,delRule,listRule } from '@/api/systemSet/member/pmsMemberIntegralRule'
-  import MemberIntegralRuleEdit from './MemberIntegralRuleEdit'
+  import {listGrade,delRule,listRule } from '@/api/systemSet/member/pmsMemberRechargeGiveRule'
+  import MemberRechargeGiveRuleEdit from './MemberRechargeGiveRuleEdit'
   export default {
-   components: { MemberIntegralRuleEdit },
+   components: { MemberRechargeGiveRuleEdit },
     data() {
       return {
         options:[],
@@ -71,7 +67,7 @@
             pageNum:1,
             pageSize:10
         },
-        queryPower:this.hasPerm("pms:memberIntegralRule:list")
+        queryPower:this.hasPerm("pms:rechargeGiveRule:list")
       }
     },
     mounted(){
@@ -97,11 +93,11 @@
         })
       },
       addClick(){
-        this.$refs.MemberIntegralRuleEditRef.showDialog()
+        this.$refs.MemberRechargeGiveRuleEditRef.showDialog()
       },
       editClick(row){
         var temoObj = JSON.parse(JSON.stringify(row))
-        this.$refs.MemberIntegralRuleEditRef.showDialog(temoObj)
+        this.$refs.MemberRechargeGiveRuleEditRef.showDialog(temoObj)
       },
       deleteClick (id) {
         this.$confirm('确定删除数据?', '提示', {
@@ -115,21 +111,6 @@
               }
             this.$message({ type: res.code == 1?'success':'warning', message: res.sub_msg })
           })
-        })
-      },
-      listGrade(row){
-        const self = this
-        self.gradeList = [];
-        listGrade().then(result => {
-            if(row){
-                self.gradeList.push({
-                    gradePk:row.gradePk,
-                    gradeName:row.grade
-                })
-            }
-            self.gradeList = self.gradeList.concat(result.data)
-        }).catch(() => {
-        }).finally(()=>{
         })
       },
       // 分页相关

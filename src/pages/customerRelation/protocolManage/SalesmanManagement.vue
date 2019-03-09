@@ -71,6 +71,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
                 message: '添加成功',
                 type: 'success'
               });
+              this.refreshType();
             }
             self.list(self.queryParams.pageNum);
           })
@@ -83,6 +84,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
                 message: '修改成功',
                 type: 'success'
               });
+              this.refreshType();
             }
             self.list(self.queryParams.pageNum);
           })
@@ -102,6 +104,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
                 message: '删除成功',
                 type: 'success'
               })
+              this.refreshType();
             }
             self.list(self.queryParams.pageNum);
           })

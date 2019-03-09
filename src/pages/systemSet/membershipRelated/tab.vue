@@ -13,9 +13,19 @@
       <el-tab-pane label="会员级别管理" name="memberLevel">
         <member-level ref="memberLevel"/>
       </el-tab-pane>
-      <el-tab-pane label="会员级别管理" name="MemberIntegralRule">
+      <el-tab-pane label="会员积分规则" name="MemberIntegralRule" v-if="hasPerm('pms:member:memberIntegralRule')">
         <MemberIntegralRule ref="MemberIntegralRule"/>
       </el-tab-pane>
+      <el-tab-pane label="充值赠送规则" name="MemberRechargeGiveRule" v-if="hasPerm('pms:member:rechargeGiveRule')">
+        <MemberRechargeGiveRule ref="MemberRechargeGiveRule"/>
+      </el-tab-pane>
+      <el-tab-pane label="积分换房活动" name="MemberIntegralRoomChangeRule" v-if="hasPerm('pms:member:integralRoomChange')">
+        <MemberIntegralRoomChangeRule ref="MemberIntegralRoomChangeRule"/>
+      </el-tab-pane>
+      <el-tab-pane label="会员远期房价" name="MemberForwardPrice" v-if="hasPerm('pms:member:memberForwardPrice')">
+        <MemberForwardPrice ref="MemberForwardPrice"/>
+      </el-tab-pane>
+      
     </el-tabs>
   </div>
 </template>
@@ -26,6 +36,12 @@
   import MemberCardFee from './MemberCardFee'
   import MemberLevel from './MemberLevel'
   import MemberIntegralRule from './MemberIntegralRule'
+  import MemberRechargeGiveRule from './MemberRechargeGiveRule'
+  import MemberIntegralRoomChangeRule from './MemberIntegralRoomChangeRule'
+  import MemberForwardPrice from './MemberForwardPrice'
+
+  
+  
   // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
@@ -34,7 +50,10 @@
       MemberRechargeDiscount,
       MemberCardFee,
       MemberLevel,
-      MemberIntegralRule
+      MemberIntegralRule,
+      MemberRechargeGiveRule,
+      MemberIntegralRoomChangeRule,
+      MemberForwardPrice
     },
     data () {
       return {
@@ -63,7 +82,20 @@
         }else if(this.activeName == 'MemberIntegralRule'){
           var child = this.$refs.MemberIntegralRule
           child.init()
+        }else if(this.activeName == 'MemberRechargeGiveRule'){
+          var child = this.$refs.MemberRechargeGiveRule
+          child.init()
+        }else if(this.activeName == 'MemberIntegralRoomChangeRule'){
+          var child = this.$refs.MemberIntegralRoomChangeRule
+          child.init()
+        }else if(this.activeName == 'MemberForwardPrice'){
+          var child = this.$refs.MemberForwardPrice
+          child.init()
         }
+
+        
+
+        
       },
       // powerJudge(id){
       //   return powerJudge(id);
