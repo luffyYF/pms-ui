@@ -39,7 +39,6 @@ export default {
       shiftList: [],
       companyShift: [],
       activeCompany: "",
-      activeShift: ""
     };
   },
   mounted(){
@@ -54,19 +53,6 @@ export default {
       localStorage.setItem('pms_userinfo', '')
     },
     goBack() {
-      // store
-      //   .dispatch("LogOut")
-      //   .then(res => {
-      //     // 拉取user_info
-      //     this.$router.push("/login");
-      //      window.localStorage.setItem('current_logon_company','');
-      //   })
-      //   .catch(() => {
-      //     store.dispatch("FedLogOut").then(() => {
-      //       this.$router.push("/login");
-      //       window.localStorage.setItem('current_logon_company','');            
-      //     });
-      //   });
       logout().then(res=>{}).finally(()=>{
         this.clearLocalInfo();
         localStorage.setItem('pms_token','');
@@ -76,20 +62,6 @@ export default {
     //设置公司主键和班次到cookies跳转首页
     toHome(shift) {
       getUserInfo().then(res => {
-        // let userInfo = res.data;
-        // getUpmsUserInfo().then(res2=>{
-        //   let upmsUserInfo = res2.data
-        //   let temp = {
-        //     userName:userInfo.userName,
-        //     userPk:userInfo.userPk,
-        //     companyPk:userInfo.companyPk,
-        //     upmsUserName:upmsUserInfo.upmsUserName,//权限用户登录账号
-        //     permissionValues:upmsUserInfo.permissionValues
-        //   }
-          
-        // })
-        // console.log(res.data)
-        this.activeShift = shift.shiftPk|" ";
         if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != this.activeCompany.companyPk){
           localStorage.removeItem("roomList")
           localStorage.removeItem("statisticsData")
@@ -98,11 +70,9 @@ export default {
           sessionStorage.removeItem("isTime")
         }
         Cookies.set('select_company_pk',this.activeCompany.companyPk)
-        Cookies.set('select_shift_pk',this.activeShift)
+        Cookies.set('select_shift_pk',shift.shiftPk ? shift.shiftPk : '0')
         localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
         localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
-
-        // this.$router.push({ path: this.getRPath("/",0) });
         this.$router.push('/')
       })
 

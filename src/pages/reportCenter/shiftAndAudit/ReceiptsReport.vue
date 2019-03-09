@@ -4,26 +4,39 @@
   <div class="container">
     <el-form :inline="true" size="mini" :rules="addressRules"  class="demo-form-inline">
       <el-form-item label="日期" prop="begenAndEnd">
-       <date-picker v-model="begenAndEnd"></date-picker>
+        <el-date-picker
+        v-model="queryObj.begenAndEnd"
+        type="daterange"
+        range-separator="至"
+        value-format="yyyy-MM-dd"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :clearable="false"
+        @change="dateChange">
+      </el-date-picker>
       </el-form-item>
       <el-form-item label="收银员">
         <el-select v-model="queryObj.userPk" placeholder="选择收银员">
           <el-option  label="全部" value=""></el-option>
           <el-option
-      v-for="item in listCashierOperatorData"
-      :key="item.userPk"
-      :label="item.userName"
-      :value="item.userPk"></el-option>
-        </el-select>     
+            v-for="item in listCashierOperatorData"
+            :key="item.userPk"
+            :label="item.userName"
+            :value="item.userPk">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="班次">
-        <el-select v-model="queryObj.shiftPk" placeholder="选择班次">
+        <el-select v-model="queryObj.shiftPk" @change="dateChange" placeholder="选择班次">
           <el-option label="全部" value=""></el-option>
           <el-option
-      v-for="item in selectShiftData"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"></el-option>
+            v-for="item in selectShiftData"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">({{ item.beginTime.substring(0,5) }}-{{item.endTime.substring(0,5)}})</span>
+          </el-option>
         </el-select>
       </el-form-item>
       
@@ -35,17 +48,18 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
-    <div class="table-container" id="print-receiptsreport">
-      <h3>{{activeCompany.companyName}}</h3>
-      <h4>收银员收款报表</h4>
-      <div class="table-box">
+    <div id="print-receiptsreport" style="padding: 20px;text-align: center;border-top: 3px solid #eee;margin-bottom: 50px;overflow-y: auto;">
+      <h3 style="text-align:center">{{activeCompany.companyName}}</h3>
+      <h4 style="text-align:center">收银员收款报表</h4>
+      <div style="width: 800px;margin: 0 auto;text-align:center">
         <p>
-          营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
+          营业日期从：{{reportBeginDate}}&nbsp;&nbsp;到&nbsp;&nbsp;{{reportEndDate}}&nbsp;&nbsp;&nbsp;&nbsp;
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
         </p>
         <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
-        <el-col :span="12">
-          <el-table 
+
+        <div style="float: left;width: 46%;">
+          <!-- <el-table 
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
             :summary-method="getSummaries"
@@ -55,10 +69,25 @@
             border style="width: 100%; margin:0 auto;">
             <el-table-column prop="projectName" align="center" label="收入项目" ></el-table-column>
             <el-table-column prop="settlementAmount" align="center" label="金额" ></el-table-column>
-          </el-table>
-        </el-col>
-        <el-col :span="11" :offset="1">
-          <el-table :data="consumer"
+          </el-table> -->
+          <table style="text-align: left;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="1"  cellpadding="8" cellspacing="0">
+            <tr>
+                <th>收入项目</th>
+                <th>金额</th>
+              <tr v-for="y in settlement">
+                <td>{{y.projectName}}</td>
+                <td>{{y.settlementAmount}}</td>
+              </tr>
+              <tr style="background-color: #e8e8e8;">
+                <td>总价</td>
+                <td>{{settlPrice}}</td>
+              </tr>
+            </tr>
+          </table>
+        </div>
+
+        <div style="float: right;width: 46%;">
+          <!-- <el-table :data="consumer"
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
             :summary-method="getSummaries"
@@ -66,8 +95,23 @@
             size="mini" border style="width: 100%; margin:0 auto;">
             <el-table-column prop="projectName" align="center" label="消费项目" ></el-table-column>
             <el-table-column prop="consumptionAmount" align="center" label="金额" ></el-table-column>
-          </el-table>
-        </el-col>
+          </el-table> -->
+
+          <table style="text-align: left;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="1"  cellpadding="8" cellspacing="0">
+            <tr>
+                <th>消费项目</th>
+                <th>金额</th>
+              <tr v-for="y in consumer">
+                <td>{{y.projectName}}</td>
+                <td>{{y.consumptionAmount}}</td>
+              </tr>
+              <tr style="background-color: #e8e8e8;">
+                <td>总价</td>
+                <td>{{consumPrice}}</td>
+              </tr>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
     <!-- 打印填充 iframe-->
@@ -77,7 +121,6 @@
 
 <script>
 import common from "@/api/common"
-import DatePicker from '@/components/DateComponent/DatePicker';
 import {roomStatus,reportShouYinYuanShouKuan} from "@/api/reportCenter/pmsReportFormController"
 import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
@@ -85,15 +128,27 @@ import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
 
 export default {
-  components: {DatePicker},
   data() {
     return {
       userInfo:{},
       sDate: moment().format("YYYY-MM-DD"),
       sTime: moment().format("HH:mm:ss"),
-      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
+      queryObj:{
+        userName:"",
+        shift:"",
+        userPk:'',
+        shiftPk:'',
+        begenAndEnd:[
+          moment().format("YYYY-MM-DD"),
+          moment().add(1,"days").format("YYYY-MM-DD")
+        ],
+        // begin:moment().format("YYYY-MM-DD"),
+        // end:moment().add(1,"days").format("YYYY-MM-DD")
+      },
+      reportBeginDate: null,
+      reportEndDate: null,
       consumer: [],
-      settlement:[],
+      settlement: [],
       selectShiftData:[],
       listCashierOperatorData:[],
       tableStyleObj:{
@@ -101,27 +156,20 @@ export default {
         padding: '8px',
         'text-align':'center'
       },
-      begenAndEnd:{
-        begin:moment().format("YYYY-MM-DD"),
-        end:moment().format("YYYY-MM-DD")
-      },
-      addressRules: {
-        // begenAndEnd: [
-        //   { required: true, message: "请选择时间", trigger: "change" }
-        // ]
-      },
+      
+      addressRules: {},
       // baseUrl:common.baseUrl
       // ,ziurl:"/pms/report/uploadShouYinYuanShouKuanExcel?"
     };
   },
-  watch:{
-    begenAndEnd: function () {
-      if (this.begenAndEnd) {
-        this.queryObj.begin = this.begenAndEnd.begin;
-        this.queryObj.end = this.begenAndEnd.end;
-      }
-    }
-  },
+  // watch:{
+  //   begenAndEnd: function () {
+  //     if (this.begenAndEnd) {
+  //       this.queryObj.begin = this.begenAndEnd.begin;
+  //       this.queryObj.end = this.begenAndEnd.end;
+  //     }
+  //   }
+  // },
   created() {
     var test = window.localStorage.getItem("current_logon_company");
     this.activeCompany = JSON.parse(test);
@@ -132,29 +180,46 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
-    this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
+    this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'))
     this.init()
+  },
+  computed:{
+    consumPrice:function() {
+      let temp = 0;
+      this.consumer.forEach(item=>{
+        temp = temp + Number(item.consumptionAmount)
+      })
+      return parseFloat(temp.toFixed(2));
+    },
+    settlPrice:function() {
+      let temp = 0;
+      this.settlement.forEach(item=>{
+        temp = temp + Number(item.settlementAmount)
+      })
+      return parseFloat(temp.toFixed(2));
+    }
   },
   methods: {
     init(){
       let self = this
       this.getList()
       selectShift().then((data)=>{
-        console.log(data)
         if(data.code == 1){
           self.selectShiftData = data.data
         }
+        this.dateChange();
       })
       listCashierOperator().then((data)=>{
-        console.log(data)
         if(data.code == 1){
           self.listCashierOperatorData = data.data
         }
       })
+      
     },
     getList(){
       let self = this
-      console.log(this.queryObj)
+      self.consumer = []
+      self.settlement = []
       self.selectShiftData.forEach((data)=>{
         if(data.value == self.queryObj.shiftPk){
           self.queryObj.shift = data.label
@@ -165,8 +230,15 @@ export default {
           self.queryObj.userName = data.userName
         }
       });
-      reportShouYinYuanShouKuan(this.queryObj).then((data)=>{
-        console.log(data)
+      let params = {
+        userName: this.queryObj.userName,
+        shift: this.queryObj.shift,
+        userPk: this.queryObj.userPk,
+        shiftPk: this.queryObj.shiftPk,
+        begin: this.queryObj.begenAndEnd[0],
+        end: this.queryObj.begenAndEnd[1]
+      }
+      reportShouYinYuanShouKuan(params).then((data)=>{
         if(data.code == 1){
           self.consumer =  data.data.consumer
           self.settlement =  data.data.settlement
@@ -198,9 +270,44 @@ export default {
       });
       return sums;
     },
+
+    //改变营业日期时间
+    dateChange() {
+      // console.log(this.queryObj.begenAndEnd)
+      // console.log(this.selectShiftData)
+      // console.log(this.queryObj.shiftPk)
+      let beginTime;
+      let endTime;
+      //循环班次
+      this.selectShiftData.forEach(item=>{
+        if(item.value==this.queryObj.shiftPk) {
+          beginTime = item.beginTime
+          endTime = item.endTime
+        }
+      })
+
+      if(beginTime && endTime){
+        //若选择的是跨天，自动更改开始结束日期
+        if(beginTime>endTime){
+          if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
+            this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+          }
+        }
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5) 
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
+      }else if(this.queryObj.begenAndEnd[0] == this.queryObj.begenAndEnd[1]){
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
+        this.reportEndDate = moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD") + " 00:00"
+      }else {
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 00:00"
+      }
+      this.getList()
+    },
+
     //导出EXCEL
     downloadExcel(){
-      let url = '/pms/report/uploadShouYinYuanShouKuanExcel?begin='+this.begenAndEnd.begin+'&end='+this.begenAndEnd.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk
+      let url = '/pms/report/uploadShouYinYuanShouKuanExcel?begin='+this.queryObj.begenAndEnd[0]+'&end='+this.queryObj.begenAndEnd[1]+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk
       downloadExcel(url, '收银员收款报表');
     },
     //打印预览
