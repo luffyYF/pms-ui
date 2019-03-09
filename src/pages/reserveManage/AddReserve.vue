@@ -253,6 +253,8 @@
       agreementCallback(data) {
         this.$set(this.form,"agreementPk",data.agreementPk)
         this.$set(this.form,"agreementName",data.unitName)
+        // this.form.userPhone = data.contactPhone;
+        // this.form.userName = data.contactName;
         // this.form.agreementPk = data.agreementPk;
         // this.form.agreementName = data.unitName;
       },
