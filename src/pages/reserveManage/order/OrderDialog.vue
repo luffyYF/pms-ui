@@ -12,32 +12,22 @@
         <div class="pattern-dialog-title">
           <h5 class="info-title">预定信息</h5>
           <div class="dialog-form-con">
-            <el-form ref="form" :inline="true" size="mini" :model="form" label-width="68px">
-              <el-col class="dialog-li">
+            <el-form ref="form" :inline="true" size="mini" :model="form" label-width="68px" class="main-order-class">
                 <el-form-item label="名   称" required>
                   <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
                 </el-form-item>
-              </el-col>
-
-              <el-col class="dialog-li">
                 <el-form-item label="预订人">
                   <el-input v-model="form.userName" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="预订手机">
                   <el-input v-model="form.userPhone" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="是否团体">
                   <el-select v-model="form.isTeam" :disabled="currConfirmType!='add-checkin'">
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <!-- <el-form-item label="协议单位">
                   <el-input v-model="form.agreementName" ></el-input>
                 </el-form-item> -->
@@ -46,18 +36,12 @@
                     <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
                   </el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="预订卡号">
                   <el-input v-model="form.reserveCardNo" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="担 保 方">
                   <el-input v-model="form.guarantee" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="担保类型">
                   <el-select v-model="form.guaranteeType" :disabled="true">
                       <el-option label="无担保" value=""></el-option>
@@ -65,30 +49,21 @@
                       <el-option label="全程担保" value="GUARANTEE_ALL"></el-option>
                     </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="支付方式">
                   <!-- :disabled="currConfirmType=='edit-guest'" -->
                   <el-select v-model="form.payment" >
                     <el-option v-for="(value,index) in paymentMap" :key="index" :value="index" :label="value"></el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="保留时效">
                   <el-input v-model="form.keepTime" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="登记时间">
                   <el-date-picker v-model="reserveTime" type="datetime" placeholder="选择日期时间" :disabled="true"></el-date-picker>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
-                <el-form-item label="备   注">
-                  <el-input v-model="form.remark"></el-input>
+                <el-form-item label="备   注"  >
+                  <el-input v-model="form.remark" style="width: 770px;"></el-input>
                 </el-form-item>
-              </el-col>
             </el-form>
           </div>
         </div>
@@ -1062,6 +1037,10 @@ export default {
   border: 1px solid #ddd;
   padding: 0 4px;
 }
+.main-order-class .el-form-item--mini.el-form-item{
+  margin-bottom: 5px;
+}
+
 /* .patternDialog .el-dialog__body{
   min-height: 500px;
   overflow-y: auto;
