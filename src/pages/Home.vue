@@ -341,19 +341,19 @@ export default {
       this.$confirm("确认退出吗?", "提示", {
         type: "warning"
       })
-        .then(() => {
-          logout().then(res=>{}).finally(()=>{
-            Cookies.set('select_company_pk','')
-            Cookies.set('select_shift_pk','')
-            localStorage.setItem('current_logon_company','');
-            localStorage.setItem('pms_userinfo', '')
-            localStorage.setItem('pms_token','');
-            sessionStorage.removeItem("orderIsNew")
-            sessionStorage.removeItem("isTime")
-            this.$router.push("/login");
-          })
+      .then(() => {
+        logout().then(res=>{}).finally(()=>{
+          Cookies.set('select_company_pk','')
+          Cookies.set('select_shift_pk','')
+          localStorage.setItem('current_logon_company','');
+          localStorage.setItem('pms_userinfo', '')
+          localStorage.setItem('pms_token','');
+          sessionStorage.removeItem("orderIsNew")
+          sessionStorage.removeItem("isTime")
+          this.$router.push("/login");
         })
-        .catch(() => {});
+      })
+      .catch(() => {});
     },
     // 折叠导航栏
     collapse() {

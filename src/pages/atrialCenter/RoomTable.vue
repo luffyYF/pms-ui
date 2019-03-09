@@ -1,9 +1,9 @@
+// 房态表
 <template>
   <div class="about_spacing">
     <div class="margin_bottom_z line_height_z">
-    <p>*注：可售房 = 总房数 - 预订当天到 - 当日预计不离店房 - 维修房 - 停用房 </p>
-    <p>可用房 = 总房数 - 在住房 - 维修房 - 停用房 </p>
-    <p>出租率 = 房晚数 / (总房间数 — 维修房(不可以入住) — 停用房 — 自用房 — 免费房) * 100 </p>
+    <p>*注：可用房 = 总房数 - 在住房 - 维修房 - 停用房 </p>
+    <p>出租率 = 房晚数 / (总房间数 — 维修房(不可以入住) — 停用房 — 接待房) * 100 </p>
     </div>
     
     <el-table
@@ -55,8 +55,8 @@ import { roomStatusCount } from "@/api/atrialCenter/roomStatusController";
           {name:'在住房',value:'OCCUPY'},
           {name:'维修房',value:'REPAIR_ROOM'},
           {name:'停用房',value:'DISABLE_ROOM'},
-          {name:'免费房',value:'FREE_ROOM'},
-          {name:'自用房',value:'SELF_USE'},
+          {name:'接待房',value:'FREE_ROOM'},
+          // {name:'自用房',value:'SELF_USE'},
           {name:'总房数',value:'allRoom'},
           // {name:'清洁房',value:'CLEAN_ROOM'},
           {name:'清洁未检查',value:'CLEAN_NOCHECK'},

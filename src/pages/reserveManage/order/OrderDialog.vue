@@ -12,32 +12,22 @@
         <div class="pattern-dialog-title">
           <h5 class="info-title">预定信息</h5>
           <div class="dialog-form-con">
-            <el-form ref="form" :inline="true" size="mini" :model="form" label-width="68px">
-              <el-col class="dialog-li">
+            <el-form ref="form" :inline="true" size="mini" :model="form" label-width="68px" class="main-order-class">
                 <el-form-item label="名   称" required>
                   <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
                 </el-form-item>
-              </el-col>
-
-              <el-col class="dialog-li">
                 <el-form-item label="预订人">
                   <el-input v-model="form.userName" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="预订手机">
                   <el-input v-model="form.userPhone" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="是否团体">
                   <el-select v-model="form.isTeam" :disabled="currConfirmType!='add-checkin'">
                       <el-option label="否" value="N"></el-option>
                       <el-option label="是" value="Y"></el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <!-- <el-form-item label="协议单位">
                   <el-input v-model="form.agreementName" ></el-input>
                 </el-form-item> -->
@@ -46,18 +36,12 @@
                     <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
                   </el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="预订卡号">
                   <el-input v-model="form.reserveCardNo" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="担 保 方">
                   <el-input v-model="form.guarantee" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="担保类型">
                   <el-select v-model="form.guaranteeType" :disabled="true">
                       <el-option label="无担保" value=""></el-option>
@@ -65,30 +49,21 @@
                       <el-option label="全程担保" value="GUARANTEE_ALL"></el-option>
                     </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="支付方式">
                   <!-- :disabled="currConfirmType=='edit-guest'" -->
                   <el-select v-model="form.payment" >
                     <el-option v-for="(value,index) in paymentMap" :key="index" :value="index" :label="value"></el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="保留时效">
                   <el-input v-model="form.keepTime" :disabled="true"></el-input>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
                 <el-form-item label="登记时间">
                   <el-date-picker v-model="reserveTime" type="datetime" placeholder="选择日期时间" :disabled="true"></el-date-picker>
                 </el-form-item>
-              </el-col>
-              <el-col class="dialog-li">
-                <el-form-item label="备   注">
-                  <el-input v-model="form.remark"></el-input>
+                <el-form-item label="备   注"  >
+                  <el-input v-model="form.remark" style="width: 770px;"></el-input>
                 </el-form-item>
-              </el-col>
             </el-form>
           </div>
         </div>
@@ -100,11 +75,12 @@
               <el-button size="mini" v-if="hasPerm('pms:orderAss:priceChangeRecord')" @click="toDialogPriceChangeHistory">房价变更记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:operRecord')" @click="toDialogOperationLog">操作记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:printRcOrder')" @click="toRcprint">打印RC单</el-button>
+              <el-button size="mini" v-if="hasPerm('pms:orderAss:printRcOrder')" @click="toRoomTablePrint">打印房间表</el-button>
               <!-- <el-popover ref="wakeSort" placement="top">
                 <el-button type="primary" size="mini" @click="dialogWake = true">叫醒</el-button>
                 <el-button type="primary" size="mini" @click="dialogGroupPrinting = true">团会打印</el-button>
               </el-popover> -->
-              <el-button size="mini" v-popover:wakeSort><i class="el-icon-sort"></i></el-button>
+              <!-- <el-button size="mini" v-popover:wakeSort><i class="el-icon-sort"></i></el-button> -->
               <el-button size="mini" @click="toDialogBorrow">外借<span>({{goodsManageCountMap.wjCount}})</span></el-button>
               <el-button size="mini" @click="toDialogDeposit">寄存<span>({{goodsManageCountMap.jcCount}})</span></el-button>
               <el-button size="mini" @click="toDialogNote">留言<span>({{goodsManageCountMap.lyCount}})</span></el-button>
@@ -222,6 +198,8 @@
   </div>
 </template>
 <script>
+import base64 from 'js-base64'
+import moment from 'moment'
 // 组件通讯
 import bus from '@/utils/bus'
 // 静态数据
@@ -798,6 +776,7 @@ export default {
     toDialogPriceChangeHistory() {
       this.$refs.dialogPriceChangeHistoryRef.init(this.currOrderPk)
     },
+    //打印RC单
     toRcprint() {
       if(!this.currGuest.guestOrderPk){
         this.$message.warning('请选择一个客单');
@@ -805,6 +784,61 @@ export default {
       }
       window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
       +"&guestOrderPk="+this.currGuest.guestOrderPk);
+    },
+    //打印房间表
+    toRoomTablePrint() {
+      // 打印的房间号数据包含以下状态的订单： 预定未排房、预定排房、入住、离店、退房未结
+    
+      let orderPk = this.form.orderPk
+      let companyName = this.companyObj.companyName
+      let beginDate = moment(this.currOrderInfo.order.beginDate).format('YYYY-MM-DD')
+      let endDate = moment(this.currOrderInfo.order.endDate).format('YYYY-MM-DD')
+      let userName = this.currOrderInfo.order.userName
+      let userPhone = this.currOrderInfo.order.userPhone
+      let orderNo = this.currOrderInfo.order.shortOrderNo
+      let agreementName = this.currOrderInfo.order.agreementName
+      let remark = this.currOrderInfo.order.remark
+
+      let personCount = 0
+      let roomsCount = 0
+      let roomNumberArr = []
+      this.currOrderInfo.guestList.forEach(item=>{
+        if(item.orderStatus=='RESERVE' 
+          || item.orderStatus=='CHECKIN' 
+          || item.orderStatus=='LEAVE' 
+          || item.orderStatus=='LEAVENOPAY') {
+          personCount++;
+          if(item.mainFlag=='Y') {
+            roomsCount++;
+            roomNumberArr.push(item.roomNumber);
+          }
+        }
+      })
+
+      let data = {
+        orderPk: orderPk,
+        companyName: companyName,
+        beginDate:beginDate,
+        endDate:endDate,
+        userName:userName,
+        userPhone:userPhone,
+        orderNo:orderNo,
+        agreementName:agreementName,
+        remark:remark,
+        personCount:personCount,
+        roomsCount:roomsCount,
+        roomNumberArr:roomNumberArr
+      }
+      window.open(process.env.PRINT_ROOT+"/#/teamRoomPrint?data="+JSON.stringify(data));
+      // console.log('personCount', personCount)
+      // console.log('roomsCount', roomsCount)
+      console.log('roomNumberArr', roomNumberArr)
+      // console.log(beginDate)
+      // console.log(this.currOrderInfo)
+      // console.log( JSON.stringify(data))
+      // this.openPostWindow(process.env.PRINT_ROOT+"#/teamRoomPrint",data, '_blank');
+      // TODO base64.Base64.encode()
+      // window.open(process.env.PRINT_ROOT+"/#/teamRoomPrint",data,'height=400, width=400, top=0, left=0, toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes,location=yes, status=yes');
     },
     toDialogGuestManger() {
       this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
@@ -1003,6 +1037,10 @@ export default {
   border: 1px solid #ddd;
   padding: 0 4px;
 }
+.main-order-class .el-form-item--mini.el-form-item{
+  margin-bottom: 5px;
+}
+
 /* .patternDialog .el-dialog__body{
   min-height: 500px;
   overflow-y: auto;
