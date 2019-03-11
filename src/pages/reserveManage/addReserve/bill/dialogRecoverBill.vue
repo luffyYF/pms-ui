@@ -11,8 +11,16 @@
         :row-style="tableRowStyle"
         @selection-change="handleSelectionChange">
         <el-table-column  type="selection" width="55"></el-table-column>
-        <el-table-column label="消费" width="80" prop="consumptionAmount"></el-table-column>
-        <el-table-column label="结算" width="80" prop="settlementAmount"></el-table-column>
+        <el-table-column label="消费" width="80" prop="consumptionAmount">
+          <template slot-scope="scope">
+            <span>{{scope.row.consumptionAmount.toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="结算" width="80" prop="settlementAmount">
+          <template slot-scope="scope">
+            <span>{{scope.row.settlementAmount.toFixed(2)}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="结账时间" width="180" prop="createTime"></el-table-column>
         <el-table-column label="营业日期" width="120" prop="businessDate"></el-table-column>
         <el-table-column label="记录数" width="70" prop="number"></el-table-column>
@@ -20,13 +28,17 @@
           <template slot-scope="scope">
             <el-table :data="scope.row.subItem" tooltip-effect="dark" style="width: 100%" border>
             <el-table-column width="53"></el-table-column>
-              <el-table-column label="消费" width="80" prop="consumptionAmount"></el-table-column>
+              <el-table-column label="消费" width="80" prop="consumptionAmount">
+                <template slot-scope="scope">
+                  <span>{{scope.row.settlementAmount.toFixed(2)}}</span>
+                </template>
+              </el-table-column>
               <el-table-column label="结算" width="80" prop="settlementAmount"></el-table-column>
               <el-table-column label="发生时间" width="180" prop="createTime"></el-table-column>
               <el-table-column label="营业日期" width="120" prop="businessDate"></el-table-column>
               <el-table-column label="房号" width="70" prop="roomNumber"></el-table-column>
               <el-table-column label="项目" width="100" prop="projectName"></el-table-column>
-            </el-table> 
+            </el-table>
           </template>
         </el-table-column>
       </el-table>

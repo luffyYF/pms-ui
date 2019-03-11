@@ -228,8 +228,11 @@ export default {
     },
     //选择协议回调
     agreementCallback(data) {
+      console.log(data)
       this.form.agreementPk = data.agreementPk;
       this.form.agreementName = data.unitName;
+      this.form.userPhone = data.contactPhone;
+      this.form.userName = data.contactName;
     },
     //添加条目
     addItem() {
