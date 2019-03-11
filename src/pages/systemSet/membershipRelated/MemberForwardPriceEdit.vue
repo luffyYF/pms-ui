@@ -42,7 +42,8 @@
                 </el-table-column>
                 <el-table-column   label="具体值" align="center" >
                     <template slot-scope="scope">
-                        <el-input-number :disabled="scope.row.type == 0 " size="mini" style="width:100%;" :precision="2" :step="1" :min="0" :controls="false" v-model="scope.row.num" ></el-input-number>
+                        <el-input-number v-if="scope.row.type == 2 || scope.row.type == '2'" size="mini" style="width:100%;" :precision="2" :step="1" :min="0" :max="10" :controls="false" v-model="scope.row.num" ></el-input-number>
+                        <el-input-number v-else :disabled="scope.row.type == 0 " size="mini" style="width:100%;" :precision="2" :step="1" :min="0" :controls="false" v-model="scope.row.num" ></el-input-number>
                     </template>
                 </el-table-column>
             </el-table>
@@ -140,7 +141,6 @@
       },
         handleSelectionChange(val) {
         this.dataForm.parms = val;
-        console.log(this.dataForm.parms)
       },
       // 保存数据
       saveData () {
@@ -151,6 +151,13 @@
                 this.$message({ type: 'warning', message: "至少选择一种房型" })
                 return
             }
+            for(var i=0;i<this.dataForm.parms.length;i++){
+               if((this.dataForm.parms[i].type == 2 || this.dataForm.parms[i].type == '2') && this.dataForm.parms[i].num > 10 ){
+                    this.$message({ type: 'warning', message: this.dataForm.parms[i].roomTypeName+"设置方式为折扣率时具体值不能超过10" })
+                    return
+               }
+            }
+
               //全部会员时
             if(this.dataForm.type == 0){
                 this.dataForm.gradePks = []
