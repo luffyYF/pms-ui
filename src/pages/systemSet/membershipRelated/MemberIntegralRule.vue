@@ -2,6 +2,7 @@
 <template>
   <div class="heightOverflow100">
     <div class="bg-reserve">
+      <el-button type="primary" size="mini" icon="el-icon-search" class="add-pro" v-if="queryPower" @click="listRule()">查询</el-button>
       <el-button type="primary" size="mini" class="add-pro" v-if="hasPerm('pms:memberIntegralRule:add')" @click="addClick()">添加规则</el-button>
       <el-table
         size="mini" 
