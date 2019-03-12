@@ -1221,7 +1221,7 @@
   .events-week
   .events-day {
   position: relative;
-  min-height:35px;
+  min-height:38px;
 }
 .room-status-calendar-box .comp-full-calendar{
   padding:0 !important;;
@@ -1231,12 +1231,15 @@
 }
 .full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item.currentDate{
   color:white !important;
+  /* margin-top:4px !important; */
 }
 .full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item.null{
   color:black !important;
+  /* margin-top:4px !important; */
 }
 .full-calendar-body .dates .dates-events .events-week .events-day .event-box .event-item.notNull{
   color:#f60 !important;
+  /* margin-top:4px !important; */
 }
 </style>
 <style scoped>

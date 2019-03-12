@@ -20,7 +20,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-                <el-button type="primary" size="mini" class="add-pro" v-if="queryPower" @click="listRule()">查看</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-search" class="add-pro" v-if="queryPower" @click="listRule()">查询</el-button>
                 <el-button type="primary" size="mini" class="add-pro" v-if="hasPerm('pms:IntegralRoomChange:add')" @click="addClick()">添加规则</el-button>
             </el-col>
           </el-row>
@@ -187,10 +187,7 @@
         this.$refs.MemberIntegralRoomChangeRuleEditRef.showDialog()
       },
       editClick(row){
-          // if(row.effectiveWeek){
-          //     row.week = row.effectiveWeek.split(",")
-          // }
-          var temoObj = JSON.parse(JSON.stringify(row))
+        var temoObj = JSON.parse(JSON.stringify(row))
         this.$refs.MemberIntegralRoomChangeRuleEditRef.showDialog(temoObj)
       },
       deleteClick (id) {

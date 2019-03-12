@@ -5,16 +5,9 @@
     <el-row :gutter="24">
       <el-col :span="18">
         <el-form class="seach-form" ref="listQuery" :inline="true" :model="listQuery" label-width="70px" size="mini" label-position="right">
-            <el-form-item label="月份">
-                <el-date-picker
-                    v-model="listQuery.month"
-                    type="month"
-                    size="mini"
-                    format="yyyy-MM-dd"
-                    placeholder="月份"
-                    :editable="false"
-                    :clearable="false">
-                </el-date-picker>
+            <el-form-item label="日期">
+              <el-date-picker :picker-options="pickerOptions1" style="width:100%;" :clearable="false" v-model="datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
+              </el-date-picker>
             </el-form-item>
             <el-form-item label="会员类型">
                 <el-select size="mini" style="width:100%;" v-model="listQuery.gradePk" placeholder="会员类型" clearable >
@@ -81,41 +74,69 @@
         headers:[],
         pricePos:{},
         dateMap:{},
+        datepicker:[ 
+            Moment().format("YYYY-MM-DD"),
+            Moment().add(30,"days").format("YYYY-MM-DD")
+        ],
         listQuery: {
           gradePk: "",
-          month: Moment().format("YYYY-MM-DD"),
+          beginDate:null,
+          endDate:null
         },
         gradeList:[],
         mergeLine:0,
         queryPower:this.hasPerm('pms:memForwardPrice:list'),
         singleSettingPower:this.hasPerm('pms:memForwardPrice:singleSet'),
+        pickerOptions1: {
+          disabledDate:this.disabledDate,
+          onPick(obj){
+              sessionStorage.setItem("forwardPriceSettingMinDate",Moment(obj.minDate).format("YYYY-MM-DD"));
+          }
+        },
+        maxDate:null,
+        minDate:null,
       }
     },
     mounted () {
     //   this.findOaCompany()
     },
     methods: {
-        init(){
-            this.listSearch()
-            this.listGrade()
-        },
+      disabledDate(time){
+        var forwardPriceSettingMinDate = sessionStorage.getItem("forwardPriceSettingMinDate")
+        if(forwardPriceSettingMinDate){
+          //小于今天或者大于结束日期+30天
+          return time.getTime() < Date.now() - 8.64e7 || time.getTime() > (new Date(forwardPriceSettingMinDate).getTime()+2592000000);
+        }
+        return time.getTime() < Date.now() - 8.64e7;
+      },
+      init(){
+          this.listSearch()
+          this.listGrade()
+      },
       listSearch () {
         if(!this.queryPower){
           this.$message({ type: 'warning', message: "权限不足" })
           return
         }
-        this.listQuery.month = Moment(new Date(this.listQuery.month)).format("YYYY-MM-DD")
+         this.loading = true
+        this.listQuery.beginDate = this.datepicker[0]
+        this.listQuery.endDate = this.datepicker[1]
         this.loading = true
         listForwardPrice(this.listQuery).then(res => {
           if (res.code != 1) {
             this.rows = []
             this.headers = []
           } else {
-            this.rows = res.data.tableData
-            this.headers = res.data.header
-            this.pricePos = res.data.pricePos
-            this.dateMap = res.data.dateMap
-            this.mergeLine = res.data.mergeLine
+            this.$set(this, 'rows', res.data.tableData)
+            this.$set(this, 'headers', res.data.header)
+            this.$set(this, 'pricePos', res.data.pricePos)
+            this.$set(this, 'dateMap', res.data.dateMap)
+            this.$set(this, 'mergeLine', res.data.mergeLine)
+            // this.rows = res.data.tableData
+            // this.headers = res.data.header
+            // this.pricePos = res.data.pricePos
+            // this.dateMap = res.data.dateMap
+            // this.mergeLine = res.data.mergeLine
           }
         }).finally(() => {
           this.loading = false

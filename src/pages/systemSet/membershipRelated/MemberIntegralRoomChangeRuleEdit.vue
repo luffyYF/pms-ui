@@ -43,7 +43,7 @@
             <el-input-number size="mini" style="width:100%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.integral" ></el-input-number>
         </el-form-item>
 
-        <el-form-item label="活动时间" prop="datepicker" v-if="dataForm.type == 1">
+        <el-form-item label="活动时间" prop="datepicker">
             <el-date-picker style="width:100%;" v-model="dataForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
             </el-date-picker>
         </el-form-item>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+  import Moment from 'moment'
   import {listGrade,addRule,updateRule} from '@/api/systemSet/member/pmsMemberIntegralRoomChangeRule'
   export default {
     data () {
@@ -73,7 +74,8 @@
             enableFlag:"Y",
             type:0,
             integral:0,
-            gradePks:[]
+            gradePks:[],
+            datepicker:[]
         },
         rules: {
           ruleName: [{ required: true, message: '请填写规则名称', trigger: 'blur' }],
@@ -131,13 +133,15 @@
         this.listGrade(row)
         this.listRoomType()
         if (row) {
+            row.datepicker = []
+            row.datepicker[0] = row.beginDate,
+            row.datepicker[1] = row.endDate
             this.title = "修改规则"
+            if(row.type == 0){
+                row.gradePks = []
+            }
             this.dataForm = row
-            this.dataForm.datepicker = [
-                row.beginDate,
-                row.endDate
-            ]
-            console.log(JSON.stringify(row))
+            console.log(JSON.stringify(this.dataForm))
         }else{
           this.title = "添加规则"
           this.dataForm = {
