@@ -6,6 +6,7 @@
           <el-form-item class="form-screh">
             <el-input class="screhhome" v-model="roomNumber" placeholder="搜索房号"></el-input>
             <el-button class="screhbtn" @click="init">搜索</el-button>
+            <!-- <el-button @click="clickRoomManager" >房间管理</el-button> -->
           </el-form-item>
         </el-form>
 
@@ -477,8 +478,10 @@
           <el-button size="mini" type="primary" @click="dialogDisableRoom = false">关闭</el-button>
         </span>
       </el-dialog>
+      <!-- 订单详细弹窗 -->
       <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="closeOrderDialog($event)"/>
-
+      <!-- 房间管理弹窗 -->
+      <RoomManager ref="roomManagerRef"></RoomManager>
     </el-container>
 </template>
 <script>
@@ -486,6 +489,7 @@
   import moment from 'moment'
   import {nightTrialTime} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
+  import RoomManager from '@/pages/atrialCenter/roomPattern/roomManager'
   import {checkInTypeMap, orderStatusMap} from '@/utils/orm'
   import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
   import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
@@ -502,7 +506,11 @@
   import {listType} from '@/api/utils/pmsTypeController'
   import {find} from '@/api/systemSet/pmsSysParamController'
   export default {
-    components: {DialogCheckinVisible,"full-calendar": require("vue-fullcalendar")},
+    components: { 
+      "full-calendar": require("vue-fullcalendar"), 
+      DialogCheckinVisible,
+      RoomManager
+    },
     data() {
       return {
         moment:moment,
@@ -617,8 +625,7 @@
           this.$forceUpdate();
           // localStorage.setItem("roomList",JSON.stringify(this.roomList))
         })
-      }
-      ,
+      },
       calendarRoomForwardStatus(row) {
         this.currentRoom = row
         if(!this.currentDate){
@@ -995,7 +1002,10 @@
             }
           }
         })
-      }
+      },
+      clickRoomManager() {
+        this.$refs.roomManagerRef.showDialog();
+      },
     },
     mounted() {
       this.repairType = []
@@ -1251,7 +1261,8 @@
   width: 100%;
 }
 .screhhome{
-  width: calc(100% - 60px);
+  width: calc(100% - 80px);
+  /* width:122px */
 }
 .screhbtn{
   width: 50px;

@@ -11,8 +11,7 @@
         value-format="yyyy-MM-dd"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :clearable="false"
-        @change="dateChange">
+        :clearable="false">
       </el-date-picker>
       </el-form-item>
       <el-form-item label="收银员">
@@ -27,7 +26,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="班次">
-        <el-select v-model="queryObj.shiftPk" @change="dateChange" placeholder="选择班次">
+        <el-select v-model="queryObj.shiftPk" placeholder="选择班次">
           <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in selectShiftData"
@@ -59,7 +58,7 @@
         <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
 
         <div style="float: left;width: 46%;">
-          <!-- <el-table 
+          <!-- <el-table
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
             :summary-method="getSummaries"
@@ -202,12 +201,11 @@ export default {
   methods: {
     init(){
       let self = this
-      this.getList()
       selectShift().then((data)=>{
         if(data.code == 1){
           self.selectShiftData = data.data
         }
-        this.dateChange();
+        this.getList()
       })
       listCashierOperator().then((data)=>{
         if(data.code == 1){
@@ -216,10 +214,13 @@ export default {
       })
       
     },
-    getList(){
+    getList() {
       let self = this
       self.consumer = []
       self.settlement = []
+      self.queryObj.shift = ''
+      self.queryObj.userName = ''
+      
       self.selectShiftData.forEach((data)=>{
         if(data.value == self.queryObj.shiftPk){
           self.queryObj.shift = data.label
@@ -244,6 +245,42 @@ export default {
           self.settlement =  data.data.settlement
         }
       });
+
+      /**
+       * 设置报表日期显示
+       */
+      let beginTime;
+      let endTime;
+      //循环班次
+      this.selectShiftData.forEach(item=>{
+        if(item.value==this.queryObj.shiftPk) {
+          beginTime = item.beginTime
+          endTime = item.endTime
+        }
+      })
+      if(this.queryObj.shiftPk) {
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5) 
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
+      }else {
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 59:59"
+      }
+      // if(beginTime && endTime){
+      //   //若选择的是跨天，自动更改开始结束日期
+      //   if(beginTime>endTime){
+      //     if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
+      //       this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+      //     }
+      //   }
+      //   this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5) 
+      //   this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
+      // }else if(this.queryObj.begenAndEnd[0] == this.queryObj.begenAndEnd[1]){
+      //   this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
+      //   this.reportEndDate = moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD") + " 00:00"
+      // }else {
+      //   this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
+      //   this.reportEndDate = this.queryObj.begenAndEnd[1] + " 00:00"
+      // }
     },
     getSummaries(param) {
       const { columns, data } = param;
@@ -269,40 +306,6 @@ export default {
         }
       });
       return sums;
-    },
-
-    //改变营业日期时间
-    dateChange() {
-      // console.log(this.queryObj.begenAndEnd)
-      // console.log(this.selectShiftData)
-      // console.log(this.queryObj.shiftPk)
-      let beginTime;
-      let endTime;
-      //循环班次
-      this.selectShiftData.forEach(item=>{
-        if(item.value==this.queryObj.shiftPk) {
-          beginTime = item.beginTime
-          endTime = item.endTime
-        }
-      })
-
-      if(beginTime && endTime){
-        //若选择的是跨天，自动更改开始结束日期
-        if(beginTime>endTime){
-          if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
-            this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
-          }
-        }
-        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5) 
-        this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
-      }else if(this.queryObj.begenAndEnd[0] == this.queryObj.begenAndEnd[1]){
-        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
-        this.reportEndDate = moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD") + " 00:00"
-      }else {
-        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
-        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 00:00"
-      }
-      this.getList()
     },
 
     //导出EXCEL
