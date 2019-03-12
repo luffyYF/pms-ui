@@ -139,7 +139,7 @@ export default {
         shiftPk:'',
         begenAndEnd:[
           moment().format("YYYY-MM-DD"),
-          moment().add(1,"days").format("YYYY-MM-DD")
+          moment().format("YYYY-MM-DD"),
         ],
         // begin:moment().format("YYYY-MM-DD"),
         // end:moment().add(1,"days").format("YYYY-MM-DD")
@@ -215,6 +215,8 @@ export default {
       
     },
     getList() {
+      this.autoChagneReportDate();
+
       let self = this
       self.consumer = []
       self.settlement = []
@@ -245,10 +247,11 @@ export default {
           self.settlement =  data.data.settlement
         }
       });
-
-      /**
-       * 设置报表日期显示
-       */
+    },
+    /**
+     * 设置报表日期显示
+     */
+    autoChagneReportDate() {
       let beginTime;
       let endTime;
       //循环班次
@@ -258,6 +261,16 @@ export default {
           endTime = item.endTime
         }
       })
+      if(beginTime && endTime){
+        if(beginTime>endTime){
+          if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
+            this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+            this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+            console.log(111)
+          }
+        }
+      }
+
       if(this.queryObj.shiftPk) {
         this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5) 
         this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
@@ -265,23 +278,9 @@ export default {
         this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
         this.reportEndDate = this.queryObj.begenAndEnd[1] + " 23:59"
       }
-      // if(beginTime && endTime){
-      //   //若选择的是跨天，自动更改开始结束日期
-      //   if(beginTime>endTime){
-      //     if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
-      //       this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
-      //     }
-      //   }
-      //   this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5) 
-      //   this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
-      // }else if(this.queryObj.begenAndEnd[0] == this.queryObj.begenAndEnd[1]){
-      //   this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
-      //   this.reportEndDate = moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD") + " 00:00"
-      // }else {
-      //   this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
-      //   this.reportEndDate = this.queryObj.begenAndEnd[1] + " 00:00"
-      // }
+
     },
+
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
