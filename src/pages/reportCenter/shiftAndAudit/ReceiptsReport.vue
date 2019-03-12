@@ -263,7 +263,7 @@ export default {
         this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
       }else {
         this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 00:00"
-        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 59:59"
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 23:59"
       }
       // if(beginTime && endTime){
       //   //若选择的是跨天，自动更改开始结束日期
