@@ -187,10 +187,7 @@
         this.$refs.MemberIntegralRoomChangeRuleEditRef.showDialog()
       },
       editClick(row){
-          // if(row.effectiveWeek){
-          //     row.week = row.effectiveWeek.split(",")
-          // }
-          var temoObj = JSON.parse(JSON.stringify(row))
+        var temoObj = JSON.parse(JSON.stringify(row))
         this.$refs.MemberIntegralRoomChangeRuleEditRef.showDialog(temoObj)
       },
       deleteClick (id) {

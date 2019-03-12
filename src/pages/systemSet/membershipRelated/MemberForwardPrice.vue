@@ -88,20 +88,31 @@
         queryPower:this.hasPerm('pms:memForwardPrice:list'),
         singleSettingPower:this.hasPerm('pms:memForwardPrice:singleSet'),
         pickerOptions1: {
-          disabledDate(time) {
-            return (time.getTime() < Date.now() && Moment(time).format("YYYY-MM-DD") != Moment().format("YYYY-MM-DD"));
+          disabledDate:this.disabledDate,
+          onPick(obj){
+              sessionStorage.setItem("forwardPriceSettingMinDate",Moment(obj.minDate).format("YYYY-MM-DD"));
           }
         },
+        maxDate:null,
+        minDate:null,
       }
     },
     mounted () {
     //   this.findOaCompany()
     },
     methods: {
-        init(){
-            this.listSearch()
-            this.listGrade()
-        },
+      disabledDate(time){
+        var forwardPriceSettingMinDate = sessionStorage.getItem("forwardPriceSettingMinDate")
+        if(forwardPriceSettingMinDate){
+          //小于今天或者大于结束日期+30天
+          return time.getTime() < Date.now() - 8.64e7 || time.getTime() > (new Date(forwardPriceSettingMinDate).getTime()+2592000000);
+        }
+        return time.getTime() < Date.now() - 8.64e7;
+      },
+      init(){
+          this.listSearch()
+          this.listGrade()
+      },
       listSearch () {
         if(!this.queryPower){
           this.$message({ type: 'warning', message: "权限不足" })
