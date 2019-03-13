@@ -14,3 +14,11 @@ export const listRoom = params => {
 export const updateStatusBatch = params => {
     return request.post('/back/roomManager/updateStatusBatch', params);
 }
+//批量置停用、维修
+export const disableAndRepairBatch = params => {
+    return request.post('/back/roomManager/disableAndRepairBatch', params);
+}
+//批量解除停用、维修
+export const delDisableAndRepairBatch = params => {
+    return request.post('/back/roomManager/delDisableAndRepairBatch', params);
+}
