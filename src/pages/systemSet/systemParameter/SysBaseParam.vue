@@ -24,16 +24,16 @@
                     <span style="color:red">（注：夜审过后不可恢复）</span>
                   </el-form-item>
                   <el-form-item label="开启NoShow：">
-                  <el-switch
-                    style="display: block"
-                    v-model="form.noShowFlag"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    active-text="是"
-                    inactive-text="否"
-                    active-value="Y"
-                    inactive-value="N">
-                  </el-switch>
+                    <el-switch
+                      v-model="form.noShowFlag"
+                      active-color="#13ce66"
+                      inactive-color="#ff4949"
+                      active-text="是"
+                      inactive-text="否"
+                      active-value="Y"
+                      inactive-value="N">
+                    </el-switch>
+                    <span style="color:red">（注：开启NoShow后对应的房间远期房态会被解除）</span>
                   </el-form-item>
                 </div>
               </el-col>
