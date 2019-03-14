@@ -81,7 +81,10 @@
                 <el-button type="primary" v-if="hasPerm('pms:coupon:update') && (scope.row.useAmount == 0 || scope.row.useAmount == null)" @click="editClick(scope.row)" 
                         size="mini">编辑
                 </el-button>
-
+                <el-button type="primary" v-if="hasPerm('pms:coupon:detail') && scope.row.useAmount > 0" @click="editClick(scope.row)" 
+                        size="mini">
+                        查看
+                </el-button>
                 <el-button type="primary" v-if="hasPerm('pms:coupon:editEnableFlag') && scope.row.enableFlag == 'N'" @click="editEnableFlagClick(scope.row.couponPk,'Y')" 
                         size="mini">启用
                 </el-button>

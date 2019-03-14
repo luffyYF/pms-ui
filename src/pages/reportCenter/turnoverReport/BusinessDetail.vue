@@ -86,6 +86,7 @@
         <el-table-column prop="consumptionAmount" align="center" label="消费"></el-table-column>
         <el-table-column prop="settlementAmount" align="center"  label="结算"></el-table-column>
         <el-table-column prop="businessDate" align="center" width="130" label="营业日期"></el-table-column>
+        <el-table-column prop="checkInType" align="center" width="100" label="入住类型"></el-table-column>
         <el-table-column prop="channelTypeName" align="center" label="渠道"></el-table-column>
         <el-table-column prop="payment" align="center" label="支付方式">
           <template slot-scope="scope">{{paymentMap[scope.row.payment]}}</template>

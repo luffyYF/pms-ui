@@ -80,7 +80,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-      <el-button type="primary" size="mini" :loading="loading" @click="saveData">保存</el-button>
+      <el-button type="primary" v-if="isDetail" size="mini" :loading="loading" @click="saveData">保存</el-button>
     </span>
   </el-dialog>
 </template>
@@ -138,7 +138,8 @@
             {label:"普通",value:"0"},
             {label:"钟点房",value:"1"},
             {label:"接待房",value:"4"},
-        ]
+        ],
+        isDetail:false
       }
     },
     methods: {
@@ -160,11 +161,13 @@
                 row.datepicker[0] = row.beginDate,
                 row.datepicker[1] = row.endDate
             }            
-            this.title = "修改规则"
+            this.title = row.useAmount > 0?"规则详情":"修改规则"
+            this.isDetail = row.useAmount > 0?false:true
             this.dataForm = row
             console.log(JSON.stringify(this.dataForm))
         }else{
             this.title = "添加规则"
+            this.isDetail = true
             this.dataForm = {
                 enableFlag:"Y",
                 type:0,
