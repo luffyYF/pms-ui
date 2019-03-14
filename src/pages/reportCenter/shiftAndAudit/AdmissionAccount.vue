@@ -1,3 +1,4 @@
+// 收银入账明细报表
 <template>
   <div class="container">
     <p style="margin-top:0; margin-bottom:5px;">项目：</p>
@@ -6,21 +7,16 @@
       <el-checkbox class="checkboxgrou" size="mini" v-for="item in itemList" :label="item.projectPk" :key="item.projectPk">{{item.projectName}}</el-checkbox>
     </el-checkbox-group>
     <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
-      <el-form-item label="开始营业日：">
+      <el-form-item label="营业日期">
         <el-date-picker
-          v-model="queryObj.begin"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="结束营业日：">
-        <el-date-picker
-          v-model="queryObj.end"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择日期">
-        </el-date-picker>
+        v-model="queryObj.begenAndEnd"
+        type="daterange"
+        range-separator="至"
+        value-format="yyyy-MM-dd"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :clearable="false">
+      </el-date-picker>
       </el-form-item>
       <el-form-item label="收银员">
         <el-select v-model="queryObj.userPk" placeholder="选择收银员">
@@ -36,10 +32,13 @@
         <el-select v-model="queryObj.shiftPk" placeholder="选择班次">
           <el-option label="全部" value=""></el-option>
           <el-option
-      v-for="item in selectShiftData"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"></el-option>
+            v-for="item in selectShiftData"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">({{ item.beginTime.substring(0,5) }}-{{item.endTime.substring(0,5)}})</span>
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -52,13 +51,10 @@
       </el-form-item>
     </el-form>
 
-    <div>
-      <span style="color:red">注：营业日期查询包含结束日期</span>
-    </div>
     <div class="table-container" id="print-admissionaccount">
       <h3>{{activeCompany.companyName}}</h3>
       <h4>收银入账明细报表</h4>
-      <p>营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span></p>
+      <p>营业日期从：{{reportBeginDate}}&nbsp;&nbsp;到&nbsp;&nbsp;{{reportEndDate}}&nbsp;&nbsp;&nbsp;&nbsp;收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span></p>
       <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
       <el-table
         :header-cell-style="tableStyleObj"
@@ -104,7 +100,16 @@ export default {
       admissionBank:[],
       sDate: moment().format("YYYY-MM-DD"),
       sTime: moment().format("HH:mm:ss"),
-      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD"),projectPks:null},
+      queryObj:{ 
+        userName:"",
+        shift:"",
+        userPk:'',
+        shiftPk:'',
+        begenAndEnd:[
+          moment().format("YYYY-MM-DD"),
+          moment().add(1,'days').format("YYYY-MM-DD"),
+        ],
+      },
       selectShiftData:[],
       listCashierOperatorData:[],
       tableStyleObj:{
@@ -149,7 +154,11 @@ export default {
       this.handleCheckAllChange();
     },
     getList(){
+      this.autoChagneReportDate();
+
       let self = this
+      self.queryObj.shift = ''
+      self.queryObj.userName = ''
       self.selectShiftData.forEach((data)=>{
         if(data.value == self.queryObj.shiftPk){
           self.queryObj.shift = data.label
@@ -160,14 +169,54 @@ export default {
           self.queryObj.userName = data.userName
         }
       });
-      this.queryObj.projectPks = this.checkedItem.join(',');
-      // console.log(this.checkedItem.length);
-      reportShouYinYuanRuZhangMingXi(this.queryObj).then((data)=>{
+       let params = {
+        userName: this.queryObj.userName,
+        shift: this.queryObj.shift,
+        userPk: this.queryObj.userPk,
+        shiftPk: this.queryObj.shiftPk,
+        begin: this.queryObj.begenAndEnd[0],
+        end: this.queryObj.begenAndEnd[1],
+        projectPks: this.checkedItem.join(',')
+      }
+      reportShouYinYuanRuZhangMingXi(params).then((data)=>{
         if(data.code == 1){
           self.admissionBank =  data.data
         }
       });
     },
+    /**
+     * 设置报表日期显示
+     */
+    autoChagneReportDate() {
+      let beginTime;
+      let endTime;
+      //循环班次
+      this.selectShiftData.forEach(item=>{
+        if(item.value==this.queryObj.shiftPk) {
+          beginTime = item.beginTime
+          endTime = item.endTime
+        }
+      })
+      if(this.queryObj.shiftPk) {
+        if(beginTime && endTime && beginTime>endTime){
+          if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
+            this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+            this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+          }
+        }
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5)
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
+      }else {
+        //班次选择全部
+        if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]) {
+          this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+          this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+        }
+        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 06:00"
+        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 05:59"
+      }
+    },
+
     handleCheckAllChange(val) {
       this.checkedItem = val ? this.allItemList : [];
       this.isIndeterminate = false;
@@ -180,7 +229,7 @@ export default {
     },
     //导出EXCEL
     downloadExcel(){
-      let url = '/pms/report/shouYinYuanRuZhangMingXiExcel?begin='+this.queryObj.begin+'&end='+this.queryObj.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk+'&projectPks='+this.checkedItem.join(",")
+      let url = '/pms/report/shouYinYuanRuZhangMingXiExcel?begin='+this.queryObj.begenAndEnd[0]+'&end='+this.queryObj.begenAndEnd[1]+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk+'&projectPks='+this.checkedItem.join(",")
       downloadExcel(url, '收银入账明细报表');
     },
     //打印预览
