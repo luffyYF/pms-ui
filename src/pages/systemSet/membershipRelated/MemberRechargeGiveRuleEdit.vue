@@ -1,6 +1,7 @@
 // 会员规则编辑
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
+<div>
   <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="650px"
              :close-on-click-modal="false" :before-close="handleClose">
     <el-form ref="dataForm" size="mini" :rules="rules" :model="dataForm" label-width="110px">
@@ -33,7 +34,7 @@
                 <span v-if="obj.type == 1">赠送金额<el-input-number size="mini" style="width:80px;" :precision="2" :step="1" :min="0" :controls="false" v-model="obj.giveCount" ></el-input-number>元</span>
                 <br>
                 <div style="margin-top:5px;padding-left:56px;margin-bottom:5px;">送积分<el-input-number size="mini" style="width:80px;" :precision="2" :step="1" :min="0" :controls="false" v-model="obj.giveIntegral" ></el-input-number>分&nbsp;&nbsp;&nbsp;&nbsp;
-                <el-button type="info" size="mini" plain>
+                <el-button @click="couponChangeClick(index)" type="info" size="mini" plain>
                     优惠卷
                 </el-button>
                 <el-button type="info" size="mini" plain>
@@ -44,21 +45,22 @@
                 </el-button>
                 </div>
             </div>
-
         </div>
     </el-form>
-
-
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
       <el-button type="primary" size="mini" :loading="loading" @click="saveData">保存</el-button>
     </span>
   </el-dialog>
+  <couponChange ref="couponChangeRef" @callback="couponChangeCallback"/>
+  </div>
 </template>
 
 <script>
   import {listGrade,addRule,updateRule,detailList} from '@/api/systemSet/member/pmsMemberRechargeGiveRule'
+    import couponChange from './couponChange'
   export default {
+   components: { couponChange },
     data () {
       return {
         dialogVisible: false,
@@ -84,6 +86,7 @@
         },
         title:"添加规则",
         gradeList:[],
+        currentDtoIndex:null
       }
     },
     methods: {
@@ -156,6 +159,16 @@
       handleClose () {
         this.dialogVisible = false
       },
+      couponChangeClick(index){
+          this.currentDtoIndex = index
+          this.$refs.couponChangeRef.showDialog()
+      }
+      ,
+      couponChangeCallback(couponPks){
+          this.detailDtos[this.currentDtoIndex].couponPk = couponPks
+          console.log(JSON.stringify(this.detailDtos[this.currentDtoIndex]))
+      }
+      ,
       // 保存数据
       saveData () {
         let refs = this.$refs
