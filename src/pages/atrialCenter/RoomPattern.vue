@@ -6,7 +6,7 @@
           <el-form-item class="form-screh">
             <el-input class="screhhome" v-model="roomNumber" placeholder="搜索房号"></el-input>
             <el-button class="screhbtn" @click="init">搜索</el-button>
-            <!-- <el-button @click="clickRoomManager" >房间管理</el-button> -->
+            <el-button @click="clickRoomManager">房间管理</el-button>
           </el-form-item>
         </el-form>
 
@@ -414,6 +414,7 @@
           <el-button size="mini" type="primary" @click="dialogRepairRoom = false">关闭</el-button>
         </span>
       </el-dialog>
+
       <el-dialog class="pattern-dialog2" title="转停用房" :visible.sync="dialogDisableRoom" width="500px" :before-close="handleClose">
         <div class="pattern-dialog-container" style="padding: 25px 4px;">
           <el-form ref="disableForm" :model="disableForm" label-width="80px" size="mini">
@@ -481,7 +482,7 @@
       <!-- 订单详细弹窗 -->
       <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="closeOrderDialog($event)"/>
       <!-- 房间管理弹窗 -->
-      <RoomManager ref="roomManagerRef"></RoomManager>
+      <RoomManager ref="roomManagerRef" @callback="init"></RoomManager>
     </el-container>
 </template>
 <script>
@@ -1264,8 +1265,8 @@
   width: 100%;
 }
 .screhhome{
-  width: calc(100% - 80px);
-  /* width:122px */
+  /* width: calc(100% - 80px); */
+  width:122px
 }
 .screhbtn{
   width: 50px;
