@@ -166,3 +166,11 @@ export const listEmptyRoom = params => {
     return request.get('/back/order/listEmptyRoom', {params: params})
 }
 
+//批量更改预订单抵店离店日期
+export const updateReserveDateBatch = params => {
+    return request.post('/back/order/updateReserveDateBatch', params)
+}
+//批量更改预订单的房型
+export const updateReserveRoomTypeBatch = params => {
+    return request.post('/back/order/updateReserveRoomTypeBatch', params)
+}
