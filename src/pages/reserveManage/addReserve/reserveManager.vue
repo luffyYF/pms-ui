@@ -29,6 +29,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           value-format="yyyy-MM-dd HH:mm:ss"
+          :picker-options="pickerOptions0"
           size="mini">
         </el-date-picker>
         <el-button size="mini" type="primary" @click="editDate" :loading="loading1" :disabled="loading">更改抵离日期</el-button>
@@ -52,7 +53,7 @@
 </template>
 
 <script>
-
+import moment from 'moment'
 import bus from "@/utils/bus";
 import { orderStatusMap,roomStatusMap } from "@/utils/orm";
 import {
@@ -79,6 +80,12 @@ export default {
       selectionRows: [], //已勾选的数据
       roomTypeArray:[],
       datePicker:[],
+      pickerOptions0: {
+        //限制今天以前的日期不可选择
+        disabledDate(time) {
+          return time.getTime() < moment().subtract(1, 'days') - 8.64e7;
+        },
+      },
       roomTypePk:'',
     };
   },
