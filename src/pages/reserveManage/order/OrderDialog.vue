@@ -91,7 +91,7 @@
                 <visitor-tag ref="visitorForm" @changeCurrGuest="changeCurrGuest" @callback="loadOrderInfo" @unlock="loading=false"/>
                 <div class="cardtabs-visitor-button">
                   <!-- ========底部按钮操作======== -->
-                  <el-button size="mini" v-if="hasPerm('pms:orderAss:bulkCheckIn')" @click="batchCheckin">批量入住</el-button>
+                  <el-button size="mini" v-if="hasPerm('pms:orderAss:bulkCheckIn') && currConfirmType=='add-checkin'" @click="batchCheckin">批量入住</el-button>
                   <template v-if="currConfirmType=='leave-info'">
                   
                   </template>
