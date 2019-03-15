@@ -407,6 +407,10 @@
               this.$message.warning('请选择未结账的账单')
               return;
             }
+            if(tickOptionsList[0].billClassify!="NORMAL") {
+              this.$message.warning('请选择普通账单')
+              return;
+            }
 
             this.dialogOffset = true;
             for (let index = 0; index < tickOptionsList.length; index++) {
