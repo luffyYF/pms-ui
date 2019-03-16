@@ -19,8 +19,8 @@
         
       <div style="width: 900px;margin: 0 auto;text-align:center;overflow:hidden;border-top:2px solid black; ">
           <div style="float: left;width: 46%;">
-              <div style="text-align:center;float:left;width:40%;font-size:20px;margin:0;">==========今 </div>
-              <div style="text-align:center;float:right;width:40%;font-size:20px;margin:0;">日==========</div>
+              <div style="text-align:center;float:left;width:45%;font-size:20px;margin:0;">=========今 </div>
+              <div style="text-align:center;float:right;width:45%;font-size:20px;margin:0;">日=========</div>
               
               <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
                 <tr>
@@ -38,7 +38,7 @@
             </table>
           </div>
           <div style="float: right;width: 50%;">
-            <p style="text-align:center;font-size:20px;margin:0;">===========<span style="display: inline-block;width: 100px;">本月至今日</span>===========</p>
+            <p style="text-align:center;font-size:20px;margin:0;">==========<span style="display: inline-block;width: 100px;">本月至今日</span>==========</p>
             <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
                 <tr>
                     <th>开房数</th>
