@@ -174,3 +174,7 @@ export const updateReserveDateBatch = params => {
 export const updateReserveRoomTypeBatch = params => {
     return request.post('/back/order/updateReserveRoomTypeBatch', params)
 }
+//查询近三天内的在住或离店客人
+export const guestListApi = params => {
+    return request.get('/back/order/findThreeDaysGuest', {params: params})
+}

@@ -25,10 +25,16 @@
       <el-tab-pane label="库存" name="seven">
         <stock-list ref="stockListRef"/>
       </el-tab-pane>
-      <el-tab-pane label="库存盘点" name="eight" >
+      <el-tab-pane label="消耗" name="eight" v-if="hasPerm('pms:consumeManage:add')">
+        <inventory-consume ref="inventoryConsumeRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="消耗记录" name="night" v-if="hasPerm('pms:consumeManage:list')">
+        <inventory-consume-list ref="inventoryConsumeListRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="库存盘点" name="ten" >
         <take-stock ref="takeStokeRef"/>
       </el-tab-pane>
-      <el-tab-pane label="盘点记录" name="night" >
+      <el-tab-pane label="盘点记录" name="eleven" >
         <take-stock-list ref="takeStokeListRef"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="部门库存盘点" name="nine" v-if="powerJudge('210109')">
@@ -51,6 +57,8 @@
   import ApplicationList from './ApplicationList'
   import TakeStock from './TakeStock'
   import TakeStockList from './TakeStockList'
+  import InventoryConsumeList from './InventoryConsumeList.vue'
+  import InventoryConsume from './InventoryConsume.vue'
   
   export default {
     components: {
@@ -65,7 +73,9 @@
       DepartmentInventoryInventory,
       ApplicationList,
       TakeStock,
-      TakeStockList
+      TakeStockList,
+      InventoryConsumeList,
+      InventoryConsume
     },
     data () {
       return {
@@ -73,9 +83,14 @@
       }
     },
     mounted(){
+      console.log(this.$route.params)
       //设置第一个不被隐藏的el-tab-pane为激活状态
       this.activeName = this.$refs.checkTabs.panes[0].name
       this.$refs.applicationRef.init();
+      if (this.$route.params.activeName == 'night') {
+          this.activeName = 'night'
+          this.$refs.inventoryConsumeListRef.init();
+      }
     },
     methods: {
       handleClick (tab, event) {
@@ -87,9 +102,13 @@
           this.$refs.inventoryInRef.init();
         }else if(tab.name=='seven'){
           this.$refs.stockListRef.init();
-        }else if(tab.name=='eight'){
+        }else if(tab.name=='eight') {
+          this.$refs.inventoryConsumeRef.init();
+        }else if(tab.name=='night') {
+          this.$refs.inventoryConsumeListRef.init();
+        }else if(tab.name=='ten'){
           this.$refs.takeStokeRef.init();
-        }else if(tab.name=='night'){
+        }else if(tab.name=='eleven'){
           this.$refs.takeStokeListRef.init();
         }
       },

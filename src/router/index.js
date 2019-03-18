@@ -125,6 +125,7 @@ import BusinessDetail from '@/pages/reportCenter/turnoverReport/BusinessDetail.v
 import StockTab from '@/pages/stock/tab';
 import StockFunction from "@/pages/stock/stockFunction/tab";
 import StockSetUp from "@/pages/stock/stockSetUp/tab";
+import InventoryConsumeDetail from "@/pages/stock/stockFunction/InventoryConsumeDetail.vue"
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
@@ -158,6 +159,10 @@ import BillChecking from '@/pages/financialAudit/BillChecking'
 import BillCheckingLog from '@/pages/financialAudit/billCheckingLog/BillCheckingLog'
 import BillPostilLog from '@/pages/financialAudit/billPostilLog'
 import InvoiceList from '@/pages/financialAudit/invoiceManage/invoiceList.vue'
+
+// 房务管理
+import roomServiceTab from '@/pages/roomService/tab.vue'
+import LostArticlesList from '@/pages/roomService/lostArticles/LostArticlesList.vue'
 
 Vue.use(Router)
 /**
@@ -286,8 +291,9 @@ export const constantRouterMap = [
         name: '库存',
         hidden: false,
         children: [
-          {path: '/stock/stockopr', component: StockFunction, label: '库存功能'},
+          {path: '/stock/stockopr', name: 'stockopr', component: StockFunction, label: '库存功能'},
           {path: '/stock/setting',  component: StockSetUp, label: '库存相关设置'},
+          {path: '/stock/InventoryConsumeRecord/O:outId',  component: InventoryConsumeDetail, label: '消耗详细'},
         ]
       },
 
@@ -361,6 +367,15 @@ export const constantRouterMap = [
           {path: '/zl/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           {path: '/zl/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
           {path: '/zl/housePriceCode', component: housePriceCode, label: '房价代码设置'},
+        ]
+      },
+      {
+        path: '/roomService',
+        component: roomServiceTab, 
+        name: '房务管理', 
+        hidden: false,
+        children: [
+          {path: '/roomService/LostArticlesList', component:LostArticlesList , label: '客人物品管理'},
         ]
       },
       {path: '/linen', component: LinenTag, name: '布草', hidden: false}
