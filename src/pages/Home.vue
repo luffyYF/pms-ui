@@ -48,16 +48,16 @@
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <router-link to="/zl" >
-          <div class="nav-li">
-            <div class="nav-icon reserve-manage-icon"></div>
-            <div class="nav-txt">直连</div>
-          </div>
-        </router-link>
         <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
             <div class="nav-txt">客户关系</div>
+          </div>
+        </router-link>
+        <router-link to="/zl" v-if="hasPerm('pms:zl:zlManage')">
+          <div class="nav-li">
+            <div class="nav-icon customer-relation-icon"></div>
+            <div class="nav-txt">直连</div>
           </div>
         </router-link>
         <!-- <router-link to="/smsMarketing" v-power:id="'16'">
@@ -100,6 +100,12 @@
           <div class="nav-li">
             <div class="nav-icon conference-room-icon"></div>
             <div class="nav-txt">会议室</div>
+          </div>
+        </router-link>
+        <router-link to="/roomService" v-if="screenWidth > 1390 && hasPerm('pms:dir:roomService')">
+          <div class="nav-li">
+            <div class="nav-icon linen-icon"></div>
+            <div class="nav-txt">房务管理</div>
           </div>
         </router-link>
         <!-- <router-link to="/operators" v-if="screenWidth > 1390" v-power:id="'23'"> -->
@@ -218,6 +224,16 @@
       </el-dialog>
     </div> 
     <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="getCurrentRoomList()" />
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      :close-on-press-escape="false"
+      width="400px"
+      :show-close="false"
+      :close-on-click-modal="false"
+      center>
+      <span>系统正在夜审...</span>
+    </el-dialog>
   </div>
 
   
@@ -246,6 +262,7 @@ import {find} from '@/api/systemSet/pmsSysParamController'
 import {getNewGuestOrder} from '@/api/order/pmsOrderController'
 
 import { allTypeList } from '@/api/utils/pmsTypeController'
+import { Message } from 'element-ui';
 
 export default {
   components:{DialogCheckinVisible},
@@ -273,6 +290,7 @@ export default {
       this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     }, 30*60*1000)
     this.validateToken();
+    this.nightTrialTask()
   },
   data() {
     return {
@@ -297,9 +315,61 @@ export default {
       ydList:[],
       dialogVisible:false,
       ydDialogVisible:false,
+      nightTrialTimer:null,
+      nightTrialTimer2:null,
+      nightTrialFlag:false,
+      centerDialogVisible:false,
+      msg:null
     };
   },
   methods: {
+    nightTrialTask(){
+      this.nightTrialTimer2 = setInterval(() => {
+        var date2 = new Date()
+        if(date2.getHours() == 5 || date2.getHours() == 6){
+          this.nightTrialTimer = setInterval(() => {
+            var date = new Date()
+            console.log(date.getHours()+"  "+date.getMinutes()+"  "+date.getSeconds())
+            if(date.getHours() == 6 && date.getMinutes() <= 0 && date.getSeconds() <20){
+              if(!this.nightTrialFlag){
+                this.centerDialogVisible = true
+                this.nightTrialFlag = true
+              }
+            }else{
+              if(date.getHours() >= 6 && date.getMinutes() >= 0 && date.getSeconds() >20){
+                clearInterval(this.nightTrialTimer)
+              }
+              this.centerDialogVisible = false
+              this.nightTrialFlag = false
+            }
+          },1000)
+        }
+        
+      },1000 * 60 * 30)
+
+      var date2 = new Date()
+      if(date2.getHours() == 5 || date2.getHours() == 6){
+        this.nightTrialTimer = setInterval(() => {
+          var date = new Date()
+          // console.log(date.getHours()+"  "+date.getMinutes()+"  "+date.getSeconds())
+          if(date.getHours() == 6 && date.getMinutes() <= 0 && date.getSeconds() <20){
+            if(!this.nightTrialFlag){
+              this.centerDialogVisible = true
+              this.nightTrialFlag = true
+            }
+          }else{
+            if(date.getHours() >= 6 && date.getMinutes() >= 0 && date.getSeconds() >20){
+              clearInterval(this.nightTrialTimer)
+            }
+            console.log(false)
+            this.centerDialogVisible = false
+            this.nightTrialFlag = false
+          }
+        },1000)
+      }
+      
+    },
+
     click(id){alert(id)},
     handleOpen(key, keyPath) {},
     handleClose(key, keyPath) {},

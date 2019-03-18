@@ -165,3 +165,35 @@ export const getTakeStockList = params => {
 export const getTakeStockDetail = params => {
   return requestUpms.get('/backend/ckTakeStock/getTakeStockDetail', { params: params })
 }
+
+/**
+ * 消耗api
+ */
+// 查找消耗数据
+export const consumeListApi = params => {
+  return requestUpms.get('/backend/ckInventoryOut/list', { params: params })
+}
+// 查询消耗详细
+export const findConsumeAndDetailApi = params => {
+  return requestUpms.get('/backend/ckOutDetail/findOutAndDetail', { params: params })
+}
+// 查询所有的仓库
+export const getAllStorageApi = params => {
+  return requestUpms.get('/backend/storage/getAllStorage', { params: params })
+}
+// 获取消耗序列
+export const xhSequenceApi = params => {
+  return requestUpms.get('/seq/xhSequence', { params: params })
+}
+// 查询仓库和库存
+export const getAllAndStockApi = params => {
+  return requestUpms.get('/backend/storage/getAllAndStock', { params: params })
+}
+// 消耗
+export const consumeApi = params => {
+  return requestUpms.post('/backend/ckInventoryOut/consume', params)
+}
+// 根据仓库id查询列表
+export const findStockByStorageIdApi = params => {
+  return requestUpms.get('/backend/ckStock/findStockByStorageId', { params: params })
+}

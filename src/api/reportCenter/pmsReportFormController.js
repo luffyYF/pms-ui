@@ -310,4 +310,11 @@ export const saleAgreementConsumptionDetails = params =>{
     return request.get('/pms/report/getSaleAgreementConsumptionDetails',{params:params})
 }
 
+/**
+ * 当天客房营业统计
+ */
+export const toDayHouseDoBusinessStatistics = params =>{
+    return request.get('/pms/report/toDayHouseDoBusinessStatistics',{params:params})
+}
+
 

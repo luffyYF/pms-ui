@@ -12,6 +12,11 @@ export const commonReport = [{
       label: '经理日报',
       path: '/reportCenter/roomDailyReport',
       pointer: 'pms:reportCenter:dailyManage'
+    },
+    {
+      label: '客房营业统计',
+      path: '/reportCenter/houseDoBusinessStatistics',
+      pointer: 'pms:reportCenter:KFYYStatistics'
     }
   ]
 }, {
