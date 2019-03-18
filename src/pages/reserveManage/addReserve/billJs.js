@@ -407,6 +407,10 @@
               this.$message.warning('请选择未结账的账单')
               return;
             }
+            if(tickOptionsList[0].billClassify!="NORMAL") {
+              this.$message.warning('请选择普通账单')
+              return;
+            }
 
             this.dialogOffset = true;
             for (let index = 0; index < tickOptionsList.length; index++) {
@@ -443,9 +447,16 @@
             this.$message({type:'warning',message:'至少选择一条账单'})
             return;
           }
-          let beginDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].beginDate:new Date()
-          let endDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].endDate:new Date()
+          let beginDate = new Date()
+          let endDate = new Date()
+          console.log(JSON.stringify(this.currOrderInfo.guestList[0]))
+          console.log(this.currOrderInfo.guestList[0].checkoutDate == null)
+          if(this.currOrderInfo.guestList.length>0){
+            beginDate = this.currOrderInfo.guestList[0].checkinDate == null?this.currOrderInfo.guestList[0].beginDate:this.currOrderInfo.guestList[0].checkinDate
+            endDate = this.currOrderInfo.guestList[0].checkoutDate == null?this.currOrderInfo.guestList[0].endDate:this.currOrderInfo.guestList[0].checkoutDate
+          }
           let billPks = ""
+          console.log(endDate)
           this.multipleSelection.forEach(item => {
             billPks += item.billPk + ","
           })

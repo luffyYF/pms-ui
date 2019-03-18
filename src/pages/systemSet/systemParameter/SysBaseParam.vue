@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="24">
             <el-row>
-              <el-col :span="8">
+              <el-col :span="10">
                 <div class="bg-reserve">
                   <h5 class="info-title">房间设置</h5>
                   <el-form-item label="退房结束时间：">
@@ -22,6 +22,42 @@
                     </el-input>
                     分钟内可恢复
                     <span style="color:red">（注：夜审过后不可恢复）</span>
+                  </el-form-item>
+                  <el-form-item label="开启NoShow：">
+                    <el-switch
+                      v-model="form.noShowFlag"
+                      active-color="#13ce66"
+                      inactive-color="#ff4949"
+                      active-text="是"
+                      inactive-text="否"
+                      active-value="Y"
+                      inactive-value="N">
+                    </el-switch>
+                    <span style="color:red">（注：开启NoShow后对应的房间远期房态会被解除）</span>
+                  </el-form-item>
+                  <el-form-item label="自动续房:">
+                    <el-switch
+                      v-model="form.extendRoomFlag"
+                      active-color="#13ce66"
+                      inactive-color="#ff4949"
+                      active-text="是"
+                      inactive-text="否"
+                      active-value="Y"
+                      inactive-value="N">
+                    </el-switch>
+                    <span style="color:red">（注：开启自动续房后夜审是会将预离订单自动续房）</span>
+                  </el-form-item>
+                  <el-form-item label="预离转脏房：">
+                    <el-switch
+                      v-model="form.dirtyRoomFlag"
+                      active-color="#13ce66"
+                      inactive-color="#ff4949"
+                      active-text="是"
+                      inactive-text="否"
+                      active-value="Y"
+                      inactive-value="N">
+                    </el-switch>
+                    <span style="color:red">（注：开启预离转脏房后夜审是会将预离房自动转脏房）</span>
                   </el-form-item>
                 </div>
               </el-col>

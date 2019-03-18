@@ -48,12 +48,6 @@
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <router-link to="/zl" >
-          <div class="nav-li">
-            <div class="nav-icon reserve-manage-icon"></div>
-            <div class="nav-txt">直连</div>
-          </div>
-        </router-link>
         <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
@@ -279,6 +273,7 @@ export default {
       this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     }, 30*60*1000)
     this.validateToken();
+    this.nightTrialTask()
   },
   data() {
     return {
@@ -303,9 +298,36 @@ export default {
       ydList:[],
       dialogVisible:false,
       ydDialogVisible:false,
+      nightTrialTimer:null,
+      nightTrialFlag:false
     };
   },
   methods: {
+    nightTrialTask(){
+
+      // this.nightTrialTimer = setInterval(() => {
+      //   var date = new Date()
+      //   // && date.getMinutes() == 0 
+      //     if(date.getHours() == 16 && date.getSeconds() <50){
+      //       if(!this.nightTrialFlag){
+      //         this.$alert('系统正在夜审...', '警告', {
+      //           confirmButtonText: '确定',
+      //           showClose: false,
+      //           showConfirmButton: false,
+      //           type:'warning',
+      //         });
+      //         this.nightTrialFlag = true
+      //       }
+            
+      //     }else{
+      //       this.$message.close()
+      //       // this.$alert().close()
+      //       this.nightTrialFlag = false
+      //     }
+      // },1000)
+
+    },
+
     click(id){alert(id)},
     handleOpen(key, keyPath) {},
     handleClose(key, keyPath) {},

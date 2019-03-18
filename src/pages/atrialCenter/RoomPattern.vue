@@ -1,6 +1,6 @@
 // 房态图
 <template>
-    <el-container class="tabs-hieght">
+    <el-container class="room-pattern-class">
       <el-aside width="280px">
         <el-form :inline="true" size="mini" class="demo-form-inline">
           <el-form-item class="form-screh">
@@ -1242,13 +1242,16 @@
   color:#f60 !important;
   /* margin-top:4px !important; */
 }
+.room-pattern-class .el-button+.el-button {
+  margin-left: 0px;
+}
 </style>
 <style scoped>
 .button-status-icon{
   bottom: 3px;
   position: absolute;
 }
-.tabs-hieght{
+.room-pattern-class{
   height: 100%;
 }
 .no-bottom{

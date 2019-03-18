@@ -6,14 +6,14 @@
         <el-form ref="pageObj" size="mini" :model="pageObj" label-width="110px">
           <el-row class="info-li">
             <el-col :span="6">
-              <el-form-item label="规则名称" prop="ruleName">
+              <el-form-item label="状态" prop="ruleName">
                   <el-select size="mini" style="width:100%;" v-model="pageObj.status" placeholder="状态" clearable >
                       <el-option v-for="y in statusList" :label="y.label" :value="y.value" :key="y.value"></el-option>
                   </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="规则名称" prop="ruleName">
+              <el-form-item label="十分启用" prop="ruleName">
                   <el-select size="mini" style="width:100%;" v-model="pageObj.enableFlag" placeholder="是否启用" clearable >
                       <el-option v-for="y in enableFlagList" :label="y.label" :value="y.value" :key="y.value"></el-option>
                   </el-select>

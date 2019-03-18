@@ -24,6 +24,7 @@
         <el-table-column prop="orderNo" align="center" label="主单号"></el-table-column>
         <el-table-column prop="orderGuestNo" align="center" label="客单号"></el-table-column>
         <el-table-column prop="guestName" align="center" label="姓名"></el-table-column>
+        <el-table-column prop="checkInType" align="center" label="入住类型"></el-table-column>
         <el-table-column prop="channelTypeName" align="center" label="渠道"></el-table-column>
         <el-table-column prop="rentPrice" align="center" label="房租"></el-table-column>
         <el-table-column prop="promotionPrice" align="center" label="优惠/促销价"></el-table-column>

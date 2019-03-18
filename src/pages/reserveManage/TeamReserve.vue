@@ -44,8 +44,9 @@
                 <el-option label="是" value="Y"></el-option>
               </el-select>
             </el-form-item>
+            <!-- <br> -->
             <el-form-item label="备   注">
-              <el-input v-model="form.remark"></el-input>
+              <el-input :rows="3" v-model="form.remark" type="textarea" resize="both"></el-input>
             </el-form-item>
             <!-- <el-form-item label="预订数量">
               <el-input v-model="form.rentCount"></el-input>

@@ -88,6 +88,7 @@ import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAu
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
+import ManaghouseDoBusinessStatistics from '@/pages/reportCenter/houseDoBusinessStatistics/houseDoBusinessStatistics.vue'
 import ManagSalesGuests from '@/pages/reportCenter/managementSales/SalesGuests.vue'
 import ManagSalesAgreement from '@/pages/reportCenter/managementSales/SalesAgreement.vue'
 import ManagSalesAgreementConsumptionDetails from '@/pages/reportCenter/managementSales/SalesAgreementConsumptionDetails.vue'
@@ -135,6 +136,7 @@ import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
 import ChannelManagement from '@/pages/systemSet/ChannelManagement'
 import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
+import marketingSetting from '@/pages/systemSet/marketing/tab'
 // import zlRoomStatusSetting from '@/pages/systemSet/zlRoomStatusSetting/tab'
 // import zlPriceSetting from '@/pages/systemSet/zlRoomStatusSetting/zlPriceSetting'
 
@@ -250,6 +252,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/narpCheck', component: NightAuditRentPriceCheck, label: '夜审房费前核对报表'},
           {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表'},
           {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况'},
+          {path: '/reportCenter/houseDoBusinessStatistics', component: ManaghouseDoBusinessStatistics, label: '查看每天的订房报表情况'},
           {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源'},
           {path: '/reportCenter/salesAgreement', component: ManagSalesAgreement, label: '销售分析报表-协议单位'},
           {path: '/reportCenter/salesAgreementConsumptionDetails', component: ManagSalesAgreementConsumptionDetails, label: '销售分析报表-协议单位'},
@@ -345,7 +348,8 @@ export const constantRouterMap = [
           {path: '/systemSet/settleSetting',  component: ConsumerProjects, label: '消费项目设置'},
           {path: '/systemSet/channelManage', component: ChannelManagement, label: '渠道管理'},
           {path: '/systemSet/projectSetting', component: ProjectSetting, label: '入账项目显示设置'},
-          {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},
+          {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},,
+          {path: '/systemSet/marketingSetting', component: marketingSetting, label: '营销'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
         ]

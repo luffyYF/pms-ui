@@ -97,7 +97,7 @@
               <el-col :span="22">
                 <el-form-item label="房间类型：" required>
                   <!-- currFormType=='guest-info'  -->
-                  <el-select v-model="form.roomTypePk" @change="roomTypeChange" placeholder="请选择房间类型" :disabled="form.orderStatus=='CHECKIN' || form.orderStatus=='LEAVE' || form.orderStatus=='LEAVENOPAY' ||  currFormType=='add-checkin' || currFormType=='add-guest'">
+                  <el-select v-model="form.roomTypePk" @change="roomTypeChange" placeholder="请选择房间类型" :disabled="form.orderStatus=='CHECKIN' || form.orderStatus=='LEAVE' || form.orderStatus=='LEAVENOPAY' ||  currFormType=='add-checkin' || currFormType=='add-guest' || form.roomPk">
                     <el-option :label="r.typeName" :value="r.typePk" v-for="r in roomTypeArr" :key="r.typePk"></el-option>
                   </el-select>
                 </el-form-item>
@@ -178,7 +178,7 @@
                   <el-date-picker style="color:black" v-model="form.checkinDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='guest-info' || currFormType=='add-guest'" :clearable="false"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="抵店日期：" required  v-else>
-                  <el-date-picker style="color:black" v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='add-guest'" :clearable="false"></el-date-picker>
+                  <el-date-picker style="color:black" v-model="form.beginDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="beginDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-checkin' || currFormType=='add-guest' || form.roomPk" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -947,7 +947,7 @@
         },
         //结束日期改变 续房
         endDateChange(endDate) {
-          if(this.currFormType=='guest-info' && this.form.orderStatus=='CHECKIN'){
+          if( (this.currFormType=='guest-info' && this.form.orderStatus=='CHECKIN') || (this.form.roomPk && this.form.orderStatus=='RESERVE')){
             // this.extendForm.payment='0'
             this.extendForm.settleProjectCode=null
             this.extendForm.settlementAmount=0

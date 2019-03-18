@@ -94,8 +94,38 @@
         </el-form-item>
       <!-- </el-col> -->
     </el-form>
-    <el-table v-loading="loading" :data="tableData" filter-change="handlerFilterChange" border max-height="628">
-      <el-table-column label="预订单" prop="orderNo" width="120">
+    <el-table v-loading="loading" ref="singleTable" size="mini" cell-style="font-size:10px;-webkit-text-size-adjust: none;" :expand-row-keys="orderExpands" row-key="orderNo" :data="tableData" filter-change="handlerFilterChange" @expand-change="handExpandChange" border max-height="628">
+      <el-table-column type="expand" width="30">
+        <template slot-scope="scope">
+          <orderGuestList  :ref="scope.row.orderNo"/>
+          <!-- <el-table :data="scope.row.guestDots" border max-height="500">
+           <el-table-column label="入住人" prop="guestName">
+          </el-table-column>
+          <el-table-column label="入住手机" min-width="180" prop="guestPhone">
+          </el-table-column>
+          <el-table-column label="房型" min-width="180" prop="roomTypeName" show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column label="房价">
+            <template slot-scope="scopes">
+              <span v-if="scopes.row.mainFlag == 'Y'">￥ {{scopes.row.currPrice}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="房间号" min-width="180" prop="roomNumber">
+            <template slot-scope="scopes">
+              <span v-if="scopes.row.roomNumber != null">{{scopes.row.roomNumber}}</span>
+              <span v-else>未排房</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="渠道" min-width="180" prop="channelTypeName">
+          </el-table-column>
+          <el-table-column label="预抵时间" min-width="180" prop="beginDate">
+          </el-table-column>
+          <el-table-column label="预离时间" min-width="180" prop="endDate">
+          </el-table-column>
+        </el-table> -->
+        </template>
+    </el-table-column>
+      <el-table-column label="预订单" prop="orderNo" width="100">
         <template slot-scope="scope">
           <span>{{scope.row.orderNo}}</span><br>
           <span v-if="scope.row.auditStatus==0">(审批中...)</span>
@@ -103,55 +133,58 @@
           <span v-if="scope.row.auditStatus==2">(审批拒绝)</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作员" prop="createUserName">
-      </el-table-column>
-      <el-table-column label="预订人" prop="userName">
+      <el-table-column label="预订人" prop="userName"  width="110">
+        <template slot-scope="scope">
+          <p class="guest-item">{{scope.row.userName}}</p>
+          <p class="guest-item">{{scope.row.userPhone}}</p>
+        </template>
       </el-table-column>
       <!-- <el-table-column label="预订卡号" prop="reserveCardNo">
       </el-table-column> -->
-      <el-table-column label="预订手机" prop="userPhone" min-width="130">
-      </el-table-column>
-      <el-table-column label="渠道" min-width="150">
+      <!-- <el-table-column label="预订手机" prop="userPhone" min-width="130">
+      </el-table-column> -->
+      <el-table-column label="渠道" width="80">
         <template slot-scope="scope">
-          <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.channelTypeName}}</p>
+          <!-- <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.channelTypeName}}</p> -->
+          {{scope.row.guestDtos[0].channelTypeName}}
         </template>
       </el-table-column>
-      <el-table-column label="入住人">
+      <!-- <el-table-column label="入住人">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.guestName}}</p>
         </template>
-      </el-table-column>
-      <el-table-column label="入住手机" min-width="180">
+      </el-table-column> -->
+      <!-- <el-table-column label="入住手机" min-width="180">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.guestPhone}}</p>
         </template>
-      </el-table-column>
-      <el-table-column label="房型" min-width="180" show-overflow-tooltip>
+      </el-table-column> -->
+      <!-- <el-table-column label="房型" min-width="180" show-overflow-tooltip>
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index"><span v-if="y.mainFlag == 'Y'">{{y.roomTypeName}}</span></p>
         </template>
-      </el-table-column>
-      <el-table-column label="房价">
+      </el-table-column> -->
+      <!-- <el-table-column label="房价">
         <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index"><span v-if="y.mainFlag == 'Y'">￥ {{y.currPrice}}</span></p>
         </template>
-      </el-table-column>
-      <el-table-column label="抵店日期" width="180">
-        <template slot-scope="scope">
+      </el-table-column> -->
+      <el-table-column label="抵店日期" width="160" prop="beginDate">
+        <!-- <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.beginDate}}</p>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column label="离店时间" width="180">
-        <template slot-scope="scope">
+      <el-table-column label="离店时间" width="160" prop="endDate">
+        <!-- <template slot-scope="scope">
           <p class="guest-item" v-for="(y,index) in scope.row.guestDtos" :key="index">{{y.endDate}}</p>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column label="房间数">
+      <el-table-column label="房间数" width="70" align="center">
         <template slot-scope="scope">
           <span>{{roomCount(scope.row.guestDtos)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排房情况" min-width="140">
+      <el-table-column label="排房情况">
         <template slot-scope="scope">
           <template v-if="getRowrooms(scope.row.guestDtos).rowRooms">
             <span >已排房号：{{getRowrooms(scope.row.guestDtos).rowRooms}}</span><br>
@@ -161,7 +194,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="状态" min-width="120">
+      <el-table-column label="状态" width="80">
         <template slot-scope="scope">
             <template v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >
               <span>NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span><br>
@@ -189,14 +222,16 @@
             </template>
         </template>
       </el-table-column>
+      <!-- <el-table-column label="操作员" prop="createUserName">
+      </el-table-column> -->
       <!-- <el-table-column label="备注" prop="remark">
       </el-table-column> -->
-      <el-table-column label="操作" min-width="200" fixed="right">
+      <el-table-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" v-if="(scope.row.orderStatus == 'LEAVE' || scope.row.orderStatus == 'LEAVENOPAY') && hasPerm('pms:listReserve:onInvoice') " @click="onInvoiceClick(scope.row.orderNo)">开发票</el-button>
-          <el-button size="mini" type="primary" v-if="hasPerm('pms:listReserve:orderDetail')" @click="showOrderInfo(scope.row)">查看订单</el-button>
+          <el-button size="mini" type="primary" v-if="hasPerm('pms:listReserve:orderDetail')" @click="showOrderInfo(scope.row)">查看</el-button>
           <template v-if="getOrderStatus(scope.row.guestDtos).reserveCount > 0">
-            <el-button size="mini" type="danger" v-if="hasPerm('pms:listReserve:cancelOrder')" @click="cancelOrder(scope.row)">取消订单</el-button>
+            <el-button size="mini" type="danger" v-if="hasPerm('pms:listReserve:cancelOrder')" @click="cancelOrder(scope.row)">取消</el-button>
           </template>
         </template>
       </el-table-column>
@@ -224,9 +259,10 @@
   import exportExcel from '@/components/download/exportExcel'
   import reserveEdit from './reserveEdit'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
+  import orderGuestList from './orderGuestList'
 
   export default {
-    components: {DialogCheckinVisible,invoiceEdit,reserveEdit},
+    components: {DialogCheckinVisible,invoiceEdit,reserveEdit,orderGuestList},
     data () {
       return {
         orderStatusMap:orderStatusMap,
@@ -311,6 +347,7 @@
         typeMaster: 'CHANNEL',
         total: 0,
         companyPk: JSON.parse(localStorage.getItem("current_logon_company")).companyPk,
+        orderExpands:[]
       }
     },
     created () {
@@ -394,6 +431,28 @@
       },
       handlerFilterChange (value) {
         this.total = value.length
+      },
+      setRowKey(row){
+        return row.orderNo
+      },
+      handExpandChange(row, expandedRows){
+        var that = this
+        var bol = false
+        for(var i=0;i<expandedRows.length;i++){
+          if(row.orderNo == expandedRows[i].orderNo){
+            bol = true
+            break;
+          }
+        }
+        if(bol){
+          this.orderExpands = [row.orderNo]
+          console.log(that.$refs)
+          this.$nextTick(()=>{
+            that.$refs[row.orderNo].showDialog(row.guestDtos)
+          })
+        }else{
+          this.orderExpands = []
+        }
       },
       init() {
         this.list()
