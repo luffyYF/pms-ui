@@ -16,7 +16,7 @@ export const commonReport = [{
     {
       label: '客房营业统计',
       path: '/reportCenter/houseDoBusinessStatistics',
-      pointer: 'pms:reportCenter:houseDoBusinessStatisticsManage'
+      pointer: 'pms:reportCenter:KFYYStatistics'
     }
   ]
 }, {

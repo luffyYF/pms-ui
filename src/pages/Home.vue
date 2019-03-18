@@ -54,6 +54,12 @@
             <div class="nav-txt">客户关系</div>
           </div>
         </router-link>
+        <router-link to="/zl" v-if="hasPerm('pms:zl:zlManage')">
+          <div class="nav-li">
+            <div class="nav-icon customer-relation-icon"></div>
+            <div class="nav-txt">直连</div>
+          </div>
+        </router-link>
         <!-- <router-link to="/smsMarketing" v-power:id="'16'">
           <div class="nav-li">
             <div class="nav-icon sms-marketing-icon"></div>
@@ -212,6 +218,16 @@
       </el-dialog>
     </div> 
     <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="getCurrentRoomList()" />
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      :close-on-press-escape="false"
+      width="400px"
+      :show-close="false"
+      :close-on-click-modal="false"
+      center>
+      <span>系统正在夜审...</span>
+    </el-dialog>
   </div>
 
   
@@ -240,6 +256,7 @@ import {find} from '@/api/systemSet/pmsSysParamController'
 import {getNewGuestOrder} from '@/api/order/pmsOrderController'
 
 import { allTypeList } from '@/api/utils/pmsTypeController'
+import { Message } from 'element-ui';
 
 export default {
   components:{DialogCheckinVisible},
@@ -293,33 +310,58 @@ export default {
       dialogVisible:false,
       ydDialogVisible:false,
       nightTrialTimer:null,
-      nightTrialFlag:false
+      nightTrialTimer2:null,
+      nightTrialFlag:false,
+      centerDialogVisible:false,
+      msg:null
     };
   },
   methods: {
     nightTrialTask(){
+      this.nightTrialTimer2 = setInterval(() => {
+        var date2 = new Date()
+        if(date2.getHours() == 5 || date2.getHours() == 6){
+          this.nightTrialTimer = setInterval(() => {
+            var date = new Date()
+            console.log(date.getHours()+"  "+date.getMinutes()+"  "+date.getSeconds())
+            if(date.getHours() == 6 && date.getMinutes() <= 0 && date.getSeconds() <20){
+              if(!this.nightTrialFlag){
+                this.centerDialogVisible = true
+                this.nightTrialFlag = true
+              }
+            }else{
+              if(date.getHours() >= 6 && date.getMinutes() >= 0 && date.getSeconds() >20){
+                clearInterval(this.nightTrialTimer)
+              }
+              this.centerDialogVisible = false
+              this.nightTrialFlag = false
+            }
+          },1000)
+        }
+        
+      },1000 * 60 * 30)
 
-      // this.nightTrialTimer = setInterval(() => {
-      //   var date = new Date()
-      //   // && date.getMinutes() == 0 
-      //     if(date.getHours() == 16 && date.getSeconds() <50){
-      //       if(!this.nightTrialFlag){
-      //         this.$alert('系统正在夜审...', '警告', {
-      //           confirmButtonText: '确定',
-      //           showClose: false,
-      //           showConfirmButton: false,
-      //           type:'warning',
-      //         });
-      //         this.nightTrialFlag = true
-      //       }
-            
-      //     }else{
-      //       this.$message.close()
-      //       // this.$alert().close()
-      //       this.nightTrialFlag = false
-      //     }
-      // },1000)
-
+      var date2 = new Date()
+      if(date2.getHours() == 5 || date2.getHours() == 6){
+        this.nightTrialTimer = setInterval(() => {
+          var date = new Date()
+          // console.log(date.getHours()+"  "+date.getMinutes()+"  "+date.getSeconds())
+          if(date.getHours() == 6 && date.getMinutes() <= 0 && date.getSeconds() <20){
+            if(!this.nightTrialFlag){
+              this.centerDialogVisible = true
+              this.nightTrialFlag = true
+            }
+          }else{
+            if(date.getHours() >= 6 && date.getMinutes() >= 0 && date.getSeconds() >20){
+              clearInterval(this.nightTrialTimer)
+            }
+            console.log(false)
+            this.centerDialogVisible = false
+            this.nightTrialFlag = false
+          }
+        },1000)
+      }
+      
     },
 
     click(id){alert(id)},
