@@ -102,6 +102,12 @@
             <div class="nav-txt">会议室</div>
           </div>
         </router-link>
+        <router-link to="/roomService" v-if="screenWidth > 1390 && hasPerm('pms:dir:roomService')">
+          <div class="nav-li">
+            <div class="nav-icon linen-icon"></div>
+            <div class="nav-txt">房务管理</div>
+          </div>
+        </router-link>
         <!-- <router-link to="/operators" v-if="screenWidth > 1390" v-power:id="'23'"> -->
         <router-link to="/operators" v-if="hasPerm('pms:dir:operatorManage')">
           <div class="nav-li">

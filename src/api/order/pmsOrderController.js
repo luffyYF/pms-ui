@@ -166,3 +166,7 @@ export const listEmptyRoom = params => {
     return request.get('/back/order/listEmptyRoom', {params: params})
 }
 
+//查询近三天内的在住或离店客人
+export const guestListApi = params => {
+    return request.get('/back/order/findThreeDaysGuest', {params: params})
+}
