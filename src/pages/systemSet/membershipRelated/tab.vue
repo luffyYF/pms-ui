@@ -25,6 +25,9 @@
       <el-tab-pane label="会员远期房价" name="MemberForwardPrice" v-if="hasPerm('pms:member:memberForwardPrice')">
         <MemberForwardPrice ref="MemberForwardPrice"/>
       </el-tab-pane>
+      <el-tab-pane label="积分兑换" name="IntegralExchangeRule" v-if="hasPerm('pms:member:integralExchangeRule')">
+        <IntegralExchangeRule ref="IntegralExchangeRule"/>
+      </el-tab-pane>
       
     </el-tabs>
   </div>
@@ -39,6 +42,8 @@
   import MemberRechargeGiveRule from './MemberRechargeGiveRule'
   import MemberIntegralRoomChangeRule from './MemberIntegralRoomChangeRule'
   import MemberForwardPrice from './MemberForwardPrice'
+  import IntegralExchangeRule from './IntegralExchangeRule'
+  
 
   
   
@@ -53,7 +58,8 @@
       MemberIntegralRule,
       MemberRechargeGiveRule,
       MemberIntegralRoomChangeRule,
-      MemberForwardPrice
+      MemberForwardPrice,
+      IntegralExchangeRule
     },
     data () {
       return {
@@ -90,6 +96,9 @@
           child.init()
         }else if(this.activeName == 'MemberForwardPrice'){
           var child = this.$refs.MemberForwardPrice
+          child.init()
+        }else if(this.activeName == 'IntegralExchangeRule'){
+          var child = this.$refs.IntegralExchangeRule
           child.init()
         }
 

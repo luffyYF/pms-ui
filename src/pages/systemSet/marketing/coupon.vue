@@ -147,7 +147,7 @@
           {label:"启用",value:"Y"},
           {label:"禁用",value:"N"}
         ],
-        queryPower:this.hasPerm("")
+        queryPower:this.hasPerm("pms:coupon:list")
       }
     },
     mounted(){
