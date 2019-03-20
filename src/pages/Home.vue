@@ -329,7 +329,7 @@ export default {
         if(date2.getHours() == 5 || date2.getHours() == 6){
           this.nightTrialTimer = setInterval(() => {
             var date = new Date()
-            console.log(date.getHours()+"  "+date.getMinutes()+"  "+date.getSeconds())
+            // console.log(date.getHours()+"  "+date.getMinutes()+"  "+date.getSeconds())
             if(date.getHours() == 6 && date.getMinutes() <= 0 && date.getSeconds() <20){
               if(!this.nightTrialFlag){
                 this.centerDialogVisible = true

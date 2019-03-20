@@ -1,8 +1,21 @@
 <template>
-  <el-dialog class="son-dialog" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
-    <el-table ref="guestManagerTab" :data="guestTable" tooltip-effect="dark" style="width: 100%" height="400" size="mini" @selection-change="handleSelectionChange">
+  <el-dialog class="guest-manager-dialog" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
+    <el-table ref="guestManagerTab" 
+      :row-class-name="tableRowClassName"
+      :data="guestTable" 
+      tooltip-effect="dark"
+      style="width: 100%"
+      height="400" 
+      size="mini"
+      @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
-      <el-table-column prop="roomNumber" label="房号" width="90" align="center">
+      <el-table-column prop="roomNumber" label="房号" width="90" align="left">
+        <template slot-scope="scope">
+          <div style="float:left;width:18px;height: 17px;">
+            <img v-if="scope.row.mainFlag=='Y'" src="../../../assets/image/main_guest.png" width="15" height="16" alt="主客人">
+          </div>
+          <div style="float:left;">{{scope.row.roomNumber}}</div>
+        </template>
       </el-table-column>
       <el-table-column prop="guestName" label="姓名"  align="center">
         <template slot-scope="scope"> 
@@ -31,10 +44,12 @@
           <el-input type="text" size="mini" v-model="scope.row.certificateNo"></el-input>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="right">
         <template slot-scope="scope">
+          <el-button v-if="!scope.row.guestOrderPk" title="移除" icon="el-icon-remove" size="mini" type="text" @click="removeGuest(scope.$index)" style="color:#f56c6c"></el-button>
+          <el-button v-if="scope.row.mainFlag=='Y'" title="添加客人" icon="el-icon-circle-plus" size="mini" type="text" @click="addGuest(scope.$index)"></el-button>
           <IDCardScan @callback="getIDCardInfo(scope.$index, $event)"></IDCardScan>
-          <el-button size="mini" type="text" @click="submitItem(scope.row)">修改</el-button>
+          <el-button size="mini" type="text" @click="submitItem(scope.row)">保存</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,10 +89,19 @@ export default {
       this.currOrderPk=orderPk;
       this.guestTable = [];
       this.multipleSelection = []
-      listSimpleGuestMemberInfo({orderPk:orderPk}).then(res=>{
+      this.dialogVisible = true;
+      this.getList()
+    },
+    getList(){
+      listSimpleGuestMemberInfo({orderPk:this.currOrderPk}).then(res=>{
         this.guestTable = res.data;
       })
-      this.dialogVisible = true;
+    },
+    tableRowClassName({row, rowIndex}) {
+      // if(row.mainFlag=='Y'){
+      //   return 'success-row';
+      // }
+      return '';
     },
     submitBatch(){
       if(this.multipleSelection.length<=0) {
@@ -89,8 +113,13 @@ export default {
         this.loading = false;
         return
       }
-      editOrderMemberBatch(this.multipleSelection).then(res=>{
-        this.$message.success('修改成功')
+      let data = {
+        orderPk: this.currOrderPk,
+        guestList: this.multipleSelection
+      }
+      editOrderMemberBatch(data).then(res=>{
+        this.$message.success('保存成功')
+        this.getList()
       }).finally(()=>{
         this.loading = false;
       })
@@ -99,8 +128,13 @@ export default {
       if(!this.validate([row])){
         return
       }
-      editOrderMemberBatch([row]).then(res=>{
-        this.$message.success('修改成功')
+      let data = {
+        orderPk: this.currOrderPk,
+        guestList: [row]
+      }
+      editOrderMemberBatch(data).then(res=>{
+        this.$message.success('保存成功')
+        this.getList()
       })
     },
     validate(dataList) {
@@ -128,6 +162,32 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+
+    //添加客人
+    addGuest(index){
+      let currRow = this.guestTable[index];
+      let temp = {
+        address: null,
+        birthday: null,
+        certificateNo: null,
+        certificateType: "TWO_IDENTITY",
+        guestName: "新客人",
+        guestOrderPk: null,
+        guestPhone: null,
+        mainFlag: "N",
+        memSex: null,
+        nationality: null,
+        roomNumber: currRow.roomNumber,
+        mainGuestPk: currRow.guestOrderPk
+      }
+      // this.$set(this.guestTable,index, temp)
+      this.guestTable.splice(index+1,0,temp)
+      this.$refs.guestManagerTab.toggleRowSelection(this.guestTable[index+1]);
+    },
+    //移除客人
+    removeGuest(index){
+      this.guestTable.splice(index,1)
+    },
     handleClose() {
       this.$emit('refresh', this.currOrderPk, 'visitor');
       this.dialogVisible = false;
@@ -139,4 +199,7 @@ export default {
 </script>
 
 <style>
+.guest-manager-dialog .el-table .success-row {
+  background: #f6faff
+}
 </style>

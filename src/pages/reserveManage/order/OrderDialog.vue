@@ -72,6 +72,7 @@
             <div class="pattern-visitor-button" v-if="currConfirmType!='add-checkin'">
               <!--<el-button size="mini" @click="dialogCommodity = true">商品部</el-button>
                <el-button size="mini" @click="dialogRegimentPayment = true">团付账</el-button> -->
+              <!-- <el-button size="mini" v-if="hasPerm('pms:orderAss:inputIdCard')" @click="inputIdCard">录入身份证信息</el-button> -->
               <el-button size="mini" v-if="hasPerm('pms:orderAss:priceChangeRecord')" @click="toDialogPriceChangeHistory">房价变更记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:operRecord')" @click="toDialogOperationLog">操作记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:printRcOrder')" @click="toRcprint">打印RC单</el-button>
@@ -195,6 +196,9 @@
     <dialog-batch-continue-room ref="dialogBatchContinueRoomRef" @callback="loadOrderInfo"></dialog-batch-continue-room>
     <!-- 批量入住 -->
     <dialog-batch-add-checkin ref="dialogBatchAddCheckin" @callback="initOrderInfo"></dialog-batch-add-checkin>
+    <!-- 录入身份证信息 -->
+    <IdCardInputDialog ref="idCardInputDialogRef"></IdCardInputDialog>
+
   </div>
 </template>
 <script>
@@ -228,6 +232,8 @@ import RowRoomDialog from './RowRoomDialog'
 import GuestManagerDialog from './GuestManagerDialog'
 import Agreement from "@/components/Agreement/Agreement";
 import DialogBatchAddCheckin from './dialogBatchAddCheckin'
+import IdCardInputDialog from '@/pages/reserveManage/order/IdCardInputDialog'
+
 export default {
   components: {
     VisitorTag,
@@ -242,7 +248,8 @@ export default {
     GuestManagerDialog,
     Agreement,
     DialogBatchContinueRoom,
-    DialogBatchAddCheckin
+    DialogBatchAddCheckin,
+    IdCardInputDialog
   },
   data() {
     return {
@@ -857,7 +864,11 @@ export default {
     batchContinueClick(){
       this.popoverVisible = false
       this.$refs.dialogBatchContinueRoomRef.showDialog(this.currOrderInfo.order.orderPk)
-    }
+    },
+    inputIdCard() {
+      this.$refs.idCardInputDialogRef.showDialog()
+    },
+
   },
   mounted() {
     bus.$on('toCheckout', () => { this.toBillTab() })
@@ -871,7 +882,7 @@ export default {
     this.roomTypeArr = []
     var typeList = JSON.parse(localStorage.getItem("pms_type"))
     this.roomType = []
-    console.log(typeList.length)
+    // console.log(typeList.length)
     typeList.forEach(item=> {
       if(item.typeMaster == "ROOM_TYPE"){
         this.roomTypeArr.push(item);
