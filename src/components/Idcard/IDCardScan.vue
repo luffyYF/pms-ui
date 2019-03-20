@@ -23,7 +23,7 @@ export default {
     cssStyle: String
   },
   mounted(){
-    console.log('当前类型',this.cssStyle)
+    // console.log('当前类型',this.cssStyle)
   },
   data() {
     return {

@@ -75,6 +75,7 @@ export default {
   data(){
     return {
       dialogVisible:false,
+      dialogVisible2:false,
       orderPk:'',
       idcardTable:[],
       detailForm: {}
