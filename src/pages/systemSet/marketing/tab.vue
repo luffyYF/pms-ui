@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="优惠券" name="coupon">
+      <el-tab-pane label="优惠券" name="coupon" v-if="hasPerm('pms:marketing:coupon')">
         <coupon ref="coupon"/>
       </el-tab-pane>
     </el-tabs>
