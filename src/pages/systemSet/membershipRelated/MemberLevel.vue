@@ -128,6 +128,9 @@
         loading:false,
       }
     },
+    created() {
+    this.init();
+    },
     methods: {
       init() {
         this.listGrade()

@@ -58,7 +58,7 @@ import {
 } from "../../../api/systemSet/member/pmsIntegralGoodsController";
 export default {
   created() {
-    this.selectGoodList();
+    // this.selectGoodList();
   },
   data() {
     return {

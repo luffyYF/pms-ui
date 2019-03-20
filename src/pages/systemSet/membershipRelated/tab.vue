@@ -1,15 +1,7 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="积分商品管理" name="memberIntegralCommodity">
-        <member-integral-commodity ref="memberIntegralCommodity"/>
-      </el-tab-pane>
-      <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount">
-        <member-recharge-discount ref="memberRechargeDiscount"/>
-      </el-tab-pane>
-      <el-tab-pane label="会员卡费管理" name="memberCardFee">
-        <member-card-fee ref="memberCardFee"/>
-      </el-tab-pane>
+      
       <el-tab-pane label="会员级别管理" name="memberLevel">
         <member-level ref="memberLevel"/>
       </el-tab-pane>
@@ -25,8 +17,17 @@
       <el-tab-pane label="会员远期房价" name="MemberForwardPrice" v-if="hasPerm('pms:member:memberForwardPrice')">
         <MemberForwardPrice ref="MemberForwardPrice"/>
       </el-tab-pane>
-      <el-tab-pane label="积分兑换" name="IntegralExchangeRule" v-if="hasPerm('pms:member:integralExchangeRule')">
+      <el-tab-pane label="积分兑换规则" name="IntegralExchangeRule" v-if="hasPerm('pms:member:integralExchangeRule')">
         <IntegralExchangeRule ref="IntegralExchangeRule"/>
+      </el-tab-pane>
+      <el-tab-pane label="积分商品管理" name="memberIntegralCommodity">
+        <member-integral-commodity ref="memberIntegralCommodity"/>
+      </el-tab-pane>
+      <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount">
+        <member-recharge-discount ref="memberRechargeDiscount"/>
+      </el-tab-pane>
+      <el-tab-pane label="会员卡费管理" name="memberCardFee">
+        <member-card-fee ref="memberCardFee"/>
       </el-tab-pane>
       
     </el-tabs>
