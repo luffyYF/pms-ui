@@ -28,6 +28,30 @@
       <el-tab-pane label="酒店信息" name="syshotelinformation">
         <sys-hotel-information ref="syshotelinformation"/>
       </el-tab-pane>
+      <!-- <el-tab-pane label="所有" name="all">
+        <sys-base-param ref="allRef"/>
+      </el-tab-pane> -->
+      <el-tab-pane label="前台" name="reception">
+        <sys-base-param ref="receptionRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="财务" name="finance">
+        <sys-base-param ref="financeRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="房务" name="roomService">
+        <sys-base-param ref="roomServiceRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="打印" name="print">
+        <sys-base-param ref="printRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="会员" name="member">
+        <sys-base-param ref="memberRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="仓库" name="warehouse">
+        <sys-base-param ref="warehouseRef"/>
+      </el-tab-pane>
+      <el-tab-pane label="电话" name="tel">
+        <sys-base-param ref="telRef"/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -92,7 +116,9 @@
           var child = this.$refs.syshotelinformation
           child.init()
         }else if(this.activeName == 'sysBaseParamRef') {
-          this.$refs.sysBaseParamRef.init();
+          this.$refs.sysBaseParamRef.init(this.activeName);
+        }else {
+           this.$refs[this.activeName+"Ref"].init(this.activeName);
         }
       },
 
