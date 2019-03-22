@@ -55,9 +55,9 @@ export const splitBill = params => {
 }
 
 //账单转账处理
-export const transBill = params => {
-  return request.post('/back/bill/trans', params)
-}
+// export const transBill = params => {
+//   return request.post('/back/bill/trans', params)
+// }
 
 //账单转账处理
 export const transferAccountsBill = params => {

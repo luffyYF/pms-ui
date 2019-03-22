@@ -215,7 +215,7 @@ import {validatePhone} from '@/utils/validate'
 // API
 import {gmCount} from "@/api/goods/goodsManageController";
 import {saveCheckin, addCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder} from '@/api/order/pmsOrderController'
-import {listProject,addBill,authBill,checkoutauthBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill,transBill} from '@/api/bill'
+import {listProject,addBill,authBill,checkoutauthBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill} from '@/api/bill'
 import {listType} from '@/api/utils/pmsTypeController'
 
 // 组件
