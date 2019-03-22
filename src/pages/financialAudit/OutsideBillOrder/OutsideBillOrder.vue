@@ -17,8 +17,8 @@
           </el-select>
         </el-form-item>
         
-        <el-button type="primary" size="mini" icon="el-icon-search" @click="search">查询</el-button>
-        <el-button type="primary" size="mini" icon="el-icon-plus" @click="addBillOrder">新增</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-search" v-if="hasPerm('pms:outsideBill:list')" @click="search">查询</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-plus" v-if="hasPerm('pms:outsideBill:add')" @click="addBillOrder">新增</el-button>
       </el-form>
     </el-col>
     <el-col :span="24">
@@ -99,6 +99,7 @@ export default {
       total: 0,
       orderTable: [],
       shiftArray:[],
+      queryPower:this.hasPerm("pms:outsideBill:list")
     };
   },
   mounted() {
@@ -123,6 +124,10 @@ export default {
   },
   methods: {
     search() {
+      if(!this.queryPower){
+          this.$message({ type: 'warning', message: "权限不足" })
+          return
+      }
       let data = {
         orderNo: this.searchForm.orderNo,
         pageNum: this.currPage,

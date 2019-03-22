@@ -31,25 +31,25 @@
       <!-- <el-tab-pane label="所有" name="all">
         <sys-base-param ref="allRef"/>
       </el-tab-pane> -->
-      <el-tab-pane label="前台" name="reception">
+      <el-tab-pane label="前台" name="reception" v-if="hasPerm('pms:paramsSetting:reception')">
         <sys-base-param ref="receptionRef"/>
       </el-tab-pane>
-      <el-tab-pane label="财务" name="finance">
+      <el-tab-pane label="财务" name="finance" v-if="hasPerm('pms:paramsSetting:finance')">
         <sys-base-param ref="financeRef"/>
       </el-tab-pane>
-      <el-tab-pane label="房务" name="roomService">
+      <el-tab-pane label="房务" name="roomService" v-if="hasPerm('pms:paramsSetting:roomService')">
         <sys-base-param ref="roomServiceRef"/>
       </el-tab-pane>
-      <el-tab-pane label="打印" name="print">
+      <el-tab-pane label="打印" name="print" v-if="hasPerm('pms:paramsSetting:print')">
         <sys-base-param ref="printRef"/>
       </el-tab-pane>
-      <el-tab-pane label="会员" name="member">
+      <el-tab-pane label="会员" name="member" v-if="hasPerm('pms:paramsSetting:member')">
         <sys-base-param ref="memberRef"/>
       </el-tab-pane>
-      <el-tab-pane label="仓库" name="warehouse">
+      <el-tab-pane label="仓库" name="warehouse" v-if="hasPerm('pms:paramsSetting:warehouse')">
         <sys-base-param ref="warehouseRef"/>
       </el-tab-pane>
-      <el-tab-pane label="电话" name="tel">
+      <el-tab-pane label="电话" name="tel" v-if="hasPerm('pms:paramsSetting:tel')">
         <sys-base-param ref="telRef"/>
       </el-tab-pane>
     </el-tabs>
