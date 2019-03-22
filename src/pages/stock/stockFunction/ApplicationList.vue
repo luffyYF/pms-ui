@@ -174,7 +174,6 @@
 
 <script>
 import moment from "moment";
-import Cookies from "js-cookie";
 import { approvalStatusMap, outStatusMap,inStatusMap } from "@/utils/orm";
 import { applyList, applyDetailList,inventoryOutInfo,outConfirm } from "@/api/upmsStorage";
 import { cancelApply } from "@/api/oaApi";
@@ -194,7 +193,7 @@ export default {
         userName: null,
         approvalStatus: null,
         status: null,
-        companyPk: Cookies.get("select_company_pk")
+        companyPk: localStorage.getItem("select_company_pk")
       },
       currApplyForm:{},
       outData:[],//出货单及详细

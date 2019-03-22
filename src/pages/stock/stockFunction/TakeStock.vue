@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import {takeStockStatusMap} from '@/utils/orm'
 import {
   viewTakeStockDetail,
@@ -85,7 +84,7 @@ export default {
       storageData: [],
       stock: null,
       stockNo: null,
-      currCompanyPk: Cookies.get("select_company_pk"),
+      currCompanyPk: localStorage.getItem("select_company_pk"),
       takeStockStatusMap:takeStockStatusMap,
     };
   },

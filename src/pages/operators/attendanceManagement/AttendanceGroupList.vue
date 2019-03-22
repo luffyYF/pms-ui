@@ -58,7 +58,6 @@
 </template>
 <script>
   import {attendanceTypeMap} from '@/utils/orm'
-  import Cookies from 'js-cookie'
   import { attendanceGroupList,attendanceGroupDelete } from '@/api/oaApi'
   import AttendanceGroupEdit from './AttendanceGroupEdit'
 
@@ -88,7 +87,7 @@
         let data = {
           pageNum: this.listQuery.pageNum,
           pageSize: this.listQuery.pageSize,
-          companyPk:Cookies.get('select_company_pk')
+          companyPk:localStorage.getItem('select_company_pk')
         }
         attendanceGroupList(data).then(res => {
           this.total = Number(res.total)

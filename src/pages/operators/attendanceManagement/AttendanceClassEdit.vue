@@ -78,7 +78,6 @@
 </template>
 
 <script>
-  import Cookies from 'js-cookie'
   import {attendanceTypeMap} from '@/utils/orm'
   import { attendanceListSelect,attendanceClassAdd,attendanceClassDetail,attendanceClassUpdate } from '@/api/oaApi'
 
@@ -139,7 +138,7 @@
       showDialog (id) {
         this.dialogVisible = true
         this.groupList = []
-        attendanceListSelect({companyPk:Cookies.get('select_company_pk')}).then(res=>{
+        attendanceListSelect({companyPk:localStorage.getItem('select_company_pk')}).then(res=>{
           this.groupList = res.data;
 
           if (id) {

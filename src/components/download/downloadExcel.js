@@ -1,10 +1,9 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
 
 export default function(url,name){
   //当前选择的公司主键和班次主键
-  let companyPk = Cookies.get('select_company_pk');
-  let shiftPk = Cookies.get('select_shift_pk');
+  let companyPk = localStorage.getItem('select_company_pk');
+  let shiftPk = localStorage.getItem('select_shift_pk');
   axios({
     method:'get',
     url:process.env.API_ROOT+url,

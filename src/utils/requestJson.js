@@ -3,7 +3,6 @@ import {Message, MessageBox} from 'element-ui'
 // import store from '@/store'
 // import {getToken, removeToken, removeRefreshToken} from './auth'
 import router from '@/router'
-import Cookies from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
@@ -26,8 +25,8 @@ service.interceptors.request.use(config => {
   config.headers['Authorization']='Bearer '+token
 
   //当前选择的公司主键和班次主键
-  let companyPk = Cookies.get('select_company_pk');
-  let shiftPk = Cookies.get('select_shift_pk');
+  let companyPk = localStorage.getItem('select_company_pk');
+  let shiftPk = localStorage.getItem('select_shift_pk');
   config.headers['CompanyPk']=companyPk==null?'':companyPk;
   config.headers['ShiftPk']=shiftPk==null?'':shiftPk;
 

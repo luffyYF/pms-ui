@@ -26,7 +26,6 @@
 <script>
 import { getCompanyShift, getUserInfo } from "@/api/login";
 import { logout } from '@/api/upmsApi'
-import Cookies from 'js-cookie'
 // import store from "@/store";
 import Moment from "moment";
 export default {
@@ -47,8 +46,8 @@ export default {
   methods: {
     //清除用户缓存
     clearLocalInfo(){
-      Cookies.set('select_company_pk','')
-      Cookies.set('select_shift_pk','')
+      localStorage.setItem('select_company_pk','')
+      localStorage.setItem('select_shift_pk','')
       localStorage.setItem('current_logon_company','');
       localStorage.setItem('pms_userinfo', '')
     },
@@ -69,8 +68,8 @@ export default {
           sessionStorage.removeItem("orderIsNew")
           sessionStorage.removeItem("isTime")
         }
-        Cookies.set('select_company_pk',this.activeCompany.companyPk)
-        Cookies.set('select_shift_pk',shift.shiftPk ? shift.shiftPk : '0')
+        localStorage.setItem('select_company_pk',this.activeCompany.companyPk)
+        localStorage.setItem('select_shift_pk',shift.shiftPk ? shift.shiftPk : '0')
         localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
         localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
         this.$router.push('/')
