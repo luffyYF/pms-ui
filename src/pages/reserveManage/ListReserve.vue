@@ -523,14 +523,15 @@
         let noRowRooms = 0
         var roomNumber = '无';
         guestDots.forEach(guest => {
+
           if (guest['mainFlag'] == 'Y') {
             if(guest['roomPk'] && guest['roomNumber']){
               if(guest['roomNumber']!= roomNumber  ){
                 rowRooms.push(guest.roomNumber);
                 roomNumber = guest['roomNumber']
               }
-            }else{
-              noRowRooms++
+            }else if(guest['orderStatus'] != "CANCEL" ){
+                 noRowRooms++
             }
           }
         });
