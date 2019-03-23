@@ -5,7 +5,6 @@ import 'nprogress/nprogress.css'
 import {Message} from 'element-ui'
 // import store from './store/index'
 // import {getToken} from './utils/auth'
-import Cookies from 'js-cookie'
 // Progress 进度条
 // Progress 进度条样式
 // 验权
@@ -57,7 +56,7 @@ router.beforeEach((to, from, next) => {
     
     let token = window.localStorage.getItem('pms_token');
     if(token){
-      if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !Cookies.get('select_company_pk') || !Cookies.get('select_shift_pk'))){
+      if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !localStorage.getItem('select_company_pk') || !localStorage.getItem('select_shift_pk'))){
         //没有选择
         next('/classSelection');
       }else{

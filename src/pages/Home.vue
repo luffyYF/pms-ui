@@ -241,7 +241,6 @@
 
 <script>
 import moment from 'moment'
-import Cookies from 'js-cookie'
 import {nightTrialTime} from '@/utils/orm'
 import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
@@ -413,8 +412,8 @@ export default {
       })
       .then(() => {
         logout().then(res=>{}).finally(()=>{
-          Cookies.set('select_company_pk','')
-          Cookies.set('select_shift_pk','')
+          localStorage.setItem('select_company_pk','')
+          localStorage.setItem('select_shift_pk','')
           localStorage.setItem('current_logon_company','');
           localStorage.setItem('pms_userinfo', '')
           localStorage.setItem('pms_token','');

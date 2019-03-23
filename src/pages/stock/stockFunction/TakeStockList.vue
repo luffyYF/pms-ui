@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import { getTakeStockList, getStorageList } from "@/api/upmsStorage";
 import TakeStockDetail from './TakeStockDetail'
 export default {
@@ -66,7 +65,7 @@ export default {
   data() {
     return {
       loading: false,
-      currCompanyPk: Cookies.get("select_company_pk"),
+      currCompanyPk: localStorage.getItem("select_company_pk"),
       rows: [],
       PRINT_ROOT: process.env.PRINT_ROOT,
       storageData: [],

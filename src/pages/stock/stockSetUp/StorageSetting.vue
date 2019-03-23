@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
 import {getStorageList,addStorage,updateStorage, deleteStorage} from '@/api/upmsStorage';
 export default {
   components: {},
@@ -44,7 +43,7 @@ export default {
       loading: false,
       tableData: [],
       multipleSelection: [],
-      currCompanyPk: Cookies.get('select_company_pk')
+      currCompanyPk: localStorage.getItem('select_company_pk')
     };
   },
   created() {
