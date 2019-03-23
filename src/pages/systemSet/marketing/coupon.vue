@@ -163,7 +163,7 @@
           this.$message({ type: 'warning', message: "权限不足" })
           return
         }
-        self.loading = true
+        this.loading = true
         listCoupon(this.pageObj).then(result => {
             var data = result.data.data;
             // for(var i=0;i<data.length;i++){
@@ -173,11 +173,9 @@
             // }
             this.tableData = data
             this.pageObj.total = result.data.total
-            self.loading = false
         }).catch(() => {
-          self.loading = false
         }).finally(()=>{
-          self.loading = false
+          this.loading = false
         })
       },
       addClick(){

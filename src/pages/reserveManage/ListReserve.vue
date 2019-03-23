@@ -240,7 +240,7 @@
 
     <!-- DIALOG -->
     <!-- 订单页面 -->
-    <DialogCheckinVisible ref="checkinDialogRef" />
+    <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="init()" />
 
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
