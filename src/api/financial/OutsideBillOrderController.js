@@ -13,4 +13,7 @@ export const add = params => {
 export const settle = params => {
   return request.post('/back/outsideBillOrder/settle',params);
 }
+export const offset = params => {
+  return request.post('/back/outsideBillOrder/offset',params);
+}
 

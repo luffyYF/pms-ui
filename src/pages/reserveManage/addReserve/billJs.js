@@ -34,7 +34,6 @@
     partialCheckoutBill,
     singleRoomCheckoutBill,
     splitBill,
-    transBill,
     selectGuestOrderBill,
     countCheckoutBill,
     overtimeRemind
