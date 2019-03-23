@@ -11,7 +11,7 @@
         v-loading="loading"
         height="500px"
         style="width: 98%; margin:10px;">
-        <el-table-column label="房型" prop="roomTypeName" width="150"  align="center">=
+        <el-table-column label="房型" prop="roomTypeName" width="150"  align="center">
         </el-table-column>
         <el-table-column label="全价" prop="price" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
