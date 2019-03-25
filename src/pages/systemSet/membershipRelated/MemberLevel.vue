@@ -110,17 +110,21 @@
           <!-- 操作 -->
           <template slot-scope="scope">
             <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
+            <el-button @click="editClick(scope.row)" v-if="scope.row.gradePk" type="text" size="mini">价格设置</el-button>
             <el-button v-if="scope.row.gradePk == ''" @click="deleteRow(scope.$index,tableData)" type="text" size="mini">取消</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <MemberLevelEdit ref="MemberLevelEditRef" />
   </div>
 </template>
 
 <script>
   import {listGrade,addGrade,updateGrade} from '@/api/systemSet/member/pmsMemberGradeController'
+  import MemberLevelEdit from './MemberLevelEdit'
   export default {
+    components: { MemberLevelEdit },
     data() {
       return {
         options:[],
@@ -128,9 +132,16 @@
         loading:false,
       }
     },
+    created() {
+    this.init();
+    },
     methods: {
       init() {
         this.listGrade()
+      },
+      editClick(row){
+        var temoObj = JSON.parse(JSON.stringify(row))
+        this.$refs.MemberLevelEditRef.showDialog(temoObj)
       },
       saveClick(row) {
         row.autoUpgradeFlag = (row.upgradeMemPk == null || row.upgradeMemPk == "")?"N":"Y"

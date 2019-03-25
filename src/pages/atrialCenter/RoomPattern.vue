@@ -599,7 +599,7 @@
 
           var typeList = JSON.parse(localStorage.getItem("pms_type"))
           this.roomType = []
-          console.log(typeList.length)
+          // console.log(typeList.length)
           typeList.forEach(item=> {
             if(item.typeMaster == "ROOM_TYPE"){
               this.roomType.push(item);

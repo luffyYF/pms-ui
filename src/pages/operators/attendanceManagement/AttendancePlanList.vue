@@ -81,7 +81,6 @@
 </template>
 <script>
   import moment from 'moment'
-  import Cookies from 'js-cookie'
   import {attendanceTypeMap} from '@/utils/orm'
   import { attendanceListSelect, attendancePlanList,attendanceClassSelect,attendancePlanDelete } from '@/api/oaApi'
   import PlanAdd from './PlanAdd'
@@ -143,7 +142,7 @@
         let data = {
           date:this.listQuery.currDate+'-01',
           // groupId:this.listQuery.groupId,
-          companyPk:Cookies.get('select_company_pk')
+          companyPk:localStorage.getItem('select_company_pk')
         }
         this.header1 = []
         this.header2 = []

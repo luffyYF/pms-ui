@@ -159,6 +159,7 @@ import BillChecking from '@/pages/financialAudit/BillChecking'
 import BillCheckingLog from '@/pages/financialAudit/billCheckingLog/BillCheckingLog'
 import BillPostilLog from '@/pages/financialAudit/billPostilLog'
 import InvoiceList from '@/pages/financialAudit/invoiceManage/invoiceList.vue'
+import OutsideBillOrder from '@/pages/financialAudit/OutsideBillOrder/OutsideBillOrder.vue'
 
 // 房务管理
 import roomServiceTab from '@/pages/roomService/tab.vue'
@@ -313,6 +314,7 @@ export const constantRouterMap = [
           {path: '/financialAudit/billCheckingLog', component: BillCheckingLog, label: '对账记录'},
           {path: '/financialAudit/billPostilLog', component: BillPostilLog, label: '账单批注记录'},
           {path: '/financialAudit/InvoiceList', component: InvoiceList, label: '发票管理'},
+          {path: '/financialAudit/outsideBillOrder', component: OutsideBillOrder, label: '外账单管理'},
           // {path: '/financialAudit', component: OffsetDetail, label: '冲减明细报表'}
         ]
       },

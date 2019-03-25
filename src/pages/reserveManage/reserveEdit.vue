@@ -80,7 +80,6 @@
   import { paymentMap } from "@/utils/orm";
   import Agreement from "@/components/Agreement/Agreement";
   import { getUploadExcelAction } from "@/api/upload";
-  import Cookies from 'js-cookie'
 
   export default {
     components: { Agreement },
@@ -128,8 +127,8 @@
         getUploadExcelAction: getUploadExcelAction,
         headers: {
           'Authorization': 'Bearer '+localStorage.getItem('pms_token'),
-          'CompanyPk': Cookies.get('select_company_pk') == null ? '' : Cookies.get('select_company_pk'),
-          'ShiftPk': Cookies.get('select_shift_pk') == null ? '' : Cookies.get('select_shift_pk')
+          'CompanyPk': localStorage.getItem('select_company_pk') == null ? '' : localStorage.getItem('select_company_pk'),
+          'ShiftPk': localStorage.getItem('select_shift_pk') == null ? '' : localStorage.getItem('select_shift_pk')
         },
         dialogVisibleBox: false,
       }

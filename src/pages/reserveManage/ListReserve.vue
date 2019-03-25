@@ -240,7 +240,7 @@
 
     <!-- DIALOG -->
     <!-- 订单页面 -->
-    <DialogCheckinVisible ref="checkinDialogRef" />
+    <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="init()" />
 
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
@@ -523,14 +523,15 @@
         let noRowRooms = 0
         var roomNumber = '无';
         guestDots.forEach(guest => {
+
           if (guest['mainFlag'] == 'Y') {
             if(guest['roomPk'] && guest['roomNumber']){
               if(guest['roomNumber']!= roomNumber  ){
                 rowRooms.push(guest.roomNumber);
                 roomNumber = guest['roomNumber']
               }
-            }else{
-              noRowRooms++
+            }else if(guest['orderStatus'] != "CANCEL" ){
+                 noRowRooms++
             }
           }
         });

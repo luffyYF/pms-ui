@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="height-programme-one">
     <!-- <el-tabs v-model="activeName" ref='checkTabs' @tab-click="handleClick">
       <el-tab-pane label="系统参数设置" name="first" class="aLayerOfPage" v-if="powerJudge('2401')">
@@ -66,7 +66,7 @@
       <el-menu-item index="/systemSet/priceSetting" v-if="hasPerm('pms:systemSet:priceSetting')">
         <span slot="title">价格设置</span>
       </el-menu-item>
-      <el-menu-item index="/systemSet/marketingSetting" >
+      <el-menu-item index="/systemSet/marketingSetting" v-if="hasPerm('pms:systemSet:marketing')">
         <span slot="title">营销</span>
       </el-menu-item>
       <!-- <el-menu-item index="/systemSet/zlRoomStatusSetting" >

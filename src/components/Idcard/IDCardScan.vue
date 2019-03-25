@@ -1,8 +1,14 @@
 // 读取身份证公共组件
 <template>
   <section style="display: inline-block;text-align:center;width: 24px;">
-    <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" v-if="!idcLoading"></el-button>
-    <i class="el-icon-loading" v-else style="color:#409EFF"></i>
+    <template v-if="cssStyle=='ICON' || !cssStyle ">
+      <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" v-if="!idcLoading"></el-button>
+      <i class="el-icon-loading" v-else style="color:#409EFF"></i>
+    </template>
+
+    <template v-if="cssStyle=='BUTTON'">
+      <el-button type="primary" size="mini" @click="readIDCard" :loading="idcLoading">身份证扫描</el-button>
+    </template>
   </section>
 </template>
 
@@ -12,6 +18,13 @@ import base64 from 'js-base64'
 import {readCVR} from '@/components/hfplugin/index'
 import {saveCvrRecord} from '@/api/cvrApi/apiCVRController'
 export default {
+  props:{
+    //BUTTON ICON
+    cssStyle: String
+  },
+  mounted(){
+    // console.log('当前类型',this.cssStyle)
+  },
   data() {
     return {
       idcLoading:false,
@@ -22,6 +35,8 @@ export default {
   methods: {
     //调用读取身份证信息
     readIDCard() {
+      console.log(this.cssStyle)
+
       //end
       const curr = this
       this.idcLoading = true

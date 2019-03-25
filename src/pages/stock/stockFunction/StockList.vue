@@ -111,7 +111,6 @@
 
 <script>
 import Moment from "moment";
-import Cookies from "js-cookie";
 import { getStorageList, typeCascaderList, stockList } from "@/api/upmsStorage";
 
 export default {
@@ -127,7 +126,7 @@ export default {
       supplierPkList: [], //供应商
       tableData: [],
       pickerTime: "",
-      currCompanyPk: Cookies.get("select_company_pk"),
+      currCompanyPk: localStorage.getItem("select_company_pk"),
       cascaderList: [],
       pageNum:1,
       pageSize:10,

@@ -93,7 +93,6 @@
 
 <script>
 import Moment from 'moment'
-import Cookies from "js-cookie";
 import {getInSequence,findOutInfo, inventoryIn, getStorageList} from '@/api/upmsStorage'
 
 export default {
@@ -102,7 +101,7 @@ export default {
       inForm: {
         inventoryNo: null,
         userName: null,
-        companyPk: Cookies.get("select_company_pk"),
+        companyPk: localStorage.getItem("select_company_pk"),
         supplierPk: null,
         inTime: null,
         outId:null,

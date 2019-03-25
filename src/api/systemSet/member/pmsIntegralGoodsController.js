@@ -21,6 +21,12 @@ export const integralGoodsList = () => {
     return request.get('/back/integralGoods/list')
 }
 
+//查找积分商品列表
+export const listGridIntegralGoods = params =>{
+    return request.get('/back/integralGoods/listGrid',{params:params})
+}
+
+
 //保存积分商品
 export const integralGoodsUpdate = params => {
     return request.post('/back/integralGoods/update',params)

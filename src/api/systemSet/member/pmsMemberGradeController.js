@@ -31,3 +31,11 @@ export const listGradeCardFee = params => {
     return request.get('/back/grade/cardFee/list')
 }
 
+//查找会员-房型基础价格
+export const peiceList = params => {
+    return request.get('/back/memberRoomTypePrice/list',{params:params})
+}
+//设置会员价格
+export const priceSetting = params => {
+    return request.post('/back/memberRoomTypePrice/priceSetting', params)
+}
