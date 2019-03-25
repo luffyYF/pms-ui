@@ -120,6 +120,7 @@
           type: null,
           beginDate: null,
           endDate: null,
+          companyPk: JSON.parse(localStorage.getItem('current_logon_company')).companyPk,
         },
         dateTimeRange: [],
         total: 0,
@@ -189,7 +190,6 @@
         this.listSearch()
       },
       handleDateTimeChange (val) {
-        console.log(val)
         if (val == null) {
           this.listQuery.beginDate = null
           this.listQuery.endDate = null

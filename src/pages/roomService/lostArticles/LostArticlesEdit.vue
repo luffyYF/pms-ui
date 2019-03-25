@@ -90,6 +90,7 @@
       this.receiveUserId = null
       this.receiveUserName = null
       this.status = null
+      this.companyPk = null
       this.createTime = null
       this.updateTime = null
     }
@@ -112,6 +113,7 @@
       this.receiveUserId = pmsLostArticles.receiveUserId
       this.receiveUserName = pmsLostArticles.receiveUserName
       this.status = pmsLostArticles.status
+      this.companyPk = pmsLostArticles.companyPk
       this.createTime = pmsLostArticles.createTime
       this.updateTime = pmsLostArticles.updateTime
     }
@@ -132,6 +134,7 @@
           ],
         },
         userInfo: JSON.parse(localStorage.getItem('pms_userinfo')),
+        company: JSON.parse(localStorage.getItem('current_logon_company')),
       }
     },
     methods: {
@@ -202,6 +205,7 @@
             this.loading = true
             this.dataForm.depositUserId = this.userInfo.userPk
             this.dataForm.depositUserName = this.userInfo.upmsRealName
+            this.dataForm.companyPk = this.company.companyPk
             addApi(this.dataForm).then(res => {
               this.$message({ type: 'success', message: res.sub_msg })
               this.dialogVisible = false

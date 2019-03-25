@@ -22,3 +22,7 @@ export const disableAndRepairBatch = params => {
 export const delDisableAndRepairBatch = params => {
     return request.post('/back/roomManager/delDisableAndRepairBatch', params);
 }
+//维修 结束房间原因
+export const delRepairRoomReason = params => {
+    return request.post('/back/roomManager/delRepairRoomReason', params);
+}
