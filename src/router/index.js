@@ -165,6 +165,12 @@ import OutsideBillOrder from '@/pages/financialAudit/OutsideBillOrder/OutsideBil
 // 房务管理
 import roomServiceTab from '@/pages/roomService/tab.vue'
 import LostArticlesList from '@/pages/roomService/lostArticles/LostArticlesList.vue'
+import RoomPatternPage from '@/pages/roomService/roomState/RoomPattern.vue'
+import RoomManager from '@/pages/roomService/roomManager/RoomManager.vue'
+import RepairRecordList from '@/pages/roomService/repairRecord/RepairRecordList.vue'
+import RoomStatePrint from '@/pages/roomService/roomStatePrint/RoomStatePrint.vue'
+import StateLogList from '@/pages/roomService/stateLog/StateLogList.vue'
+import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepingLogList.vue'
 
 Vue.use(Router)
 /**
@@ -379,6 +385,12 @@ export const constantRouterMap = [
         name: '房务管理', 
         hidden: false,
         children: [
+          {path: '/roomService/RoomPattern', component:RoomPatternPage , label: '房态'},
+          {path: '/roomService/RoomManager', component:RoomManager , label: '房间管理'},
+          {path: '/roomService/RepairRecordList', component:RepairRecordList , label: '维修记录管理'},
+          {path: '/roomService/RoomStatePrint', component:RoomStatePrint , label: '房态打印'},
+          {path: '/roomService/StateLogList', component:StateLogList , label: '房态日志'},
+          {path: '/roomService/RoomSweepingLogList', component:RoomSweepingLogList , label: '房扫查询'},
           {path: '/roomService/LostArticlesList', component:LostArticlesList , label: '客人物品管理'},
         ]
       },
