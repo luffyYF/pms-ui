@@ -12,12 +12,12 @@
     <div id="print-receiptsreport" style="padding: 20px;text-align: center;border-top: 3px solid #eee;margin-bottom: 50px;overflow-y: auto;">
       <h3 style="text-align:center">客房营业统计表</h3>
       <!-- <h4 style="text-align:center"></h4> -->
-      <div style="width: 900px;margin: 0 auto;text-align:left;overflow:hidden; ">
+      <div style="width: 1000px;margin: 0 auto;text-align:left;overflow:hidden; ">
           <span>{{activeCompany.companyName}}</span><br>
         <span>{{currentDate}}</span><span style="padding-left:10px;">{{currentWeek}}</span>
       </div>
         
-      <div style="width: 900px;margin: 0 auto;text-align:center;overflow:hidden;border-top:2px solid black; ">
+      <div style="width: 1000px;margin: 0 auto;text-align:center;overflow:hidden;border-top:2px solid black; ">
           <div style="float: left;width: 46%;">
               <div style="text-align:center;float:left;width:45%;font-size:20px;margin:0;">=========今 </div>
               <div style="text-align:center;float:right;width:45%;font-size:20px;margin:0;">日=========</div>
@@ -25,7 +25,7 @@
               <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
                 <tr>
                     <th>开房数</th>
-                    <th>开房率%</th>
+                    <th style="min-width:10em;">开房率%</th>
                     <th>平均租</th>
                     <th>房租收入</th>
                 </tr>
@@ -42,7 +42,7 @@
             <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
                 <tr>
                     <th>开房数</th>
-                    <th>开房率%</th>
+                    <th style="min-width:10em;">开房率%</th>
                     <th>平均租</th>
                     <th>房租收入</th>
                 </tr>
@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div style="width: 900px;margin: 0 auto;text-align:center;border-top:2px solid black;overflow:hidden; ">
+      <div style="width: 1000px;margin: 0 auto;text-align:center;border-top:2px solid black;overflow:hidden; ">
         <div style="float: left;width: 46%;">
           <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid black;">
