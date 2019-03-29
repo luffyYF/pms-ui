@@ -5,19 +5,19 @@
       <el-form-item>
           营业日期：<el-date-picker v-model="listQuery.now" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini" :editable="false" :clearable="false"></el-date-picker>
         <el-button type="primary" @click="init()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
-        <!-- <el-button type="primary" @click="downloadExcel">导出EXCEL</el-button>
-        <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button> -->
+        <!-- <el-button type="primary" @click="downloadExcel">导出EXCEL</el-button> -->
+        <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
     <div id="print-receiptsreport" style="padding: 20px;text-align: center;border-top: 3px solid #eee;margin-bottom: 50px;overflow-y: auto;">
       <h3 style="text-align:center">客房营业统计表</h3>
       <!-- <h4 style="text-align:center"></h4> -->
-      <div style="width: 900px;margin: 0 auto;text-align:left;overflow:hidden; ">
+      <div style="width: 1000px;margin: 0 auto;text-align:left;overflow:hidden; ">
           <span>{{activeCompany.companyName}}</span><br>
         <span>{{currentDate}}</span><span style="padding-left:10px;">{{currentWeek}}</span>
       </div>
         
-      <div style="width: 900px;margin: 0 auto;text-align:center;overflow:hidden;border-top:2px solid black; ">
+      <div style="width: 1000px;margin: 0 auto;text-align:center;overflow:hidden;border-top:2px solid black; ">
           <div style="float: left;width: 46%;">
               <div style="text-align:center;float:left;width:45%;font-size:20px;margin:0;">=========今 </div>
               <div style="text-align:center;float:right;width:45%;font-size:20px;margin:0;">日=========</div>
@@ -25,7 +25,7 @@
               <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
                 <tr>
                     <th>开房数</th>
-                    <th>开房率%</th>
+                    <th style="min-width:10em;">开房率%</th>
                     <th>平均租</th>
                     <th>房租收入</th>
                 </tr>
@@ -42,7 +42,7 @@
             <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
                 <tr>
                     <th>开房数</th>
-                    <th>开房率%</th>
+                    <th style="min-width:10em;">开房率%</th>
                     <th>平均租</th>
                     <th>房租收入</th>
                 </tr>
@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div style="width: 900px;margin: 0 auto;text-align:center;border-top:2px solid black; ">
+      <div style="width: 1000px;margin: 0 auto;text-align:center;border-top:2px solid black;overflow:hidden; ">
         <div style="float: left;width: 46%;">
           <table style="text-align: center;font-family: 微软雅黑;font-size: 14px;margin:0 auto;"  width="100%" border="0"  cellpadding="8" cellspacing="0">
             <tr style="border-bottom: 1px solid black;">
@@ -122,6 +122,9 @@
               </tr>
           </table>
         </div>
+      </div>
+      <div style="width: 900px;margin: 5px auto;text-align:left;color:red; ">
+        <span>注:钟点房不统计入住率</span>
       </div>
     </div>
     <!-- 打印填充 iframe-->

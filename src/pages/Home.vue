@@ -360,7 +360,7 @@ export default {
             if(date.getHours() >= 6 && date.getMinutes() >= 0 && date.getSeconds() >20){
               clearInterval(this.nightTrialTimer)
             }
-            console.log(false)
+            // console.log(false)
             this.centerDialogVisible = false
             this.nightTrialFlag = false
           }

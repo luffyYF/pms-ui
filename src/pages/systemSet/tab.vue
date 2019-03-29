@@ -69,6 +69,9 @@
       <el-menu-item index="/systemSet/marketingSetting" v-if="hasPerm('pms:systemSet:marketing')">
         <span slot="title">营销</span>
       </el-menu-item>
+      <el-menu-item index="/systemSet/pay" v-if="hasPerm('pms:pay:paramsSetting')">
+        <span slot="title">支付参数配置</span>
+      </el-menu-item>
       <!-- <el-menu-item index="/systemSet/zlRoomStatusSetting" >
         <span slot="title">直连房态</span>
       </el-menu-item>

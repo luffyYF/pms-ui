@@ -6,6 +6,24 @@
       ref="reserveMenu"
       :router="true"
       class="el-menu-vertical-demo">
+      <el-menu-item index="/roomService/RoomPattern" v-if="hasPerm('pms:roomServePattern:list')">
+        <span slot="title">房态</span>
+      </el-menu-item>
+      <!-- <el-menu-item index="/roomService/RoomManager" v-if="hasPerm('pms:roomManager:list')">
+        <span slot="title">房间管理</span>
+      </el-menu-item> -->
+      <el-menu-item index="/roomService/RepairRecordList" v-if="hasPerm('pms:repairRecord:list')">
+        <span slot="title">维修记录</span>
+      </el-menu-item>
+      <el-menu-item index="/roomService/RoomStatePrint" v-if="hasPerm('pms:roomStatePrint:list')">
+        <span slot="title">房态打印</span>
+      </el-menu-item>
+      <el-menu-item index="/roomService/StateLogList" v-if="hasPerm('pms:stateLog:list')">
+        <span slot="title">房态日志</span>
+      </el-menu-item>
+      <el-menu-item index="/roomService/RoomSweepingLogList" v-if="hasPerm('pms:roomSweepingLog:list')">
+        <span slot="title">房扫查询</span>
+      </el-menu-item>
       <el-menu-item index="/roomService/LostArticlesList" v-if="hasPerm('pms:lostArticles:list')">
         <span slot="title">客人物品管理</span>
       </el-menu-item>

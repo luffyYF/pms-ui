@@ -7,5 +7,6 @@ module.exports = {
   UPMS_ROOT:'"http://192.168.5.6/upms-back"',
   OA_ROOT:'"http://192.168.5.6/oa-back"',
   PRINT_ROOT: '"http://192.168.5.6/printing/"',
+  PAY_ROOT: '"http://192.168.5.6/pay-tomcat/"',
   SERVER_FLAG:true,//是否是正式服标识 true是正式服 false本地测试
 }

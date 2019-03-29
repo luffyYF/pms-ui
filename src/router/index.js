@@ -137,6 +137,7 @@ import ChannelManagement from '@/pages/systemSet/ChannelManagement'
 import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
 import marketingSetting from '@/pages/systemSet/marketing/tab'
+import payConfig from '@/pages/systemSet/pay/tab'
 // import zlRoomStatusSetting from '@/pages/systemSet/zlRoomStatusSetting/tab'
 // import zlPriceSetting from '@/pages/systemSet/zlRoomStatusSetting/zlPriceSetting'
 
@@ -164,6 +165,12 @@ import OutsideBillOrder from '@/pages/financialAudit/OutsideBillOrder/OutsideBil
 // 房务管理
 import roomServiceTab from '@/pages/roomService/tab.vue'
 import LostArticlesList from '@/pages/roomService/lostArticles/LostArticlesList.vue'
+import RoomPatternPage from '@/pages/roomService/roomState/RoomPattern.vue'
+import RoomManager from '@/pages/roomService/roomManager/RoomManager.vue'
+import RepairRecordList from '@/pages/roomService/repairRecord/RepairRecordList.vue'
+import RoomStatePrint from '@/pages/roomService/roomStatePrint/RoomStatePrint.vue'
+import StateLogList from '@/pages/roomService/stateLog/StateLogList.vue'
+import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepingLogList.vue'
 
 Vue.use(Router)
 /**
@@ -352,6 +359,7 @@ export const constantRouterMap = [
           {path: '/systemSet/projectSetting', component: ProjectSetting, label: '入账项目显示设置'},
           {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},,
           {path: '/systemSet/marketingSetting', component: marketingSetting, label: '营销'},
+          {path: '/systemSet/pay', component: payConfig, label: '支付配置'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
         ]
@@ -377,6 +385,12 @@ export const constantRouterMap = [
         name: '房务管理', 
         hidden: false,
         children: [
+          {path: '/roomService/RoomPattern', component:RoomPatternPage , label: '房态'},
+          {path: '/roomService/RoomManager', component:RoomManager , label: '房间管理'},
+          {path: '/roomService/RepairRecordList', component:RepairRecordList , label: '维修记录管理'},
+          {path: '/roomService/RoomStatePrint', component:RoomStatePrint , label: '房态打印'},
+          {path: '/roomService/StateLogList', component:StateLogList , label: '房态日志'},
+          {path: '/roomService/RoomSweepingLogList', component:RoomSweepingLogList , label: '房扫查询'},
           {path: '/roomService/LostArticlesList', component:LostArticlesList , label: '客人物品管理'},
         ]
       },

@@ -26,8 +26,8 @@
           <span v-if="diff>=0">应收：{{diff}}</span>
         </div>
         <div class="settle-right">
-          <el-button type="primary" size="mini" @click="settle" :loading="loading2">结账</el-button>
-          <el-button type="primary" size="mini" @click="offset">冲减</el-button>
+          <el-button type="primary" size="mini" @click="settle" v-if="hasPerm('pms:outsideBill:settleAccounts')" :loading="loading2">结账</el-button>
+          <el-button type="primary" size="mini" @click="offset" v-if="hasPerm('pms:outsideBill:offset')">冲减</el-button>
           <!-- <el-button type="primary" size="mini">挂账</el-button> -->
         </div>
       </div>
@@ -45,9 +45,9 @@
       </el-table>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" size="mini" @click="addBill('CONSUMER')">入账</el-button>
-        <el-button type="primary" size="mini" @click="addBill('SETTLEMENT')">收款</el-button>
-        <el-button type="primary" size="mini" @click="saveBillOrder" :loading="loading1">保存账务</el-button>
+        <el-button type="primary" size="mini" @click="addBill('CONSUMER')" v-if="hasPerm('pms:outsideBill:accountEntry')">入账</el-button>
+        <el-button type="primary" size="mini" @click="addBill('SETTLEMENT')" v-if="hasPerm('pms:outsideBill:receivables')">收款</el-button>
+        <el-button type="primary" size="mini" @click="saveBillOrder" v-if="hasPerm('pms:outsideBill:save')" :loading="loading1">保存账务</el-button>
         <el-button @click="handleClose" size="mini">关闭</el-button>
       </span>
     </el-dialog>

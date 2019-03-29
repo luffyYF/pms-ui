@@ -11,6 +11,8 @@ let imageRoot = process.env.IMAGE_ROOT
 
 let uploadRoot = process.env.UPLOAD_ROOT
 
+let payRoot = process.env.PAY_ROOT
+
 let apiRoot = process.env.API_ROOT
 
 /**
@@ -19,6 +21,12 @@ let apiRoot = process.env.API_ROOT
 export const getUploadImageAction = () => {
   return uploadRoot + '/back/file/uploadImage';
 }
+
+/**
+ * 上传公共图片
+ */
+export const uploadKeyStoreFile = payRoot + 'back/file/upload/keyStoreFilePath';
+
 
 /**
  * 上传头像url

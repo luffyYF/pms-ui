@@ -40,7 +40,7 @@
         </el-form-item>
 
         <el-form-item label="所需积分" prop="integral">
-            <el-input-number size="mini" style="width:100%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.integral" ></el-input-number>
+            <el-input-number size="mini" style="width:100%;" :precision="0" :step="1" :controls="false" v-model="dataForm.integral" ></el-input-number>
         </el-form-item>
 
         <el-form-item label="活动时间" prop="datepicker">
