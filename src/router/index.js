@@ -131,7 +131,7 @@ import InventoryConsumeDetail from "@/pages/stock/stockFunction/InventoryConsume
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
 import MembershipRelated from '@/pages/systemSet/MembershipRelated/tab'
 import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
-import BellSpecialRoom from '@/pages/systemSet/BellSpecialRoom/tab'
+import HourRoom from '@/pages/systemSet/HourRoom'
 import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
 import ChannelManagement from '@/pages/systemSet/ChannelManagement'
 import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
@@ -346,7 +346,7 @@ export const constantRouterMap = [
           {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
           {path: '/systemSet/userSetting',  component: MembershipRelated, label: '会员相关设置'},
           {path: '/systemSet/roomSetting', component: RoomSetting , label: '客房设置'},
-          {path: '/systemSet/clockSpecial',  component: BellSpecialRoom, label: '钟点特殊房'},
+          {path: '/systemSet/clockSpecial',  component: HourRoom, label: '钟点房设置'},
           {path: '/systemSet/settleSetting',  component: ConsumerProjects, label: '消费项目设置'},
           {path: '/systemSet/channelManage', component: ChannelManagement, label: '渠道管理'},
           {path: '/systemSet/projectSetting', component: ProjectSetting, label: '入账项目显示设置'},

@@ -1,6 +1,6 @@
 // 批量入账
 <template>
-  <el-dialog class="pattern-dialog dialog-batch-addbill" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true">
+  <el-dialog class="pattern-dialog dialog-batch-addbill" title="批量入账" :visible.sync="dialogBatchEntry" width="800px" :close-on-click-modal="false" :append-to-body="true" :before-close="handleClose">
       <div class="pattern-dialog-container" >
         <div>
             <el-button size="mini" type="text" @click="addFormAddBillsClick()">添加</el-button>
@@ -77,7 +77,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary"  @click="addBillLists(formAddBills)">确认</el-button>
-        <el-button size="mini" @click="dialogBatchEntry = false">关闭</el-button>
+        <el-button size="mini" @click="handleClose">关闭</el-button>
       </span>
     </el-dialog>
 </template>
@@ -90,7 +90,7 @@ import { listByProjectType } from '@/api/systemSet/pmsProjectController'
 export default {
   data(){
     return {
-      dialogBatchEntry:false,
+      dialogBatchEntry: false,
       addBillMultipleSelection:[],
       guestOrderSelect: [],
       formAddBills:[{
@@ -110,7 +110,8 @@ export default {
       settlProjectList:[],
       orderPk:null,
       billItems:null,
-      dumbPk:''
+      dumbPk:'',
+      remindFlag: null,
     }
   },
   methods: {
@@ -119,13 +120,16 @@ export default {
      * @augments orderPk (必传) 
      * @augments isDubm (必传)  true是哑房账  false不是哑房账
      * @augments billItems (可选) 
-     */
-    showDialog(orderPk, isDubm, billItems, dumbPk) {
+     * @augments remindFlag (可选) 已提醒标识 1:钟点房收取 2:超时收取 3:提前退房收取
+    */
+    showDialog(orderPk, isDubm, billItems, dumbPk, remindFlag) {
       this.orderPk = orderPk
       this.billItems = billItems
+      this.remindFlag = remindFlag
       this.dialogBatchEntry = true
       this.isDubm = isDubm
       this.dumbPk = dumbPk
+      console.log(this.remindFlag)
       this.loadGuestSelect(orderPk)
       let cons = this 
       this.loadProject(function() {
@@ -277,31 +281,38 @@ export default {
         formAddBills[i].billType =  this.isDubm?'DUMB':'ROOM'
       }
       if(!this.isDubm){
-        addBills(formAddBills).then(res => {
+        let data = {
+          bills:formAddBills,
+          remindFlag:this.remindFlag
+        }
+        addBills(data).then(res => {
           if(res.code == 1){
             this.$message({
               message: '入账成功！',
               type: 'success'
             });
           }
-          if(this.billItems!=null && this.billItems.length>0) {
-            //回调到退房
-            this.$emit('to-settle', this.billItems[0])
-          }else{
-            //普通回调
-            this.$emit('callback', this.orderPk)
-          }
+          // if(this.billItems!=null && this.billItems.length>0) {
+          //   //回调到退房
+          //   this.$emit('to-settle', this.billItems[0])
+          // }else{
+          //   //普通回调
+          //   this.$emit('callback', this.orderPk)
+          // }
+          this.$emit('callback', this.orderPk)
           this.dialogBatchEntry = false;
           // this.lookupBillList(this.orderPk);
         })
       }else{
-        addDumbBills(formAddBills).then(res => {
-          if(res.code == 1) {
-            this.$message({
-              message: '入账成功！',
-              type: 'success'
-            });
-          }
+        let data = {
+          bills:formAddBills,
+          remindFlag:null
+        }
+        addDumbBills(data).then(res => {
+          this.$message({
+            message: '入账成功！',
+            type: 'success'
+          });
           this.$emit('callback')
           this.dialogBatchEntry = false;
         })
@@ -316,6 +327,11 @@ export default {
       else
         return roomNumber
     },
+
+    handleClose(){
+      this.dialogBatchEntry = false
+      this.$emit('callback')
+    }
   }
 }
 </script>

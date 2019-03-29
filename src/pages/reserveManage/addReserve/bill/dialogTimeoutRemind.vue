@@ -1,4 +1,3 @@
-
 <template>
   <!-- 退房超时提醒 -->
   <el-dialog class="pattern-dialog timeout-remind-dialog" title="提醒" :visible.sync="dialogVisable" width="600px" :before-close="handleClose" :append-to-body="true">

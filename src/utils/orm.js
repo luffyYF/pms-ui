@@ -1,11 +1,23 @@
-
-/**
- * 常量映射
- */
+import moment from 'moment'
 
  //夜审时间 单位：小时
 export const nightTrialTime=6;
 
+export const getNightDateTime = () =>{
+  if(moment().hour()<nightTrialTime) {
+    return moment().subtract(1, 'days').hours(23).minutes(59).seconds(59).format("YYYY-MM-DD HH:mm:ss");
+  }else{
+    return moment().format("YYYY-MM-DD HH:mm:ss");
+  }
+}
+
+export const getNightDate = () =>{
+  if(moment().hour()<nightTrialTime){
+    return moment().subtract(1, 'days').format("YYYY-MM-DD");
+  }else{
+    return moment().format("YYYY-MM-DD");
+  }
+}
 
 /**
  * 枚举映射

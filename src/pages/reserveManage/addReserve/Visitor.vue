@@ -73,7 +73,7 @@
           <el-col :span="24">
             <el-form-item label="入住类型：">
               <!-- :disabled="currFormType!='add-checkin'" -->
-              <el-radio-group v-model="form.checkInType" :disabled="currFormType=='guest-info' || currFormType=='add-guest'" @change="loadPrice">
+              <el-radio-group v-model="form.checkInType" :disabled="currFormType=='guest-info' || currFormType=='add-guest'" @change="checkinTypeChange">
                 <el-radio label="0">普通</el-radio>
                 <el-radio label="1">钟点房</el-radio>
                 <!-- <el-radio label="2">特殊房</el-radio> -->
@@ -341,7 +341,7 @@
     </el-row>
 
     <!-- 续房 -->
-    <el-dialog class="agreement-body" title="是否确认续房" :visible.sync="dialogExtend" width="30%" :append-to-body="true" :before-close="extendClose">
+    <el-dialog class="agreement-body" title="是否确认续房" :visible.sync="dialogExtend" width="30%" :close-on-click-modal="false" :append-to-body="true" :before-close="extendClose">
       <div class="body-conten">
         <p>离店日期改为：{{this.form.endDate}}</p>
         <!-- <p>付款方式：
@@ -385,28 +385,89 @@
         <el-button size="mini" type="primary" @click="QRCodeSettingSubmit">确 认</el-button>
       </span>
     </el-dialog>
+  
+    <!-- 钟点房价格方按选择 -->
+    <el-dialog 
+      class="agreement-body" 
+      title="钟点房方案" 
+      :visible.sync="hourVisible" 
+      width="860px" 
+      :append-to-body="true"
+      :before-close="dialogHourClose">
+      <div class="body-conten">
+        <el-table
+          border
+          :data="tableHourScheme"
+          @row-dblclick="dialogHourRoomSelect"
+          size="mini"
+          style="width: 100%">
+        <el-table-column
+          prop="schemeName"
+          align="center"
+          label="方案名称" show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="startTime"
+            align="center"
+            label="起步时间">
+          </el-table-column>
+          <el-table-column
+            prop="startPrice"
+            align="center"
+            label="起步价格">
+          </el-table-column>
+          <el-table-column
+          prop="standardBillingTime"
+          align="center"
+          label="标准计费时间">
+        </el-table-column>
+        <el-table-column
+          prop="standardBillingPrice"
+          align="center"
+          label="标准计费金额">
+        </el-table-column>
+        <el-table-column
+          prop="minimumBillingTime"
+          align="center"
+          label="最小计费时间">
+        </el-table-column>
+        <el-table-column
+          prop="minimumBillingPrice"
+          align="center"
+          label="最小计费金额">
+        </el-table-column>
+      </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogHourClose">取 消</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
     <!-- 预定管理 -->
     <reserveManager ref="reserveManagerRef" @callback="reserveManagerCallback"></reserveManager>
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
-     <!-- 退房超时收费提示 -->
+     <!-- 退房超时收费提示
     <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckAdvance" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
     <!-- 提前退房收费提示 -->
-    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind>
+    <!-- <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind> --> -->
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
+    <!-- 收费提醒 -->
+    <remind-dialog ref="remindDialogRef" @callback="checkout"></remind-dialog>
+  
   </div>
 </template>
 
 <script>
     import bus from '@/utils/bus'
     import moment from 'moment'
-    import {orderStatusMap,contractMap, paymentMap, credentialsMap} from '@/utils/orm'
+    import {MyToFixed} from '@/utils/number'
+    import {orderStatusMap,contractMap, paymentMap, credentialsMap, getNightDateTime} from '@/utils/orm'
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
     import {isInteger,validatePhone} from '@/utils/validate'
-    import {MyToFixed} from '@/utils/number'
     import {listContract} from "@/api/order/pmsContractControll"
     import {findPriceSchemeDetailPrice} from '@/api/systemSet/priceScheme/priceSchemeController'
     import {
@@ -428,17 +489,29 @@
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
     import {overtimeRemind,checkoutGuest} from '@/api/bill'
     import { listByProjectType } from '@/api/systemSet/pmsProjectController'
+    import {roomRuleSchemeList} from '@/api/systemSet/pmsRoomRuleController'
 
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
-    import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
-    import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
+    // import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
+    // import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
     import dialogBatchAddBill from './bill/dialogBatchAddBill'
     import IDCardScan from '@/components/Idcard/IDCardScan'
+    import RemindDialog from './bill/RemindDialog'
+
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind,dialogAdvanceCheckoutRemind, dialogBatchAddBill,IDCardScan},
+      components:{
+        IDCardScan,
+        chooseGuest, 
+        RemindDialog,
+        DialogMakeCard, 
+        reserveManager, 
+        dialogBatchAddBill,
+        // dialogTimeoutRemind,
+        // dialogAdvanceCheckoutRemind, 
+      },
       data() {
         return {
           /**
@@ -509,7 +582,8 @@
             pmsCancelFlag: null,
             checkinDate:null,
             checkoutDate:null,
-            diyPriceFlag: 'N'
+            diyPriceFlag: 'N',
+            hourRoomSchemePk:""
           },
           qrcodeForm:{
             guestOrderPk:'',
@@ -542,6 +616,9 @@
             },
           },
           regisType: '',
+          hourVisible:false,
+          tableHourScheme:[], 
+          
           // idcLoading:false,
           // idcTime:null,
           // timer:null,
@@ -620,11 +697,12 @@
             this.form.currTitle = '复制入住'
             this.form.roomPk = null
             this.form.roomNumber = null
-            if(moment().hour()<6){
-              this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-            }else{
-              this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
-            }
+            this.form.beginDate = getNightDateTime()
+            // if(moment().hour()<6){
+            //   this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+            // }else{
+            //   this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
+            // }
             this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
             this.loadPrice()
             this.getBookableCount()
@@ -745,11 +823,6 @@
             this.$emit('unlock')
             return
           }
-          // if(!this.form.guestPhone) {
-          //   this.$message.warning('请输入手机号')
-          //   this.$emit('unlock')
-          //   return
-          // }
           let data = {
             order: {orderPk: orderPk},
             guestOrder: this.form
@@ -794,13 +867,10 @@
           this.form.mealTicketNight = 0
           this.form.bornDate = null
           this.form.orderStatus=null
-          if(moment().hour()<6){
-            this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-          }else{
-            this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
-          }
+          this.form.beginDate = getNightDateTime()
           this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
           this.form.pmsCancelFlag = 'N'
+          this.form.hourRoomSchemePk = ""
           this.memberFlag = false
         },
         formFillGuestInfo(guest) {//填充客单信息
@@ -1031,18 +1101,17 @@
         toCheckout(guestOrderPk) {
           if(this.gsCheckin>1) {
             //检测入住的客单是否超过退房时间，进行提醒
-            this.$refs.dialogTimeoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+            this.$refs.remindDialogRef.showDialog(this.form.orderPk, guestOrderPk)
           }else {
             //检测是否有提前退房，进行提醒
-  
             //跳转账单页面
             bus.$emit('toCheckout')
           }
         },
 
-        toCheckAdvance(guestOrderPk) {
-          this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
-        },
+        // toCheckAdvance(guestOrderPk) {
+        //   this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+        // },
 
         //单房退房，提交
         checkout(guestOrderPk) {
@@ -1245,11 +1314,40 @@
           this.form.guestGender = data.guestGender
           this.form.nationality = data.nationality
           this.form.certificateType = 'TWO_IDENTITY'
+        },
+        //入住类型选择
+        checkinTypeChange(checkInType) {
+          this.form.hourRoomSchemePk = ''
+          if(checkInType=='1') {
+            if(!this.form.roomTypePk) {
+              this.$message.warning("请先选择房型")
+              this.form.checkInType='0'
+              return 
+            }
+            this.tableHourScheme=[]
+            roomRuleSchemeList({roomTypePk: this.form.roomTypePk}).then(res=>{
+              this.hourVisible = true
+              this.tableHourScheme = res.data
+            })
+          }else {
+            this.form.beginDate = getNightDateTime()
+            this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+          }
+          this.loadPrice()
+        },
+        dialogHourClose(){
+          this.hourVisible = false
+          this.form.checkInType='0'
+        },
+        dialogHourRoomSelect(	row, column, event){
+          console.log(row)
+          this.form.currPrice = row.startPrice
+          this.form.hourRoomSchemePk = row.schemePk
+          this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss")
+          this.form.endDate = moment(this.form.beginDate).add('hour', 1).format("YYYY-MM-DD HH:mm:ss")
+          this.hourVisible = false
         }
       },
-      mounted() {
-        // bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })
-      }
 
     }
 </script>
