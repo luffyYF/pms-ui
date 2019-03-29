@@ -10,5 +10,6 @@ module.exports = merge(prodEnv, {
   UPLOAD_ROOT: '"http://localhost"',//上传文件的地址 微云系统
   OA_ROOT:'"http://192.168.5.6/oa-back"',
   PRINT_ROOT: '"http://localhost:8083/"',
+  PAY_ROOT: '"http://localhost/"',
   SERVER_FLAG:false,//是否是正式服标识 true是正式服 false本地测试
 })

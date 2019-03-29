@@ -7,5 +7,6 @@ module.exports = {
   UPMS_ROOT:'"https://www.housefeel.cn/upms-back"',
   OA_ROOT:'"https://www.housefeel.cn/oa-back"',
   PRINT_ROOT: '"https://www.housefeel.cn/printing/"',
+  PAY_ROOT: '"https://www.housefeel.cn/pay-tomcat/"',
   SERVER_FLAG:true,//是否是正式服标识 true是正式服 false本地测试
 }
