@@ -11,13 +11,13 @@
             <el-time-picker
             v-model="form.beginTime"
             value-format="HH:mm:ss"
-            placeholder="任意时间点">
+            placeholder="开始时间">
             </el-time-picker>
             至
             <el-time-picker
             v-model="form.endTime"
             value-format="HH:mm:ss"
-            placeholder="任意时间点">
+            placeholder="结束时间">
             </el-time-picker>
           </el-form-item>
           <el-form-item>

@@ -129,7 +129,6 @@ export default {
       this.dialogBatchEntry = true
       this.isDubm = isDubm
       this.dumbPk = dumbPk
-      console.log(this.remindFlag)
       this.loadGuestSelect(orderPk)
       let cons = this 
       this.loadProject(function() {

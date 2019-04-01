@@ -202,26 +202,26 @@
           </el-table-column> -->
       </el-table>
     </el-dialog>
-      <el-dialog title="离店提醒" :center="true" style="position: absolute;width:480px;left: calc(100% - 480px);top: auto;padding:0;" top="0" 
-      :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
-        <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
-          <el-table-column align="center"  prop="channelName" label="渠道" width="80"></el-table-column>
-          <el-table-column align="center" prop="guestName" label="客人" width="80"></el-table-column>
-          <el-table-column align="center" prop="roomNumber" label="房号" width="80"></el-table-column>
-          <el-table-column align="center" prop="roomTypeName" label="房型" width="80"></el-table-column>
-          <el-table-column align="center" label="预离时间" >
+    <el-dialog title="离店提醒" :center="true" style="position: absolute;width:480px;left: calc(100% - 480px);top: auto;padding:0;" top="0" 
+    :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
+      <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
+        <el-table-column align="center"  prop="channelName" label="渠道" width="80"></el-table-column>
+        <el-table-column align="center" prop="guestName" label="客人" width="80"></el-table-column>
+        <el-table-column align="center" prop="roomNumber" label="房号" width="80"></el-table-column>
+        <el-table-column align="center" prop="roomTypeName" label="房型" width="80"></el-table-column>
+        <el-table-column align="center" label="预离时间" >
+          <template slot-scope="scope">
+          {{scope.row.guestEndDate | dateFormat('YYYY-MM-DD HH:mm')}}
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="操作"  width="80">
             <template slot-scope="scope">
-            {{scope.row.guestEndDate | dateFormat('YYYY-MM-DD HH:mm')}}
+                <el-button size="mini" type="text" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
             </template>
-          </el-table-column>
-          <!-- <el-table-column label="操作"  width="80">
-              <template slot-scope="scope">
-                 <el-button size="mini" type="text" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
-              </template>
-          </el-table-column> -->
-          
-        </el-table>
-      </el-dialog>
+        </el-table-column> -->
+        
+      </el-table>
+    </el-dialog>
     </div> 
     <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="getCurrentRoomList()" />
     <el-dialog
@@ -234,6 +234,8 @@
       center>
       <span>系统正在夜审...</span>
     </el-dialog>
+
+    <common-message ref="commonMessageRef"></common-message>
   </div>
 
   
@@ -246,7 +248,6 @@ import "../../static/img/user.png";
 import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
-import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
 // import {logout,refreshTokenUpms }from '@/api/login'
 import {logout,refreshTokenUpms,validateToken }from '@/api/upmsApi'
 import {
@@ -258,13 +259,15 @@ import {
     loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
 import {find} from '@/api/systemSet/pmsSysParamController'
-import {getNewGuestOrder} from '@/api/order/pmsOrderController'
+import {getNewGuestOrder} from '@/api/utils/pmsTimerController'
 
 import { allTypeList } from '@/api/utils/pmsTypeController'
-import { Message } from 'element-ui';
+import { Message } from 'element-ui'
+import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
+import CommonMessage from '@/pages/CommonMessage'
 
 export default {
-  components:{DialogCheckinVisible},
+  components:{DialogCheckinVisible,CommonMessage},
   created() {
     var test = window.localStorage.getItem("current_logon_company");
     if(test){
@@ -288,7 +291,7 @@ export default {
     setInterval(()=>{
       this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     }, 30*60*1000)
-    this.validateToken();
+    this.validateToken()
     this.nightTrialTask()
   },
   data() {
@@ -555,18 +558,18 @@ export default {
       })
     },
     //预离查询等
-      sysParmInit() {
-        var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
-        //每天只获取一次
-        if(tempSysParm == null || tempSysParm.queryTime != moment().format('YYYY-MM-DD')){
-          find().then(res=>{
-            var sysParm =  res.data
-            sysParm.queryTime = moment().format('YYYY-MM-DD')
-            localStorage.setItem("sysParm",JSON.stringify(sysParm))
-            this.getCurrentRoomList()
-          })
-        }
-      },
+    sysParmInit() {
+      var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
+      //每天只获取一次
+      if(tempSysParm == null || tempSysParm.queryTime != moment().format('YYYY-MM-DD')){
+        find().then(res=>{
+          var sysParm =  res.data
+          sysParm.queryTime = moment().format('YYYY-MM-DD')
+          localStorage.setItem("sysParm",JSON.stringify(sysParm))
+          this.getCurrentRoomList()
+        })
+      }
+    },
       initAlert(){
         //预离提示
         this.timer = setInterval(() => {

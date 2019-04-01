@@ -399,7 +399,7 @@ export default {
     // powerJudge(id) {
     //   return powerJudge(id);
     // }
-  }
+  },
 };
 </script>
 

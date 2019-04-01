@@ -68,7 +68,10 @@
         </div>
       </el-col>
       <el-col :span="15" class="visitor-addReservations">
-        <p class="visitor-title visiitor-add">{{form.currTitle}}</p>
+        <p class="visitor-title visiitor-add">
+          <span v-if="form.checkInType==1">钟点房已入住 {{hourRoomMinute}} 分钟&nbsp;&nbsp;&nbsp;</span>
+          {{form.currTitle}}
+        </p>
         <el-form ref="form" :model="form" size="mini" label-width="100px">
           <el-col :span="24">
             <el-form-item label="入住类型：">
@@ -189,7 +192,7 @@
                   <el-date-picker v-model="form.checkoutDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="离店日期：" required v-else>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N' || this.form.checkInType==1" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -449,10 +452,6 @@
     <reserveManager ref="reserveManagerRef" @callback="reserveManagerCallback"></reserveManager>
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
-     <!-- 退房超时收费提示
-    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckAdvance" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
-    <!-- 提前退房收费提示 -->
-    <!-- <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind> --> -->
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
     <!-- 收费提醒 -->
@@ -618,13 +617,21 @@
           regisType: '',
           hourVisible:false,
           tableHourScheme:[], 
-          
-          // idcLoading:false,
-          // idcTime:null,
-          // timer:null,
+          hourRoomMinute: 0,
         }
       },
+      mounted() {
+        this.$nextTick(function () {
+          setInterval(this.hourRoomTimer, 2000);
+        })
+      },
       methods: {
+        // 定时器执行内容
+        hourRoomTimer() {
+          if(this.form.checkInType==1){
+            this.hourRoomMinute = moment().diff(this.form.checkinDate,'minute')
+          }
+        },
         tableRowClassName({row, rowIndex}) {
           if(this.currTableIndex==row.guestOrderPk){
             return 'success-row';
@@ -1152,7 +1159,8 @@
           this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, billItems)
         },
 
-        guestTableClick(row, event, column) {//点击客单table
+        //点击客单table
+        guestTableClick(row, event, column) {
           this.currGuestList.forEach((guest,index)=>{
             if(row.guestOrderPk==guest.guestOrderPk){
               this.currFormType = 'guest-info'
@@ -1161,6 +1169,7 @@
               this.form.currTitle = this.orderStatusMap[guest.orderStatus]+'客人，客单号：'+guest.orderGuestNo
               this.tempEndDate = this.form.endDate
               this.calcDays();
+              this.hourRoomTimer()
               this.$emit('changeCurrGuest', guest, index);
             }
           });
@@ -1346,7 +1355,8 @@
           this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss")
           this.form.endDate = moment(this.form.beginDate).add('hour', 1).format("YYYY-MM-DD HH:mm:ss")
           this.hourVisible = false
-        }
+        },
+        
       },
 
     }
