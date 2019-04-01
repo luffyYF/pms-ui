@@ -1,6 +1,5 @@
 // 身份证录入
 <template>
-
   <section>
     <el-dialog class="idcard-input-dialog" title="录入身份证信息" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
       <el-table ref="idcardInputTab" 

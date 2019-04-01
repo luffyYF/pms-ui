@@ -429,16 +429,6 @@
           align="center"
           label="标准计费金额">
         </el-table-column>
-        <el-table-column
-          prop="minimumBillingTime"
-          align="center"
-          label="最小计费时间">
-        </el-table-column>
-        <el-table-column
-          prop="minimumBillingPrice"
-          align="center"
-          label="最小计费金额">
-        </el-table-column>
       </el-table>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -629,7 +619,13 @@
         // 定时器执行内容
         hourRoomTimer() {
           if(this.form.checkInType==1){
-            this.hourRoomMinute = moment().diff(this.form.checkinDate,'minute')
+            if(this.form.orderStatus=='CHECKIN') {
+              this.hourRoomMinute = moment().diff(this.form.checkinDate,'minute')
+            }else if(this.form.orderStatus=='LEAVE' || this.form.orderStatus=='LEAVENOPAY') {
+              this.hourRoomMinute = moment(this.form.checkoutDate).diff(this.form.checkinDate,'minute')
+            }else {
+              this.hourRoomMinute = 0
+            }
           }
         },
         tableRowClassName({row, rowIndex}) {
