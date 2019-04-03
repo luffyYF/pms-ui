@@ -1,8 +1,8 @@
 <template>
-  <el-dialog class="guest-manager-dialog" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
-    <el-table ref="guestManagerTab" 
+  <el-dialog class="guest-manager-page" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
+    <el-table ref="guestManagerTab"
       :row-class-name="tableRowClassName"
-      :data="guestTable" 
+      :data="guestTable"
       tooltip-effect="dark"
       style="width: 100%"
       height="400" 
@@ -45,7 +45,7 @@
             popper-class="my-autocomplete"
             v-model="scope.row.certificateNo"
             :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
+            placeholder="请输入或选择身份证号"
             size="mini"
             value-key="peopleIdCode"
             clearable
@@ -67,11 +67,10 @@
         </template>
       </el-table-column>
     </el-table>
-
     <span slot="footer" class="dialog-footer">
-    <el-button size="mini" type="primary" @click="submitBatch" :loading="loading">批量保存</el-button>
-    <el-button size="mini" @click="handleClose">关闭</el-button>
-  </span>
+      <el-button size="mini" type="primary" @click="submitBatch" :loading="loading">批量保存</el-button>
+      <el-button size="mini" @click="handleClose">关闭</el-button>
+    </span>
   </el-dialog>
   
 </template>
@@ -231,24 +230,23 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 .el-table .success-row {
   background: #f6faff
 }
- .my-autocomplete li{
+.my-autocomplete li{
   line-height: normal;
   padding: 1px 14px;
 }
- .my-autocomplete li .name{
+.my-autocomplete li .name{
   text-overflow: ellipsis;
   overflow: hidden;
 }
- .my-autocomplete li .addr{
+.my-autocomplete li .addr{
   font-size: 12px;
   color: #b4b4b4;
 }
 .my-autocomplete li .highlighted .addr{
   color: #ddd;
-
 }
 </style>

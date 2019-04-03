@@ -63,7 +63,7 @@
                  <span>{{contractMap[scope.row.status]}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="remark" label="说明" width="100" ></el-table-column>
+            <el-table-column prop="remark" label="说明" width="100" show-overflow-tooltip></el-table-column>
           </el-table>
         </div>
       </el-col>
@@ -199,7 +199,6 @@
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="入住天数：" required>
-                  <!-- <el-input v-model="form.checkinDays" :disabled="true"></el-input> -->
                   <el-input-number v-model="form.checkinDays" :min="1" @change="checkInDaysChange" :disabled="this.currFormType=='guest-info' || this.currFormType=='add-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
@@ -221,15 +220,13 @@
                 </el-form-item>
               </el-col>
             </el-col>
-            <el-col :span="12">
-              <el-col :span="18">
-                <!--  :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'" -->
+            <el-col :span="10">
+              <el-col :span="22">
                 <el-form-item label="手机号码：">
-                  <!-- :disabled="memberFlag" -->
                   <el-input v-model="form.guestPhone" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="2">
                 <span class="iconCarNoVip" title="读会员卡"></span>
               </el-col>
             </el-col>
@@ -243,17 +240,31 @@
               </el-col>
               <el-col :span="2">
                 <!-- <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" :loading="idcLoading"></el-button> -->
-                <IDCardScan @callback="getIDCardInfo"></IDCardScan>
+                <!-- <IDCardScan @callback="getIDCardInfo"></IDCardScan> -->
               </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="证件号码：">
-                  <el-input v-model="form.certificateNo" :disabled="memberFlag"></el-input>
+                  <!-- <el-input v-model="form.certificateNo" :disabled="memberFlag"></el-input> -->
+                  <el-autocomplete
+                    popper-class="my-autocomplete"
+                    v-model="form.certificateNo"
+                    :fetch-suggestions="querySearchAsync"
+                    value-key="peopleIdCode"
+                    placeholder="请输入或选择身份证号"
+                    clearable
+                    @select="getIDCardInfo">
+                    <template slot-scope="{ item }">
+                      <div class="name">{{ item.peopleName }}</div>
+                      <span class="addr">{{ item.peopleIdCode }}</span>
+                    </template>
+                  </el-autocomplete>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <span class="iconSearch" @click="seeCompany" title="根据证件号查询历史客人"></span>
+                <!-- <span class="iconSearch" @click="seeCompany" title="根据证件号查询历史客人"></span> -->
+                <IDCardScan @callback="getIDCardInfo"></IDCardScan>
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -479,7 +490,7 @@
     import {overtimeRemind,checkoutGuest} from '@/api/bill'
     import { listByProjectType } from '@/api/systemSet/pmsProjectController'
     import {roomRuleSchemeList} from '@/api/systemSet/pmsRoomRuleController'
-
+    import {list as idCardInfoList} from '@/api/order/pmsIdCardInfoController'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
@@ -608,6 +619,7 @@
           hourVisible:false,
           tableHourScheme:[], 
           hourRoomMinute: 0,
+          tempIdCardInfo:[]
         }
       },
       mounted() {
@@ -1313,7 +1325,7 @@
         //获取身份证信息
         getIDCardInfo(data){
           this.form.guestName = data.peopleName
-          this.form.certificateNo = data.peopleIDCode
+          this.form.certificateNo = data.peopleIdCode
           this.form.bornDate = data.peopleBirthday
           this.form.detailAddress = data.peopleAddress
           this.form.guestGender = data.peopleSex
@@ -1345,16 +1357,28 @@
           this.form.checkInType='0'
         },
         dialogHourRoomSelect(	row, column, event){
-          console.log(row)
           this.form.currPrice = row.startPrice
           this.form.hourRoomSchemePk = row.schemePk
           this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss")
           this.form.endDate = moment(this.form.beginDate).add('hour', 1).format("YYYY-MM-DD HH:mm:ss")
           this.hourVisible = false
         },
-        
-      },
 
+        querySearchAsync(queryString, cb) {
+          idCardInfoList({orderPk: this.form.orderPk}).then(res=>{
+            var restaurants = res.data
+            var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+            cb(results);
+          })
+        },
+        createStateFilter(queryString) {
+          return (restaurant) => {
+            let temp = restaurant.peopleName + restaurant.peopleIdCode
+            return (temp.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
+          };
+        },
+      },
+      
     }
 </script>
 
