@@ -14,13 +14,13 @@
           <div class="dialog-form-con">
             <el-form ref="form" :inline="true" size="mini" :model="form" label-width="68px" class="main-order-class">
                 <el-form-item label="名   称" required>
-                  <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
+                  <el-input v-model="form.name" ></el-input>
                 </el-form-item>
                 <el-form-item label="预订人">
-                  <el-input v-model="form.userName" :disabled="true"></el-input>
+                  <el-input v-model="form.userName"></el-input>
                 </el-form-item>
                 <el-form-item label="预订手机">
-                  <el-input v-model="form.userPhone" :disabled="true"></el-input>
+                  <el-input v-model="form.userPhone"></el-input>
                 </el-form-item>
                 <el-form-item label="是否团体">
                   <el-select v-model="form.isTeam" :disabled="currConfirmType!='add-checkin'">
@@ -33,7 +33,7 @@
                 </el-form-item> -->
                 <el-form-item label="协议单位" >
                   <el-input v-model="form.agreementName" :readonly="true">
-                    <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
+                    <el-button slot="append" icon="el-icon-search" :disabled="form.isTeam=='N'"  @click="openAgreement" title="查询协议单位"></el-button>
                   </el-input>
                 </el-form-item>
                 <el-form-item label="预订卡号">
@@ -490,6 +490,20 @@ export default {
       const guestOrderPo = this.$refs.visitorForm.form
 
       //校验
+      // if(!orderPo.userName) {
+      //   this.$message({type:'warning', message:'主单名称不能为空'})
+      //   return false
+      // }
+      // if(!orderPo.userName) {
+      //   this.$message({type:'warning', message:'预订人不能为空'})
+      //   return false
+      // }
+      if(orderPo.userPhone) {
+        if(!validatePhone(orderPo.userPhone)){
+          this.$message({type:'warning', message:'预定手机号不合法'})
+          return false
+        }
+      }
       if(!guestOrderPo.channelTypePk){
         this.$message({type:'warning', message:'客源渠道不能为空'})
         return false
@@ -522,26 +536,12 @@ export default {
         this.$message({type:'warning', message:'离店日期不能为空'})
         return false
       }
-      // if(this.currConfirmType=='add-checkin' || this.currConfirmType=='add-guest'){
-      //   if(!guestOrderPo.guestPhone){
-      //     this.$message({type:'warning', message:'请填写手机号'})
-      //     return false
-      //   }
-      // }
       if(guestOrderPo.guestPhone) {
         if(!validatePhone(guestOrderPo.guestPhone)){
           this.$message({type:'warning', message:'手机号不合法'})
           return false
         }
       }
-
-      //TODO 协议单位校验
-      // if(orderPo.isTeam=='Y'){
-      //   if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
-      //     this.$message({type:'warning', message: '协议单位不能为空'})
-      //     return false
-      //   }
-      // }
 
       return true
     },
@@ -735,6 +735,9 @@ export default {
           remark: this.form.remark,
           agreementName:this.form.agreementName,
           AgreementPk:this.form.agreementPk,
+          name: this.form.name,
+          userName: this.form.userName,
+          userPhone: this.form.userPhone
         }
 
         editOrder(data).then(res=>{})

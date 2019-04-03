@@ -116,7 +116,6 @@ export default {
     loadIDCardInfo(data){
       if(data) {
         data.orderPk = this.orderPk
-        console.log(this.orderPk)
         add(data).then(res=>{
           this.$message.success("录入成功")
           this.getList();
