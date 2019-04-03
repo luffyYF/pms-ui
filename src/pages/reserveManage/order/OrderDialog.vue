@@ -72,7 +72,7 @@
             <div class="pattern-visitor-button" v-if="currConfirmType!='add-checkin'">
               <!--<el-button size="mini" @click="dialogCommodity = true">商品部</el-button>
                <el-button size="mini" @click="dialogRegimentPayment = true">团付账</el-button> -->
-              <!-- <el-button size="mini" v-if="hasPerm('pms:orderAss:inputIdCard')" @click="inputIdCard">录入身份证信息</el-button> -->
+              <el-button size="mini" v-if="hasPerm('pms:orderAss:inputIdCard')" @click="inputIdCard">录入身份证信息</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:priceChangeRecord')" @click="toDialogPriceChangeHistory">房价变更记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:operRecord')" @click="toDialogOperationLog">操作记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:printRcOrder')" @click="toRcprint">打印RC单</el-button>
@@ -866,7 +866,7 @@ export default {
       this.$refs.dialogBatchContinueRoomRef.showDialog(this.currOrderInfo.order.orderPk)
     },
     inputIdCard() {
-      this.$refs.idCardInputDialogRef.showDialog()
+      this.$refs.idCardInputDialogRef.showDialog(this.currOrderInfo.order.orderPk)
     },
 
   },

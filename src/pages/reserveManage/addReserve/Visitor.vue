@@ -63,7 +63,7 @@
                  <span>{{contractMap[scope.row.status]}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="remark" label="说明"></el-table-column>
+            <el-table-column prop="remark" label="说明" width="100" ></el-table-column>
           </el-table>
         </div>
       </el-col>
@@ -1312,12 +1312,12 @@
         },
         //获取身份证信息
         getIDCardInfo(data){
-          this.form.guestName = data.guestName
-          this.form.certificateNo = data.certificateNo
-          this.form.bornDate = data.bornDate
-          this.form.detailAddress = data.detailAddress
-          this.form.guestGender = data.guestGender
-          this.form.nationality = data.nationality
+          this.form.guestName = data.peopleName
+          this.form.certificateNo = data.peopleIDCode
+          this.form.bornDate = data.peopleBirthday
+          this.form.detailAddress = data.peopleAddress
+          this.form.guestGender = data.peopleSex
+          this.form.nationality = data.certType
           this.form.certificateType = 'TWO_IDENTITY'
         },
         //入住类型选择

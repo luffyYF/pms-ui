@@ -22,7 +22,15 @@ export const getNightDate = () =>{
 /**
  * 枚举映射
  */
-
+export const genderMap = {
+  'M':'男',
+  'W': '女'
+}
+export const certTypeMap = {
+  'DL':'大陆',
+  'GAT':'港澳台',
+  'GW':'国外'
+}
 //订单状态
 export const orderStatusMap = {
   RESERVE: "预定",
