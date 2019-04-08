@@ -177,6 +177,7 @@ import moment from "moment";
 import { approvalStatusMap, outStatusMap,inStatusMap } from "@/utils/orm";
 import { applyList, applyDetailList,inventoryOutInfo,outConfirm } from "@/api/upmsStorage";
 import { cancelApply } from "@/api/oaApi";
+import bus from "@/utils/bus";
 
 
 export default {
@@ -206,6 +207,9 @@ export default {
       total: 0,
       status: 0,
     };
+  },
+  mounted () {
+    this.init()
   },
   methods: {
     init() {
@@ -284,7 +288,9 @@ export default {
     //跳转到出库TAB
     clickToInventoryIn(outId) {
       this.dialogVisible2 = false;
-      this.$emit('to-inventory-in', outId);
+      bus.$emit("operationIn", {outId: outId})
+      // this.$router.push('/stock/inventoryIn/O' + outId)
+      // this.$emit('to-inventory-in', outId);
     },
     
   }

@@ -10,12 +10,39 @@
     </el-tabs>
   </div> -->
   <div class="height-programme-one">
-    <el-menu :default-active="activeMenu" mode="horizontal" ref="reserveMenu" :router=true class="el-menu-vertical-demo">
-      <el-menu-item index="/stock/stockopr" v-if="hasPerm('pms:stock:stockOpr')">
+    <el-menu :default-active="activeMenu" mode="horizontal" ref="reserveMenu" @select="handleSelect" :router=true class="el-menu-vertical-demo">
+      <!-- <el-menu-item index="/stock/stockopr" v-if="hasPerm('pms:stock:stockOpr')">
         <span slot="title">库存功能</span>
       </el-menu-item>
       <el-menu-item index="/stock/setting"  v-if="hasPerm('pms:stock:stockSetting')">
         <span slot="title">库存相关设置</span>
+      </el-menu-item> -->
+      <el-menu-item index="/stock/applications" v-if="hasPerm('pms:application:add')">
+        <span slot="title">物品申领</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/applicationList" v-if="hasPerm('pms:application:list')">
+        <span slot="title">申领记录</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/inventoryIn" disabled>
+        <span slot="title">入库</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/stockList" v-if="hasPerm('pms:stockManage:list')">
+        <span slot="title">库存</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/inventoryConsumes" v-if="hasPerm('pms:consumeManage:add')">
+        <span slot="title">消耗</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/inventoryConsumeList" v-if="hasPerm('pms:consumeManage:list')">
+        <span slot="title">消耗记录</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/takeStocks" v-if="hasPerm('pms:takeStock:add')">
+        <span slot="title">库存盘点</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/takeStockList" v-if="hasPerm('pms:takeStock:list')">
+        <span slot="title">盘点记录</span>
+      </el-menu-item>
+      <el-menu-item index="/stock/storageSetting" v-if="hasPerm('pms:stock:stockSetting')">
+        <span slot="title">仓库设置</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">
@@ -27,6 +54,8 @@
 </template>
 
 <script>
+import bus from "@/utils/bus";
+
 export default {
   components: {},
   data() {
@@ -35,7 +64,9 @@ export default {
     };
   },
   methods: {
-    handleClick(tab, event) {
+    handleSelect(index, indexPath) {
+      console.log(index, indexPath)
+      this.activeMenu = index;
     },
   },
   mounted() {
@@ -43,6 +74,11 @@ export default {
     let routerPath = this.$refs.reserveMenu.$children[0].$options.propsData.index;
     this.activeMenu = routerPath;
     this.$router.push(routerPath);
+    
+    bus.$on("operationIn", (data) => {
+      this.activeMenu = '/stock/inventoryIn';
+      this.$router.push('/stock/inventoryIn/O' + data.outId)
+    })
   }
 };
 </script>

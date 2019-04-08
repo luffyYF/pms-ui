@@ -115,6 +115,9 @@ export default {
       company: JSON.parse(localStorage.getItem('current_logon_company')),
     };
   },
+  mounted () {
+    this.init()
+  },
   methods: {
     init(){
       let self = this
