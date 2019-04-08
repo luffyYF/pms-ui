@@ -72,7 +72,7 @@
       <el-menu-item index="/systemSet/pay" v-if="hasPerm('pms:pay:paramsSetting')">
         <span slot="title">支付参数配置</span>
       </el-menu-item>
-      <el-menu-item index="">
+      <el-menu-item index="" v-if="hasPerm('pms:systemSet:cmsManage')">
         <a class="hover" target="_blank" @click="toCms">
           <span slot="title">cms管理</span>
         </a>

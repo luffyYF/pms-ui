@@ -136,7 +136,9 @@ export default {
   // created() {
   //   this.init();
   // },
-  mounted() {},
+  mounted() {
+    this.init()
+  },
   methods: {
     init() {
       //加载仓库列表

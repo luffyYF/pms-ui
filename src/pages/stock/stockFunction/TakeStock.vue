@@ -88,6 +88,9 @@ export default {
       takeStockStatusMap:takeStockStatusMap,
     };
   },
+  mounted () {
+    this.init()
+  },
   methods: {
     init() {
       getStorageList({ companyPk: this.currCompanyPk }).then(res => {

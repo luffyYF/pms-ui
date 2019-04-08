@@ -81,6 +81,7 @@ export default {
   },
   mounted () {
     this.listQuery.companyPk = this.company.companyPk
+    this.init()
   },
   methods: {
     init() {
