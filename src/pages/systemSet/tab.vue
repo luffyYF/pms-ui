@@ -29,7 +29,7 @@
         <PriceSetting ref="priceSettingRef"/>
       </el-tab-pane>
     </el-tabs> -->
-    
+
       <!-- <el-tab-pane label="价格方案设置" name="tenth" class="aLayerOfPage" v-if="powerJudge('2410')">
         <price-scheme/>
       </el-tab-pane> -->
@@ -51,9 +51,9 @@
       <el-menu-item index="/systemSet/roomSetting" v-if="hasPerm('pms:systemSet:roomSetting')">
         <span slot="title">客房设置</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/systemSet/clockSpecial" v-if="hasPerm('pms:systemSet:clockSpecial')">
-        <span slot="title">钟点特殊房</span>
-      </el-menu-item> -->
+      <el-menu-item index="/systemSet/clockSpecial" v-if="hasPerm('pms:systemSet:clockSpecial')">
+        <span slot="title">钟点房设置</span>
+      </el-menu-item>
       <el-menu-item index="/systemSet/settleSetting" v-if="hasPerm('pms:systemSet:consItemSetting')">
         <span slot="title">消费项目设置</span>
       </el-menu-item>
@@ -68,6 +68,9 @@
       </el-menu-item>
       <el-menu-item index="/systemSet/marketingSetting" v-if="hasPerm('pms:systemSet:marketing')">
         <span slot="title">营销</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/pay" v-if="hasPerm('pms:pay:paramsSetting')">
+        <span slot="title">支付参数配置</span>
       </el-menu-item>
       <el-menu-item index="">
         <a class="hover" target="_blank" @click="toCms">

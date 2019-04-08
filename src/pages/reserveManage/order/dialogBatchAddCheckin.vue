@@ -17,7 +17,9 @@
               </el-form-item>
               <el-form-item label="入住类型" required>
                 <el-select v-model="form.checkInType" style="width:150px">
-                  <el-option v-for="(v, k) in checkInTypeMap" :key="k" :value="k" :label="v"></el-option>
+                  <!-- <el-option v-for="(v, k) in checkInTypeMap" :key="k" :value="k" :label="v"></el-option> -->
+                  <el-option value="0" label="普通"></el-option>
+                  <el-option value="4" label="接待房"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="是否团体">

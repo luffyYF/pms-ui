@@ -1,3 +1,4 @@
+// 钟点房设置
 <template>
   <div class="content-body">
     <el-form ref="form" :model="form" size="mini">
@@ -10,13 +11,13 @@
             <el-time-picker
             v-model="form.beginTime"
             value-format="HH:mm:ss"
-            placeholder="任意时间点">
+            placeholder="开始时间">
             </el-time-picker>
             至
             <el-time-picker
             v-model="form.endTime"
             value-format="HH:mm:ss"
-            placeholder="任意时间点">
+            placeholder="结束时间">
             </el-time-picker>
           </el-form-item>
           <el-form-item>
@@ -40,12 +41,12 @@
             <el-input v-model="form.checkInLongNum" size="mini" :disabled="!checkCheckInLongNum"></el-input>
             &nbsp;&nbsp;分钟自动转为正常入住
           </el-form-item>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-checkbox v-model="checkOverStartTime"></el-checkbox>
             &nbsp;&nbsp;钟点房入住超过起步时间&nbsp;&nbsp;
             <el-input size="mini" v-model="form.overStartTime" :disabled="!checkOverStartTime"></el-input>
             &nbsp;&nbsp;分钟自动转为正常入住
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             钟点房提前&nbsp;&nbsp;<el-input v-model="form.remindTimeNum" size="mini" clearable></el-input>&nbsp;&nbsp;分钟提醒操作员
           </el-form-item>
@@ -122,7 +123,7 @@
                 <el-input size="mini" v-model="scope.row.standardBillingPrice" ></el-input>
               </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               prop="date"
               align="center"
               label="最小计费时间">
@@ -137,7 +138,7 @@
               <template slot-scope="scope">
                 <el-input size="mini" v-model="scope.row.minimumBillingPrice" ></el-input>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               fixed="right"      
               align="center"
@@ -155,8 +156,6 @@
 
 <script>
 import {
-  roomRuleAdd,
-  roomRuleDel,
   roomRuleHour,
   roomRuleUpdate,
   roomRuleSchemeAdd,
@@ -166,15 +165,13 @@ import {
 } from "@/api/systemSet/pmsRoomRuleController";
 import { listType } from "@/api/utils/pmsTypeController";
 export default {
-  components: {},
-  watch: {},
   data() {
     return {
       form: {},
       checkExceedTime: true,
       checkCheckInLongNum: true,
       checkOverStartTime: true,
-      roomRulePk: "",
+      rulePk: "",
       tableData: [],
       roomTypeList: [],
 
@@ -191,41 +188,30 @@ export default {
     this.selectRoomType();
   },
   methods: {
-    init() {
-      this.selectRuleHour();
-      this.selectRoomType();
-    },
     selectRuleHour() {
       roomRuleHour().then(res => {
-        if (res.code == 1) {
-          this.form = res.data;
-          this.roomRulePk = this.form.roomRulePk;
-          this.form.exceedTimeFlag == "N"
-            ? (this.checkExceedTime = false)
-            : (this.checkExceedTime = true);
-          this.form.checkInLongNumFlag == "N"
-            ? (this.checkCheckInLongNum = false)
-            : (this.checkCheckInLongNum = true);
-          this.form.overStartTimeFlag == "N"
-            ? (this.checkOverStartTime = false)
-            : (this.checkOverStartTime = true);
-          this.selectSchemeList();
-        }
+        this.form = res.data;
+        this.rulePk = this.form.rulePk;
+        this.form.exceedTimeFlag == "N"
+          ? (this.checkExceedTime = false)
+          : (this.checkExceedTime = true);
+        this.form.checkInLongNumFlag == "N"
+          ? (this.checkCheckInLongNum = false)
+          : (this.checkCheckInLongNum = true);
+        this.form.overStartTimeFlag == "N"
+          ? (this.checkOverStartTime = false)
+          : (this.checkOverStartTime = true);
+        this.selectSchemeList();
       });
     },
     selectSchemeList() {
-      roomRuleSchemeList({ roomRulePk: this.roomRulePk }).then(res => {
+      roomRuleSchemeList({ rulePk: this.rulePk }).then(res => {
         if (res.code == 1) {
           this.tableData = res.data;
         }
       });
     },
     selectRoomType() {
-      // listType({ typeMaster: "ROOM_TYPE" }).then(res => {
-      //   if (res.code == 1) {
-      //     this.roomTypeList = res.data;
-      //   }
-      // });
       this.roomTypeList = []
       var typeList = JSON.parse(localStorage.getItem("pms_type"))
       typeList.forEach(item=> {
@@ -261,14 +247,14 @@ export default {
         startPrice: "",
         standardBillingTime: "",
         standardBillingPrice: "",
-        minimumBillingTime: "",
-        minimumBillingPrice: "",
+        // minimumBillingTime: "",
+        // minimumBillingPrice: "",
         isNew: true
       };
       this.tableData.push(item);
     },
     saveClick(row) {
-      row.roomRulePk = this.roomRulePk;
+      row.rulePk = this.rulePk;
       if (this.verification(row)) {
         if (row.isNew) {
           roomRuleSchemeAdd(row).then(res => {
@@ -305,11 +291,12 @@ export default {
         content = "请输入标准计费时间";
       } else if (row.standardBillingPrice == "") {
         content = "请输入标准计费金额";
-      } else if (row.minimumBillingTime == "") {
-        content = "请输入最小计费时间";
-      } else if (row.minimumBillingPrice == "") {
-        content = "请输入最小计费价格";
-      }
+      } 
+      // else if (row.minimumBillingTime == "") {
+      //   content = "请输入最小计费时间";
+      // } else if (row.minimumBillingPrice == "") {
+      //   content = "请输入最小计费价格";
+      // }
       if (content != "") {
         this.$message.error(content);
         return false;

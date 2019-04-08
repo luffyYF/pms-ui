@@ -19,6 +19,7 @@ import fullCalendar from 'vue-fullcalendar'
 import './directive'
 import {hasPermission} from "@/utils/hasPermission";
 import {refreshPmsType} from "@/utils/refreshPmsType";
+
 // import './mock' // simulation data
 
 // import 'babel-polyfill'

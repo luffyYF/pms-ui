@@ -63,17 +63,20 @@
                  <span>{{contractMap[scope.row.status]}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="remark" label="说明"></el-table-column>
+            <el-table-column prop="remark" label="说明" width="100" show-overflow-tooltip></el-table-column>
           </el-table>
         </div>
       </el-col>
       <el-col :span="15" class="visitor-addReservations">
-        <p class="visitor-title visiitor-add">{{form.currTitle}}</p>
+        <p class="visitor-title visiitor-add">
+          <span v-if="form.checkInType==1">钟点房已入住 {{hourRoomMinute}} 分钟&nbsp;&nbsp;&nbsp;</span>
+          {{form.currTitle}}
+        </p>
         <el-form ref="form" :model="form" size="mini" label-width="100px">
           <el-col :span="24">
             <el-form-item label="入住类型：">
               <!-- :disabled="currFormType!='add-checkin'" -->
-              <el-radio-group v-model="form.checkInType" :disabled="currFormType=='guest-info' || currFormType=='add-guest'" @change="loadPrice">
+              <el-radio-group v-model="form.checkInType" :disabled="currFormType=='guest-info' || currFormType=='add-guest'" @change="checkinTypeChange">
                 <el-radio label="0">普通</el-radio>
                 <el-radio label="1">钟点房</el-radio>
                 <!-- <el-radio label="2">特殊房</el-radio> -->
@@ -189,14 +192,13 @@
                   <el-date-picker v-model="form.checkoutDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="离店日期：" required v-else>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N' || this.form.checkInType==1" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="入住天数：" required>
-                  <!-- <el-input v-model="form.checkinDays" :disabled="true"></el-input> -->
                   <el-input-number v-model="form.checkinDays" :min="1" @change="checkInDaysChange" :disabled="this.currFormType=='guest-info' || this.currFormType=='add-guest'"></el-input-number>
                 </el-form-item>
               </el-col>
@@ -218,15 +220,13 @@
                 </el-form-item>
               </el-col>
             </el-col>
-            <el-col :span="12">
-              <el-col :span="18">
-                <!--  :required="currFormType=='add-checkin' || currFormType=='add-checkin-guest'" -->
+            <el-col :span="10">
+              <el-col :span="22">
                 <el-form-item label="手机号码：">
-                  <!-- :disabled="memberFlag" -->
                   <el-input v-model="form.guestPhone" @change="phoneChange" @keyup.enter.native="phoneChange(form.guestPhone)"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="2">
                 <span class="iconCarNoVip" title="读会员卡"></span>
               </el-col>
             </el-col>
@@ -240,17 +240,31 @@
               </el-col>
               <el-col :span="2">
                 <!-- <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" :loading="idcLoading"></el-button> -->
-                <IDCardScan @callback="getIDCardInfo"></IDCardScan>
+                <!-- <IDCardScan @callback="getIDCardInfo"></IDCardScan> -->
               </el-col>
             </el-col>
             <el-col :span="10">
               <el-col :span="22">
                 <el-form-item label="证件号码：">
-                  <el-input v-model="form.certificateNo" :disabled="memberFlag"></el-input>
+                  <!-- <el-input v-model="form.certificateNo" :disabled="memberFlag"></el-input> -->
+                  <el-autocomplete
+                    popper-class="my-autocomplete"
+                    v-model="form.certificateNo"
+                    :fetch-suggestions="querySearchAsync"
+                    value-key="peopleIdCode"
+                    placeholder="请输入或选择身份证号"
+                    clearable
+                    @select="getIDCardInfo">
+                    <template slot-scope="{ item }">
+                      <div class="name">{{ item.peopleName }}</div>
+                      <span class="addr">{{ item.peopleIdCode }}</span>
+                    </template>
+                  </el-autocomplete>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <span class="iconSearch" @click="seeCompany" title="根据证件号查询历史客人"></span>
+                <!-- <span class="iconSearch" @click="seeCompany" title="根据证件号查询历史客人"></span> -->
+                <IDCardScan @callback="getIDCardInfo"></IDCardScan>
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -341,7 +355,7 @@
     </el-row>
 
     <!-- 续房 -->
-    <el-dialog class="agreement-body" title="是否确认续房" :visible.sync="dialogExtend" width="30%" :append-to-body="true" :before-close="extendClose">
+    <el-dialog class="agreement-body" title="是否确认续房" :visible.sync="dialogExtend" width="30%" :close-on-click-modal="false" :append-to-body="true" :before-close="extendClose">
       <div class="body-conten">
         <p>离店日期改为：{{this.form.endDate}}</p>
         <!-- <p>付款方式：
@@ -385,28 +399,75 @@
         <el-button size="mini" type="primary" @click="QRCodeSettingSubmit">确 认</el-button>
       </span>
     </el-dialog>
+  
+    <!-- 钟点房价格方按选择 -->
+    <el-dialog 
+      class="agreement-body" 
+      title="钟点房方案" 
+      :visible.sync="hourVisible" 
+      width="860px" 
+      :append-to-body="true"
+      :before-close="dialogHourClose">
+      <div class="body-conten">
+        <el-table
+          border
+          :data="tableHourScheme"
+          @row-dblclick="dialogHourRoomSelect"
+          size="mini"
+          style="width: 100%">
+        <el-table-column
+          prop="schemeName"
+          align="center"
+          label="方案名称" show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="startTime"
+            align="center"
+            label="起步时间">
+          </el-table-column>
+          <el-table-column
+            prop="startPrice"
+            align="center"
+            label="起步价格">
+          </el-table-column>
+          <el-table-column
+          prop="standardBillingTime"
+          align="center"
+          label="标准计费时间">
+        </el-table-column>
+        <el-table-column
+          prop="standardBillingPrice"
+          align="center"
+          label="标准计费金额">
+        </el-table-column>
+      </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogHourClose">取 消</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 添加客人 选择客历 -->
     <chooseGuest ref="chooseGuestRef" @sendGuest="loadGuest($event)"></chooseGuest>
     <!-- 预定管理 -->
     <reserveManager ref="reserveManagerRef" @callback="reserveManagerCallback"></reserveManager>
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
-     <!-- 退房超时收费提示 -->
-    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckAdvance" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
-    <!-- 提前退房收费提示 -->
-    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="checkout" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind>
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
+    <!-- 收费提醒 -->
+    <remind-dialog ref="remindDialogRef" @callback="checkout"></remind-dialog>
+  
   </div>
 </template>
 
 <script>
     import bus from '@/utils/bus'
     import moment from 'moment'
-    import {orderStatusMap,contractMap, paymentMap, credentialsMap} from '@/utils/orm'
+    import {MyToFixed} from '@/utils/number'
+    import {orderStatusMap,contractMap, paymentMap, credentialsMap, getNightDateTime} from '@/utils/orm'
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
     import {isInteger,validatePhone} from '@/utils/validate'
-    import {MyToFixed} from '@/utils/number'
     import {listContract} from "@/api/order/pmsContractControll"
     import {findPriceSchemeDetailPrice} from '@/api/systemSet/priceScheme/priceSchemeController'
     import {
@@ -428,17 +489,29 @@
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
     import {overtimeRemind,checkoutGuest} from '@/api/bill'
     import { listByProjectType } from '@/api/systemSet/pmsProjectController'
-
+    import {roomRuleSchemeList} from '@/api/systemSet/pmsRoomRuleController'
+    import {list as idCardInfoList} from '@/api/order/pmsIdCardInfoController'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
     import DialogMakeCard from './dialogMakeCard'
-    import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
-    import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
+    // import dialogTimeoutRemind from '@/pages/reserveManage/addReserve/bill/dialogTimeoutRemind'
+    // import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
     import dialogBatchAddBill from './bill/dialogBatchAddBill'
     import IDCardScan from '@/components/Idcard/IDCardScan'
+    import RemindDialog from './bill/RemindDialog'
+
     export default {
       props: ['parentForm'],
-      components:{chooseGuest, reserveManager, DialogMakeCard, dialogTimeoutRemind,dialogAdvanceCheckoutRemind, dialogBatchAddBill,IDCardScan},
+      components:{
+        IDCardScan,
+        chooseGuest, 
+        RemindDialog,
+        DialogMakeCard, 
+        reserveManager, 
+        dialogBatchAddBill,
+        // dialogTimeoutRemind,
+        // dialogAdvanceCheckoutRemind, 
+      },
       data() {
         return {
           /**
@@ -509,7 +582,8 @@
             pmsCancelFlag: null,
             checkinDate:null,
             checkoutDate:null,
-            diyPriceFlag: 'N'
+            diyPriceFlag: 'N',
+            hourRoomSchemePk:""
           },
           qrcodeForm:{
             guestOrderPk:'',
@@ -542,12 +616,30 @@
             },
           },
           regisType: '',
-          // idcLoading:false,
-          // idcTime:null,
-          // timer:null,
+          hourVisible:false,
+          tableHourScheme:[], 
+          hourRoomMinute: 0,
+          tempIdCardInfo:[]
         }
       },
+      mounted() {
+        this.$nextTick(function () {
+          setInterval(this.hourRoomTimer, 2000);
+        })
+      },
       methods: {
+        // 定时器执行内容
+        hourRoomTimer() {
+          if(this.form.checkInType==1){
+            if(this.form.orderStatus=='CHECKIN') {
+              this.hourRoomMinute = moment().diff(this.form.checkinDate,'minute')
+            }else if(this.form.orderStatus=='LEAVE' || this.form.orderStatus=='LEAVENOPAY') {
+              this.hourRoomMinute = moment(this.form.checkoutDate).diff(this.form.checkinDate,'minute')
+            }else {
+              this.hourRoomMinute = 0
+            }
+          }
+        },
         tableRowClassName({row, rowIndex}) {
           if(this.currTableIndex==row.guestOrderPk){
             return 'success-row';
@@ -620,11 +712,12 @@
             this.form.currTitle = '复制入住'
             this.form.roomPk = null
             this.form.roomNumber = null
-            if(moment().hour()<6){
-              this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-            }else{
-              this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
-            }
+            this.form.beginDate = getNightDateTime()
+            // if(moment().hour()<6){
+            //   this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+            // }else{
+            //   this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
+            // }
             this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
             this.loadPrice()
             this.getBookableCount()
@@ -745,11 +838,6 @@
             this.$emit('unlock')
             return
           }
-          // if(!this.form.guestPhone) {
-          //   this.$message.warning('请输入手机号')
-          //   this.$emit('unlock')
-          //   return
-          // }
           let data = {
             order: {orderPk: orderPk},
             guestOrder: this.form
@@ -794,13 +882,10 @@
           this.form.mealTicketNight = 0
           this.form.bornDate = null
           this.form.orderStatus=null
-          if(moment().hour()<6){
-            this.form.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-          }else{
-            this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss");
-          }
+          this.form.beginDate = getNightDateTime()
           this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
           this.form.pmsCancelFlag = 'N'
+          this.form.hourRoomSchemePk = ""
           this.memberFlag = false
         },
         formFillGuestInfo(guest) {//填充客单信息
@@ -1031,18 +1116,17 @@
         toCheckout(guestOrderPk) {
           if(this.gsCheckin>1) {
             //检测入住的客单是否超过退房时间，进行提醒
-            this.$refs.dialogTimeoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+            this.$refs.remindDialogRef.showDialog(this.form.orderPk, guestOrderPk)
           }else {
             //检测是否有提前退房，进行提醒
-  
             //跳转账单页面
             bus.$emit('toCheckout')
           }
         },
 
-        toCheckAdvance(guestOrderPk) {
-          this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
-        },
+        // toCheckAdvance(guestOrderPk) {
+        //   this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.form.orderPk, guestOrderPk)
+        // },
 
         //单房退房，提交
         checkout(guestOrderPk) {
@@ -1083,7 +1167,8 @@
           this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, billItems)
         },
 
-        guestTableClick(row, event, column) {//点击客单table
+        //点击客单table
+        guestTableClick(row, event, column) {
           this.currGuestList.forEach((guest,index)=>{
             if(row.guestOrderPk==guest.guestOrderPk){
               this.currFormType = 'guest-info'
@@ -1092,6 +1177,7 @@
               this.form.currTitle = this.orderStatusMap[guest.orderStatus]+'客人，客单号：'+guest.orderGuestNo
               this.tempEndDate = this.form.endDate
               this.calcDays();
+              this.hourRoomTimer()
               this.$emit('changeCurrGuest', guest, index);
             }
           });
@@ -1238,19 +1324,61 @@
         },
         //获取身份证信息
         getIDCardInfo(data){
-          this.form.guestName = data.guestName
-          this.form.certificateNo = data.certificateNo
-          this.form.bornDate = data.bornDate
-          this.form.detailAddress = data.detailAddress
-          this.form.guestGender = data.guestGender
-          this.form.nationality = data.nationality
+          this.form.guestName = data.peopleName
+          this.form.certificateNo = data.peopleIdCode
+          this.form.bornDate = data.peopleBirthday
+          this.form.detailAddress = data.peopleAddress
+          this.form.guestGender = data.peopleSex
+          this.form.nationality = data.certType
           this.form.certificateType = 'TWO_IDENTITY'
-        }
-      },
-      mounted() {
-        // bus.$on('agreementPo', (po) => { this.backDialogAgreement(po) })
-      }
+        },
+        //入住类型选择
+        checkinTypeChange(checkInType) {
+          this.form.hourRoomSchemePk = ''
+          if(checkInType=='1') {
+            if(!this.form.roomTypePk) {
+              this.$message.warning("请先选择房型")
+              this.form.checkInType='0'
+              return 
+            }
+            this.tableHourScheme=[]
+            roomRuleSchemeList({roomTypePk: this.form.roomTypePk}).then(res=>{
+              this.hourVisible = true
+              this.tableHourScheme = res.data
+            })
+          }else {
+            this.form.beginDate = getNightDateTime()
+            this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
+          }
+          this.loadPrice()
+        },
+        dialogHourClose(){
+          this.hourVisible = false
+          this.form.checkInType='0'
+        },
+        dialogHourRoomSelect(	row, column, event){
+          this.form.currPrice = row.startPrice
+          this.form.hourRoomSchemePk = row.schemePk
+          this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss")
+          this.form.endDate = moment(this.form.beginDate).add('hour', 1).format("YYYY-MM-DD HH:mm:ss")
+          this.hourVisible = false
+        },
 
+        querySearchAsync(queryString, cb) {
+          idCardInfoList({orderPk: this.form.orderPk}).then(res=>{
+            var restaurants = res.data
+            var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+            cb(results);
+          })
+        },
+        createStateFilter(queryString) {
+          return (restaurant) => {
+            let temp = restaurant.peopleName + restaurant.peopleIdCode
+            return (temp.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
+          };
+        },
+      },
+      
     }
 </script>
 

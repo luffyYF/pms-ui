@@ -1,8 +1,8 @@
 <template>
-  <el-dialog class="guest-manager-dialog" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
-    <el-table ref="guestManagerTab" 
+  <el-dialog class="guest-manager-page" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
+    <el-table ref="guestManagerTab"
       :row-class-name="tableRowClassName"
-      :data="guestTable" 
+      :data="guestTable"
       tooltip-effect="dark"
       style="width: 100%"
       height="400" 
@@ -39,9 +39,23 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="certificateNo" label="证件号码" width="160" align="center">
-        <template slot-scope="scope"> 
-          <el-input type="text" size="mini" v-model="scope.row.certificateNo"></el-input>
+      <el-table-column prop="certificateNo" label="证件号码" width="180" align="center">
+        <template slot-scope="scope">
+          <el-autocomplete
+            popper-class="my-autocomplete"
+            v-model="scope.row.certificateNo"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入或选择身份证号"
+            size="mini"
+            value-key="peopleIdCode"
+            clearable
+            @select="getIDCardInfo(scope.$index, $event)">
+            <!-- <i class="el-icon-delete el-input__icon" slot="suffix" @click="handleIconClick(scope.$index, $event)"></i> -->
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.peopleName }}</div>
+              <span class="addr">{{ item.peopleIdCode }}</span>
+            </template>
+          </el-autocomplete>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="right">
@@ -53,11 +67,10 @@
         </template>
       </el-table-column>
     </el-table>
-
     <span slot="footer" class="dialog-footer">
-    <el-button size="mini" type="primary" @click="submitBatch" :loading="loading">批量保存</el-button>
-    <el-button size="mini" @click="handleClose">关闭</el-button>
-  </span>
+      <el-button size="mini" type="primary" @click="submitBatch" :loading="loading">批量保存</el-button>
+      <el-button size="mini" @click="handleClose">关闭</el-button>
+    </span>
   </el-dialog>
   
 </template>
@@ -67,6 +80,7 @@
 import {credentialsMap} from '@/utils/orm'
 import {validatePhone} from '@/utils/validate'
 import {listSimpleGuestMemberInfo, editOrderMemberBatch} from '@/api/order/pmsOrderController'
+import {list} from '@/api/order/pmsIdCardInfoController'
 import IDCardScan from '@/components/Idcard/IDCardScan'
 
 export default {
@@ -78,7 +92,9 @@ export default {
       credentialsMap:credentialsMap,
       guestTable: [],
       currOrderPk: null,
-      multipleSelection: []
+      multipleSelection: [],
+      tempIdCardInfo:[],
+
     };
   },
   methods: {
@@ -95,6 +111,10 @@ export default {
     getList(){
       listSimpleGuestMemberInfo({orderPk:this.currOrderPk}).then(res=>{
         this.guestTable = res.data;
+
+        list({orderPk:this.currOrderPk}).then(res=>{
+          this.tempIdCardInfo=res.data
+        })
       })
     },
     tableRowClassName({row, rowIndex}) {
@@ -151,12 +171,12 @@ export default {
     },
     //获取身份证信息
     getIDCardInfo(index, data){
-      this.$set(this.guestTable[index], 'guestName', data.guestName)
-      this.$set(this.guestTable[index], 'certificateNo', data.certificateNo)
-      this.$set(this.guestTable[index], 'birthday', data.bornDate)
-      this.$set(this.guestTable[index], 'address', data.detailAddress)
-      this.$set(this.guestTable[index], 'memSex', data.guestGender)
-      this.$set(this.guestTable[index], 'nationality', data.nationality)
+      this.$set(this.guestTable[index], 'guestName', data.peopleName)
+      this.$set(this.guestTable[index], 'certificateNo', data.peopleIdCode)
+      this.$set(this.guestTable[index], 'birthday', data.peopleBirthday)
+      this.$set(this.guestTable[index], 'address', data.peopleAddress)
+      this.$set(this.guestTable[index], 'memSex', data.peopleSex)
+      this.$set(this.guestTable[index], 'nationality', data.certType)
       this.$set(this.guestTable[index], 'certificateType', 'TWO_IDENTITY')
     },
     handleSelectionChange(val) {
@@ -192,14 +212,41 @@ export default {
       this.$emit('refresh', this.currOrderPk, 'visitor');
       this.dialogVisible = false;
       // this.initOrderInfo(this.currOrderPk, 'visitor')
-    }
+    },
 
+    querySearch(queryString, cb) {
+      var tempIdCardInfo = this.tempIdCardInfo;
+      var results = queryString ? tempIdCardInfo.filter(this.createFilter(queryString)) : tempIdCardInfo;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        let temp = restaurant.peopleName + restaurant.peopleIdCode
+        return (temp.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
+      };
+    },
   }
 };
 </script>
 
-<style>
-.guest-manager-dialog .el-table .success-row {
+<style lang="less">
+.el-table .success-row {
   background: #f6faff
+}
+.my-autocomplete li{
+  line-height: normal;
+  padding: 1px 14px;
+}
+.my-autocomplete li .name{
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.my-autocomplete li .addr{
+  font-size: 12px;
+  color: #b4b4b4;
+}
+.my-autocomplete li .highlighted .addr{
+  color: #ddd;
 }
 </style>

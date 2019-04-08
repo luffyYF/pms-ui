@@ -1,25 +1,25 @@
 <template>
   <div>
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      <el-tab-pane label="钟点房设置" name="hourRoom">
-        <hour-room ref="hourRoom"/>
+      <el-tab-pane label="支付宝参数" name="alipay" v-if="hasPerm('pms:pay:alipaySetting')">
+        <alipay ref="alipay"/>
       </el-tab-pane>
-      <el-tab-pane label="特殊房设置" name="specialRoom">
-        <special-room ref="specialRoom"/>
+      <el-tab-pane label="微信参数" name="wxPay" v-if="hasPerm('pms:pay:wxPaySetting')" >
+        <wxPay ref="wxPay"/>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-  import HourRoom from './HourRoom'
-  import SpecialRoom from './SpecialRoom'
-  // import {powerJudge} from '@/utils/permissionsOperation.js'
+  import alipay from './alipay'
+  
+  import wxPay from './wxPay'
   
   export default {
     components: {
-      HourRoom,
-      SpecialRoom
+      wxPay,
+      alipay
     },
     data () {
       return {
@@ -33,18 +33,14 @@
     methods: {
       handleClick (tab, event) {
         console.log(tab, event)
-        if(this.activeName == 'hourRoom'){
-          var child = this.$refs.hourRoom
-          child.init()
-        }else if(this.activeName == 'specialRoom'){
-          var child = this.$refs.specialRoom
-          child.init()
+        if(this.activeName == 'alipay'){
+            var child = this.$refs.alipay
+            child.init()
+        }else if(this.activeName == 'wxPay'){
+            var child = this.$refs.wxPay
+            child.init()
         }
       },
-      // powerJudge(id){
-      //   return powerJudge(id);
-      // }
-
     }
   }
 </script>

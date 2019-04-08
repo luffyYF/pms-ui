@@ -23,7 +23,7 @@
             </el-col>
             <el-col :span="4">
               <el-form-item label="预订手机">
-                <el-input v-model="form.userPhone"></el-input>
+                <el-input type="number" v-model="form.userPhone"></el-input>
               </el-form-item>
             </el-col> 
             <el-col :span="4">

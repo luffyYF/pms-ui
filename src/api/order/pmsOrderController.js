@@ -149,10 +149,6 @@ export const recoverCheckoutGuestOrder = params => {
 export const recoverReserveGuestOrder = params => {
     return request.post('/back/order/recoverReserveGuestOrder/'+params)
 }
-//定时查看新客单
-export const getNewGuestOrder = params => {
-    return request.get('/back/order/getNewGuestOrder',{params,params})
-}
 //添加入住
 export const addCheckin = params => {
     return request.post('/back/order/addCheckin', params)
