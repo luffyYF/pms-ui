@@ -14,17 +14,32 @@
             {{scope.row.typePk != ''?scope.row.typeCode:''}}
           </template>
         </el-table-column>
-        <el-table-column prop="typeName" label="名称" align="center" width="250">
+        <el-table-column prop="typeName" label="名称" align="center" width="160">
           <template slot-scope="scope">
-            <el-input size="mini" v-model="scope.row.typeName"></el-input>
+            <el-input size="mini" v-model="scope.row.typeName" :readonly="scope.row.defaultFlag == 'Y'"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sortNum" label="排序" align="center" width="120">
+        <el-table-column prop="sortNum" label="排序" align="center" width="110">
           <template slot-scope="scope">
             <el-input size="mini" v-model="scope.row.sortNum"></el-input>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center">
+        <el-table-column prop="remark" label="备注" align="center" width="230">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="scope.row.remark" :readonly="scope.row.defaultFlag == 'Y'"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createUserName" label="创建人" align="center" width="110">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="scope.row.createUserName" readonly></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center" width="150">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="scope.row.createTime" readonly></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" align="center" min-width="90">
           <!-- 操作 -->
           <template slot-scope="scope">
             <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
@@ -41,6 +56,8 @@
 <script>
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+import Moment from 'moment'
+
   export default {
     data() {
       return {
@@ -53,6 +70,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
           pageNum: 1
         },
         total: 0,
+        pms_userinfo: JSON.parse(localStorage.getItem('pms_userinfo'))
       }
     },
     methods: {
@@ -127,7 +145,11 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
             integralFlag:'N',
             monthlyRent:'',
             sortNum:'',
-            usingFlag:'N'
+            usingFlag:'N',
+            remark: '',
+            createUserId: this.pms_userinfo.upmsUserId,
+            createUserName: this.pms_userinfo.upmsRealName,
+            createTime: Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
           })
         }
       },
@@ -163,7 +185,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
 
 <style scoped>
 .bg-reserve {
-  width: 865px;
+  width: 1000px;
   position: relative;
   background: #f7f7f7;
   margin-top: 10px;

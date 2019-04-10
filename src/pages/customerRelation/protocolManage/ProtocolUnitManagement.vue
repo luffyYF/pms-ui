@@ -7,8 +7,8 @@
           <el-form-item label="单位名称">
             <el-input v-model="conditionalQuery.unitName" clearable></el-input>
           </el-form-item>
-          <el-form-item label="协议分类">
-            <el-select v-model="conditionalQuery.agreementTypePk" placeholder="请选择协议分类">
+          <el-form-item label="协议类别">
+            <el-select v-model="conditionalQuery.agreementTypePk" placeholder="请选择协议类别">
               <el-option label="全部" value=""></el-option>
               <el-option
                 v-for="(items,index) in agreementOptions"
@@ -61,24 +61,52 @@
       style="width: 98.5%; margin:10px;">
         <!-- <el-table-column prop="companyPk" label="所属分店" align="center" width="120">
         </el-table-column> -->
-        <el-table-column prop="unitName" label="单位名称" align="center">
+        <el-table-column prop="unitName" label="名称" align="center" min-width="110" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="typeName" label="协议分类" align="center">
+        <el-table-column prop="typeName" label="协议类别" align="center" min-width="110" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="saleName" label="销售员" align="center" width="90">
+        <el-table-column prop="contactName" label="联系人" align="center" min-width="100" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="unitPhone" label="单位电话" align="center" width="150">
+        <el-table-column prop="unitPhone" label="电话" align="center" min-width="120" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="contactName" label="联系人" align="center" width="120">
+        <el-table-column prop="contactPhone" label="手机" align="center" min-width="120" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="contactPhone" label="联系人手机" align="center" width="120">
+        <el-table-column prop="billPrice" label="挂账限额" align="center" min-width="100" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-if="scope.row.billFlag == 'N'">不允许挂账</span>
+            <span v-else>{{scope.row.billPrice}}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="billPrice" label="挂账限额" align="center" width="150">
+        <el-table-column prop="saleName" label="销售员" align="center" min-width="90" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="160">
+        <el-table-column prop="customerStatus" label="客户状态" align="center" min-width="80" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-if="scope.row.customerStatus == -1">过期</span>
+            <span v-else-if="scope.row.customerStatus == 0">冻结</span>
+            <span v-else>有效</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="customerGrade" label="客户等级" align="center" min-width="80" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-if="scope.row.customerGrade == 0">一般客户</span>
+            <span v-else-if="scope.row.customerGrade == 1">常规客户</span>
+            <span v-else>重大客户</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" align="center" min-width="160" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column prop="status" label="审核状态" align="center" min-width="80" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-if="scope.row.status == 0">未审核</span>
+            <span v-else>已审核</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" align="center" min-width="200">
           <!-- 操作 -->
           <template slot-scope="scope">
             <el-button @click="editProClick(scope.row)" type="text" size="mini">修改</el-button>
+            <el-button @click="updateProClick(scope.row)" type="text" size="mini">{{scope.row.customerStatus == 0 ? '启用' : '禁用'}}</el-button>
+            <el-button @click="auditProClick(scope.row)" type="text" size="mini" :disabled="scope.row.status == 1">审核</el-button>
             <!-- <el-button @click="specialPriceClick(scope.row)" type="text" size="mini">特殊房间设置</el-button> -->
             <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
@@ -352,7 +380,7 @@
 
 <script>
 import {listType} from '@/api/utils/pmsTypeController'
-import {addProject,delProject,updateProject,listProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
+import {addProject,delProject,updateProject,listProject,updateProjectCustomerStatus,updateProjectStatus} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
 import {addPriceProject,delPriceProject,listPriceProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementRoomPrice'
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 import addProtocolUnit from './addProtocolUnit'
@@ -697,7 +725,50 @@ export default {
       if (val == 'N') {
         this.form.billPrice = 0;
       }
-    }
+    },
+    updateProClick (row) {
+      const self = this
+      let data = {
+        agreementPk: row.agreementPk,
+        customerStatus: row.customerStatus == 0 ? 1 : 0
+      }
+      updateProjectCustomerStatus(data).then(res => {
+        if(res.code == 1){
+          self.$message({
+            type: 'success',
+            message: '操作成功'
+          });
+          this.agreementList(self.conditionalQuery.pageNum);
+        }
+      })
+    },
+    auditProClick (row) {
+      const self = this
+      self.$confirm('确认审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let data = {
+          agreementPk: row.agreementPk,
+          status: 1
+        }
+        updateProjectStatus(data).then(res => {
+          if(res.code == 1){
+            self.$message({
+              type: 'success',
+              message: '操作成功'
+            });
+            self.agreementList(self.conditionalQuery.pageNum);
+          }
+        })
+      }).catch(() => {
+        self.$message({
+          type: 'info',
+          message: '已取消审核'
+        });
+      });
+    },
   }
 };
 </script>
