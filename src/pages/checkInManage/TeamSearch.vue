@@ -2,11 +2,20 @@
   <section>
     <el-col :span="24">
       <el-form :inline="true" ref="form" :model="form" size="mini" label-width="80px"  class="demo-form-inline">
-        <el-form-item label="组单状态">
+        <!-- <el-form-item label="组单状态">
           <el-select v-model="form.orderStatus" placeholder="全部状态" clearable>
             <el-option v-for="(value,key) in orderStatusMap" :key="key" :label="value" :value="key"></el-option>
           </el-select>
+        </el-form-item> -->
+        <el-form-item label="快捷搜索:">
+          <el-radio-group v-model="form.combOrderStatus" @change="getList" size="small">
+            <el-radio-button label="CHECKIN">在住团队</el-radio-button>
+            <el-radio-button label="CHECKOUT">已退团队</el-radio-button>
+            <el-radio-button label="RESERVE">预定团队</el-radio-button>
+            <el-radio-button label="">全部状态</el-radio-button>
+          </el-radio-group>
         </el-form-item>
+        <br>
         <el-form-item label="入住房号">
           <el-input v-model="form.roomNumbers" placeholder="请输入入住房号" clearable style="width: 178px;"></el-input>
         </el-form-item>
@@ -132,7 +141,8 @@
           beginDate: '', 
           endDate: '',
           pageNum:1,
-          pageSize:10
+          pageSize:10,
+          combOrderStatus:''
         },
         orderStatusMap:orderStatusMap,
         filterText: '',

@@ -240,7 +240,7 @@
               </el-col>
               <el-col :span="2">
                 <!-- <el-button type="text" class="iconCertificate" @click="readIDCard" title="身份证扫描" :loading="idcLoading"></el-button> -->
-                <!-- <IDCardScan @callback="getIDCardInfo"></IDCardScan> -->
+                <!-- <IDCardScan @callback="setIdCardInfo"></IDCardScan> -->
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -253,8 +253,8 @@
                     :fetch-suggestions="querySearchAsync"
                     value-key="peopleIdCode"
                     placeholder="请输入或选择身份证号"
-                    clearable
-                    @select="getIDCardInfo">
+                    @select="setIdCardInfo">
+                    <i class="el-icon-delete el-input__icon" slot="suffix" @click="clearCardInfo()"></i>
                     <template slot-scope="{ item }">
                       <div class="name">{{ item.peopleName }}</div>
                       <span class="addr">{{ item.peopleIdCode }}</span>
@@ -264,7 +264,7 @@
               </el-col>
               <el-col :span="2">
                 <!-- <span class="iconSearch" @click="seeCompany" title="根据证件号查询历史客人"></span> -->
-                <IDCardScan @callback="getIDCardInfo"></IDCardScan>
+                <IDCardScan @callback="readIdCardInfo"></IDCardScan>
               </el-col>
             </el-col>
             <el-col :span="10">
@@ -670,6 +670,7 @@
         initRoomData(room) {
           this.loadRoomType(_=>{
             this.formReset()
+            this.form.orderPk = null
             this.currFormType='add-checkin'
             this.form.currTitle = '办理入住'
             this.form.roomPk = room.roomPk
@@ -851,6 +852,7 @@
         },
         //重置表单
         formReset() {
+          // this.form.orderPk = null
           this.form.currTitle = ''
           this.form.memPk = null
           this.form.guestOrderPk = null
@@ -1322,8 +1324,21 @@
         makeCard(room){
           this.$refs.dialogMakeCardRef.showDialog(room.roomPk,room.endDate,room.orderGuestNo,room.roomNumber,room.guestName);
         },
+
         //获取身份证信息
-        getIDCardInfo(data){
+        readIdCardInfo(data) {
+          let idNos = ""
+          this.currGuestList.forEach(item=>{
+            idNos += item.certificateNo+','
+          })
+          if(idNos.indexOf(data.peopleIdCode)!=-1) {
+            this.$message.warning("该身份信息已存在，请不要重复读取")
+            return
+          }
+          this.setIdCardInfo(data)
+        },
+        //设置身份证信息
+        setIdCardInfo(data){
           this.form.guestName = data.peopleName
           this.form.certificateNo = data.peopleIdCode
           this.form.bornDate = data.peopleBirthday
@@ -1364,9 +1379,32 @@
           this.hourVisible = false
         },
 
+        //清除身份信息
+        clearCardInfo() {
+          this.$set(this.form, 'guestName', '新客人')
+          this.$set(this.form, 'certificateNo', '')
+          this.$set(this.form, 'bornDate', null)
+          this.$set(this.form, 'detailAddress', null)
+          this.$set(this.form, 'guestGender', null)
+          this.$set(this.form, 'nationality', null)
+          this.$set(this.form, 'certificateType', 'TWO_IDENTITY')
+        },
+
         querySearchAsync(queryString, cb) {
+          if(!this.form.orderPk) {
+            cb([])
+            return;
+          }
           idCardInfoList({orderPk: this.form.orderPk}).then(res=>{
-            var restaurants = res.data
+            let idNos = ""
+            this.currGuestList.forEach(item=>{
+              if(item.guestOrderPk!=this.form.guestOrderPk) {
+                idNos += item.certificateNo + ","
+              }
+            })
+            let restaurants = res.data.filter(ele=>{
+              return idNos.indexOf(ele.peopleIdCode)==-1
+            })
             var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
             cb(results);
           })
