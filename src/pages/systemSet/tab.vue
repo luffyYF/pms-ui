@@ -29,7 +29,7 @@
         <PriceSetting ref="priceSettingRef"/>
       </el-tab-pane>
     </el-tabs> -->
-    
+
       <!-- <el-tab-pane label="价格方案设置" name="tenth" class="aLayerOfPage" v-if="powerJudge('2410')">
         <price-scheme/>
       </el-tab-pane> -->
@@ -72,6 +72,11 @@
       <el-menu-item index="/systemSet/pay" v-if="hasPerm('pms:pay:paramsSetting')">
         <span slot="title">支付参数配置</span>
       </el-menu-item>
+      <el-menu-item index="" v-if="hasPerm('pms:systemSet:cmsManage')">
+        <a class="hover" target="_blank" @click="toCms">
+          <span slot="title">cms管理</span>
+        </a>
+      </el-menu-item>
       <!-- <el-menu-item index="/systemSet/zlRoomStatusSetting" >
         <span slot="title">直连房态</span>
       </el-menu-item>
@@ -93,6 +98,7 @@
     data () {
       return {
         activeMenu:'',
+        CMS_ROOT: process.env.CMS_ROOT,
         // activeName: ''
       }
     },
@@ -105,6 +111,10 @@
       // this.activeName = this.$refs.checkTabs.panes[0].name
     },
     methods: {
+      toCms () {
+        let token = localStorage.getItem('pms_token')
+        window.open(this.CMS_ROOT + '?token=' + token)
+      },
     }
   }
 </script>
@@ -117,6 +127,13 @@
 }
 .el-tabs__nav-scroll{
   padding-left: 10px;
+}
+.hover {
+  display: inline-block;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  line-height: 32px;
 }
 </style>
 

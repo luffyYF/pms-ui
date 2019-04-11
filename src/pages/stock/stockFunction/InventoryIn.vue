@@ -112,6 +112,9 @@ export default {
       loading:false
     };
   },
+  mounted () {
+    this.init(this.$route.params.outId)
+  },
   methods: {
     /**
      * 初始化 

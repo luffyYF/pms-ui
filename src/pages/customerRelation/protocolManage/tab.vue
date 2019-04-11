@@ -10,9 +10,9 @@
       <el-tab-pane label="协议类别" name="protocolCategory" >
         <protocol-category ref="protocolCategory"/>
       </el-tab-pane>
-      <el-tab-pane label="行业分类" name="industryClassification" >
+      <!-- <el-tab-pane label="行业分类" name="industryClassification" >
         <industry-classification ref="industryClassification"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="账套管理" name="setBillList" >
         <setBillList ref="setBillList"/>
       </el-tab-pane>

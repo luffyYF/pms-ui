@@ -127,6 +127,15 @@ import StockTab from '@/pages/stock/tab';
 import StockFunction from "@/pages/stock/stockFunction/tab";
 import StockSetUp from "@/pages/stock/stockSetUp/tab";
 import InventoryConsumeDetail from "@/pages/stock/stockFunction/InventoryConsumeDetail.vue"
+import Application from "@/pages/stock/stockFunction/Application.vue"
+import ApplicationList from "@/pages/stock/stockFunction/ApplicationList.vue"
+import InventoryIn from "@/pages/stock/stockFunction/InventoryIn.vue"
+import StockList from "@/pages/stock/stockFunction/StockList.vue"
+import InventoryConsume from "@/pages/stock/stockFunction/InventoryConsume.vue"
+import InventoryConsumeList from "@/pages/stock/stockFunction/InventoryConsumeList.vue"
+import TakeStock from "@/pages/stock/stockFunction/TakeStock.vue"
+import TakeStockList from "@/pages/stock/stockFunction/TakeStockList.vue"
+import StorageSetting from "@/pages/stock/stockSetUp/StorageSetting.vue"
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
@@ -302,9 +311,18 @@ export const constantRouterMap = [
         name: '库存',
         hidden: false,
         children: [
-          {path: '/stock/stockopr', name: 'stockopr', component: StockFunction, label: '库存功能'},
-          {path: '/stock/setting',  component: StockSetUp, label: '库存相关设置'},
+          // {path: '/stock/stockopr', name: 'stockopr', component: StockFunction, label: '库存功能'},
+          // {path: '/stock/setting',  component: StockSetUp, label: '库存相关设置'},
+          {path: '/stock/applications',  component: Application, label: '物品申领'},
+          {path: '/stock/applicationList',  component: ApplicationList, label: '申领记录'},
+          {path: '/stock/inventoryIn/O:outId',  component: InventoryIn, label: '入库'},
+          {path: '/stock/stockList',  component: StockList, label: '库存'},
+          {path: '/stock/inventoryConsumes',  component: InventoryConsume, label: '消耗'},
+          {path: '/stock/inventoryConsumeList',  component: InventoryConsumeList, label: '消耗记录'},
           {path: '/stock/InventoryConsumeRecord/O:outId',  component: InventoryConsumeDetail, label: '消耗详细'},
+          {path: '/stock/takeStocks',  component: TakeStock, label: '库存盘点'},
+          {path: '/stock/takeStockList',  component: TakeStockList, label: '盘点记录'},
+          {path: '/stock/storageSetting',  component: StorageSetting, label: '仓库设置'},
         ]
       },
 

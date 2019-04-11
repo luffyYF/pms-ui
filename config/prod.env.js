@@ -8,5 +8,6 @@ module.exports = {
   OA_ROOT:'"https://www.housefeel.cn/oa-back"',
   PRINT_ROOT: '"https://www.housefeel.cn/printing/"',
   PAY_ROOT: '"https://www.housefeel.cn/pay-tomcat/"',
+  CMS_ROOT: '"https://www.housefeel.cn/cms/"',
   SERVER_FLAG:true,//是否是正式服标识 true是正式服 false本地测试
 }

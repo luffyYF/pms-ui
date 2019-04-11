@@ -28,3 +28,11 @@ export const allAgreement = params => {
 export const findUnitName = params => {
     return request.get('/back/agreement/findByPk', {params:params})
 }
+
+export const updateProjectCustomerStatus = params => {
+    return request.post('/back/agreement/updateCustomerStatus', params)
+}
+
+export const updateProjectStatus = params => {
+    return request.post('/back/agreement/updateStatus', params)
+}

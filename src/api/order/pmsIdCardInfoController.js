@@ -8,3 +8,7 @@ export const list = params => {
 export const add = params => {
   return request.post('/back/orderIdCardInfo/add', params)
 }
+//删除
+export const del = params => {
+  return request.post('/back/orderIdCardInfo/del/'+params)
+}
