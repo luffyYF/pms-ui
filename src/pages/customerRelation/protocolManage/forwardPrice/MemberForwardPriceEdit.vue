@@ -3,7 +3,7 @@
   <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="500px"
              :close-on-click-modal="false" :before-close="handleClose">
     <el-form ref="dataForm" size="mini" :rules="rules" :model="dataForm" label-width="110px">
-        <el-form-item label="活动时间" prop="datepicker">
+        <el-form-item label="日期时间" prop="datepicker">
             <el-date-picker style="width:100%;" v-model="dataForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
             </el-date-picker>
         </el-form-item>
@@ -12,11 +12,11 @@
                 <el-checkbox v-for="obj in weekList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="活动对象" prop="type">
-            <el-radio v-model="dataForm.type" size="mini" :label="0">全部单位</el-radio>
-            <el-radio v-model="dataForm.type" size="mini" :label="1">指定单位</el-radio>
+        <el-form-item label="对象" prop="type">
+            <el-radio v-model="dataForm.type" size="mini" :label="0">{{dataForm.agreementType == 1?"全部单位":"全部中介"}}</el-radio>
+            <el-radio v-model="dataForm.type" size="mini" :label="1">{{dataForm.agreementType == 1?"指定单位":"指定中介"}}</el-radio>
         </el-form-item>
-        <el-form-item label="会员选择" v-if="dataForm.type == 1" prop="agreementPks">
+        <el-form-item :label="dataForm.agreementType == 1?'协议单位':'中介'" v-if="dataForm.type == 1" prop="agreementPks">
             <el-checkbox-group :min="1" v-model="dataForm.agreementPks">
                 <el-checkbox v-for="obj in agreementList" :label="obj.agreementPk" :key="obj.agreementPk">{{obj.unitName}}</el-checkbox>
             </el-checkbox-group>
@@ -104,7 +104,7 @@
       allAgreement(){
         const self = this
         self.agreementList = [];
-        allAgreement().then(result => {
+        allAgreement({type:this.dataForm.agreementType}).then(result => {
             self.agreementList = self.agreementList.concat(result.data)
         }).catch(() => {
 

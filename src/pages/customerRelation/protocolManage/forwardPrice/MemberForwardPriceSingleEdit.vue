@@ -3,7 +3,7 @@
   <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="500px"
              :close-on-click-modal="false" :before-close="handleClose">
     <el-form ref="dataForm" size="mini" :rules="rules" :model="dataForm" label-width="110px">
-        <el-form-item label="单位名称" prop="gradeName">
+        <el-form-item :label="type == 1?'单位名称':'中介名称'" prop="unitName">
             {{dataForm.unitName}}
         </el-form-item>
         <el-form-item label="房间类型" prop="roomTypeName">
@@ -37,11 +37,13 @@
           price: [{ required: true, message: '请填写房价', trigger: 'blur' }],
         },
         title:"设置价格",
+        type:1
       }
     },
     methods: {
-      showDialog (row) {
+      showDialog (row,type) {
         this.dataForm = row
+        this.type = type
         this.dialogVisible = true
       },
       handleClose () {

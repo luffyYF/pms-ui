@@ -60,7 +60,7 @@
       height="450"
       style="width: 98.5%; margin:10px;">
         <!-- <el-table-column prop="companyPk" label="所属分店" align="center" width="120">
-        </el-table-column> -->
+        </el-table-column> --> 
         <el-table-column prop="unitName" :label="this.conditionalQuery.type == 1?'协议单位':'中介'" align="center">
         </el-table-column>
         <el-table-column prop="typeName" label="协议类别" align="center" min-width="110" show-overflow-tooltip>

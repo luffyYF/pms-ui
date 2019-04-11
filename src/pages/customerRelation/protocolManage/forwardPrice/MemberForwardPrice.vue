@@ -9,7 +9,7 @@
               <el-date-picker :picker-options="pickerOptions1" style="width:100%;" :clearable="false" v-model="datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="协议单位">
+            <el-form-item :label="this.listQuery.type == 1?'协议单位':'中介'">
                 <el-select size="mini" style="width:100%;" v-model="listQuery.agreementPk" placeholder="协议单位" clearable >
                     <el-option v-for="y in agreementList" :label="y.unitName" :value="y.agreementPk" :key="y.agreementPk"></el-option>
                 </el-select>
@@ -177,8 +177,7 @@
                 date:this.dateMap[column.property],
                 price:pricePo == null?0:pricePo.price
             }
-            this.$refs.MemberForwardPriceSingleEditRef.showDialog(data)
-            console.log(JSON.stringify(data))
+            this.$refs.MemberForwardPriceSingleEditRef.showDialog(data,this.listQuery.type)
         }
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
