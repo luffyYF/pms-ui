@@ -35,6 +35,9 @@
       <el-menu-item index="/customerRelation/protocolManage" v-if="hasPerm('pms:menu:protocolManage')">
         <span slot="title">协议管理</span>
       </el-menu-item>
+      <el-menu-item index="/customerRelation/intermediary" v-if="hasPerm('pms:menu:protocolManage')">
+        <span slot="title">中介管理</span>
+      </el-menu-item>
       <el-menu-item index="/customerRelation/virtualOrder" v-if="hasPerm('pms:menu:virBillManage')">
         <span slot="title">虚拟账单</span>
       </el-menu-item>

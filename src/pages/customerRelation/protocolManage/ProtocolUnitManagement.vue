@@ -51,7 +51,7 @@
     <!-- table -->
     <div class="bg-reserve">
       <h5 class="info-title">协议单位列表</h5>
-      <el-button type="primary" size="mini" class="add-pro" @click="addProClick">添加协议单位</el-button>
+      <el-button type="primary" size="mini" class="add-pro" @click="addProClick">{{this.conditionalQuery.type == 1?'添加协议单位':'添加中介'}}</el-button>
       <el-table 
       size="mini" 
       border 
@@ -61,7 +61,7 @@
       style="width: 98.5%; margin:10px;">
         <!-- <el-table-column prop="companyPk" label="所属分店" align="center" width="120">
         </el-table-column> -->
-        <el-table-column prop="unitName" label="单位名称" align="center">
+        <el-table-column prop="unitName" :label="this.conditionalQuery.type == 1?'协议单位':'中介'" align="center">
         </el-table-column>
         <el-table-column prop="typeName" label="协议分类" align="center">
         </el-table-column>
@@ -397,7 +397,8 @@ export default {
       },
       conditionalQuery: { 
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        type:1
       },
       roomTypeData:{ 
         companyPk:'',
@@ -478,11 +479,13 @@ export default {
     };
   },
   created () {
-    this.agreementList(1);
+    // this.agreementList(1);
     this.listMastersType();
   },
   methods: {
-    init() {
+    init(type) {
+      this.conditionalQuery.type = type
+    this.agreementList(1);
       this.listMastersType(1)
     },
     // powerJudge(id){
@@ -493,7 +496,7 @@ export default {
       // this.dialogProtocolVisible = true
       // self.form={};
       // this.proDialogTitle = '添加协议单位'
-      this.$refs.addProtocolUnitRef.init()
+      this.$refs.addProtocolUnitRef.init(this.conditionalQuery.type)
       // self.init();
     },
     preservationUnit(formName,proDialogTitle) {
@@ -505,6 +508,8 @@ export default {
           return
           if(proDialogTitle == '添加协议单位'){
             self.form.agreementPk=null;
+            self.form.type = self.conditionalQuery.type
+            console.log(self.form.type)
             self.form.billPrice = Number(self.form.billPrice);
             addProject(self.form).then(result => {
               if(result.code == 1){

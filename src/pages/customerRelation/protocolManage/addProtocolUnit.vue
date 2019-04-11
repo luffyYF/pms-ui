@@ -172,6 +172,7 @@ export default {
         sortNum: 0,
         unitName: '',
         unitPhone: '',
+        type:0
       },
       rules: {//表单验证
         agreementTypePk: [
@@ -223,13 +224,15 @@ export default {
         //   { required: true, message: '单位电话', trigger: 'blur' }
         // ],
       },
+      type:1
     };
   },
   created () {
     this.listMastersType();
   },
   methods: {
-    init() {
+    init(type) {
+      this.type = type
       this.listMastersType(1)
       this.addProClick()
     },
@@ -251,6 +254,7 @@ export default {
         if (valid) {
           if(proDialogTitle == '添加协议单位'){
             self.form.agreementPk=null;
+            self.form.type = self.type
             self.form.billPrice = Number(self.form.billPrice);
             addProject(self.form).then(result => {
               if(result.code == 1){
