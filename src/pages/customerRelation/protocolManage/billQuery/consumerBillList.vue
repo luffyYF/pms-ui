@@ -64,7 +64,7 @@
     </el-form>
     <!-- table -->
     <div class="bg-reserve">
-      <h5 class="info-title">账套列表</h5>
+      <h5 class="info-title">账务列表</h5>
       <el-table 
       size="mini" 
       border 
