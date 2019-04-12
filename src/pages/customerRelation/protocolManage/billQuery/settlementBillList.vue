@@ -3,7 +3,7 @@
     <!-- form -->
     <el-form ref="listQuery" :inline="true" :model="listQuery" size="mini" label-width="80px">
       <div class="bg-reserve">
-        <h5 class="info-title">账务管理</h5>
+        <h5 class="info-title">收款管理</h5>
             <el-form-item label="收款时间" prop="type">
                 <el-date-picker
                 style="width:160px;"
@@ -38,7 +38,7 @@
     </el-form>
     <!-- table -->
     <div class="bg-reserve">
-      <h5 class="info-title">账务列表</h5>
+      <h5 class="info-title">收款列表</h5>
       <el-table 
       size="mini" 
       border 
