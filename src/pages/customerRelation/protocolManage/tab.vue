@@ -22,6 +22,13 @@
       <el-tab-pane label="远期房价" name="MemberForwardPrice" >
         <MemberForwardPrice ref="MemberForwardPrice"/>
       </el-tab-pane>
+      <el-tab-pane label="账务查询" name="consumerBillList" >
+        <consumerBillList ref="consumerBillList"/>
+      </el-tab-pane>
+      <el-tab-pane label="收款查询" name="settlementBillList" >
+        <settlementBillList ref="settlementBillList"/>
+      </el-tab-pane>
+      
       <!-- <el-tab-pane label="协议价格调控" name="agreementPriceRegulation" v-if="powerJudge('150306')">
         <agreement-price-regulation ref="agreementPriceRegulation"/>
       </el-tab-pane> -->
@@ -38,6 +45,8 @@
   import setBillList from './setBill/setBillList'
   import unitBillList from './setBill/unitBillList'
   import MemberForwardPrice from './forwardPrice/MemberForwardPrice'
+  import consumerBillList from './billQuery/consumerBillList'
+  import settlementBillList from './billQuery/settlementBillList'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
@@ -49,6 +58,8 @@
       setBillList,
       unitBillList,
       MemberForwardPrice,
+      consumerBillList,
+      settlementBillList
     },
     data () {
       return {
@@ -62,31 +73,40 @@
     },
     methods: {
       handleClick (tab, event) {
-        if(this.activeName == 'protocolUnitManagement'){
-          var child = this.$refs.protocolUnitManagement
-          child.init(1)
-        }else if(this.activeName == 'salesmanManagement'){
-          var child = this.$refs.salesmanManagement
-          child.init()
-        }else if(this.activeName == 'protocolCategory'){
-          var child = this.$refs.protocolCategory
-          child.init()
-        }else if(this.activeName == 'industryClassification'){
-          var child = this.$refs.industryClassification
-          child.init()
-        }else if(this.activeName == 'agreementPriceRegulation'){
-          var child = this.$refs.agreementPriceRegulation
-          child.init()
-        }else if(this.activeName == 'setBillList'){
-          var child = this.$refs.setBillList
-          child.init(1)
-        }else if(this.activeName == 'unitBillList'){
-          var child = this.$refs.unitBillList
-          child.init(1)
-        }else if(this.activeName == 'MemberForwardPrice'){
-          var child = this.$refs.MemberForwardPrice
-          child.init(1)
-        }
+        this.$refs[this.activeName].init(1)
+        // if(this.activeName == 'protocolUnitManagement'){
+        //   var child = this.$refs.protocolUnitManagement
+        //   child.init(1)
+        // }else if(this.activeName == 'salesmanManagement'){
+        //   var child = this.$refs.salesmanManagement
+        //   child.init()
+        // }else if(this.activeName == 'protocolCategory'){
+        //   var child = this.$refs.protocolCategory
+        //   child.init()
+        // }else if(this.activeName == 'industryClassification'){
+        //   var child = this.$refs.industryClassification
+        //   child.init()
+        // }else if(this.activeName == 'agreementPriceRegulation'){
+        //   var child = this.$refs.agreementPriceRegulation
+        //   child.init()
+        // }else if(this.activeName == 'setBillList'){
+        //   var child = this.$refs.setBillList
+        //   child.init(1)
+        // }else if(this.activeName == 'unitBillList'){
+        //   var child = this.$refs.unitBillList
+        //   child.init(1)
+        // }else if(this.activeName == 'MemberForwardPrice'){
+        //   var child = this.$refs.MemberForwardPrice
+        //   child.init(1)
+        // }else if(this.activeName == 'consumerBillList'){
+        //   var child = this.$refs.consumerBillList
+        //   child.init(1)
+        // }else if(this.activeName == 'settlementBillList'){
+        //   var child = this.$refs.settlementBillList
+        //   child.init(1)
+        // }
+
+        
 
         console.log(tab, event)
       },

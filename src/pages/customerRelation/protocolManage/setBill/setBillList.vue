@@ -7,7 +7,7 @@
           <el-form-item label="账套名称">
             <el-input v-model="listQuery.setBillName" clearable></el-input>
           </el-form-item>
-          <el-form-item :label="this.listQuery.type == 1?'协议单位':'中介'" v-if="this.listQuery.type == 1" prop="type">
+          <el-form-item :label="this.listQuery.type == 1?'协议单位':'中介'" prop="type">
             <el-select size="mini" v-model="listQuery.agreementPk" placeholder="协议单位" :clearable="false" >
                 <el-option v-for="y in agreementList" :label="y.unitName" :value="y.agreementPk" :key="y.agreementPk"></el-option>
             </el-select>

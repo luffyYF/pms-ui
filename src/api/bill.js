@@ -114,11 +114,14 @@ export const findDepositFromBills = params => {
   return request.get('/back/bill/findDepositFromBills', {params:params})
 }
 
+
+//协议单位/中介账务 begin
+
+
 // 根据协议单位查找消费项账单
 export const listBillByAgreement = params => {
   return request.get('/back/bill/listBillByAgreement', {params:params})
 }
-
 // 根据账套查找账单
 export const listBillBySetBillPk = params => {
   return request.get('/back/bill/listBillBySetBillPk', {params:params})
@@ -135,3 +138,9 @@ export const listSetBillByAgreementPk = params => {
 export const unitSettleAccounts = params => {
   return request.post('/back/bill/unitSettleAccounts', params)
 }
+// 查询单位/中介,账务/收款
+export const agreementBillQuery = params => {
+  return request.get('/back/bill/agreementBillQuery', {params:params})
+}
+
+//协议单位/中介账务 end
