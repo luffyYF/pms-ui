@@ -25,8 +25,9 @@
       :data="tableData" 
       @expand-change="handExpandChange" 
       height="450" 
+      
         :expand-row-keys="orderExpands" row-key="agreementPk"   
-      style="width: 98.5%; margin:10px;">
+      style="width: 99%; margin:10px;">
         <!-- <el-table-column prop="companyPk" label="所属分店" align="center" width="120">
         </el-table-column> -->
          <el-table-column type="expand">
@@ -138,32 +139,32 @@
         <el-table-column label="" align="center">
             <el-table-column prop="contactName" :label="this.listQuery.type == 1?'协议单位':'中介'" align="center" width="100">
             </el-table-column>
-            <el-table-column prop="totalAccount" label="已挂账总额" align="center" width="120">
+            <el-table-column prop="totalAccount" label="已挂账总额" align="center" width="100">
             </el-table-column>
         </el-table-column>
         <el-table-column label="已结算总额" align="center">
             <el-table-column prop="cash" label="现金" align="center" width="100">
             </el-table-column>
-            <el-table-column prop="bankCard" label="银行卡" align="center" width="120">
+            <el-table-column prop="bankCard" label="银行卡" align="center" width="100">
             </el-table-column>
-            <el-table-column prop="freeSheet" label="免单" align="center" width="200">
+            <el-table-column prop="freeSheet" label="免单" align="center" width="100">
             </el-table-column>
-            <el-table-column prop="other" label="其他" align="center" width="150">
+            <el-table-column prop="other" label="其他" align="center" width="100">
             </el-table-column>
         </el-table-column>
 
         <el-table-column label="" align="center" width="90">
-            <el-table-column prop="totalUnsettled" label="未结算总额" align="center" width="200">
+            <el-table-column prop="totalUnsettled" label="未结算总额" align="center" width="100">
             </el-table-column>
             <!-- <el-table-column prop="settleAccountName" label="结账人" align="center" width="150">
             </el-table-column> -->
-            <el-table-column prop="billPrice" label="挂账额度" align="center" width="200">
+            <el-table-column prop="billPrice" label="挂账额度" align="center">
                 <template slot-scope="scope">
                     <span v-if="scope.row.billPrice == 0">无限制</span>
                     <span v-else>{{scope.row.billPrice}}</span>
                 </template>
             </el-table-column>
-            <el-table-column  label="挂账剩余额度" align="center" width="200">
+            <el-table-column  label="挂账剩余额度" align="center">
                 <template slot-scope="scope">
                     <span v-if="scope.row.billPrice == 0">无限制</span>
                     <span v-else>{{scope.row.billPrice - scope.row.totalAccount}}</span>
@@ -336,7 +337,7 @@ export default {
   },filters: {
       /* 格式化时间戳 */
       formatDate (val) {
-          return moment(new Date()).format("YYYY-MM-DD")
+          return moment(new Date(val)).format("YYYY-MM-DD")
       }
     }
 };
@@ -349,6 +350,7 @@ export default {
   margin-top: 10px;
   border: 1px solid #ccc;
   padding-top: 18px;
+  min-width: 1200px ;
 }
 .info-title {
   position: absolute;

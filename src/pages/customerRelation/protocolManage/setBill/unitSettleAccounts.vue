@@ -68,7 +68,7 @@
             <el-button type="primary" size="mini" @click="freeSheetClick()">免单</el-button>
             <!-- <el-button type="primary" size="mini" >预收款</el-button>
             <el-button type="primary" size="mini" >支票</el-button> -->
-            <el-button type="primary" size="mini" @click="shouKuanClick(true,'财务结算')">其他</el-button>
+            <el-button type="primary" size="mini" @click="otherClick()">其他</el-button>
         </p>
         
         <el-table
@@ -109,16 +109,10 @@
         <el-form ref="shoukuanObj" size="mini" :rules="rules" :model="shoukuanObj" label-width="110px">
 
             <el-form-item label="收款方式" prop="projectPk" v-if="isPlus">
-                <el-select size="mini" v-model="shoukuanObj.projectPk"  style="width:100%;" placeholder="收款方式">
-                    <el-option v-for="y in quickProjectList" :label="y.projectName" :value="y.projectPk" :key="y.projectPk">
-                    </el-option>
-                </el-select>
+                <el-radio v-model="shoukuanObj.projectPk" :key="y.projectPk" v-for="y in quickProjectList" :label="y.projectPk">{{y.projectName}}</el-radio>
             </el-form-item>
             <el-form-item label="收款方式" prop="projectPk" v-else>
-                <el-select size="mini" v-model="shoukuanObj.projectPk"  style="width:100%;" placeholder="收款方式">
-                <el-option v-for="y in refundProjectList" :label="y.projectName" :value="y.projectPk" :key="y.projectPk">
-                </el-option>
-                </el-select>
+                <el-radio v-model="shoukuanObj.projectPk" :key="y.projectPk" v-for="y in refundProjectList" :label="y.projectPk">{{y.projectName}}</el-radio>
             </el-form-item>
             <el-form-item label="金额" prop="money">
                 <el-input-number style="width:100%;" :controls="false" v-model="shoukuanObj.money" :precision="2" :min="1" :step="1" size="mini"></el-input-number>
@@ -131,6 +125,31 @@
         <span slot="footer" class="dialog-footer">
             <el-button type="primary" size="mini" @click="shouKuanSaveClick()">确定</el-button>
             <el-button @click="shoukuanDialog = false" size="mini">取 消</el-button>
+        </span>
+    </el-dialog>
+
+    <el-dialog class="setBillSettle" title="账务结算" top="150px" :visible.sync="otherDialog" width="400px"
+             :close-on-click-modal="false" :before-close="handleOtherClose">
+            
+        <el-form ref="otherObj" size="mini" :rules="rules" :model="otherObj" label-width="110px">
+
+            <el-form-item label="收款方式" prop="projectPk" >
+                <el-select size="mini" v-model="otherObj.projectPk"  style="width:100%;" placeholder="收款方式">
+                    <el-option v-for="y in otherProjectList" :label="y.projectName" :value="y.projectPk" :key="y.projectPk">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="金额" prop="money">
+                <el-input-number style="width:100%;" :controls="false" v-model="otherObj.money" :precision="2" :min="1" :step="1" size="mini"></el-input-number>
+            </el-form-item>
+             <el-form-item label="备注" prop="remark">
+                <el-input size="mini" style="width:100%;" v-model="otherObj.remark" type="text"/>
+            </el-form-item>
+        </el-form>
+
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" size="mini" @click="otherSaveClick()">确定</el-button>
+            <el-button @click="otherDialog = false" size="mini">取 消</el-button>
         </span>
     </el-dialog>
 
@@ -160,13 +179,13 @@
              :close-on-click-modal="false" :before-close="handlemdClose">
         <el-form ref="mdObj" size="mini" :rules="rules" :model="mdObj" label-width="110px">
             <el-form-item label="收款方式" prop="projectPk" >
-                <el-select size="mini" v-model="mdObj.projectPk" :disabled="true" style="width:100%;" placeholder="收款方式">
-                    <el-option v-for="y in quickProjectList" :label="y.projectName" :value="y.projectPk" :key="y.projectPk">
+                <el-select size="mini" v-model="mdObj.projectPk" style="width:100%;" placeholder="收款方式">
+                    <el-option v-for="y in mdProjectList" :label="y.projectName" :value="y.projectPk" :key="y.projectPk">
                     </el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="金额" prop="money" >
+            <el-form-item label="免单金额" prop="money" >
                 <el-input-number style="width:100%;" :controls="false" v-model="mdObj.money" :precision="2" :min="1" :step="1" size="mini"></el-input-number>
             </el-form-item>
              <el-form-item label="备注" prop="remark">
@@ -228,6 +247,7 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
   export default {
     data () {
       return {
+        otherDialog:false,
         setBillDialog:false,
         mdDialog:false,
         ctDialog:false,
@@ -255,8 +275,10 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
         consumerBillList:[],//消费账单
         settlementBillList:[],//结算账单
         settleProjectList:[],//结算项目
-        quickProjectList:[],
+        quickProjectList:[],//收款项目
+        mdProjectList:[],//免单项目
         refundProjectList:[],//退款项目
+        otherProjectList:[],
         shoukuanObj:{//收款
             projectPk:"",
             money:0,
@@ -274,6 +296,11 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
         },
         projectObj:{
 
+        },
+        otherObj:{
+            projectPk:"",
+            money:0,
+            remark:""
         },
         isPlus:false,
         // 结算项当前选中行
@@ -324,6 +351,7 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
         },
         mdSaveClick(){
             this.$refs.mdObj.validate(valid => {
+                console.log(this.mdObj)
                 var project = this.projectObj[this.mdObj.projectPk]
                 var isNew = true
                 for(var i=0;i<this.settlementBillList.length;i++){
@@ -336,7 +364,7 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
                         break
                     }
                 }
-                console.log(this.dataForm.agreementPk)
+                console.log(project)
                 if(isNew){
                     var bill = {
                         settlementAmount:this.isPlus?parseFloat(this.mdObj.money):-parseFloat(this.mdObj.money),
@@ -369,11 +397,8 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
             //     this.$message({ type: 'warning', message: '当前账套不需要免单' })
             //     return
             // }
-            this.mdObj = {
-                projectPk:"0",
-                money:0,
-                remark:""
-            }
+            this.mdObj.money = 0
+            this.mdObj.remark = ""
             this.isPlus = true
             this.mdDialog = true
 
@@ -397,7 +422,7 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
         },
         ctClick(){
             if(this.currentRow == null){
-                this.$message({ type: 'warning', message: '请选择需要冲调的账务' })
+                this.$message({ type: 'warning', message: '请选择下面的账单进行冲调' })
                 return
             }
             if(this.currentRow.settlementAmount < 0 || this.currentRow.projectPk == "0"){
@@ -517,6 +542,44 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
 
                 this.shoukuanDialog = false
             })
+        }, 
+        otherSaveClick(){
+            this.$refs.otherObj.validate(valid => {
+                if(this.otherObj.money.isNaN){
+                    this.$message({ type: 'warning', message: '请输入正确的收款金额' })
+                    return
+                }
+                var project = this.projectObj[this.otherObj.projectPk]
+                var isNew = true
+                
+                for(var i=0;i<this.settlementBillList.length;i++){
+                    //判断当前是否有未保存的同项目账单
+                    if(this.settlementBillList[i].projectPk == this.otherObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
+                        var settle = this.isPlus?parseFloat(this.otherObj.money):-parseFloat(this.otherObj.money)
+                        this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
+                        isNew = false
+                        break
+                    }
+                }
+                if(isNew){
+                    var bill = {
+                        settlementAmount:project.inoutFlag?-parseFloat(this.otherObj.money):parseFloat(this.otherObj.money),
+                        projectPk:project.projectPk,
+                        projectCode:project.code,
+                        projectName:project.projectName,
+                        remark:project.projectName+(this.otherObj.remark == null?"":"-"+this.otherObj.remark),
+                        agreementPk:this.dataForm.agreementPk,
+                        setBillPk:this.dataForm.type == 1?this.currentSetBill.setBillPk:null
+                    }
+                    this.settlementBillList.push(bill)
+                }
+
+                this.otherDialog = false
+            })
+        },
+        otherClick(){
+            this.otherObj = {}
+            this.otherDialog = true
         },
         shouKuanClick(isPlus,sktitle){
             this.isPlus = isPlus
@@ -525,30 +588,34 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
             this.shoukuanDialog = true
         },
         initProject(){
+            let that = this
         listByProjectType({projectType:'SETTLEMENT'}).then(res => {
             var data = res.data
             this.settleProjectList = data
             this.quickProjectList = []
             this.refundProjectList = []
+            this.otherProjectList = []
+            this.mdProjectList = []
             console.log(JSON.stringify(data));
             for(var i=0;i<data.length;i++){
                 this.projectObj[data[i].projectPk] = data[i]
-
-                if(data[i].projectName == "现金退款" || data[i].projectName == "银行卡退款" || data[i].projectName == "微信退款" || data[i].projectName == "支付宝退款"){
+                //退款
+                if(data[i].code == 238 || data[i].code == 239 || data[i].code == 240 || data[i].code == 241){
                     this.refundProjectList.push(data[i])
                 }
-                if(data[i].projectName == "现金" || data[i].projectName == "银行卡押金" || data[i].projectName == "微信押金" || data[i].projectName == "预授权押金" 
-                || data[i].projectName == "支付宝押金"|| data[i].projectName == "现金押金" || data[i].projectName == "押金" || data[i].projectName == "现金支出"){
+                //收款
+                if(data[i].code == 211 || data[i].code == 237 || data[i].code == 236
+                || data[i].code == 235 || data[i].code == 234 ){
                     this.quickProjectList.push(data[i])
                 }
+                if(data[i].code == 0){
+                    this.mdProjectList.push(data[i])
+                    that.mdObj.projectPk = data[i].projectPk
+                }
+                if(data[i].defaultFlag == "N"){
+                    this.otherProjectList.push(data[i])
+                }
             }
-            var project = {
-                projectName:"免单",
-                projectPk:"0",
-                code:null
-            }
-            this.projectObj[project.projectPk] = project
-            this.quickProjectList.push(project)
           })
         },
         removeClick(index){
@@ -588,6 +655,9 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
         },
         handleShouKuanClose() {
             this.shoukuanDialog = false
+        },
+        handleOtherClose(){
+            this.otherDialog = false
         },
     },filters: {
       /* 格式化时间戳 */
