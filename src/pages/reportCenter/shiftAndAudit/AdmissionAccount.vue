@@ -117,6 +117,8 @@ export default {
         padding: '8px',
         'text-align':'center'
       },
+      reportBeginDate:null,
+      reportEndDate:null,
       // baseUrl:common.baseUrl,
       // ziurl:"/pms/report/shouYinYuanRuZhangMingXiExcel?"
     };

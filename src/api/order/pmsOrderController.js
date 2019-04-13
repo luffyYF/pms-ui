@@ -174,3 +174,8 @@ export const updateReserveRoomTypeBatch = params => {
 export const guestListApi = params => {
     return request.get('/back/order/findThreeDaysGuest', {params: params})
 }
+
+//钟点房转换为全日房
+export const convertToDailyRoom = params => {
+    return request.post('/back/order/convertToDailyRoom/'+ params)
+}

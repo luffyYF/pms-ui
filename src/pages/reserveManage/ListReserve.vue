@@ -253,7 +253,6 @@
   import {orderStatusMap, checkInTypeMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
-  import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
   import {listChannelType} from '../../api/systemSet/type/typeController'
   import {listType} from '@/api/utils/pmsTypeController'
   import exportExcel from '@/components/download/exportExcel'

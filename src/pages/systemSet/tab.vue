@@ -13,9 +13,6 @@
       <el-tab-pane label="客房设置" name="fourth" class="aLayerOfPage" v-if="powerJudge('2404')">
         <room-setting/>
       </el-tab-pane>
-      <el-tab-pane label="钟点特殊房" name="fifth" class="aLayerOfPage" v-if="powerJudge('2405')">
-        <bell-special-room/>
-      </el-tab-pane>
       <el-tab-pane label="消费项目设置" name="consumerProjects" class="aLayerOfPage" v-if="powerJudge('2406')">
         <consumer-projects ref="consumerProjects"/>
       </el-tab-pane>
@@ -33,7 +30,7 @@
       <!-- <el-tab-pane label="价格方案设置" name="tenth" class="aLayerOfPage" v-if="powerJudge('2410')">
         <price-scheme/>
       </el-tab-pane> -->
-         <!-- <el-tab-pane label="团付模板设置" name="seventh" class="aLayerOfPage" v-if="powerJudge('2407')">
+      <!-- <el-tab-pane label="团付模板设置" name="seventh" class="aLayerOfPage" v-if="powerJudge('2407')">
         <regiment-payment-template/>
       </el-tab-pane> -->
     <el-menu
@@ -51,8 +48,14 @@
       <el-menu-item index="/systemSet/roomSetting" v-if="hasPerm('pms:systemSet:roomSetting')">
         <span slot="title">客房设置</span>
       </el-menu-item>
-      <el-menu-item index="/systemSet/clockSpecial" v-if="hasPerm('pms:systemSet:clockSpecial')">
+      <el-menu-item index="/systemSet/hourRoomSetting" v-if="hasPerm('pms:systemSet:hourRoom')">
         <span slot="title">钟点房设置</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/specialRoomSetting" v-if="hasPerm('pms:systemSet:specialRoom')">
+        <span slot="title">特殊房设置</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/dailyRoomSetting" v-if="hasPerm('pms:systemSet:dailyRoomSetting')">
+        <span slot="title">全天房设置</span>
       </el-menu-item>
       <el-menu-item index="/systemSet/settleSetting" v-if="hasPerm('pms:systemSet:consItemSetting')">
         <span slot="title">消费项目设置</span>

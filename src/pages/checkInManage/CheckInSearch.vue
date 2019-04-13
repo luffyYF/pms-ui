@@ -180,7 +180,6 @@
   import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
-  import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";
   import {recoverCheckoutGuestOrder, recoverReserveGuestOrder} from '@/api/order/pmsOrderController'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
@@ -284,7 +283,6 @@
     created () {
       this.getList(1);
       this.listMastersType();
-      this.selectPriceList();
       this.$nextTick(()=>{
         this.$refs.channelRef.load(false);
       })
@@ -318,13 +316,6 @@
         this.total = value.length
         // var offset = (index - 1) * size
         // return items.slice(offset, offset + size)
-      },
-      selectPriceList(){
-        listPriceScheme().then(res =>{
-          if(res.code == 1) {
-            this.priceList = res.data;
-          }
-        })
       },
       listMastersType() {//查询分类类型
         const self = this;

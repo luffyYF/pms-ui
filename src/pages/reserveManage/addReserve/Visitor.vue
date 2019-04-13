@@ -403,10 +403,11 @@
     <!-- 钟点房价格方按选择 -->
     <el-dialog 
       class="agreement-body" 
-      title="钟点房方案" 
+      title="钟点房方案"
       :visible.sync="hourVisible" 
       width="860px" 
       :append-to-body="true"
+      :close-on-click-modal="false"
       :before-close="dialogHourClose">
       <div class="body-conten">
         <el-table
@@ -414,11 +415,12 @@
           :data="tableHourScheme"
           @row-dblclick="dialogHourRoomSelect"
           size="mini"
-          style="width: 100%">
+          style="width: 100%"
+          empty-text="该房型暂未设置钟点房价格方案，请先前往设置">
         <el-table-column
-          prop="schemeName"
+          prop="ruleName"
           align="center"
-          label="方案名称" show-overflow-tooltip>
+          label="规则名称" show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="startTime"
@@ -469,7 +471,6 @@
     import {deepClone, formatDate, getBetweenDay, phoneReg, addDate} from '@/utils/index'
     import {isInteger,validatePhone} from '@/utils/validate'
     import {listContract} from "@/api/order/pmsContractControll"
-    import {findPriceSchemeDetailPrice} from '@/api/systemSet/priceScheme/priceSchemeController'
     import {
       checkin,
       addGuest,
@@ -489,7 +490,8 @@
     import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
     import {overtimeRemind,checkoutGuest} from '@/api/bill'
     import { listByProjectType } from '@/api/systemSet/pmsProjectController'
-    import {roomRuleSchemeList} from '@/api/systemSet/pmsRoomRuleController'
+    import {hourRoomRuleschemeList} from '@/api/systemSet/pmsHourRoomController'
+
     import {list as idCardInfoList} from '@/api/order/pmsIdCardInfoController'
     import reserveManager from '@/pages/reserveManage/addReserve/reserveManager'
     import chooseGuest from '@/pages/reserveManage/addReserve/chooseGuest'
@@ -583,7 +585,7 @@
             checkinDate:null,
             checkoutDate:null,
             diyPriceFlag: 'N',
-            hourRoomSchemePk:""
+            priceSchemePk:""
           },
           qrcodeForm:{
             guestOrderPk:'',
@@ -887,7 +889,7 @@
           this.form.beginDate = getNightDateTime()
           this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
           this.form.pmsCancelFlag = 'N'
-          this.form.hourRoomSchemePk = ""
+          this.form.priceSchemePk = ""
           this.memberFlag = false
         },
         formFillGuestInfo(guest) {//填充客单信息
@@ -1349,15 +1351,16 @@
         },
         //入住类型选择
         checkinTypeChange(checkInType) {
-          this.form.hourRoomSchemePk = ''
+          this.form.priceSchemePk = ''
           if(checkInType=='1') {
             if(!this.form.roomTypePk) {
               this.$message.warning("请先选择房型")
               this.form.checkInType='0'
               return 
             }
+            this.hourVisible = true
             this.tableHourScheme=[]
-            roomRuleSchemeList({roomTypePk: this.form.roomTypePk}).then(res=>{
+            hourRoomRuleschemeList({roomTypePk: this.form.roomTypePk}).then(res=>{
               this.hourVisible = true
               this.tableHourScheme = res.data
             })
@@ -1371,9 +1374,10 @@
           this.hourVisible = false
           this.form.checkInType='0'
         },
-        dialogHourRoomSelect(	row, column, event){
+        dialogHourRoomSelect(	row, column, event) {
           this.form.currPrice = row.startPrice
-          this.form.hourRoomSchemePk = row.schemePk
+          this.form.priceSchemePk = row.schemePk
+          console.log(row.schemePk)
           this.form.beginDate = moment().format("YYYY-MM-DD HH:mm:ss")
           this.form.endDate = moment(this.form.beginDate).add('hour', 1).format("YYYY-MM-DD HH:mm:ss")
           this.hourVisible = false
