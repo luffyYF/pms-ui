@@ -59,6 +59,7 @@ import MemberManage from '@/pages/customerRelation/memberManage/tab.vue'
 import GuestManage from '@/pages/customerRelation/guestManage/tab.vue'
 import VirtualOrder from '@/pages/customerRelation/VirtualOrder.vue'
 import ProtocolManage from '@/pages/customerRelation/ProtocolManage/tab.vue'
+import intermediaryTab from '@/pages/customerRelation/ProtocolManage/intermediaryTab.vue'
 import Invoice from '@/pages/customerRelation/invoice/tab.vue'
 import PassengerInformationUploading from '@/pages/customerRelation/passengerInformationUploading/tab.vue'
 
@@ -251,6 +252,8 @@ export const constantRouterMap = [
           {path: '/customerRelation/memberManage',  component: MemberManage, label: '会员管理'},
           {path: '/customerRelation/guestManage', component: GuestManage, label: '客人管理'},
           {path: '/customerRelation/protocolManage',component: ProtocolManage, label: '协议管理'},
+          {path: '/customerRelation/intermediary',component: intermediaryTab, label: '协议管理'},
+          
           {path: '/customerRelation/virtualOrder', component: VirtualOrder, label: '虚拟账单'},
           {path: '/customerRelation/invoice', component: Invoice, label: '发票'},
           {path: '/customerRelation/passengerInformationUploading', component: PassengerInformationUploading, label: '旅客信息上传'}
