@@ -101,6 +101,7 @@
                     <el-button size="mini" v-if="hasPerm('pms:orderAss:saveCheckIn')" @click="saveCheckin" :loading="islock">保存入住</el-button>
                   </template>
                   <template v-else-if="currOrderInfo.order.auditStatus==null || currOrderInfo.order.auditStatus==1">
+                    <el-button size="mini" @click="hourRoomConvertToDailyRoom" v-if="hasPerm('pms:orderAss:convert') && currGuest.checkInType==1 && currGuest.pmsCancelFlag=='N' &&  this.currGuest.orderStatus=='CHECKIN' && this.currGuest.mainFlag=='Y'">转为全日房</el-button>
                     <el-popover ref="occupancySort" placement="top" v-model="popoverVisible">
                       <el-button  size="mini" v-if="hasPerm('pms:orderAss:copyCheckIn')" @click="copyCheckin">复制入住</el-button>
                       <el-button  size="mini" v-if="hasPerm('pms:orderAss:addCheckIn')" @click="addCheckin">添加入住</el-button>
@@ -213,9 +214,9 @@ import {formatDate, copyObj} from '@/utils/index'
 import {validatePhone} from '@/utils/validate'
 
 // API
-import {gmCount} from "@/api/goods/goodsManageController";
-import {saveCheckin, addCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder} from '@/api/order/pmsOrderController'
+import {saveCheckin, addCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder, convertToDailyRoom} from '@/api/order/pmsOrderController'
 import {listProject,addBill,authBill,checkoutauthBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill} from '@/api/bill'
+import {gmCount} from "@/api/goods/goodsManageController";
 import {listType} from '@/api/utils/pmsTypeController'
 
 // 组件
@@ -367,7 +368,6 @@ export default {
       @augments guestOrderPk 客单主键 (可选，用于选中客单)
      */
     initOrderInfo(orderPk, activeName, guestOrderPk) {
-      console.log("321");
       this.dialogVisible = true
       this.loading = false
       this.currOrderPk = orderPk
@@ -455,7 +455,7 @@ export default {
       this.listRowRoomList(this.currGuest.roomTypePk)
     },
     //查找可更换的房间
-    listRowRoomList(roomTypePk) { 
+    listRowRoomList(roomTypePk) {
       let data = {
         roomTypePk: roomTypePk,
         beginDateTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -610,7 +610,9 @@ export default {
     },
     toBillTab() {//切换到账单
       this.activeName = 'bill'
-      this.$refs.billTagForm.lookupBillList(this.currOrderPk);
+      this.$nextTick(()=>{
+        this.$refs.billTagForm.lookupBillList(this.currOrderPk);
+      })
     },
     handleCloseRowRoom() {//排房窗口关闭
       this.dialogRowRoom = false
@@ -840,15 +842,6 @@ export default {
         roomNumberArr:roomNumberArr
       }
       window.open(process.env.PRINT_ROOT+"/#/teamRoomPrint?data="+JSON.stringify(data));
-      // console.log('personCount', personCount)
-      // console.log('roomsCount', roomsCount)
-      console.log('roomNumberArr', roomNumberArr)
-      // console.log(beginDate)
-      // console.log(this.currOrderInfo)
-      // console.log( JSON.stringify(data))
-      // this.openPostWindow(process.env.PRINT_ROOT+"#/teamRoomPrint",data, '_blank');
-      // TODO base64.Base64.encode()
-      // window.open(process.env.PRINT_ROOT+"/#/teamRoomPrint",data,'height=400, width=400, top=0, left=0, toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes,location=yes, status=yes');
     },
     toDialogGuestManger() {
       this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
@@ -871,6 +864,20 @@ export default {
     inputIdCard() {
       this.$refs.idCardInputDialogRef.showDialog(this.currOrderInfo.order.orderPk)
     },
+
+    hourRoomConvertToDailyRoom() {
+      this.$confirm('确定转为全日房吗，此操作不可逆转?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        convertToDailyRoom(this.currGuest.guestOrderPk).then(res=>{
+          this.$message.success('转换成功');
+          this.loadOrderInfo()
+        })
+        
+      })
+    }
 
   },
   mounted() {
