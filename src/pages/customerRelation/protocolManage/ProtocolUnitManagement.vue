@@ -3,11 +3,11 @@
     <!-- form -->
     <el-form ref="conditionalQuery" :inline="true" :model="conditionalQuery" size="mini" label-width="80px">
       <div class="bg-reserve">
-        <h5 class="info-title">协议单位查询</h5>
+        <h5 class="info-title">{{conditionalQuery.type == 1 ? '协议单位查询' : '中介查询'}}</h5>
           <el-form-item label="单位名称">
             <el-input v-model="conditionalQuery.unitName" clearable></el-input>
           </el-form-item>
-          <el-form-item label="协议类别">
+          <el-form-item label="协议类别" v-if="conditionalQuery.type == 1">
             <el-select v-model="conditionalQuery.agreementTypePk" placeholder="请选择协议类别">
               <el-option label="全部" value=""></el-option>
               <el-option
@@ -50,7 +50,7 @@
     </el-form>
     <!-- table -->
     <div class="bg-reserve">
-      <h5 class="info-title">协议单位列表</h5>
+      <h5 class="info-title">{{conditionalQuery.type == 1 ? '协议单位列表' : '中介列表'}}</h5>
       <el-button type="primary" size="mini" class="add-pro" @click="addProClick">{{this.conditionalQuery.type == 1?'添加协议单位':'添加中介'}}</el-button>
       <el-table
       size="mini"
@@ -63,7 +63,7 @@
         </el-table-column> --> 
         <el-table-column prop="unitName" :label="this.conditionalQuery.type == 1?'协议单位':'中介'" align="center">
         </el-table-column>
-        <el-table-column prop="typeName" label="协议类别" align="center" min-width="110" show-overflow-tooltip>
+        <el-table-column prop="typeName" :label="conditionalQuery.type == 1 ? '协议类别' : '类别'" align="center" min-width="110" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="contactName" label="联系人" align="center" min-width="100" show-overflow-tooltip>
         </el-table-column>
@@ -79,23 +79,33 @@
         </el-table-column>
         <el-table-column prop="saleName" label="销售员" align="center" min-width="90" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="customerStatus" label="客户状态" align="center" min-width="80" show-overflow-tooltip>
+        <el-table-column prop="customerStatus" label="客户状态" align="center" min-width="80" show-overflow-tooltip v-if="conditionalQuery.type == 1">
           <template slot-scope="scope">
             <span v-if="scope.row.customerStatus == -1">过期</span>
             <span v-else-if="scope.row.customerStatus == 0">冻结</span>
             <span v-else>有效</span>
           </template>
         </el-table-column>
-        <el-table-column prop="customerGrade" label="客户等级" align="center" min-width="80" show-overflow-tooltip>
+        <el-table-column prop="agreementCode" label="合同号" align="center" min-width="120" show-overflow-tooltip v-else>
+          <template slot-scope="scope">
+            {{scope.row.agreementCode}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="customerGrade" label="客户等级" align="center" min-width="80" show-overflow-tooltip v-if="conditionalQuery.type == 1">
           <template slot-scope="scope">
             <span v-if="scope.row.customerGrade == 0">一般客户</span>
             <span v-else-if="scope.row.customerGrade == 1">常规客户</span>
             <span v-else>重大客户</span>
           </template>
         </el-table-column>
+        <el-table-column prop="beginDate" label="合同生效期" align="center" min-width="180" show-overflow-tooltip v-else>
+          <template slot-scope="scope">
+            {{scope.row.beginDate == '' ? '***' : scope.row.beginDate}} 至 {{scope.row.endDate == '' ? '***' : scope.row.endDate}}
+          </template>
+        </el-table-column>
         <el-table-column prop="remark" label="备注" align="center" min-width="160" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="status" label="审核状态" align="center" min-width="80" show-overflow-tooltip>
+        <el-table-column prop="status" label="审核状态" align="center" min-width="80" show-overflow-tooltip v-if="conditionalQuery.type == 1">
           <template slot-scope="scope">
             <span v-if="scope.row.status == 0">未审核</span>
             <span v-else>已审核</span>
@@ -106,7 +116,7 @@
           <template slot-scope="scope">
             <el-button @click="editProClick(scope.row)" type="text" size="mini">修改</el-button>
             <el-button @click="updateProClick(scope.row)" type="text" size="mini">{{scope.row.customerStatus == 0 ? '启用' : '禁用'}}</el-button>
-            <el-button @click="auditProClick(scope.row)" type="text" size="mini" :disabled="scope.row.status == 1">审核</el-button>
+            <el-button @click="auditProClick(scope.row)" type="text" size="mini" :disabled="scope.row.status == 1" v-if="conditionalQuery.type == 1">审核</el-button>
             <!-- <el-button @click="specialPriceClick(scope.row)" type="text" size="mini">特殊房间设置</el-button> -->
             <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
@@ -578,7 +588,7 @@ export default {
       // this.dialogProtocolVisible = true
       this.proDialogTitle = '修改协议单位'
       // delete self.form.typeName;
-      this.$refs.addProtocolUnitRef.editProClick(row)
+      this.$refs.addProtocolUnitRef.editProClick(row, this.conditionalQuery.type)
     },
     specialPriceClick(row) {//特殊房间设置
       this.dialogSpecialPriceVisible = true;
