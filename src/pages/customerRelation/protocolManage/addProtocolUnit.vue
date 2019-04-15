@@ -19,7 +19,7 @@
                 <el-input v-model="form.unitPhone" style="width:224px"></el-input>
               </el-form-item>
             </el-col>
-          </el-col>  
+          </el-col>
           <el-col :span="24">
             <el-col :span="8">
               <el-form-item label="手机号" label-width="80px" prop="contactPhone" size="mini">
@@ -44,7 +44,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="7.5">
-              <el-form-item label="合同号" label-width="80px" prop="agreementCode" size="mini"> 
+              <el-form-item label="合同号" label-width="80px" prop="agreementCode" size="mini">
                 <el-input v-model="form.agreementCode" style="width:194px"></el-input>
               </el-form-item>
             </el-col>
@@ -56,7 +56,7 @@
                 <el-date-picker type="date" placeholder="选择日期" v-model="form.endDate" value-format="yyyy-MM-dd" style="width:101px" :clearable="false"></el-date-picker>
               </el-form-item>
             </el-col>
-          </el-col> 
+          </el-col>
           <el-col :span="24">
             <el-col :span="8">
               <el-form-item label="挂账额度" label-width="80px" size="mini" style="margin-bottom: 0;" required>
@@ -230,6 +230,7 @@ export default {
         status: 0,
         isPriceSecrecy: 0,
         remark: '',
+        type:0
       },
       rules: {//表单验证
         agreementTypePk: [
@@ -249,7 +250,7 @@ export default {
         ],
         billPrice: [
           { required: true, message: '请输入挂账限额', trigger: 'blur' }
-        ],                      
+        ],
         // fax: [
         //   { required: true, message: '请输入单位传真', trigger: 'blur' }
         // ],
@@ -269,13 +270,15 @@ export default {
         //   { required: true, message: '单位电话', trigger: 'blur' }
         // ],
       },
+      type:1
     };
   },
   created () {
     this.listMastersType();
   },
   methods: {
-    init() {
+    init(type) {
+      this.type = type
       if (this.$refs.form2 != undefined) {
         this.$refs.form2.clearValidate()
       }
@@ -300,6 +303,7 @@ export default {
         if (valid) {
           if(proDialogTitle == '添加协议单位'){
             self.form.agreementPk=null;
+            self.form.type = self.type
             self.form.billPrice = Number(self.form.billPrice);
             addProject(self.form).then(result => {
               if(result.code == 1){
@@ -399,7 +403,7 @@ export default {
                 remark: '',
             }
         }
-        
+
       // })
     },
     billFlagChange(val) {

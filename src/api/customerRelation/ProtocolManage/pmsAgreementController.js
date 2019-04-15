@@ -20,6 +20,10 @@ export const updateProject = params => {
 export const listProject = params => {
     return request.get('/back/agreement/list', {params:params})
 }
+//所有的协议单位
+export const allAgreement = params => {
+    return request.get('/back/agreement/allAgreement', {params:params})
+}
 //查找协议单位名称
 export const findUnitName = params => {
     return request.get('/back/agreement/findByPk', {params:params})

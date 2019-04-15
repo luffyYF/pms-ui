@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs type="border-card" ref='checkTabs' v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="协议单位管理" name="protocolUnitManagement" >
+      <el-tab-pane label="中介管理" name="protocolUnitManagement" >
         <protocol-unit-management ref="protocolUnitManagement"/>
       </el-tab-pane>
       <el-tab-pane label="销售员管理" name="salesmanManagement" >
@@ -28,7 +28,6 @@
       <el-tab-pane label="收款查询" name="settlementBillList" >
         <settlementBillList ref="settlementBillList"/>
       </el-tab-pane>
-      
       <!-- <el-tab-pane label="协议价格调控" name="agreementPriceRegulation" v-if="powerJudge('150306')">
         <agreement-price-regulation ref="agreementPriceRegulation"/>
       </el-tab-pane> -->
@@ -69,14 +68,14 @@
     mounted(){
       //设置第一个不被隐藏的el-tab-pane为激活状态
       this.activeName = this.$refs.checkTabs.panes[0].name
-      this.$refs.protocolUnitManagement.init(1)
+      this.$refs.protocolUnitManagement.init(0)
     },
     methods: {
       handleClick (tab, event) {
-        this.$refs[this.activeName].init(1)
+        this.$refs[this.activeName].init(0)
         // if(this.activeName == 'protocolUnitManagement'){
         //   var child = this.$refs.protocolUnitManagement
-        //   child.init(1)
+        //   child.init(0)
         // }else if(this.activeName == 'salesmanManagement'){
         //   var child = this.$refs.salesmanManagement
         //   child.init()
@@ -91,22 +90,17 @@
         //   child.init()
         // }else if(this.activeName == 'setBillList'){
         //   var child = this.$refs.setBillList
-        //   child.init(1)
+        //   child.init(0)
         // }else if(this.activeName == 'unitBillList'){
         //   var child = this.$refs.unitBillList
-        //   child.init(1)
-        // }else if(this.activeName == 'MemberForwardPrice'){
-        //   var child = this.$refs.MemberForwardPrice
-        //   child.init(1)
+        //   child.init(0)
         // }else if(this.activeName == 'consumerBillList'){
         //   var child = this.$refs.consumerBillList
-        //   child.init(1)
+        //   child.init(0)
         // }else if(this.activeName == 'settlementBillList'){
         //   var child = this.$refs.settlementBillList
         //   child.init(1)
         // }
-
-        
 
         console.log(tab, event)
       },
