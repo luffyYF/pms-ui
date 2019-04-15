@@ -36,3 +36,7 @@ export const updateProjectCustomerStatus = params => {
 export const updateProjectStatus = params => {
     return request.post('/back/agreement/updateStatus', params)
 }
+
+export const detailProject = params => {
+    return request.get('/back/agreement/detail', {params:params})
+}
