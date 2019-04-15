@@ -26,6 +26,9 @@
                   <el-form-item label="回调路径">
                       <el-input size="mini" style="width:300px;" v-model="form.notifyUrl" type="text"/>
                   </el-form-item>
+                  <el-form-item label="退款回调路径">
+                      <el-input size="mini" style="width:300px;" v-model="form.refundNotifyUrl" type="text"/>
+                  </el-form-item>
                   <el-form-item label="keyStoreFilePath">
                       <KeyStoreFileUpload :avatar.sync="form.keyStoreFilePath" />
                       <span style="color:#606266;" v-if="form.keyStoreFilePath">{{form.keyStoreFilePath}}</span>
