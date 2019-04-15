@@ -351,7 +351,16 @@ export default {
         var typeList = JSON.parse(localStorage.getItem("pms_type"))
         typeList.forEach(item=> {
           if(item.typeMaster == "ROOM_TYPE"){
-            self.roomTypeOptions.push(item);
+            let data = {
+              roomTypePk: item.typePk,
+              price: item.basePrice,
+              beginPrice: 0,
+              unitPrice: 0,
+              cappingPrice: 0,
+              roomPrice: 0,
+              remark: ""
+            }
+            self.roomTypeOptions.push(data);
           }
           else if(item.typeMaster == "AGREEMENT"){
             self.agreementOptions.push(item);
