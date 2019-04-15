@@ -216,6 +216,7 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
         settleProjectList:[],
         quickProjectList:[],
         refundProjectList:[],
+        mdProjectList:[],
         otherProjectList:[],
         shoukuanObj:{
             projectPk:"",
