@@ -3,7 +3,7 @@
   <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="800px"
              :close-on-click-modal="false" :before-close="handleClose">
         <el-form ref="pageObj" size="mini" :model="pageObj" label-width="110px">
-            <el-form-item label="商品名称" prop="goodsName">
+            <el-form-item label="礼品名称" prop="goodsName">
                 <el-input size="mini" style="width:200px;" v-model="pageObj.couponName" type="text"/>
                 <el-button type="primary" size="mini" icon="el-icon-search" class="add-pro" @click="listGridIntegralGoods()">查询</el-button>
             </el-form-item>
@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column label="礼品名称" prop="goodsName" align="center">
         </el-table-column>
-        <el-table-column label="商品编码" prop="code" align="center">
+        <el-table-column label="礼品编码" prop="code" align="center">
         </el-table-column>
         <el-table-column label="类型" prop="amount" align="center">
           <template slot-scope="scope">
@@ -63,7 +63,7 @@
         dataForm: {
 
         },
-        title:"优惠券选择",
+        title:"礼品选择",
         currentDtoIndex:null,
         pageObj:{
             enableFlag:"",
