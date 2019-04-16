@@ -662,7 +662,7 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
     },filters: {
       /* 格式化时间戳 */
       formatDate (val) {
-          return Moment(new Date()).format("YYYY-MM-DD")
+          return Moment(new Date(val)).format("YYYY-MM-DD")
       },
       momeyFilter2(list,list2){
         var momey = 0;

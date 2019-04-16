@@ -6,38 +6,30 @@
         <h5 class="info-title">账务管理</h5>
             
             <el-form-item label="入住时间" prop="type">
-                <el-date-picker
+                <!-- <el-date-picker
                 style="width:110px;"
-                v-model="listQuery.checkInDate"
-                type="date"
+                v-model="datepicker"
+                type="daterange"
                 value-format="yyyy-MM-dd"
                 placeholder="选择日期">
-                </el-date-picker>
-                -
+                </el-date-picker> -->
                 <el-date-picker
-                style="width:110px;"
-                v-model="listQuery.checkOutDate"
-                type="date"
+                v-model="datepicker"
+                type="daterange"
                 value-format="yyyy-MM-dd"
-                placeholder="选择日期">
-                </el-date-picker>
-                
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>                
             </el-form-item>
             <el-form-item label="消费时间" prop="type">
                 <el-date-picker
-                style="width:160px;"
-                v-model="listQuery.beginDate"
-                type="datetime"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                placeholder="选择日期时间">
-                </el-date-picker>
-                -
-                <el-date-picker
-                style="width:160px;"
-                v-model="listQuery.endDate"
-                type="datetime"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                placeholder="选择日期时间">
+                  v-model="datetimepicker"
+                  type="datetimerange"
+                  range-separator="至"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期">
                 </el-date-picker>
             </el-form-item>
             <el-form-item :label="this.listQuery.agreementType == 1?'协议单位':'中介'" prop="type">
@@ -73,8 +65,14 @@
       height="450" 
       style="width: 98.5%; margin:10px;">
         <el-table-column prop="checkInDate" width="200" label="入住时间" align="center">
+          <template slot-scope="scope">
+              {{scope.row.checkInDate | formatDate}}
+          </template>
         </el-table-column>
         <el-table-column prop="checkOutDate" width="200"  label="离店时间" align="center">
+          <template slot-scope="scope">
+              {{scope.row.checkOutDate | formatDate}}
+          </template>
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
         </el-table-column>
@@ -85,6 +83,9 @@
         <el-table-column prop="roomTypeName" label="房型" align="center">
         </el-table-column>
         <el-table-column prop="createTime" width="200"  label="消费时间" align="center">
+         <template slot-scope="scope">
+              {{scope.row.createTime | formatDate}}
+          </template>
         </el-table-column>
         <el-table-column prop="consumptionAmount" label="挂账金额" align="center" width="100">
         </el-table-column>
@@ -128,6 +129,8 @@ export default {
             checkInDate:"",
             checkOutDate:""
         },
+        datepicker:[],
+        datetimepicker:[],
         tableData: [],
         total: 0,
         agreementList:[],
@@ -157,6 +160,20 @@ export default {
     },
     agreementBillQuery(){
         this.loading = true
+        if(this.datepicker != null){
+          this.listQuery.checkInDate = this.datepicker[0]
+          this.listQuery.checkOutDate = this.datepicker[1]
+        }else{
+          this.listQuery.checkInDate = ""
+          this.listQuery.checkOutDate = ""
+        }
+        if(this.datetimepicker != null){
+          this.listQuery.beginDate = this.datetimepicker[0]
+          this.listQuery.endDate = this.datetimepicker[1]
+        }else{
+          this.listQuery.beginDate = ""
+          this.listQuery.endDate = ""
+        }
         agreementBillQuery(this.listQuery).then(res=>{
             this.tableData = res.data.data;
             this.total = res.data.total
@@ -174,6 +191,15 @@ export default {
       this.agreementBillQuery()
     },
     
+    
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YYYY-MM-DD HH:mm:ss")
+      },
   }
 };
 </script>
