@@ -2,7 +2,7 @@
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
 <div>
-  <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="650px"
+  <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="660px"
              :close-on-click-modal="false" :before-close="handleClose">
     <el-form ref="dataForm" size="mini" :rules="rules" :model="dataForm" label-width="110px">
         <el-form-item label="规则名称" prop="ruleName">
@@ -34,10 +34,10 @@
                 <span v-if="obj.type == 1">赠送金额<el-input-number size="mini" style="width:80px;" :precision="2" :step="1" :min="0" :controls="false" v-model="obj.giveCount" ></el-input-number>元</span>
                 <br>
                 <div style="margin-top:5px;padding-left:56px;margin-bottom:5px;">送积分<el-input-number size="mini" style="width:80px;" :precision="2" :step="1" :min="0" :controls="false" v-model="obj.giveIntegral" ></el-input-number>分&nbsp;&nbsp;&nbsp;&nbsp;
-                <el-button @click="couponChangeClick(index)" type="info" size="mini" plain>
+                <el-button @click="couponChangeClick(index,'coupon')" type="info" size="mini" plain>
                     优惠卷
                 </el-button>
-                <el-button type="info" size="mini" plain>
+                <el-button type="info" size="mini" @click="couponChangeClick(index,'goods')" plain>
                     礼品
                 </el-button>
                 <el-button type="info" @click="delDetailClicl(index)" size="mini" plain>
@@ -53,14 +53,17 @@
     </span>
   </el-dialog>
   <couponChange ref="couponChangeRef" @callback="couponChangeCallback"/>
+  <goodsChange ref="goodsChangeRef" @callback="goodsChangeCallBack"/>
   </div>
 </template>
 
 <script>
   import {listGrade,addRule,updateRule,detailList} from '@/api/systemSet/member/pmsMemberRechargeGiveRule'
-    import couponChange from './couponChange'
+  import {listGridIntegralGoods} from '@/api/systemSet/member/pmsIntegralGoodsController'
+  import couponChange from './couponChange'
+  import goodsChange from './goodsChange'
   export default {
-   components: { couponChange },
+   components: { couponChange,goodsChange },
     data () {
       return {
         dialogVisible: false,
@@ -94,12 +97,6 @@
         const self = this
         self.gradeList = [];
         listGrade().then(result => {
-            // if(row){
-            //     self.gradeList.push({
-            //         gradePk:row.gradePk,
-            //         gradeName:row.gradeName
-            //     })
-            // }
             self.gradeList = self.gradeList.concat(result.data)
         }).catch(() => {
 
@@ -159,16 +156,23 @@
       handleClose () {
         this.dialogVisible = false
       },
-      couponChangeClick(index){
+      couponChangeClick(index,type){
           this.currentDtoIndex = index
-          this.$refs.couponChangeRef.showDialog()
-      }
-      ,
+          console.log(type)
+          if(type == "goods"){
+
+            this.$refs.goodsChangeRef.showDialog()
+          }else{
+            this.$refs.couponChangeRef.showDialog()
+          }
+          
+      },
       couponChangeCallback(couponPks){
           this.detailDtos[this.currentDtoIndex].couponPk = couponPks
-          console.log(JSON.stringify(this.detailDtos[this.currentDtoIndex]))
-      }
-      ,
+      },
+      goodsChangeCallBack(goodsPks){
+        this.detailDtos[this.currentDtoIndex].giftPks = goodsPks
+      },
       // 保存数据
       saveData () {
         let refs = this.$refs
