@@ -45,6 +45,15 @@ export const listType = params => {
 }
 
 /**
+ * 查找房型
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const roomTypeList = params => {
+  return request.get('/back/type/roomTypeList', {params: params})
+}
+
+/**
  * 查找公司的所有类型
  * @param params
  * @returns {AxiosPromise<any>}
