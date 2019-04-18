@@ -105,12 +105,12 @@ export default {
         listByProjectType({projectType:'SETTLEMENT'}).then(res => {
             var data = res.data
             this.settleProjectList = data
-            var project = {
-                projectName:"免单",
-                projectPk:"0",
-                code:null
-            }
-            this.settleProjectList.push(project)
+            // var project = {
+            //     projectName:"免单",
+            //     projectPk:"0",
+            //     code:null
+            // }
+            // this.settleProjectList.push(project)
             this.settleProjectList.unshift({
                 projectName:"全部",
                 projectPk:"",

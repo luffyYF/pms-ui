@@ -1,5 +1,5 @@
 <template>
-  <el-dialog class="pattern-dialog2" :title="'转'+title+'房'" :visible.sync="dialogVisible" width="500px" :close-on-click-modal="false" :before-close="handleClose">
+  <el-dialog class="pattern-dialog2" :title="'转'+title+'房'" :visible.sync="dialogVisible" width="500px" :close-on-click-modal="false" :before-close="handleClose" append-to-body>
     <div class="pattern-dialog-container" style="padding: 25px 4px;">
       <el-form ref="reasonForm" :model="reasonForm" label-width="80px" size="mini">
         <el-form-item label="房号">

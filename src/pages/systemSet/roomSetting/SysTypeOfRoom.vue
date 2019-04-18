@@ -26,44 +26,36 @@
             <el-input v-model="scope.row.typeDescribe" class="el-Name" size="mini" placeholder="请输入简称"></el-input>
           </template>
         </el-table-column>
-		<el-table-column prop="basePrice" label="基础价" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.basePrice" class="el-Name" size="mini" placeholder="请输入基础价"></el-input>
-          </template>
-        </el-table-column>
         <el-table-column prop="roomCount" label="房间总数" align="center">
         </el-table-column>
-        <el-table-column prop="usingFlag" label="超时退房小时计费" align="center" width="200">
+        <el-table-column label="全价" prop="price" align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.usingFlag" size="mini" placeholder="请选择状态">
-              <el-option
-                v-for="item in options1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
+            <el-input v-model="scope.row.price" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
           </template>
         </el-table-column>
-        <el-table-column prop="sortNum" label="排序" align="center">
+        <el-table-column label="起步价" prop="beginPrice" align="center">
           <template slot-scope="scope">
-           <el-input v-model="scope.row.sortNum" size="mini" placeholder="请输入排序"></el-input>
+            <el-input v-model="scope.row.beginPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
           </template>
         </el-table-column>
-        <el-table-column prop="excessNumber" label="超额数" align="center" width="120">
+        <el-table-column label="单位时间加收价" prop="unitPrice" align="center">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.excessNumber" size="mini" placeholder="请输入超额数"></el-input>
+            <el-input v-model="scope.row.unitPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
           </template>
         </el-table-column>
-        <el-table-column prop="integralFlag" label="参加积分" align="center">
+        <el-table-column label="加收封顶额" prop="cappingPrice" align="center">
           <template slot-scope="scope">
-           <el-checkbox size="mini" v-model="scope.row.integralFlag" true-label="Y"></el-checkbox>
+            <el-input v-model="scope.row.cappingPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
           </template>
         </el-table-column>
-        <el-table-column prop="monthlyRent" label="月房租" align="center">
+        <el-table-column label="预收房费" prop="roomPrice" align="center">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.monthlyRent" class="el-Name" size="mini" placeholder="请输入月房租"></el-input>
+            <el-input v-model="scope.row.roomPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" prop="remark" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.remark" type="text" class="el-Name" size="mini"/>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center">
@@ -80,7 +72,7 @@
 </template>
 
 <script>
-  import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+  import {roomTypeList,delType,updateype,addType} from '@/api/utils/pmsTypeController'
   export default {
     data() {
       return {
@@ -189,14 +181,32 @@
             integralFlag:'N',
             monthlyRent:'',
             sortNum:'',
-            usingFlag:'N'
+            usingFlag:'N',
+            typeDescribe:'',
+            basePrice: 0,
+            price: 0,
+            beginPrice: 0,
+            unitPrice: 0,
+            cappingPrice: 0,
+            roomPrice: 0,
+            remark: ""
           })
         }
       },
       listRoomType(){
         const self = this
         this.loading = true;
-        listType({typeMaster: this.typeMaster}).then(result => {
+        roomTypeList({typeMaster: this.typeMaster}).then(result => {
+          result.data.data.forEach(element => {
+            if (element.pricePk == null) {
+              element.basePrice = 0
+              element.price = 0
+              element.beginPrice = 0
+              element.unitPrice = 0
+              element.cappingPrice = 0
+              element.roomPrice = 0
+            }
+          });
           self.tableData = result.data.data
           self.loading = false
         }).catch(() => {

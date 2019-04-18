@@ -14,9 +14,9 @@
                   <el-form-item label="appSecret">
                       <el-input size="mini" style="width:300px;" v-model="form.appSecret" type="text"/>
                   </el-form-item>
-                  <el-form-item label="标题">
+                  <!-- <el-form-item label="标题">
                       <el-input size="mini" style="width:300px;" v-model="form.name" type="text"/>
-                  </el-form-item>
+                  </el-form-item> -->
                   <el-form-item label="商户id">
                       <el-input size="mini" style="width:300px;" v-model="form.mchId" type="text"/>
                   </el-form-item>
@@ -25,6 +25,9 @@
                   </el-form-item>
                   <el-form-item label="回调路径">
                       <el-input size="mini" style="width:300px;" v-model="form.notifyUrl" type="text"/>
+                  </el-form-item>
+                  <el-form-item label="退款回调路径">
+                      <el-input size="mini" style="width:300px;" v-model="form.refundNotifyUrl" type="text"/>
                   </el-form-item>
                   <el-form-item label="keyStoreFilePath">
                       <KeyStoreFileUpload :avatar.sync="form.keyStoreFilePath" />
