@@ -138,7 +138,7 @@ import Moment from 'moment'
             typeName: '', 
             integralFlag:'N',
             monthlyRent:'',
-            sortNum:'',
+            sortNum:0,
             usingFlag:'N',
             remark: '',
             createUserId: this.pms_userinfo.upmsUserId,
@@ -151,6 +151,11 @@ import Moment from 'moment'
         const self = this
         self.queryParams.pageNum = val;
         listType(self.queryParams).then(result => {
+          result.data.data.forEach(element => {
+            if (element.sortNum == null) {
+              element.sortNum = 0
+            }
+          });
           self.tableData = result.data.data;
           self.total = result.data.pageSize;
         }).catch(() => {

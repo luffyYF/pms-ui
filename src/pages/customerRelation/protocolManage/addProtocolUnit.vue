@@ -212,16 +212,23 @@
               </el-form-item>
             </el-col>
           </el-col>
+          <el-col :span="24">
+            —————————————————————————————— 客户权益设置 ————————————————————————————
+          </el-col>
+          <el-col :span="24" style="margin-top: 10px">
+            <el-form-item label="入住标准" label-width="82px" prop="rulePk" size="mini">
+              <el-select v-model="form.agreementPo.rulePk" placeholder="请选择入住标准" style="width:194px">
+                <el-option v-for="item in ruleData" :key="item.rulePk" :label="item.ruleName" :value="item.rulePk"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-form>
-        <el-col :span="24">
-          —————————————————————————————— 客户权益设置 ————————————————————————————
-        </el-col>
         <el-col :span="24">
           <el-table
           :data="form.roomTypePricePos"
           stripe
           header-cell-class-name="header-row-style"
-          style="width: 100%; margin: 10px 0"
+          style="width: 100%; margin-bottom: 10px"
           size="mini"
           class="price-table">
             <el-table-column label="房型" prop="typeName" width="150"></el-table-column>
@@ -235,7 +242,7 @@
                 <el-input v-model="scope.row.beginPrice" type="number" size="mini" min="0" step="0.1"/>
               </template>
             </el-table-column>
-            <el-table-column label="单位时间加收价" prop="unitPrice" width="110">
+            <el-table-column label="单位时间加收价" prop="unitPrice" width="120">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.unitPrice" type="number" size="mini" min="0" step="0.1"/>
               </template>
@@ -268,8 +275,10 @@
 import {listType, roomTypeList} from '@/api/utils/pmsTypeController'
 import {addProject,delProject,updateProject,listProject, detailProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
 import {addPriceProject,delPriceProject,listPriceProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementRoomPrice'
+import { dailyRoomRuleList } from "@/api/systemSet/pmsDailyRoomController";
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 import moment from "moment"
+
 export default {
   data() {
     return {
@@ -309,6 +318,7 @@ export default {
           returnMode: 0,
           price: 0,
           rebatePrice: 0,
+          rulePk: null,
         },
         roomTypePricePos: []
       },
@@ -343,6 +353,9 @@ export default {
         contactPhone: [
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
+        rulePk: [
+          { required: true, message: '请选择入住标准', trigger: 'change' },
+        ],
         // address: [
         //   { required: true, message: '详细地址', trigger: 'blur' }
         // ],
@@ -357,6 +370,7 @@ export default {
           return time.getTime() < Date.now() - 8.64e7;
         }
       },
+      ruleData: [],
     };
   },
   created () {
@@ -370,6 +384,7 @@ export default {
       }
       this.listMastersType(1)
       this.addProClick()
+      this.getRule()
     },
     addProClick() {
       const self = this;
@@ -394,6 +409,7 @@ export default {
         this.proDialogTitle = '修改中介'
         this.btnName = '修改中介'
       }
+      this.getRule()
       detailProject({agreementPk: row.agreementPk}).then(res => {
         if (res.data.roomTypePricePos.length == 0) {
             this.roomTypeList();
@@ -509,6 +525,7 @@ export default {
                 returnMode: 0,
                 price: 0,
                 rebatePrice: 0,
+                rulePk: null,
             }
             if (this.type == 1) {
               this.selectDate.push(self.form.agreementPo.beginDate)
@@ -558,6 +575,11 @@ export default {
           element.remark = ''
         });
         this.form.roomTypePricePos = result.data.data
+      })
+    },
+    getRule() {
+      dailyRoomRuleList().then(res=>{
+        this.ruleData = res.data
       })
     },
   }
