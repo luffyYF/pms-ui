@@ -54,7 +54,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="累计积分要求" size="mini" :prop="dataForm.gradePo.upgradeMemPk == '0' ? '' : 'accumulatedPoints'">
+            <el-form-item label="累计积分要求" size="mini" ref="accumulatedPointsRef" :prop="dataForm.gradePo.upgradeMemPk == '0' ? '' : 'accumulatedPoints'">
               <el-input v-model="dataForm.gradePo.accumulatedPoints" type="number" min="0" step="1" style="width:194px" :disabled="dataForm.gradePo.upgradeMemPk == '0'"></el-input>
             </el-form-item>
           </el-col>
@@ -355,6 +355,9 @@ import { dailyRoomRuleList } from "@/api/systemSet/pmsDailyRoomController";
       },
       handleChange (val) {
         if (val == '0') {
+          if (this.$refs.accumulatedPointsRef != undefined) {
+            this.$refs.accumulatedPointsRef.clearValidate()
+          }
           this.dataForm.gradePo.autoUpgradeFlag = 'N'
           this.dataForm.gradePo.accumulatedPoints = null
           this.dataForm.gradePo.accumulatedValue = null
