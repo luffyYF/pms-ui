@@ -101,7 +101,7 @@
                     <el-button size="mini" v-if="hasPerm('pms:orderAss:saveCheckIn')" @click="saveCheckin" :loading="islock">保存入住</el-button>
                   </template>
                   <template v-else-if="currOrderInfo.order.auditStatus==null || currOrderInfo.order.auditStatus==1">
-                    <el-button size="mini" @click="hourRoomConvertToDailyRoom" v-if="hasPerm('pms:orderAss:convert') && currGuest.checkInType==1 && currGuest.pmsCancelFlag=='N' &&  this.currGuest.orderStatus=='CHECKIN' && this.currGuest.mainFlag=='Y'">转为全日房</el-button>
+                    <el-button size="mini" @click="hourRoomConvertToDailyRoom" v-if="hasPerm('pms:orderAss:convert') && currGuest.checkInType==1 && this.currGuest.orderStatus=='CHECKIN' && this.currGuest.mainFlag=='Y'">转为全日房</el-button>
                     <el-popover ref="occupancySort" placement="top" v-model="popoverVisible">
                       <el-button  size="mini" v-if="hasPerm('pms:orderAss:copyCheckIn')" @click="copyCheckin">复制入住</el-button>
                       <el-button  size="mini" v-if="hasPerm('pms:orderAss:addCheckIn')" @click="addCheckin">添加入住</el-button>
@@ -110,14 +110,14 @@
                       <!-- <el-button type="primary" size="mini">减少客人</el-button> -->
                     </el-popover>
                     <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button>
-                    <el-button size="mini" @click="addGuest" v-if="hasPerm('pms:orderAss:addGuest')" :disabled="this.currGuest.pmsCancelFlag=='Y' ||  this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">添加客人</el-button>
-                    <el-button size="mini" @click="addReserveGuest" v-if="hasPerm('pms:orderAss:addReservation')" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
-                    <el-button size="mini" @click="reserveRowRoom2" v-if="hasPerm('pms:orderAss:ReservePaiFang')" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
-                    <el-button size="mini" @click="toDialogModifyHomePrice" v-if="hasPerm('pms:orderAss:editRoomPrice')" :disabled=" currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
+                    <el-button size="mini" @click="addGuest" v-if="hasPerm('pms:orderAss:addGuest')" :disabled="this.currGuest.orderStatus=='CANCEL' ||  this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">添加客人</el-button>
+                    <el-button size="mini" @click="addReserveGuest" v-if="hasPerm('pms:orderAss:addReservation')" :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
+                    <el-button size="mini" @click="reserveRowRoom2" v-if="hasPerm('pms:orderAss:ReservePaiFang')" :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
+                    <el-button size="mini" @click="toDialogModifyHomePrice" v-if="hasPerm('pms:orderAss:editRoomPrice')" :disabled=" currGuest.mainFlag=='N' || this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
                     <el-button size="mini" @click="toDialogGuestManger" v-if="hasPerm('pms:orderAss:guestOrderManage')" :disabled="!(this.currGuest.orderStatus=='CHECKIN' || this.currGuest.orderStatus=='RESERVE')">客单管理</el-button>
-                    <el-button size="mini" @click="toReserveManager" v-if="hasPerm('pms:orderAss:reserveManage')" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
-                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk && hasPerm('pms:orderAss:changeRoom')" :disabled="this.currGuest.pmsCancelFlag=='Y' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">换房</el-button>
-                    <el-button size="mini" @click="confirmClick" :loading="loading"  :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
+                    <el-button size="mini" @click="toReserveManager" v-if="hasPerm('pms:orderAss:reserveManage')" :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
+                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk && hasPerm('pms:orderAss:changeRoom')" :disabled="this.currGuest.orderStatus=='CANCEL' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">换房</el-button>
+                    <el-button size="mini" @click="confirmClick" :loading="loading"  :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
                   </template>
                 </div>
               </el-tab-pane>
@@ -415,7 +415,7 @@ export default {
           this.dialogVisibleTitle += " (审批拒绝)";
         }
         //设置页面类型
-        if(res.data.order.pmsCancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
+        if(res.data.order.orderStatus=='CANCEL' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
           this.currConfirmType = 'leave-info'
         }else{
           this.currConfirmType = 'edit-guest'

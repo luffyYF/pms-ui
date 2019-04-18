@@ -15,12 +15,12 @@
             <el-table-column prop="roomNumber" label="房号" width="80"></el-table-column>
             <el-table-column prop="orderStatus" label="状态" width="80">
               <template slot-scope="scope">
-                <span v-if="scope.row.pmsCancelFlag=='Y'" style="color:#999999">订单取消</span>
+                <span v-if="scope.row.orderStatus=='CANCEL'" style="color:#999999">订单取消</span>
                 <span v-else-if="scope.row.orderStatus=='LEAVE' || scope.row.orderStatus=='LEAVENOPAY' || scope.row.orderStatus=='NOSHOW'" style="color:#999999">{{orderStatusMap[scope.row.orderStatus]}}</span>
                 <span v-else>{{orderStatusMap[scope.row.orderStatus]}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="guestName" label="姓名" min-width="100">
+            <el-table-column prop="guestName" label="姓名" min-width="100" show-overflow-tooltip>
               <template slot-scope="scope">
                 <img v-if="scope.row.mainFlag=='Y'" src="../../../assets/image/main_guest.png" width="15" height="16" alt="主客人">
                 <span>{{scope.row.guestName}}</span>
@@ -28,10 +28,10 @@
             </el-table-column>
             <el-table-column prop="count" label="操作" :fixed="'right'">
               <template slot-scope="scope">
-                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.roomPk && scope.row.orderStatus=='RESERVE'">
+                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.roomPk && scope.row.orderStatus=='RESERVE'">
                   <el-button size="mini" type="text" @click="guestCheckin(scope.row)">入住</el-button>
                 </p>
-                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y' && scope.row.orderStatus=='CHECKIN'">
+                <p class="guest-orp-item" v-if="scope.row.mainFlag=='Y' && scope.row.orderStatus=='CHECKIN'">
                   <el-button size="mini" type="text" @click="toCheckout(scope.row.guestOrderPk)">退房</el-button>
                 </p>
                 <p class="guest-orp-item" v-if="scope.row.roomNumber && scope.row.rflLockNo">
@@ -40,7 +40,7 @@
                 <p class="guest-orp-item" v-if="scope.row.orderStatus=='CHECKIN' && scope.row.intelligentFlag=='Y'">
                   <el-button size="mini" type="text" @click="dialogQRCodeSettingOpen(scope.row)">二维码开门</el-button>  
                 </p>
-                <!-- <template v-if="scope.row.mainFlag=='Y' && scope.row.pmsCancelFlag!='Y'">
+                <!-- <template v-if="scope.row.mainFlag=='Y'">
                   <el-button size="mini" type="text" v-if="scope.row.roomPk && scope.row.orderStatus=='RESERVE'" @click="guestCheckin(scope.row)">入住<br></el-button>
                   <el-button size="mini" type="text" v-if="scope.row.orderStatus=='CHECKIN' && gsCheckin>1" @click="toCheckout(scope.row.guestOrderPk)">退房<br></el-button>
                 </template> 
@@ -189,10 +189,10 @@
               <el-col :span="22">
                 <el-form-item label="离店日期：" required v-if="form.orderStatus=='LEAVE' || form.orderStatus=='LEAVENOPAY'">
                   <!-- 实际离店日期 -->
-                  <el-date-picker v-model="form.checkoutDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.checkoutDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.orderStatus=='CANCEL' || this.form.mainFlag=='N'" :clearable="false"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="离店日期：" required v-else>
-                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.pmsCancelFlag=='Y' || this.form.mainFlag=='N' || this.form.checkInType==1" :clearable="false"></el-date-picker>
+                  <el-date-picker v-model="form.endDate" :picker-options="pickerOptions0" value-format="yyyy-MM-dd HH:mm:ss" @change="endDateChange" type="datetime" placeholder="选择日期时间" :disabled="currFormType=='add-guest' || this.form.orderStatus=='LEAVE' || this.form.orderStatus=='NOSHOW' || this.form.orderStatus=='CANCEL' || this.form.mainFlag=='N' || this.form.checkInType==1" :clearable="false"></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-col>
@@ -581,7 +581,6 @@
             guestPhone:null,
             beginDate: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             endDate: formatDate(new Date(new Date().setDate(new Date().getDate()+1)), 'yyyy-MM-dd hh:mm:ss'),
-            pmsCancelFlag: null,
             checkinDate:null,
             checkoutDate:null,
             diyPriceFlag: 'N',
@@ -818,9 +817,9 @@
         },
         //提交修改客人信息（外部调用）
         editGuestInfo() {
-          if(this.form.pmsCancelFlag=='Y'){
-            return;
-          }
+          // if(this.form.pmsCancelFlag=='Y'){
+          //   return;
+          // }
           editOrderMember(this.form).then(res=>{
             this.$message({type:'success', message: '客人信息修改成功'})
             this.$emit('callback')
@@ -888,14 +887,12 @@
           this.form.orderStatus=null
           this.form.beginDate = getNightDateTime()
           this.form.endDate = moment(this.form.beginDate).add(1, 'days').format("YYYY-MM-DD HH:mm:ss");
-          this.form.pmsCancelFlag = 'N'
           this.form.priceSchemePk = ""
           this.memberFlag = false
         },
         formFillGuestInfo(guest) {//填充客单信息
           this.form.beginDate = guest.beginDate
           this.form.bornDate = guest.bornDate
-          this.form.pmsCancelFlag = guest.pmsCancelFlag
           this.form.carNumber = guest.carNumber
           this.form.certificateNo = guest.certificateNo
           this.form.certificateType = guest.certificateType
@@ -1008,7 +1005,7 @@
           this.gsCheckin = 0
           this.gsLeave = 0
           this.currGuestList.forEach(obj=>{
-            if(obj.mainFlag=='Y' && obj.pmsCancelFlag=='N'){
+            if(obj.mainFlag=='Y'){
               if(obj.orderStatus=='RESERVE'){
                 this.gsReserve++;
               }else if(obj.orderStatus=='CHECKIN'){
