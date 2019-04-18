@@ -220,7 +220,6 @@ export default {
       this.$set(this.guestTable[index], 'memSex', null)
       this.$set(this.guestTable[index], 'nationality', null)
       this.$set(this.guestTable[index], 'certificateType', 'TWO_IDENTITY')
-
     },
 
     handleSelectionChange(val) {

@@ -71,9 +71,9 @@ export const getCheckinAbleRoom = params => {
     return request.get('/back/order/getCheckinAbleRoom', {params:params})
 }
 //查找今天预抵的主订单pk
-export const findToday = params => {
-    return request.get('/back/order/findTodayOrderPk', {params:params})
-}
+// export const findToday = params => {
+//     return request.get('/back/order/findTodayOrderPk', {params:params})
+// }
 //排房
 export const rowRoom = params => {
     return request.post('/back/order/rowRoom', params)
@@ -119,7 +119,7 @@ export const quickReserve = params => {
 
 //预定时，动态计算总房费
 export const calcMoney = params => {
-    return request.get('/back/order/calcMoney', {params: params})
+    return request.get('/back/roomTypePrice/calcMoney', {params: params})
 }
 //预定时，动态计算总房费
 export const listLog = params => {
@@ -178,4 +178,24 @@ export const guestListApi = params => {
 //钟点房转换为全日房
 export const convertToDailyRoom = params => {
     return request.post('/back/order/convertToDailyRoom/'+ params)
+}
+
+//联房客单列表
+export const linkListGuest = params => {
+    return request.get('/back/order/link/listGuest', {params:params})
+}
+
+//选择联房 联房模块中组单房间选择
+export const linkListGroup = params => {
+    return request.get('/back/order/link/listGroup', {params:params})
+}
+
+//加入联房
+export const linkJoin = params => {
+    return request.post('/back/order/link/join', params)
+}
+
+//退出联房
+export const outJoin = params => {
+    return request.post('/back/order/link/outJoin', params)
 }
