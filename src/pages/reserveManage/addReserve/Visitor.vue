@@ -456,7 +456,7 @@
     <!-- 制卡窗口 -->
     <dialog-make-card ref="dialogMakeCardRef"></dialog-make-card>
     <!-- 批量入账 -->
-    <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="checkout" ></dialog-batch-addBill>
+    <dialog-batch-addBill ref="dialogBatchAddBillRef" ></dialog-batch-addBill>
     <!-- 收费提醒 -->
     <remind-dialog ref="remindDialogRef" @callback="checkout"></remind-dialog>
   
@@ -1152,21 +1152,21 @@
           }).then(()=>{});
         },
         //弹出批量入账转入账
-        timeoutRemindToAddBill(guestPks) {
-          let billItems = []
-          guestPks.forEach(guestPk=>{
-            billItems.push({
-              projectCode:112,
-              guestOrderPk:guestPk,
-              price:null
-            })
-          })
-          this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, guestPks)
-        },
+        // timeoutRemindToAddBill(guestPks) {
+        //   let billItems = []
+        //   guestPks.forEach(guestPk=>{
+        //     billItems.push({
+        //       projectCode:112,
+        //       guestOrderPk:guestPk,
+        //       price:null
+        //     })
+        //   })
+        //   this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, guestPks)
+        // },
         
-        advanceCheckoutToAddBill(billItems) {
-          this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, billItems)
-        },
+        // advanceCheckoutToAddBill(billItems) {
+        //   this.$refs.dialogBatchAddBillRef.showDialog(this.form.orderPk, false, billItems)
+        // },
 
         //点击客单table
         guestTableClick(row, event, column) {
