@@ -4,9 +4,6 @@
       <el-tab-pane label="协议单位管理" name="protocolUnitManagement" >
         <protocol-unit-management ref="protocolUnitManagement"/>
       </el-tab-pane>
-      <el-tab-pane label="销售员管理" name="salesmanManagement" >
-        <salesman-management ref="salesmanManagement"/>
-      </el-tab-pane>
       <el-tab-pane label="协议类别" name="protocolCategory" >
         <protocol-category ref="protocolCategory"/>
       </el-tab-pane>
@@ -27,6 +24,9 @@
       </el-tab-pane>
       <el-tab-pane label="收款查询" name="settlementBillList" >
         <settlementBillList ref="settlementBillList"/>
+      </el-tab-pane>
+      <el-tab-pane label="销售员管理" name="salesmanManagement" >
+        <salesman-management ref="salesmanManagement"/>
       </el-tab-pane>
       
       <!-- <el-tab-pane label="协议价格调控" name="agreementPriceRegulation" v-if="powerJudge('150306')">
