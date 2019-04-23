@@ -199,7 +199,9 @@
     <dialog-batch-add-checkin ref="dialogBatchAddCheckin" @callback="initOrderInfo"></dialog-batch-add-checkin>
     <!-- 录入身份证信息 -->
     <IdCardInputDialog ref="idCardInputDialogRef"></IdCardInputDialog>
-
+    <!-- 收费提醒 -->
+    <remind-dialog ref="remindDialogRef"></remind-dialog>
+    <RcPrint ref="rcPrintRef"></RcPrint>
   </div>
 </template>
 <script>
@@ -234,6 +236,8 @@ import GuestManagerDialog from './GuestManagerDialog'
 import Agreement from "@/components/Agreement/Agreement";
 import DialogBatchAddCheckin from './dialogBatchAddCheckin'
 import IdCardInputDialog from '@/pages/reserveManage/order/IdCardInputDialog'
+import RemindDialog from '@/pages/reserveManage/addReserve/bill/RemindDialog'
+import RcPrint from '@/components/LodopPrintPage/RcPrint'
 
 export default {
   components: {
@@ -250,7 +254,9 @@ export default {
     Agreement,
     DialogBatchContinueRoom,
     DialogBatchAddCheckin,
-    IdCardInputDialog
+    IdCardInputDialog,
+    RemindDialog,
+    RcPrint
   },
   data() {
     return {
@@ -680,7 +686,9 @@ export default {
      
       addCheckin(data).then(res=>{
         this.$message({type:'success', message:'入住成功'})
-        this.initOrderInfo(res.data, 'visitor')
+        this.initOrderInfo(res.data.orderPk, 'visitor')
+        
+        this.$refs.remindDialogRef.showPreChargeDialog(res.data.orderPk, res.data.guestPk)
       }).finally(()=>{
         this.islock = false;
       })
@@ -794,8 +802,9 @@ export default {
         this.$message.warning('请选择一个客单');
         return;
       }
-      window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
-      +"&guestOrderPk="+this.currGuest.guestOrderPk);
+      this.$refs.rcPrintRef.showDialog(this.currGuest.guestOrderPk,this.companyObj.companyName);
+      // window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
+      // +"&guestOrderPk="+this.currGuest.guestOrderPk);
     },
     //打印房间表
     toRoomTablePrint() {

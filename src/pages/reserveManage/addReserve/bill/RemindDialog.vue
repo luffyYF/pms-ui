@@ -40,7 +40,7 @@
     </span>
   </el-dialog>
 
-  <!-- 钟点房 收费提醒 -->
+  <!-- 钟点房 退房收费提醒 -->
   <el-dialog class="remind-dialog" title="钟点房收费提醒" :visible.sync="hourRoomVisable" width="600px" :before-close="handleClose" :append-to-body="true">
       <p style="margin:0">收费规则</p>
       <p style="margin:0">1.入住时长小于等于实际起步时间：总价 = 起步价</p>
@@ -71,7 +71,12 @@
 
 <script>
 import DialogBatchAddBill from './dialogBatchAddBill'
-import {overtimeRemind, advanceCheckoutRemind, hourRoomChargeRemind} from '@/api/order/pmsChargeRemindController'
+import {
+  overtimeRemind,
+  advanceCheckoutRemind,
+  hourRoomChargeRemind,
+  hourRoomPreChargeRemind} 
+from '@/api/order/pmsChargeRemindController'
 
 export default {
   components:{DialogBatchAddBill},
@@ -86,6 +91,7 @@ export default {
       guestOrderPk:null,
       orderPk:null,
       count: 0,
+      preFlag:false,
     }
   },
   methods: {
@@ -97,7 +103,29 @@ export default {
       this.orderPk = orderPk
       this.guestOrderPk = guestOrderPk;
       this.count = 0
+      this.preFlag = false
       this.load()
+    },
+
+    showPreChargeDialog(orderPk, guestOrderPk) {
+      this.preFlag = true
+      hourRoomPreChargeRemind({guestOrderPk:guestOrderPk}).then(res=>{
+        if(res.data) {
+          let preChargePrice = res.data
+          this.$confirm('该钟点房需预收取费用'+preChargePrice+'元, 是否收取?', '提示', {
+            confirmButtonText: '收取',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let billItems = [{
+              projectCode:234,
+              guestOrderPk: guestOrderPk,
+              price: preChargePrice
+            }]
+            this.$refs.dialogBatchAddBillRef.showDialog(orderPk, false, billItems, null, 1)
+          })
+        }
+      })
     },
 
     load() {
@@ -147,6 +175,9 @@ export default {
     },
     //继续监测
     toLoading() {
+      if(this.preFlag) {
+        return
+      }
       // this.$emit('callback')
       this.timeoutVisable = false
       this.advanceVisable = false
