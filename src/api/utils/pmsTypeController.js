@@ -70,3 +70,30 @@ export const allTypeList = params => {
 export const listPriceScheme = params => {
   return request.get('/back/priceScheme/select')
 }
+
+/**
+ * 保存类型
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const addRoomType = params => {
+  return request.post('/back/type/addRoomType', params)
+}
+
+/**
+ * 修改类型
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const updateRoomType = params => {
+  return request.post('/back/type/updateRoomType', params)
+}
+
+/**
+ * 查找房型信息
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const roomTypeDetail = params => {
+  return request.get('/back/type/detail', {params: params})
+}

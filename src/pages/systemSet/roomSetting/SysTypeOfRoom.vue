@@ -11,137 +11,58 @@
         v-loading="loading"
         style="width: 98%; margin:10px;">
         <el-table-column prop="typeCode" label="代码" align="center">
-          <template slot-scope="scope">
-            <el-input v-if="scope.row.typePk == ''" v-model="scope.row.typeCode" size="mini" placeholder="请输入代码"></el-input>
-            {{scope.row.typePk != ''?scope.row.typeCode:''}}
-          </template>
         </el-table-column>
         <el-table-column prop="typeName" label="名称" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.typeName" class="el-Name" size="mini" placeholder="请输入名称"></el-input>
-          </template>
         </el-table-column>
         <el-table-column prop="typeDescribe" label="简称" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.typeDescribe" class="el-Name" size="mini" placeholder="请输入简称"></el-input>
-          </template>
         </el-table-column>
         <el-table-column prop="roomCount" label="房间总数" align="center">
         </el-table-column>
         <el-table-column label="全价" prop="price" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.price" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
-          </template>
         </el-table-column>
         <el-table-column label="起步价" prop="beginPrice" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.beginPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
-          </template>
         </el-table-column>
         <el-table-column label="单位时间加收价" prop="unitPrice" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.unitPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
-          </template>
         </el-table-column>
         <el-table-column label="加收封顶额" prop="cappingPrice" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.cappingPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
-          </template>
         </el-table-column>
         <el-table-column label="预收房费" prop="roomPrice" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.roomPrice" type="number" class="el-Name" size="mini" min="0" step="0.1"/>
-          </template>
         </el-table-column>
         <el-table-column label="备注" prop="remark" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.remark" type="text" class="el-Name" size="mini"/>
-          </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center">
           <!-- 操作 -->
           <template slot-scope="scope">
-            <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
-            <el-button v-if="scope.row.typePk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button>
-            <el-button v-if="scope.row.typePk != ''" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
+            <el-button @click="editClick(scope.row)" type="text" size="mini">编辑</el-button>
+            <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+
+    <SysTypeOfRoomEdit ref="sysTypeOfRoomEditRef" @callback="listRoomType" />
   </div>
 </template>
 
 <script>
   import {roomTypeList,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+  import SysTypeOfRoomEdit from './SysTypeOfRoomEdit.vue'
+
   export default {
+    components: {SysTypeOfRoomEdit},
     data() {
       return {
-        submitLock:false,
-        checked:'',
         typeMaster: 'ROOM_TYPE',
-        value2: new Date(),
         tableData: [],
         loading:false,
-        options1: [{
-          value: 'Y',
-          label: '启动'
-        }, {
-          value: 'N',
-          label: '关闭'
-        }]
       }
     },
     methods: {
       init() {
-        this.submitLock = false
         this.listRoomType()
       },
-      saveClick(row) {
-        const self = this
-        if(row.typePk == ''){
-
-          if(this.submitLock){
-            return;
-          }else{
-            this.submitLock = true
-          }
-          addType(row).then(result => {
-            if(result.code == 1){
-              self.storeyName = '';
-              self.$message({
-                message: '添加成功',
-                type: 'success'
-              });
-            }
-            self.listRoomType();
-            this.refreshType();
-            this.submitLock = false
-          }).catch(()=>{
-            this.submitLock = false
-          })
-        }else{
-          delete row.createTime;
-          delete row.updateTime;
-          
-          if(this.submitLock){
-            return;
-          }else{
-            this.submitLock = true
-          }
-          updateype(row).then(result => {
-            if(result.code == 1){
-              self.$message({
-                message: '修改成功',
-                type: 'success'
-              });
-              this.refreshType();
-            }
-            self.listRoomType();
-            this.submitLock = false
-          }).catch(()=>{
-            this.submitLock = false
-          })
-        }
+      editClick(row) {
+        this.$refs.sysTypeOfRoomEditRef.showDialog(row.typePk);
       },
       deleteClick(row) {
         const self = this
@@ -168,30 +89,8 @@
           });         
         })
       },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
-      },
       addProtocolClick() {
-        if(this.tableData.length == 0 || this.tableData[0].typePk != ''){
-          this.tableData.unshift({
-            typePk: '',
-            typeCode: '',
-            typeMaster: this.typeMaster, 
-            typeName: '', 
-            integralFlag:'N',
-            monthlyRent:'',
-            sortNum:'',
-            usingFlag:'N',
-            typeDescribe:'',
-            basePrice: 0,
-            price: 0,
-            beginPrice: 0,
-            unitPrice: 0,
-            cappingPrice: 0,
-            roomPrice: 0,
-            remark: ""
-          })
-        }
+        this.$refs.sysTypeOfRoomEditRef.showDialog();
       },
       listRoomType(){
         const self = this
@@ -212,14 +111,6 @@
         }).catch(() => {
           self.loading = false
         })
-        // var typeList = JSON.parse(localStorage.getItem("pms_type"))
-        // self.tableData = []
-        // typeList.forEach(item=> {
-        //   if(item.typeMaster == self.typeMaster){
-        //     self.tableData.push(item);
-        //   }
-        // })
-        // self.loading = false
       }
     }
   }

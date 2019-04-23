@@ -13,3 +13,7 @@ export const getCompanyInfot = () => {
 export const updateCompany = params => {
     return request.post('/back/pmsCompany/update', params)
 }
+
+export const getMiniApp = params => {
+    return request.get('/back/pmsCompany/getMiniApp', params)
+}

@@ -34,6 +34,20 @@
         <el-form-item label="RFL酒店标识" prop="rflCoid">
           <el-input v-model="companyObj.rflCoid" placeholder="请输入7位数字的酒店标识"></el-input>
         </el-form-item>
+        <el-form-item label="绑定应用：">
+          <el-select v-model="companyObj.appid" placeholder="请选择要绑定的应用">
+            <el-option v-for="item in miniapp" :key="item.applyPk" :label="item.name" :value="item.appid"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="经度：">
+          <el-input v-model="companyObj.longitude" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="维度：">
+          <el-input v-model="companyObj.latitude" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="   ">
+            <el-button type="primary" @click="openMap">地图</el-button>
+        </el-form-item>
         <el-form-item label="酒店介绍：">
           <el-input type="textarea"
             autosizea
@@ -46,15 +60,21 @@
             <el-button type="primary" @click="saveInfo">保存酒店信息</el-button>
         </el-form-item>
       </el-form>
+      <p style="color: #F56C6C">*请点击地图，选择经纬度</p>
+      <a-map-dialog :dialogVisible="dialogVisible" ref="amapDialogRef" @input="returnMap" @update:dialogVisible="closeMap"></a-map-dialog>
     </div>
 </template>
 
 <script>
 import {
   getCompanyInfot,
-  updateCompany
+  updateCompany,
+  getMiniApp
 } from "@/api/systemSet/pmsCompanyController";
+import AMapDialog from '@/components/AmapLocalize/AMapDialog.vue'
+
 export default {
+  components: {AMapDialog},
   data() {
     return {
       companyObj: {},
@@ -94,11 +114,14 @@ export default {
             trigger: "blur,change"
           }
         ]
-      }
+      },
+      miniapp: [],
+      dialogVisible: false,
     };
   },
   methods: {
     init(){
+      this.findMiniApp()
       this.getCompany();
     },
     getCompany() {
@@ -149,7 +172,53 @@ export default {
         return false;
       }
       return true;
-    }
+    },
+    findMiniApp () {
+      getMiniApp().then(res => {
+        this.miniapp = res.data
+      })
+    },
+    openMap () {
+      this.dialogVisible = true
+      let value = this.transFromMap(this.companyObj.longitude, this.companyObj.latitude)
+      this.$refs.amapDialogRef.setAddress(value.lng, value.lat)
+    },
+    returnMap (data) {
+      console.log(data)
+      let value = this.transFromMapToBaiDu(data.lng, data.lat)
+      this.companyObj.longitude = value.bd_lng
+      this.companyObj.latitude = value.bd_lat
+      if (this.companyObj.companyAddress == null || this.companyObj.companyAddress == "") {
+        this.companyObj.companyAddress = data.address
+      }
+    },
+    closeMap (data) {
+      this.dialogVisible = data
+    },
+    // 百度坐标转高德（传入经度、纬度）
+    transFromMap (bd_lng, bd_lat) {
+      var X_PI = Math.PI * 3000.0 / 180.0;
+      var x = bd_lng - 0.0065;
+      var y = bd_lat - 0.006;
+      var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
+      var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
+      var gg_lng = z * Math.cos(theta);
+      var gg_lat = z * Math.sin(theta);
+      return {lng: gg_lng, lat: gg_lat}
+    },
+    // 高德坐标转百度（传入经度、纬度）
+    transFromMapToBaiDu (gg_lng, gg_lat) {
+        var X_PI = Math.PI * 3000.0 / 180.0;
+        var x = gg_lng, y = gg_lat;
+        var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * X_PI);
+        var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * X_PI);
+        var bd_lng = z * Math.cos(theta) + 0.0065;
+        var bd_lat = z * Math.sin(theta) + 0.006;
+        return {
+            bd_lat: bd_lat,
+            bd_lng: bd_lng
+        };
+    },
   },
   mounted() {
     this.init()
