@@ -201,7 +201,7 @@
     <IdCardInputDialog ref="idCardInputDialogRef"></IdCardInputDialog>
     <!-- 收费提醒 -->
     <remind-dialog ref="remindDialogRef"></remind-dialog>
-  
+    <RcPrint ref="rcPrintRef"></RcPrint>
   </div>
 </template>
 <script>
@@ -237,6 +237,7 @@ import Agreement from "@/components/Agreement/Agreement";
 import DialogBatchAddCheckin from './dialogBatchAddCheckin'
 import IdCardInputDialog from '@/pages/reserveManage/order/IdCardInputDialog'
 import RemindDialog from '@/pages/reserveManage/addReserve/bill/RemindDialog'
+import RcPrint from '@/components/LodopPrintPage/RcPrint'
 
 export default {
   components: {
@@ -254,7 +255,8 @@ export default {
     DialogBatchContinueRoom,
     DialogBatchAddCheckin,
     IdCardInputDialog,
-    RemindDialog
+    RemindDialog,
+    RcPrint
   },
   data() {
     return {
@@ -800,8 +802,9 @@ export default {
         this.$message.warning('请选择一个客单');
         return;
       }
-      window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
-      +"&guestOrderPk="+this.currGuest.guestOrderPk);
+      this.$refs.rcPrintRef.showDialog(this.currGuest.guestOrderPk,this.companyObj.companyName);
+      // window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
+      // +"&guestOrderPk="+this.currGuest.guestOrderPk);
     },
     //打印房间表
     toRoomTablePrint() {
