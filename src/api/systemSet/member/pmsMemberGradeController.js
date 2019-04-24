@@ -21,6 +21,14 @@ export const delGrade = params => {
     return request.post('/back/grade/del', params)
 }
 
+export const findGrade = params => {
+    return request.get('/back/grade/find', {params:params})
+}
+
+export const updStatusGrade = params => {
+    return request.post('/back/grade/updStatus', params)
+}
+
 
 //修改会员卡费用
 export const updateGradeCardFee = params => {

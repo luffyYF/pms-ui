@@ -11,145 +11,58 @@
         v-loading="loading"
         style="width: 98%; margin:10px;">
         <el-table-column prop="typeCode" label="代码" align="center">
-          <template slot-scope="scope">
-            <el-input v-if="scope.row.typePk == ''" v-model="scope.row.typeCode" size="mini" placeholder="请输入代码"></el-input>
-            {{scope.row.typePk != ''?scope.row.typeCode:''}}
-          </template>
         </el-table-column>
         <el-table-column prop="typeName" label="名称" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.typeName" class="el-Name" size="mini" placeholder="请输入名称"></el-input>
-          </template>
         </el-table-column>
         <el-table-column prop="typeDescribe" label="简称" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.typeDescribe" class="el-Name" size="mini" placeholder="请输入简称"></el-input>
-          </template>
-        </el-table-column>
-		<el-table-column prop="basePrice" label="基础价" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.basePrice" class="el-Name" size="mini" placeholder="请输入基础价"></el-input>
-          </template>
         </el-table-column>
         <el-table-column prop="roomCount" label="房间总数" align="center">
         </el-table-column>
-        <el-table-column prop="usingFlag" label="超时退房小时计费" align="center" width="200">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.usingFlag" size="mini" placeholder="请选择状态">
-              <el-option
-                v-for="item in options1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
-          </template>
+        <el-table-column label="全价" prop="price" align="center">
         </el-table-column>
-        <el-table-column prop="sortNum" label="排序" align="center">
-          <template slot-scope="scope">
-           <el-input v-model="scope.row.sortNum" size="mini" placeholder="请输入排序"></el-input>
-          </template>
+        <el-table-column label="起步价" prop="beginPrice" align="center">
         </el-table-column>
-        <el-table-column prop="excessNumber" label="超额数" align="center" width="120">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.excessNumber" size="mini" placeholder="请输入超额数"></el-input>
-          </template>
+        <el-table-column label="单位时间加收价" prop="unitPrice" align="center">
         </el-table-column>
-        <el-table-column prop="integralFlag" label="参加积分" align="center">
-          <template slot-scope="scope">
-           <el-checkbox size="mini" v-model="scope.row.integralFlag" true-label="Y"></el-checkbox>
-          </template>
+        <el-table-column label="加收封顶额" prop="cappingPrice" align="center">
         </el-table-column>
-        <el-table-column prop="monthlyRent" label="月房租" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.monthlyRent" class="el-Name" size="mini" placeholder="请输入月房租"></el-input>
-          </template>
+        <el-table-column label="预收房费" prop="roomPrice" align="center">
+        </el-table-column>
+        <el-table-column label="备注" prop="remark" align="center">
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center">
           <!-- 操作 -->
           <template slot-scope="scope">
-            <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
-            <el-button v-if="scope.row.typePk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button>
-            <el-button v-if="scope.row.typePk != ''" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
+            <el-button @click="editClick(scope.row)" type="text" size="mini">编辑</el-button>
+            <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+
+    <SysTypeOfRoomEdit ref="sysTypeOfRoomEditRef" @callback="listRoomType" />
   </div>
 </template>
 
 <script>
-  import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+  import {roomTypeList,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+  import SysTypeOfRoomEdit from './SysTypeOfRoomEdit.vue'
+
   export default {
+    components: {SysTypeOfRoomEdit},
     data() {
       return {
-        submitLock:false,
-        checked:'',
         typeMaster: 'ROOM_TYPE',
-        value2: new Date(),
         tableData: [],
         loading:false,
-        options1: [{
-          value: 'Y',
-          label: '启动'
-        }, {
-          value: 'N',
-          label: '关闭'
-        }]
       }
     },
     methods: {
       init() {
-        this.submitLock = false
         this.listRoomType()
       },
-      saveClick(row) {
-        const self = this
-        if(row.typePk == ''){
-
-          if(this.submitLock){
-            return;
-          }else{
-            this.submitLock = true
-          }
-          addType(row).then(result => {
-            if(result.code == 1){
-              self.storeyName = '';
-              self.$message({
-                message: '添加成功',
-                type: 'success'
-              });
-            }
-            self.listRoomType();
-            this.refreshType();
-            this.submitLock = false
-          }).catch(()=>{
-            this.submitLock = false
-          })
-        }else{
-          delete row.createTime;
-          delete row.updateTime;
-          
-          if(this.submitLock){
-            return;
-          }else{
-            this.submitLock = true
-          }
-          updateype(row).then(result => {
-            if(result.code == 1){
-              self.$message({
-                message: '修改成功',
-                type: 'success'
-              });
-              this.refreshType();
-            }
-            self.listRoomType();
-            this.submitLock = false
-          }).catch(()=>{
-            this.submitLock = false
-          })
-        }
+      editClick(row) {
+        this.$refs.sysTypeOfRoomEditRef.showDialog(row.typePk);
       },
       deleteClick(row) {
         const self = this
@@ -176,40 +89,28 @@
           });         
         })
       },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
-      },
       addProtocolClick() {
-        if(this.tableData.length == 0 || this.tableData[0].typePk != ''){
-          this.tableData.unshift({
-            typePk: '',
-            typeCode: '',
-            typeMaster: this.typeMaster, 
-            typeName: '', 
-            integralFlag:'N',
-            monthlyRent:'',
-            sortNum:'',
-            usingFlag:'N'
-          })
-        }
+        this.$refs.sysTypeOfRoomEditRef.showDialog();
       },
       listRoomType(){
         const self = this
         this.loading = true;
-        listType({typeMaster: this.typeMaster}).then(result => {
+        roomTypeList({typeMaster: this.typeMaster}).then(result => {
+          result.data.data.forEach(element => {
+            if (element.pricePk == null) {
+              element.basePrice = 0
+              element.price = 0
+              element.beginPrice = 0
+              element.unitPrice = 0
+              element.cappingPrice = 0
+              element.roomPrice = 0
+            }
+          });
           self.tableData = result.data.data
           self.loading = false
         }).catch(() => {
           self.loading = false
         })
-        // var typeList = JSON.parse(localStorage.getItem("pms_type"))
-        // self.tableData = []
-        // typeList.forEach(item=> {
-        //   if(item.typeMaster == self.typeMaster){
-        //     self.tableData.push(item);
-        //   }
-        // })
-        // self.loading = false
       }
     }
   }

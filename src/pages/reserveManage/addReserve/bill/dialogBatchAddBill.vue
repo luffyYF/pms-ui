@@ -190,6 +190,7 @@ export default {
     //加载客单下拉框列表
     loadGuestSelect(orderPk) {
       this.guestOrderSelect = []
+      console.log("当前主单",orderPk)
       selectGuestOrderBill({orderPk: orderPk}).then(res=>{
         res.data.forEach(item=>{
           if(item.orderStatus=="CHECKIN" || item.orderStatus=='RESERVE' || item.orderStatus=='LEAVENOPAY') {

@@ -7,9 +7,9 @@
       <el-tab-pane label="销售员管理" name="salesmanManagement" >
         <salesman-management ref="salesmanManagement"/>
       </el-tab-pane>
-      <el-tab-pane label="协议类别" name="protocolCategory" >
+      <!-- <el-tab-pane label="协议类别" name="protocolCategory" >
         <protocol-category ref="protocolCategory"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <!-- <el-tab-pane label="行业分类" name="industryClassification" >
         <industry-classification ref="industryClassification"/>
       </el-tab-pane> -->

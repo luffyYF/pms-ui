@@ -64,6 +64,10 @@
         <el-table-column prop="unitName" :label="this.conditionalQuery.type == 1?'协议单位':'中介'" align="center">
         </el-table-column>
         <el-table-column prop="typeName" :label="conditionalQuery.type == 1 ? '协议类别' : '类别'" align="center" min-width="110" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-if="conditionalQuery.type == 1">{{scope.row.typeName}}</span>
+            <span v-else>{{scope.row.agreementTypePk == 0 ? '网络中介' : (scope.row.agreementTypePk == 1 ? '旅行社' : (scope.row.agreementTypePk == 2 ? '本地中介' : scope.row.typeName))}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="contactName" label="联系人" align="center" min-width="100" show-overflow-tooltip>
         </el-table-column>

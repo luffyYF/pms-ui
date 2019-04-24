@@ -35,7 +35,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="营业日期">
-                <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 152px;"></el-date-picker>
+                <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 130px;"></el-date-picker>
               </el-form-item>
             </div>
           </el-form>
@@ -400,9 +400,9 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="发生日期"  width="175">
+            <el-table-column prop="createTime" label="发生日期" width="130">
               <template slot-scope="scope">
-                  <el-date-picker size="mini" style="width:100%;" v-model="scope.row.createTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="营业日期"/>
+                  <el-date-picker size="mini" style="width:130px;" v-model="scope.row.createTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="营业日期"/>
               </template>
             </el-table-column>
             <el-table-column prop="createUserName" width="95" label="操作员"></el-table-column>

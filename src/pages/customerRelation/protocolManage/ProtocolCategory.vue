@@ -8,12 +8,12 @@
         border 
         :data="tableData" 
         style="width: 98%; margin:10px;">
-        <el-table-column prop="typeCode" label="代码" align="center" width="120">
+        <!-- <el-table-column prop="typeCode" label="代码" align="center" width="120">
           <template slot-scope="scope">
             <el-input v-if="scope.row.typePk == ''" v-model="scope.row.typeCode" size="mini" placeholder="请输入代码"></el-input>
             {{scope.row.typePk != ''?scope.row.typeCode:''}}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="typeName" label="名称" align="center" width="160">
           <template slot-scope="scope">
             <el-input size="mini" v-model="scope.row.typeName" :readonly="scope.row.defaultFlag == 'Y'"></el-input>
@@ -24,20 +24,14 @@
             <el-input size="mini" v-model="scope.row.sortNum"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" align="center" width="230">
+        <el-table-column prop="remark" label="备注" align="center" width="260">
           <template slot-scope="scope">
             <el-input size="mini" v-model="scope.row.remark" :readonly="scope.row.defaultFlag == 'Y'"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="createUserName" label="创建人" align="center" width="110">
-          <template slot-scope="scope">
-            <el-input size="mini" v-model="scope.row.createUserName" readonly></el-input>
-          </template>
+        <el-table-column prop="createUserName" label="创建人" align="center" width="130">
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" align="center" width="150">
-          <template slot-scope="scope">
-            <el-input size="mini" v-model="scope.row.createTime" readonly></el-input>
-          </template>
+        <el-table-column prop="createTime" label="创建时间" align="center" width="190">
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" min-width="90">
           <!-- 操作 -->
@@ -144,7 +138,7 @@ import Moment from 'moment'
             typeName: '', 
             integralFlag:'N',
             monthlyRent:'',
-            sortNum:'',
+            sortNum:0,
             usingFlag:'N',
             remark: '',
             createUserId: this.pms_userinfo.upmsUserId,
@@ -157,6 +151,11 @@ import Moment from 'moment'
         const self = this
         self.queryParams.pageNum = val;
         listType(self.queryParams).then(result => {
+          result.data.data.forEach(element => {
+            if (element.sortNum == null) {
+              element.sortNum = 0
+            }
+          });
           self.tableData = result.data.data;
           self.total = result.data.pageSize;
         }).catch(() => {
