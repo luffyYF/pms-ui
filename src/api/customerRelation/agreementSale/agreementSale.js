@@ -3,6 +3,10 @@ import request from '@/utils/requestJson'
 export const listAgreementSale = params => {
     return request.get('/back/agreementSale/list', {params: params})
 }
+
+export const allAgreementSale = params => {
+    return request.get('/back/agreementSale/allAgreementSale', {params: params})
+}
  
 export const addSale = params => {
    return request.post('/back/agreementSale/add', params)

@@ -8,15 +8,20 @@
         border 
         :data="tableData" 
         style="width: 98%; margin:10px;">
-        <el-table-column prop="typeCode" label="代码" align="center" width="120">
+        <el-table-column prop="code" label="代码" align="center" width="120">
           <template slot-scope="scope">
-            <el-input v-if="scope.row.typePk == ''" v-model="scope.row.typeCode" size="mini" placeholder="请输入代码"></el-input>
-            {{scope.row.typePk != ''?scope.row.typeCode:''}}
+            <el-input v-if="scope.row.salePk == ''" v-model="scope.row.code" size="mini" placeholder="请输入代码"></el-input>
+            {{scope.row.salePk != ''?scope.row.code:''}}
           </template>
         </el-table-column>
         <el-table-column prop="typeName" label="姓名" align="center" width="250">
           <template slot-scope="scope">
-            <el-input size="mini" v-model="scope.row.typeName"></el-input>
+            <el-input size="mini" v-model="scope.row.saleName"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" label="手机号" align="center" width="250">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="scope.row.phone"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="sortNum" label="排序" align="center" width="120">
@@ -28,8 +33,8 @@
           <!-- 操作 -->
           <template slot-scope="scope">
             <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
-            <el-button v-if="scope.row.typePk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button>
-            <el-button v-if="scope.row.typePk != ''" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
+            <el-button v-if="scope.row.salePk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button>
+            <el-button v-if="scope.row.salePk != ''" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -41,15 +46,14 @@
 <script>
 // 权限
 // import {powerJudge} from '@/utils/permissionsOperation.js'
-import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+// import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+import {listAgreementSale,deleteSale,updateSale,addSale} from '@/api/customerRelation/agreementSale/agreementSale'
   export default {
     data() {
       return {
-        typeMaster: 'SALE',
         options:[],
         tableData: [],
         queryParams: {
-          typeMaster: 'SALE',
           pageSize: 10,
           pageNum: 1
         },
@@ -63,8 +67,8 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
       saveClick(row) {
         console.log(row)
         const self = this
-        if(row.typePk == ''){
-          addType(row).then(result => {
+        if(row.salePk == ''){
+          addSale(row).then(result => {
             if(result.code == 1){
               self.storeyName = '';
               self.$message({
@@ -78,7 +82,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
         }else{
           delete row.createTime;
           delete row.updateTime;
-          updateype(row).then(result => {
+          updateSale(row).then(result => {
             if(result.code == 1){
               self.$message({
                 message: '修改成功',
@@ -97,7 +101,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          delType({typePk:row.typePk}).then(result => {
+          deleteSale(row.salePk).then(result => {
             if(result.code == 1){
               self.storeyName = '';
               self.$message({
@@ -119,25 +123,21 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
         rows.splice(index, 1);
       },
       addRows() {
-        if(this.tableData.length == 0 || this.tableData[0].typePk != ''){
+        if(this.tableData.length == 0 || this.tableData[0].salePk != ''){
           this.tableData.unshift({
-            typePk: '',
-            typeCode: '',
-            typeMaster: this.typeMaster, 
-            typeName: '', 
-            integralFlag:'N',
-            monthlyRent:'',
-            sortNum:'',
-            usingFlag:'N'
+            salePk: '',
+            saleName: '',
+            sortNum:0,
+            phone:''
           })
         }
       },
       list(val){
         const self = this
         self.queryParams.pageNum = val;
-        listType(self.queryParams).then(result => {
+        listAgreementSale(self.queryParams).then(result => {
           self.tableData = result.data.data;
-          self.total = result.data.pageSize;
+          self.total = result.data.total;
         }).catch(() => {
           self.loading = false
         })
@@ -148,9 +148,9 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
         if (val > self.total) {
           self.queryParams.pageNum = 1;
         }
-        listType(self.queryParams).then(result => {
+        listAgreementSale(self.queryParams).then(result => {
           self.tableData = result.data.data;
-          self.total = result.data.pageSize;
+          self.total = result.data.total;
         }).catch(() => {
           self.loading = false
         })

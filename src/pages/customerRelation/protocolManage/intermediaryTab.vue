@@ -41,7 +41,7 @@
 <script>
   import ProtocolUnitManagement from './ProtocolUnitManagement'
   // import SalesmanManagement from './SalesmanManagement'
-  import SalesmanManagement from './salesmanManagement2'
+  import SalesmanManagement from './salesmanManagement'
   import ProtocolCategory from './ProtocolCategory'
   import IndustryClassification from './IndustryClassification'
   import AgreementPriceRegulation from './AgreementPriceRegulation'
