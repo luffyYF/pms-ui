@@ -83,7 +83,7 @@
           gradePks: [{ required: true, message: '请选择会员卡类型', trigger: 'change' }],
           datepicker:  [{ required: true, message: '请选择活动日期', trigger: 'change' }],
           roomTypePk:  [{ required: true, message: '请选择兑换房型', trigger: 'change' }],
-          week: [{ required: true, message: '请选择有效日期', trigger: 'change' }],
+          week: [{ required: true, message: '请选择有效星期', trigger: 'change' }],
         },
         title:"添加规则",
         gradeList:[],

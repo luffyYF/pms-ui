@@ -69,7 +69,7 @@
         dialogVisible: false,
         loading: false,
         dataForm: {
-
+            datepicker:[]
         },
         detailDtos:[
             {
@@ -117,16 +117,20 @@
         if (row) {
             this.title = "修改规则"
             this.dataForm = row
-            if(row.type == 1){
+            if(row.type == 1 && row.beginDate && row.endDate ){
+                console.log(123)
                 this.dataForm.datepicker = [
                     row.beginDate,
                     row.endDate
                 ]
+            }else{
+                this.dataForm.datepicker = []
             }
             this.listDetail(row.rulePk)
         }else{
           this.title = "添加规则"
           this.dataForm = {
+              datepicker:[]
           }
           this.detailDtos = [
                 {
@@ -135,7 +139,7 @@
                     price:0,
                     type:0,
                     giveCount:0,
-                    giveIntegral:""
+                    giveIntegral:"",
                 }
             ]
         }
@@ -183,6 +187,9 @@
             if(this.dataForm.type == 1){
                 this.dataForm.beginDate = this.dataForm.datepicker[0]
                 this.dataForm.endDate = this.dataForm.datepicker[1]
+            }else{
+                this.dataForm.beginDate = null
+                this.dataForm.endDate = null
             }
             var data = {
                 rulePo:this.dataForm,

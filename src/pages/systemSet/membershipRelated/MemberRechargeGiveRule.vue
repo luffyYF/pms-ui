@@ -97,6 +97,7 @@
         this.$refs.MemberRechargeGiveRuleEditRef.showDialog()
       },
       editClick(row){
+        row.datepicker = []
         var temoObj = JSON.parse(JSON.stringify(row))
         this.$refs.MemberRechargeGiveRuleEditRef.showDialog(temoObj)
       },
