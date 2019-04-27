@@ -40,7 +40,7 @@
           <el-input style="float: left;" class="card-no" v-model="form.cardNumber" required></el-input>
         </el-form-item>
         <el-form-item label="卡费" porp="cardFee">
-          <el-input v-model="form.cardFee"></el-input>
+          <el-input v-model="form.cardFee" readonly></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input :disabled="true" v-model="form.remark"></el-input>
@@ -96,8 +96,8 @@
           <!-- <el-input v-model="form.agreementPk"></el-input> -->
           <span class="el-icon-search" @click="openAgreement()" style="cursor:pointer;" title="查询协议单位"></span>
         </el-form-item>
-        <el-form-item label="收取方式" prop="chargeTypePk">
-          <el-select v-model="form.chargeTypePk" @visible-change="chargeTypeChange" placeholder="请选收取方式">
+        <el-form-item label="收取方式" :prop="form.cardFee == '0' ? '' : 'chargeTypePk'">
+          <el-select v-model="form.chargeTypePk" @visible-change="chargeTypeChange" placeholder="请选收取方式" :disabled="form.cardFee <= 0">
             <el-option
               v-for="item in chargeType"
               :key="item.id"
@@ -263,10 +263,10 @@ export default {
       userInfo:{},
       chargeType:[
         {id:'',name:'请选择付款方式',accountNumber:''},
-        {id:'现金',name:'现金',accountNumber:'会员缴费'},
-        {id:'微信',name:'微信',accountNumber:'会员缴费'},
-        {id:'支付宝',name:'支付宝',accountNumber:'会员缴费'},
-        {id:'银联',name:'银联',accountNumber:'会员缴费'},
+        {id:'234',name:'现金',accountNumber:'会员缴费'},
+        {id:'237',name:'微信',accountNumber:'会员缴费'},
+        {id:'235',name:'支付宝',accountNumber:'会员缴费'},
+        {id:'211',name:'银联',accountNumber:'会员缴费'},
         // {id:'挂账',name:'挂账'}
       ],
       certificateType:[],
@@ -377,6 +377,7 @@ export default {
         nativePlace: [{ required: true, message: "籍贯不能为空" }],
         birthday: [{ required: true, message: "出生日期不能为空" }],
         memPhone: [{ required: true, message: "手机号码不能为空" }],
+        chargeTypePk: [{ required: true, message: "请选择收取方式", trigger: 'change' }],
       },
       selectGroupObj:{},
       groupList:[]
@@ -491,13 +492,14 @@ export default {
               self.empty()
             }
             self.loading = false
+          }).finally(() => {
+            self.$refs.form.clearValidate()
+            self.loading = false
           })
         } else {
           console.log('error submit!!');
           return false;
         }
-      }).finally(() => {
-        self.loading = false
       })
     },
     empty() {

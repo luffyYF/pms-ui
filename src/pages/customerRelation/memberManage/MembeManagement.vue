@@ -83,9 +83,17 @@
         </el-table-column>
         <el-table-column prop="memPhone" label="手机号码" align="center" width="120">
         </el-table-column>
+        <el-table-column prop="availableBalance" label="可用余额" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.availableBalance|toMoney}}
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <template slot-scope="scope">
             <el-button @click="memberMangerClick(scope.row)" type="text" size="mini">会员管理</el-button>
+            <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini">充值</el-button>
+            <el-button @click="rechargeDetailClick(scope.row)" type="text" size="mini">充值明细</el-button>
+            <el-button @click="integralDetailClick(scope.row)" type="text" size="mini">积分明细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -151,6 +159,9 @@
       </div>
     </el-dialog>
     
+    <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
+    <member-recharge-detail-dialog ref="memberRechargeDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-recharge-detail-dialog>
+    <member-integral-detail-dialog ref="memberIntegralDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-integral-detail-dialog>
   </div>
 </template>
 
@@ -165,8 +176,12 @@ import {
   updateMember
 } from "@/api/customerRelation/pmsMemberController";
 import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
+import MemberRecharge from "./MemberRecharge.vue"
+import MemberRechargeDetailDialog from "./MemberRechargeDetailDialog.vue"
+import MemberIntegralDetailDialog from "./MemberIntegralDetailDialog.vue"
+
 export default {
-  components: { MemberGrade, MemberOperationManagement },
+  components: { MemberGrade, MemberOperationManagement, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog },
   data() {
     return {
       memberLevel: [],
@@ -231,6 +246,38 @@ export default {
       this.form.gradePk = res.form.memberGrade;
       // this.form.cardFee=res.form.cardFee;
       // this.form.invalidDateCard=res.form.invalidDateCard;
+    },
+    memberRechargeClick (row) {
+      this.$refs.memberRechargeRefs.showDialog(row)
+    },
+    rechargeDetailClick (row) {
+      this.$refs.memberRechargeDetailDialogRefs.showDialog(row.memPk, 0)
+    },
+    integralDetailClick (row) {
+      this.$refs.memberIntegralDetailDialogRefs.showDialog(row.memPk, 1)
+    },
+  },
+  filters: {
+    toMoney: function(num) {
+      if(num){
+        if(isNaN(num)) {
+          alert("金额中含有不能识别的字符");
+          return;
+        }
+        num = typeof num == "string"?parseFloat(num):num//判断是否是字符串如果是字符串转成数字
+        num = num.toFixed(2);//保留两位
+        num = parseFloat(num);//转成数字
+        num = num.toLocaleString();//转成金额显示模式
+        //判断是否有小数
+        if(num.indexOf(".")==-1){
+            num = num+".00";
+        }else{
+            num = num.split(".")[1].length<2?num+"0":num;
+        }
+        return num;//返回的是字符串23,245.12保留2位小数
+      } else {
+        return num = 0;
+      }
     }
   }
 };

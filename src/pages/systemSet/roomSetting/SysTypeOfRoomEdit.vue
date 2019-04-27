@@ -7,7 +7,7 @@
 							:close-on-click-modal="false" :before-close="handleClose">
 			<el-form ref="dataForm" :model="dataForm.typePo" :rules="rules" label-width="106px">
 				<el-tabs type="border-card" v-model="activeName">
-					<el-tab-pane name="one" label="房型设置">
+					<el-tab-pane name="one" label="房型设置" style="height:500px;overflow-y: auto;">
 						<el-col :span="24">
 							<el-col :span="12">
 								<el-form-item label="代码" label-width="70px" prop="typeCode" size="mini">
@@ -62,7 +62,7 @@
 							</el-form-item>
 						</el-col>
 					</el-tab-pane>
-					<el-tab-pane name="two" label="扩展设置">
+					<el-tab-pane name="two" label="扩展设置" style="height:500px;overflow-y: auto;">
 						<el-col :span="24">
 							<el-col :span="12">
 								<el-form-item label="面积" label-width="70px" size="mini">
@@ -147,7 +147,7 @@
 							</el-form-item>
 						</el-col>
 					</el-tab-pane>
-					<el-tab-pane name="three" label="图片设置">
+					<el-tab-pane name="three" label="图片设置" style="height:500px;overflow-y: auto;">
 						<el-col :span="24">
 							<el-form-item label="轮播图" label-width="70px" size="mini">
 								<el-upload
@@ -169,7 +169,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-				<el-button type="primary" size="mini" @click="saveData" :loading="loading">{{dataForm.typePo.typePk == null ? '保存' : '修改'}}</el-button>
+				<el-button type="primary" size="mini" @click="saveData" :loading="loading">{{dataForm.typePo.typePk == '' ? '保存' : '修改'}}</el-button>
 			</span>
 		</el-dialog>
 
