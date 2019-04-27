@@ -21,7 +21,7 @@
             <el-date-picker style="width:100%;" v-model="dataForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
         </el-date-picker>
         </el-form-item>
-        <el-button type="primary" @click="addDetailClick()" 
+        <el-button type="primary" @click="addDetailClick()"
                 size="mini">新增赠送规则
         </el-button>
         <span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;温馨提示:优惠卷不足时，充值将不会赠送</span>
@@ -71,7 +71,7 @@
         dialogVisible: false,
         loading: false,
         dataForm: {
-
+            datepicker:[]
         },
         detailDtos:[
             {
@@ -122,17 +122,21 @@
         this.listGrade(row)
         if (row) {
             this.title = "修改规则"
-            if(row.type == 1){
-                row.datepicker = [
+            this.dataForm = row
+            if(row.type == 1 && row.beginDate && row.endDate ){
+                console.log(123)
+                this.dataForm.datepicker = [
                     row.beginDate,
                     row.endDate
                 ]
+            }else{
+                this.dataForm.datepicker = []
             }
-            this.dataForm = row
             this.listDetail(row.rulePk)
         }else{
           this.title = "添加规则"
           this.dataForm = {
+              datepicker:[]
           }
           this.detailDtos = [
                 {
@@ -177,7 +181,7 @@
           }else{
             this.$refs.couponChangeRef.showDialog(this.detailDtos[index].detailPk,this.detailDtos[index].couponPos)
           }
-          
+
       },
       couponChangeCallback(data){
           this.detailDtos[this.currentDtoIndex].couponPks = data.couponPks
@@ -206,10 +210,9 @@
             if(this.dataForm.type == 1){
                 this.dataForm.beginDate = this.dataForm.datepicker[0]
                 this.dataForm.endDate = this.dataForm.datepicker[1]
-            }
-            if(this.dataForm.type == 0){
-              delete this.dataForm['beginDate']
-              delete this.dataForm['endDate']
+            }else{
+                this.dataForm.beginDate = null
+                this.dataForm.endDate = null
             }
             var data = {
                 rulePo:this.dataForm,

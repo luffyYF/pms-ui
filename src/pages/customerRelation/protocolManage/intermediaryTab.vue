@@ -28,6 +28,9 @@
       <el-tab-pane label="收款查询" name="settlementBillList" >
         <settlementBillList ref="settlementBillList"/>
       </el-tab-pane>
+      <el-tab-pane label="返佣管理" name="agreementCommissionList" >
+        <agreementCommissionList ref="agreementCommissionList"/>
+      </el-tab-pane>
       <!-- <el-tab-pane label="协议价格调控" name="agreementPriceRegulation" v-if="powerJudge('150306')">
         <agreement-price-regulation ref="agreementPriceRegulation"/>
       </el-tab-pane> -->
@@ -37,7 +40,8 @@
 
 <script>
   import ProtocolUnitManagement from './ProtocolUnitManagement'
-  import SalesmanManagement from './SalesmanManagement'
+  // import SalesmanManagement from './SalesmanManagement'
+  import SalesmanManagement from './salesmanManagement'
   import ProtocolCategory from './ProtocolCategory'
   import IndustryClassification from './IndustryClassification'
   import AgreementPriceRegulation from './AgreementPriceRegulation'
@@ -46,6 +50,7 @@
   import MemberForwardPrice from './forwardPrice/MemberForwardPrice'
   import consumerBillList from './billQuery/consumerBillList'
   import settlementBillList from './billQuery/settlementBillList'
+  import agreementCommissionList from './agreementCommission/agreementCommissionList'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
   export default {
     components: {
@@ -58,7 +63,8 @@
       unitBillList,
       MemberForwardPrice,
       consumerBillList,
-      settlementBillList
+      settlementBillList,
+      agreementCommissionList
     },
     data () {
       return {

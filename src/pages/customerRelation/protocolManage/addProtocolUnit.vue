@@ -120,9 +120,9 @@
                 <el-select v-model="form.agreementPo.saleTypePk" placeholder="请选择销售员" style="width:224px">
                   <el-option
                     v-for="item in saleOptions"
-                    :key="item.typePk"
-                    :label="item.typeName"
-                    :value="item.typePk">
+                    :key="item.salePk"
+                    :label="item.saleName"
+                    :value="item.salePk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -276,6 +276,7 @@ import {listType, roomTypeList} from '@/api/utils/pmsTypeController'
 import {addProject,delProject,updateProject,listProject, detailProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementController'
 import {addPriceProject,delPriceProject,listPriceProject} from '@/api/customerRelation/ProtocolManage/pmsAgreementRoomPrice'
 import { dailyRoomRuleList } from "@/api/systemSet/pmsDailyRoomController";
+import {allAgreementSale} from '@/api/customerRelation/agreementSale/agreementSale'
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 import moment from "moment"
 
@@ -390,6 +391,7 @@ export default {
       const self = this;
       this.dialogProtocolVisible = true
     //   self.form={};
+      this.allAgreementSale()
       if (self.type == 1) {
         this.proDialogTitle = '添加协议单位'
         this.btnName = '保存协议单位'
@@ -400,6 +402,7 @@ export default {
     },
     editProClick(row, type) {
       const self = this;
+      self.allAgreementSale()
       self.type = type
       this.dialogProtocolVisible = true
       if (self.type == 1) {
@@ -464,6 +467,11 @@ export default {
         }
       });
     },
+    allAgreementSale(){
+      allAgreementSale().then(res=>{
+          this.saleOptions = res.data;
+      })
+    },
     listMastersType(i) {//查询分类类型
       const self = this;
       self.form.roomTypePricePos = [];
@@ -484,15 +492,7 @@ export default {
         //     self.saleOptions.push(listTypeData[index]);
         //   }
         // }
-        var typeList = JSON.parse(localStorage.getItem("pms_type"))
-        typeList.forEach(item=> {
-          if(item.typeMaster == "AGREEMENT"){
-            self.agreementOptions.push(item);
-          }
-          else if(item.typeMaster == "SALE"){
-            self.saleOptions.push(item);
-          }
-        })
+        
         if(i){
           var now = new Date();
           now.setFullYear(now.getFullYear()+1);
