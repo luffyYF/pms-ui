@@ -202,14 +202,14 @@
           </el-table-column> -->
       </el-table>
     </el-dialog>
-    <el-dialog title="离店提醒" :center="true" style="position: absolute;width:480px;left: calc(100% - 480px);top: auto;padding:0;" top="0" 
-    :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
+    <el-dialog title="离店提醒" :center="true" style="position: absolute;width:488px;left: calc(100% - 488px);top: auto;padding:0;" top="0" 
+    :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="488px" >
       <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
         <el-table-column align="center"  prop="channelName" label="渠道" width="80"></el-table-column>
         <el-table-column align="center" prop="guestName" label="客人" width="80"></el-table-column>
         <el-table-column align="center" prop="roomNumber" label="房号" width="80"></el-table-column>
         <el-table-column align="center" prop="roomTypeName" label="房型" width="80"></el-table-column>
-        <el-table-column align="center" label="预离时间" >
+        <el-table-column align="center" label="预离时间" width="114">
           <template slot-scope="scope">
           {{scope.row.guestEndDate | dateFormat('YYYY-MM-DD HH:mm')}}
           </template>

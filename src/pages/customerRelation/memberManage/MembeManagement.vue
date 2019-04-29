@@ -91,7 +91,7 @@
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <template slot-scope="scope">
             <el-button @click="memberMangerClick(scope.row)" type="text" size="mini">会员管理</el-button>
-            <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini">充值</el-button>
+            <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini" :disabled="scope.row.rechargeFlag == 'N'">充值</el-button>
             <el-button @click="rechargeDetailClick(scope.row)" type="text" size="mini">充值明细</el-button>
             <el-button @click="integralDetailClick(scope.row)" type="text" size="mini">积分明细</el-button>
           </template>

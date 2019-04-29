@@ -89,7 +89,7 @@ import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAu
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
-// import ManagerDailyReport from '@/pages/reportCenter/managementLayer/managerDailyReport.vue'
+import ManagerDailyReport from '@/pages/reportCenter/managementLayer/managerDailyReport.vue'
 import ManaghouseDoBusinessStatistics from '@/pages/reportCenter/houseDoBusinessStatistics/houseDoBusinessStatistics.vue'
 import ManagSalesGuests from '@/pages/reportCenter/managementSales/SalesGuests.vue'
 import ManagSalesAgreement from '@/pages/reportCenter/managementSales/SalesAgreement.vue'
@@ -275,7 +275,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/narpCheck', component: NightAuditRentPriceCheck, label: '夜审房费前核对报表'},
           {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表'},
           {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况'},
-          // {path: '/reportCenter/managerDailyReport', component: ManagerDailyReport, label: '经理日报'},
+          {path: '/reportCenter/managerDailyReport', component: ManagerDailyReport, label: '经理日报'},
           {path: '/reportCenter/houseDoBusinessStatistics', component: ManaghouseDoBusinessStatistics, label: '查看每天的订房报表情况'},
           {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源'},
           {path: '/reportCenter/salesAgreement', component: ManagSalesAgreement, label: '销售分析报表-协议单位'},

@@ -36,8 +36,17 @@
               :value="item.id">
             </el-option>
           </el-select> -->
-          <member-grade v-model="form.gradePk" style="width:100px;float: left;"/>
-          <el-input style="float: left;" class="card-no" v-model="form.cardNumber" required></el-input>
+          <!-- <member-grade v-model="form.gradePk" style="width:100px;float: left;"/> -->
+          <el-input class="card-no" v-model="form.cardNumber" required>
+            <el-select v-model="form.gradePk" slot="prepend" style="width: 86px" @visible-change="memberLevelChange" placeholder="会员级别">
+              <el-option
+                v-for="item in memberLevel"
+                :key="item.gradePk"
+                :label="item.gradeName"
+                :value="item.gradePk">
+              </el-option>
+            </el-select>
+          </el-input>
         </el-form-item>
         <el-form-item label="卡费" porp="cardFee">
           <el-input v-model="form.cardFee" readonly></el-input>
@@ -96,7 +105,7 @@
           <!-- <el-input v-model="form.agreementPk"></el-input> -->
           <span class="el-icon-search" @click="openAgreement()" style="cursor:pointer;" title="查询协议单位"></span>
         </el-form-item>
-        <el-form-item label="收取方式" :prop="form.cardFee == '0' ? '' : 'chargeTypePk'">
+        <el-form-item label="收取方式" ref="chargeTypePkRef" :prop="form.cardFee == '0' ? '' : 'chargeTypePk'">
           <el-select v-model="form.chargeTypePk" @visible-change="chargeTypeChange" placeholder="请选收取方式" :disabled="form.cardFee <= 0">
             <el-option
               v-for="item in chargeType"
@@ -242,6 +251,7 @@ import bus from '@/utils/bus'
 import Agreement from '@/components/Agreement/Agreement'
 import MemberGrade from '@/components/MemberGrade/MemberGrade'
 import {addMember,memberCertificateType} from '@/api/customerRelation/pmsMemberController'
+import {listGrade} from '@/api/customerRelation/pmsMemberGradeController'
 import {idcard} from '@/api/utils/pmsCommonController'
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 export default {
@@ -385,7 +395,8 @@ export default {
   },
   mounted(){
     this.memberCertificateType();
-    bus.$on('memberGrade', (res) => { this.memberLevelChange(res) });
+    this.getMemberGradeList();
+    // bus.$on('memberGrade', (res) => { this.memberLevelChange(res) });
     bus.$on('agreementPo', (res) => { this.agreementCallback(res) });
   },
   methods: {
@@ -395,7 +406,7 @@ export default {
     init(){
       this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
       this.memberCertificateType()
-      // this.getMemberGradeList();
+      this.getMemberGradeList();
     },
     agreementCallback(data) {
       // this.form.agreementUnitPk = data.agreementPk;
@@ -415,11 +426,11 @@ export default {
     //   this.form.unitName = res.unitName;
     //   this.showAgreementFlag = false;
     // },
-    memberLevelChange(res){
-      this.form.gradePk = res.form.memberGrade
-      this.form.cardFee=res.form.cardFee;
-      this.form.invalidDateCard=res.form.invalidDateCard;
-    },
+    // memberLevelChange(res){
+    //   this.form.gradePk = res.form.memberGrade
+    //   this.form.cardFee=res.form.cardFee;
+    //   this.form.invalidDateCard=res.form.invalidDateCard;
+    // },
     idcard(){
       idcard({idcard:this.form.certificateNo}).then(result => {
         if(result.data != null){
@@ -448,23 +459,42 @@ export default {
     agreementUnit(){
     },
     //获取会员等级集合
-    // getMemberGradeList(){
-    //   listGrade().then(res=>{
-    //     this.memberLevel = res.data;
-    //   })
-    // },
-    // memberLevelChange(o){
-    //   if(!o){
-    //     console.log(this.form.memberGrade)
-    //     for (let index = 0; index < this.memberLevel.length; index++) {
-    //       const element = this.memberLevel[index];
-    //       if(this.form.memberGrade == element.id){
-    //         this.form.cardFee = element.cardFee
-    //         this.form.invalidDateCard = element.invalidDateCard
-    //       }
-    //     }
-    //   }
-    // },
+    getMemberGradeList(){
+      //初始化会员等级
+      listGrade().then(result => {
+        var item = {
+          gradePk:'',
+          gradeName:'会员等级',
+          cardFee:'',
+          invalidDateCard:'',
+        };
+        var arr = [];
+        arr.push(item);
+        for (let index = 0; index < result.data.length; index++) {
+          const element = result.data[index];
+          arr.push(element);
+        }
+        this.memberLevel = arr;
+      })
+    },
+    memberLevelChange(o){
+      if(!o){
+        console.log(this.form.gradePk)
+        for (let index = 0; index < this.memberLevel.length; index++) {
+          const element = this.memberLevel[index];
+          if(this.form.gradePk == element.gradePk){
+            if (element.cardFee <= '0') {
+              if (this.$refs.chargeTypePkRef != undefined) {
+                this.$refs.chargeTypePkRef.clearValidate()
+              }
+              this.form.chargeTypePk = ''
+            }
+            this.form.cardFee = element.cardFee
+            this.form.invalidDateCard = element.invalidDateCard
+          }
+        }
+      }
+    },
     chargeTypeChange(o){
       if(!o){
         for (let index = 0; index < this.chargeType.length; index++) {
@@ -536,7 +566,7 @@ export default {
   width: 95px;
 }
 .card-no {
-  width: 104px;
+  width: 204px;
 }
 .address {
   width: 501px;
