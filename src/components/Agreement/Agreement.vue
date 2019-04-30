@@ -71,7 +71,9 @@ export default {
     return {
       dialogAgreement:false,
       tableData: [],
-      proForm: {},
+      proForm: {
+        type: 1
+      },
       typeList: [],
       radio: ""
     };
@@ -130,7 +132,9 @@ export default {
       this.$emit("sendData", row);
       this.dialogAgreement = false;
       this.radio = "";
-      this.proForm = {};
+      this.proForm = {
+        type: 1
+      };
     }
   }
 };
