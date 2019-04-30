@@ -85,7 +85,7 @@ export default {
   background-repeat: no-repeat;
   /* background-position: -1225px -17px; */
   background-position: -1100px -17px;
-  /* width: 27px; */
+  width: 24px;
   display: table;
   cursor: pointer;
 }

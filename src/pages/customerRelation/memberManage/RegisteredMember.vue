@@ -24,6 +24,7 @@
         <el-form-item label="证件号" prop="certificateNo" required>
           <el-input v-model="form.certificateNo" @blur="idcard"></el-input>
         </el-form-item>
+        <IDCardScan @callback="setCardInfo" class="vilcen"></IDCardScan>
         <el-form-item label="姓名" prop="memName" required>
           <el-input v-model="form.memName"></el-input>
         </el-form-item>
@@ -37,7 +38,7 @@
             </el-option>
           </el-select> -->
           <!-- <member-grade v-model="form.gradePk" style="width:100px;float: left;"/> -->
-          <el-input class="card-no" v-model="form.cardNumber" required>
+          <el-input class="card-no" v-model="form.cardNumber" required :maxlength="8">
             <el-select v-model="form.gradePk" slot="prepend" style="width: 86px" @visible-change="memberLevelChange" placeholder="会员级别">
               <el-option
                 v-for="item in memberLevel"
@@ -65,7 +66,7 @@
           <el-input v-model="form.nativePlace"></el-input>
         </el-form-item>
         <el-form-item label="出生" prop="birthday" required>
-          <el-date-picker v-model="form.birthday" type="date" value-format="yyyy-MM-dd" placeholder="出生日期"></el-date-picker>
+          <el-date-picker v-model="form.birthday" style="width: 204px" type="date" value-format="yyyy-MM-dd" placeholder="出生日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="form.email"></el-input>
@@ -98,7 +99,7 @@
           <el-input v-model="form.referee"></el-input>
         </el-form-item>
         <el-form-item label="卡有效期" prop="invalidDateCard">
-          <el-date-picker v-model="form.invalidDateCard" type="date" value-format="yyyy-MM-dd" placeholder="卡有效期"></el-date-picker>
+          <el-date-picker v-model="form.invalidDateCard" style="width: 204px" type="date" value-format="yyyy-MM-dd" placeholder="卡有效期"></el-date-picker>
         </el-form-item>
         <el-form-item label="协议单位：">
           <el-input v-model="form.unitName"></el-input>
@@ -253,9 +254,11 @@ import MemberGrade from '@/components/MemberGrade/MemberGrade'
 import {addMember,memberCertificateType} from '@/api/customerRelation/pmsMemberController'
 import {listGrade} from '@/api/customerRelation/pmsMemberGradeController'
 import {idcard} from '@/api/utils/pmsCommonController'
+import IDCardScan from '@/components/Idcard/IDCardScan'
+
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 export default {
-  components:{MemberGrade,Agreement},
+  components:{MemberGrade,Agreement,IDCardScan},
   data() {
     var validateMemberGrade = (rule, value, callback) => {
       if (value === '') {
@@ -350,7 +353,8 @@ export default {
           "specialRequirements": '',
           "chargeTypePk":'',
           'agreementUnitPk':'',
-          'accountNumber':''
+          'accountNumber':'',
+          'nationality':'DL',
       },
       form: {
           "address": '',
@@ -378,7 +382,8 @@ export default {
           "specialRequirements": '',
           "chargeTypePk":'',
           'agreementUnitPk':'',
-          'accountNumber':''
+          'accountNumber':'',
+          'nationality':'DL',
       },
       rules: {
         certificateNo: [{ required: true, message: "证件类型不能为空" }],
@@ -431,22 +436,27 @@ export default {
     //   this.form.cardFee=res.form.cardFee;
     //   this.form.invalidDateCard=res.form.invalidDateCard;
     // },
-    idcard(){
+    idcard(val){
       idcard({idcard:this.form.certificateNo}).then(result => {
         if(result.data != null){
           var obj = result.data
-          this.form.birthday = obj.birthday
-          this.form.nativePlace = obj.province 
-          this.form.memSex = obj.gender == '男'?'M':'W'
-          this.form.country = '中国'
-          if (obj.region == null) {
-            if (obj.city == null) {
-              this.form.address = obj.province
+          if (val == 1) {
+            this.form.nativePlace = obj.province
+            this.form.country = '中国'
+          } else {
+            this.form.birthday = obj.birthday
+            this.form.nativePlace = obj.province 
+            this.form.memSex = obj.gender == '男'?'M':'W'
+            this.form.country = '中国'
+            if (obj.region == null) {
+              if (obj.city == null) {
+                this.form.address = obj.province
+              }else{
+                this.form.address = obj.province + obj.city
+              }
             }else{
-              this.form.address = obj.province + obj.city
+              this.form.address = obj.province + obj.city + obj.region
             }
-          }else{
-            this.form.address = obj.province + obj.city + obj.region
           }
         }
       })
@@ -534,7 +544,17 @@ export default {
     },
     empty() {
       this.form = this.form1
-    }
+    },
+    setCardInfo (data) {
+      this.form.memName = data.peopleName
+      this.form.certificateNo = data.peopleIdCode
+      this.form.birthday = data.peopleBirthday
+      this.form.address = data.peopleAddress
+      this.form.memSex = data.peopleSex
+      this.form.nationality = data.certType
+      this.form.certificateType = 'TWO_IDENTITY'
+      this.idcard(1)
+    },
   }
 }
 </script>
@@ -571,7 +591,11 @@ export default {
 .address {
   width: 501px;
 }
-
+.vilcen {
+  height: 24px;
+  padding-top: 5px;
+  margin-left: -12px;
+}
 </style>
 <style>
 .menu-content {

@@ -94,6 +94,7 @@
             <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini" :disabled="scope.row.rechargeFlag == 'N'">充值</el-button>
             <el-button @click="rechargeDetailClick(scope.row)" type="text" size="mini">充值明细</el-button>
             <el-button @click="integralDetailClick(scope.row)" type="text" size="mini">积分明细</el-button>
+            <el-button @click="consumptionDetailClick(scope.row)" type="text" size="mini">消费明细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -162,6 +163,7 @@
     <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
     <member-recharge-detail-dialog ref="memberRechargeDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-recharge-detail-dialog>
     <member-integral-detail-dialog ref="memberIntegralDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-integral-detail-dialog>
+    <member-consumption-detail-dialog ref="memberConsumptionDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-consumption-detail-dialog>
   </div>
 </template>
 
@@ -179,9 +181,10 @@ import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
 import MemberRecharge from "./MemberRecharge.vue"
 import MemberRechargeDetailDialog from "./MemberRechargeDetailDialog.vue"
 import MemberIntegralDetailDialog from "./MemberIntegralDetailDialog.vue"
+import MemberConsumptionDetailDialog from "./MemberConsumptionDetailDialog.vue"
 
 export default {
-  components: { MemberGrade, MemberOperationManagement, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog },
+  components: { MemberGrade, MemberOperationManagement, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog },
   data() {
     return {
       memberLevel: [],
@@ -256,6 +259,9 @@ export default {
     integralDetailClick (row) {
       this.$refs.memberIntegralDetailDialogRefs.showDialog(row.memPk, 1)
     },
+    consumptionDetailClick (row) {
+      this.$refs.memberConsumptionDetailDialogRefs.showDialog(row.memPk)
+    }
   },
   filters: {
     toMoney: function(num) {

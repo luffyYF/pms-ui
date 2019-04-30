@@ -1,7 +1,7 @@
 //协议单位
 <template>
   <div>
-    <el-dialog class="agreement-body" title="协议单位" :visible.sync="dialogAgreement" width="1000px" :append-to-body="true">
+    <el-dialog class="agreement-container" title="协议单位" :visible.sync="dialogAgreement" width="1000px" :append-to-body="true">
       <div class="body-conten">
         <el-row>
           <el-form ref="form" :model="proForm" size="mini" label-width="100px">
