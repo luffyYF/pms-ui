@@ -2,7 +2,7 @@
 <template>
   <div>
     <el-dialog class="agreement-container" title="协议单位" :visible.sync="dialogAgreement" width="1000px" :append-to-body="true">
-      <div class="body-conten">
+      <div class="body-container">
         <el-row>
           <el-form ref="form" :model="proForm" size="mini" label-width="100px">
             <el-col :span="24">
@@ -13,7 +13,7 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="协议类别：">
-                  <el-select v-model="proForm.agreementTypePk" placeholder="请选择协议类别">
+                  <el-select v-model="proForm.agreementTypePk" placeholder="请选择协议类别" style="width: 140px">
                     <el-option v-for="item in typeList" :key="item.typePk" :label="item.typeName" :value="item.typePk">
                     </el-option>
                   </el-select>
@@ -139,3 +139,9 @@ export default {
   }
 };
 </script>
+<style>
+.body-container .el-form-item--mini .el-form-item__label, .body-container .el-form-item--mini .el-form-item__content {
+    line-height: 28px!important;
+    font-size: 13px;
+}
+</style>
