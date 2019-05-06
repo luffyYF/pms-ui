@@ -16,7 +16,7 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
-    <div class="table-container" id="print-accountsummaryreport">
+    <div class="table-container" id="print-managerdailyreport">
       <h3>{{activeCompany.companyName}}</h3>
       <h4>经理日报表</h4>
       <div class="table-box">
@@ -230,7 +230,7 @@ export default {
     },
      //打印预览
     print(){
-      let bodyhtml = document.getElementById("print-accountsummaryreport").innerHTML;
+      let bodyhtml = document.getElementById("print-managerdailyreport").innerHTML;
       var f = document.getElementById("printIframe");
       f.contentDocument.write(bodyhtml);
       f.contentDocument.close();
