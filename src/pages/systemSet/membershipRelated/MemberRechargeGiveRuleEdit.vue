@@ -21,12 +21,13 @@
             <el-date-picker style="width:100%;" v-model="dataForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
         </el-date-picker>
         </el-form-item>
-        <el-button type="primary" @click="addDetailClick()" 
+        <el-button type="primary" @click="addDetailClick()"
                 size="mini">新增赠送规则
         </el-button>
         <span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;温馨提示:优惠卷不足时，充值将不会赠送</span>
-        <div style="margin-top:20px;padding:10px 10px;border: 1px solid;" v-if="detailDtos.length > 0">
+        <div style="margin-top:20px;padding:10px 10px;border: 1px solid;" v-if="isShowBorder()">
             <div v-for="(obj,index) in detailDtos" :key="index">
+              <div v-if="obj.status == true">
                 单次储值额度满<el-input-number size="mini" style="width:80px;" :precision="2" :step="1" :min="0" :controls="false" v-model="obj.price" ></el-input-number>
                 <el-radio v-model="obj.type" size="mini" :label="0">按比例赠送</el-radio>
                 <el-radio v-model="obj.type" size="mini" :label="1">固定额赠送</el-radio>
@@ -44,6 +45,7 @@
                     移除
                 </el-button>
                 </div>
+              </div>
             </div>
         </div>
     </el-form>
@@ -78,7 +80,8 @@
                 price:0,
                 type:0,
                 giveCount:0,
-                giveIntegral:0
+                giveIntegral:0,
+                status: true
             }
         ],
         rules: {
@@ -105,6 +108,9 @@
       },
       listDetail(rulePk){
         detailList({rulePk:rulePk}).then(result => {
+            result.data.forEach(element => {
+              element.status = true
+            });
             this.detailDtos = result.data
         }).catch(() => {
 
@@ -140,6 +146,7 @@
                     type:0,
                     giveCount:0,
                     giveIntegral:"",
+                    status: true
                 }
             ]
         }
@@ -151,11 +158,16 @@
                 price:0,
                 type:0,
                 giveCount:0,
-                giveIntegral:""
+                giveIntegral:"",
+                status: true
             })
       },
       delDetailClicl(index){
+        if (this.detailDtos[index].detailPk == "") {
           this.detailDtos.splice(index,1)
+        } else {
+          this.detailDtos[index].status = false
+        }
       },
       handleClose () {
         this.dialogVisible = false
@@ -165,17 +177,28 @@
           console.log(type)
           if(type == "goods"){
 
-            this.$refs.goodsChangeRef.showDialog()
+            this.$refs.goodsChangeRef.showDialog(this.detailDtos[index].detailPk,this.detailDtos[index].giftPos)
           }else{
-            this.$refs.couponChangeRef.showDialog()
+            this.$refs.couponChangeRef.showDialog(this.detailDtos[index].detailPk,this.detailDtos[index].couponPos)
           }
-          
+
       },
-      couponChangeCallback(couponPks){
-          this.detailDtos[this.currentDtoIndex].couponPk = couponPks
+      couponChangeCallback(data){
+          this.detailDtos[this.currentDtoIndex].couponPks = data.couponPks
+          this.detailDtos[this.currentDtoIndex].couponPos = data.couponPos
       },
-      goodsChangeCallBack(goodsPks){
-        this.detailDtos[this.currentDtoIndex].giftPks = goodsPks
+      goodsChangeCallBack(data){
+        this.detailDtos[this.currentDtoIndex].giftPks = data.giftPks
+        this.detailDtos[this.currentDtoIndex].giftPos = data.giftPos
+      },
+      isShowBorder () {
+        let num = 0
+        this.detailDtos.forEach(element => {
+          if (element.status == true) {
+            num++
+          }
+        });
+        return (num == 0 ? false : true)
       },
       // 保存数据
       saveData () {

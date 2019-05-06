@@ -45,8 +45,9 @@
         <el-form-item label="维度：">
           <el-input v-model="companyObj.latitude" readonly></el-input>
         </el-form-item>
-        <el-form-item label="   ">
-            <el-button type="primary" @click="openMap">地图</el-button>
+        <el-button type="primary" @click="openMap" size="mini">地图</el-button>
+        <el-form-item label="logo：">
+          <upload-avatar :avatar.sync="companyObj.companyLogo"></upload-avatar>
         </el-form-item>
         <el-form-item label="酒店介绍：">
           <el-input type="textarea"
@@ -72,9 +73,10 @@ import {
   getMiniApp
 } from "@/api/systemSet/pmsCompanyController";
 import AMapDialog from '@/components/AmapLocalize/AMapDialog.vue'
+import UploadAvatar from "@/components/UploadImage/UploadAvatar2";
 
 export default {
-  components: {AMapDialog},
+  components: {AMapDialog, UploadAvatar},
   data() {
     return {
       companyObj: {},

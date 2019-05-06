@@ -10,6 +10,7 @@
         </el-form>
         <el-table
         size="mini" 
+        ref="tableRefs"
         border 
         highlight-current-row
         :data="tableData" 
@@ -69,15 +70,24 @@
             enableFlag:"",
             total:0,
             pageNum:1,
-            pageSize:10
+            pageSize:10,
+            detailPk: null,
         },
         tableData:[],
-        multipleSelection:[]
+        multipleSelection:[],
+        giftPos: [],
       }
     },
     methods: {
         
-      showDialog () {
+      showDialog (id, pos) {
+        console.log(id)
+        console.log(pos)
+        this.pageObj.detailPk = id
+        this.giftPos = []
+        if (pos != undefined) {
+          this.giftPos = pos
+        }
         this.dialogVisible = true
         this.listGridIntegralGoods()
       },
@@ -86,21 +96,81 @@
         listGridIntegralGoods(this.pageObj).then(result => {
             self.tableData = result.data.data
             self.pageObj.total = result.data.total
+            self.$nextTick(() => {
+              result.data.detailPos.forEach(item => {
+                result.data.data.forEach(element => {
+                  if (item.giftPk == element.goodsPk) {
+                    self.$refs.tableRefs.toggleRowSelection(element);
+                  }
+                });
+              });
+              self.giftPos.forEach(item => {
+                result.data.data.forEach(element => {
+                  if (item.pk == element.goodsPk) {
+                    self.$refs.tableRefs.toggleRowSelection(element, item.status);
+                  }
+                });
+              });
+            })
         }).catch(() => {
 
         }).finally(()=>{
         })
       },
       saveData(){
-          var goodsPks = [];
+          var giftPos = [];
+          var giftPks = [];
           for(var i=0;i<this.multipleSelection.length;i++){
-            goodsPks.push(this.multipleSelection[i].goodsPk)
+            giftPos.push({pk: this.multipleSelection[i].goodsPk, status: this.multipleSelection[i].status})
+            giftPks.push(this.multipleSelection[i].goodsPk)
           }
-          this.$emit('callback',goodsPks)
+          let data = {
+            giftPos: giftPos,
+            giftPks: giftPks
+          }
+          this.$emit('callback',data)
           this.dialogVisible = false
       },
       handleSelectionChange(val) {
-        this.multipleSelection = val;
+        if (val.length > 0) {
+          this.tableData.forEach(row => {
+            row.status = false
+            val.forEach(item => {
+              if (row.goodsPk == item.goodsPk) {
+                row.status = true
+              }
+            })
+          });
+
+          this.tableData.forEach(row => {
+            let num = 0
+            this.multipleSelection.forEach(item => {
+              if (row.goodsPk == item.goodsPk) {
+                item.status = row.status
+                num++;
+              }
+            });
+            if (num == 0) {
+              this.multipleSelection.push(row)
+            }
+          });
+        } else {
+          this.tableData.forEach(row => {
+            row.status =false
+            let num = 0
+            this.multipleSelection.forEach(item => {
+              if (row.goodsPk == item.goodsPk) {
+                item.status = row.status
+                num++;
+              }
+            });
+            if (num == 0) {
+              this.multipleSelection.push(row)
+            }
+          });
+        }
+        console.log(val)
+        console.log(this.multipleSelection)
       },
       handleClose () {
         this.dialogVisible = false

@@ -31,4 +31,12 @@ export const recoverMember = params => {
 export const memberCertificateType = params => {
     return request.get('/back/member/certificate/type')
  }
+ 
+ export const giveRule = params => {
+    return request.get('/back/member/giveRule', {params: params})
+ }
+ 
+ export const recharge = params => {
+    return request.post('/back/member/recharge', params)
+ }
 

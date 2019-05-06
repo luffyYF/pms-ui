@@ -97,3 +97,12 @@ export const updateRoomType = params => {
 export const roomTypeDetail = params => {
   return request.get('/back/type/detail', {params: params})
 }
+
+/**
+ * 同步房型价格
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const syncRoomTypePrice = params => {
+  return request.post('/back/type/syncRoomTypePrice', params)
+}

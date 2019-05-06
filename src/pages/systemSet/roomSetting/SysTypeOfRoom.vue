@@ -34,6 +34,7 @@
           <!-- 操作 -->
           <template slot-scope="scope">
             <el-button @click="editClick(scope.row)" type="text" size="mini">编辑</el-button>
+            <el-button @click="syncClick(scope.row)" type="text" size="mini">同步</el-button>
             <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
@@ -41,15 +42,17 @@
     </div>
 
     <SysTypeOfRoomEdit ref="sysTypeOfRoomEditRef" @callback="listRoomType" />
+    <SysTypeOfRoomSync ref="sysTypeOfRoomSyncRef" @callback="listRoomType" />
   </div>
 </template>
 
 <script>
   import {roomTypeList,delType,updateype,addType} from '@/api/utils/pmsTypeController'
   import SysTypeOfRoomEdit from './SysTypeOfRoomEdit.vue'
+  import SysTypeOfRoomSync from './SysTypeOfRoomSync.vue'
 
   export default {
-    components: {SysTypeOfRoomEdit},
+    components: {SysTypeOfRoomEdit, SysTypeOfRoomSync},
     data() {
       return {
         typeMaster: 'ROOM_TYPE',
@@ -111,7 +114,10 @@
         }).catch(() => {
           self.loading = false
         })
-      }
+      },
+      syncClick (row) {
+        this.$refs.sysTypeOfRoomSyncRef.showDialog(row)
+      },
     }
   }
 </script> 
