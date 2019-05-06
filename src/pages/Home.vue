@@ -48,7 +48,7 @@
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
-        <router-link to="/shiftData" v-if="hasPerm('pms:dir:checkinManage')">
+        <router-link to="/shiftData" v-if="hasPerm('pms:dir:handoverDuty')">
           <div class="nav-li">
             <div class="nav-icon check-manage-icon"></div>
             <div class="nav-txt">交班</div>

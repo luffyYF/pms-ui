@@ -13,7 +13,7 @@
           <el-button type="primary" icon="el-icon-search"  style="margin-left:30px" @click="listShiftData(1)">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="shiftData" style="margin-left:30px">交班</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="shiftData" v-if="hasPerm('pms:handoverDuty:view')" style="margin-left:30px">交班</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -168,7 +168,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
         <el-button @click="dialogMemberVisible = false" size="mini">取 消</el-button>
-        <el-button type="primary" size="mini"  @click="addShiftData" :loading="loading" >保存</el-button>
+        <el-button type="primary" size="mini" v-if="hasPerm('pms:handoverDuty:add')"  @click="addShiftData" :loading="loading" >保存</el-button>
        
         </span>
     </el-dialog>
