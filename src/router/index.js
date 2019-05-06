@@ -164,9 +164,6 @@ import zlFliggyConfig from '@/pages/zl/ZlFliggyConfig/ZlFliggyConfigList'
 import zlOpenConfig from '@/pages/zl/zlOpenConfig/zlOpenConfigList'
 import housePriceCode from '@/pages/zl/housePriceCode/housePriceCode'
 
-
-
-
 // 财务稽核
 import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
 import BillChecking from '@/pages/financialAudit/BillChecking'
@@ -184,6 +181,11 @@ import RepairRecordList from '@/pages/roomService/repairRecord/RepairRecordList.
 import RoomStatePrint from '@/pages/roomService/roomStatePrint/RoomStatePrint.vue'
 import StateLogList from '@/pages/roomService/stateLog/StateLogList.vue'
 import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepingLogList.vue'
+
+//交班
+import shiftData from '@/pages/shiftData/tab.vue'
+import advanceClass from '@/pages/shiftData/advanceClass.vue'
+import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
 
 Vue.use(Router)
 /**
@@ -241,6 +243,16 @@ export const constantRouterMap = [
         children:[
           {path: '/checkInManage/checkInSearch',  component: CheckInSearch, label: '入住查询'},
           {path: '/checkInManage/teamSearch',  component: TeamSearch, label: '团队查询'},
+        ]
+      },
+      { 
+        path: '/shiftData', 
+        component: shiftData, 
+        name: '入住管理', 
+        hidden: false,
+        children:[
+          {path: '/shiftData/advanceClass',  component: advanceClass, label: '交班预览'},
+          {path: '/shiftData/advanceClassInf',  component: advanceClassInf, label: '交班信息查询'},
         ]
       },
       {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
