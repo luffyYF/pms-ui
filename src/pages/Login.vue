@@ -67,7 +67,7 @@ export default {
         if (valid) {
           this.loading = true;
           loginByUsername(this.loginForm).then(res=>{
-            window.localStorage.setItem('pms_token', res.token)
+            window.localStorage.setItem('pms_token', res.data.token)
             this.$router.push({ path: "/classSelection" });
             this.loading = false;
           },error=>{

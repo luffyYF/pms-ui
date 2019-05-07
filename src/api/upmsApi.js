@@ -1,11 +1,12 @@
 import requestUpms from '../utils/requestJsonUpms'
+import request from '../utils/requestJson'
 /**
  * 请求权限系统api
  */
 
 //请求登录
 export const loginByUsername = params => {
-  return requestUpms.post('/login', params)
+  return request.post('/auth/login', params)
 }
 //刷新TOKEN
 export const refreshTokenUpms = params => {
@@ -13,7 +14,7 @@ export const refreshTokenUpms = params => {
 }
 //退出登录
 export const logout = () => {
-  return requestUpms.post('/logout')
+  return request.post('/auth/logout')
 }
 //获取角色列表
 export const listRoles = params => {

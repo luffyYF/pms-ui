@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
     
     let token = window.localStorage.getItem('pms_token');
     if(token){
-      if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !localStorage.getItem('select_company_pk') || !localStorage.getItem('select_shift_pk'))){
+      if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !localStorage.getItem('select_company_pk'))){
         //没有选择
         next('/classSelection');
       }else{
