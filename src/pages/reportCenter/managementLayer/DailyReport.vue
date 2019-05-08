@@ -20,11 +20,11 @@
         </div>
         <div class="tabs-contetn">
           <!-- <p style="margin: 0px">打印日期：<span>自 2018-03-09 至 2018-03-09</span>&nbsp;&nbsp;&nbsp;&nbsp;营业日期：<span>2018-03-09</span> </p> -->
-          <el-table 
-            :header-cell-style="tableStyleObj" 
-            :cell-style="tableStyleObj" 
-            :data="tableData" 
-            border  
+          <el-table
+            :header-cell-style="tableStyleObj"
+            :cell-style="tableStyleObj"
+            :data="tableData"
+            border
             style="width: 100%; margin-top: 5px;">
             <el-table-column prop="name" label="项目"></el-table-column>
             <el-table-column prop="day" label="当日"></el-table-column>
