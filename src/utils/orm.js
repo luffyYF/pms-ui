@@ -174,3 +174,13 @@ export const roomStatusMap = {
   'DISABLE_ROOM': "停用房",
   'REPAIR_ROOM': "维修房"
 }
+//预订单状态
+export const reserveOrderStatusMap = {
+  '0': "待付款",
+  '1': "待接单",
+  '2': "已接单",
+  '3': "已入住",
+  '4': "取消申请",
+  '5': "已取消",
+  '6': "已完成"
+}

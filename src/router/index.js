@@ -53,6 +53,7 @@ import ShiftTab from '@/pages/atrialCenter/shiftReport/tab.vue'
 import ListReserve from '@/pages/reserveManage/ListReserve.vue'
 import TeamReserve from '@/pages/reserveManage/TeamReserve.vue'
 import AddReserve from '@/pages/reserveManage/addReserve.vue'
+import MiniappOrderList from '@/pages/reserveManage/miniapp/MiniappOrderList.vue'
 
 //客户关系
 import MemberManage from '@/pages/customerRelation/memberManage/tab.vue'
@@ -229,7 +230,8 @@ export const constantRouterMap = [
         children: [
           {path: '/reserveManage/addReserve', component: AddReserve, label: '新增预定'},
           {path: '/reserveManage/teamReserve',  component: TeamReserve, label: '团队预定'},
-          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
+          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'},
+          {path: '/reserveManage/miniappOrder', component: MiniappOrderList, label: '小程序订单'}
         ]
       },
       { 
