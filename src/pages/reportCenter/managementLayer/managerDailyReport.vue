@@ -228,6 +228,12 @@ export default {
       }
       return sum
     },
+
+    // //导出EXCEL
+    // downloadExcel(){
+    //   let url = '/pms/report/mg/dailyExcel?date='+this.datepicker
+    //   downloadExcel(url, '经理日报表');
+    // },
      //打印预览
     print(){
       let bodyhtml = document.getElementById("print-managerdailyreport").innerHTML;
