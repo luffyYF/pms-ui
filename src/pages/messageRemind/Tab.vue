@@ -20,9 +20,9 @@ export default {
     this.toWebSocket();
 
     //测试。。。
-    this.$refs.newReserveOrderRemindRef.remind([
-      {"orderNo":"8023377920","orderPk":"8e30740e-780e-4f94-9d0d-2dcbc09a55ae","createTime":"2019-05-07 10:29:53","userPhone":"15770634606","userName":"测试"}]);
-    this.$refs.hourRoomRemindRef.remind([]);
+    // this.$refs.newReserveOrderRemindRef.remind([
+    //   {"orderNo":"8023377920","orderPk":"8e30740e-780e-4f94-9d0d-2dcbc09a55ae","createTime":"2019-05-07 10:29:53","userPhone":"15770634606","userName":"测试"}]);
+    // this.$refs.hourRoomRemindRef.remind([]);
   },
   methods:{
     //发现消息进入，开始处理前端触发逻辑
