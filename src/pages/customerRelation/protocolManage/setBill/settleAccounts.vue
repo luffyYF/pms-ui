@@ -217,6 +217,7 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
         quickProjectList:[],
         refundProjectList:[],
         mdProjectList:[],
+        commissionProjectList:[],
         otherProjectList:[],
         shoukuanObj:{
             projectPk:"",
@@ -233,6 +234,11 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
             money:0,
             remark:""
         },
+        commissionObj:{
+            projectPk:"",
+            money:0,
+            remark:""
+        },
         projectObj:{
 
         },
@@ -244,7 +250,8 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
         isPlus:false,
         currentRow:null,
         sktitle:"",
-        settlementAmount:0
+        settlementAmount:0,
+        
       }
     },
     methods: {
@@ -257,33 +264,35 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
         },
         mdSaveClick(){
             this.$refs.mdObj.validate(valid => {
-                var project = this.projectObj[this.mdObj.projectPk]
-                var isNew = true
-                for(var i=0;i<this.settlementBillList.length;i++){
-                    //判断当前是否有未保存的同项目账单
-                    if(this.settlementBillList[i].projectPk == this.mdObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
-                        var settle = this.isPlus?parseFloat(this.mdObj.money):-parseFloat(this.mdObj.money)
-                        this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
-                        this.settlementBillList[i].remark = this.settlementBillList[i].remark+((this.mdObj.remark == null || this.mdObj.remark == "")?"":"-"+this.mdObj.remark)
-                        isNew = false
-                        break
+                if (valid) {
+                    var project = this.projectObj[this.mdObj.projectPk]
+                    var isNew = true
+                    for(var i=0;i<this.settlementBillList.length;i++){
+                        //判断当前是否有未保存的同项目账单
+                        if(this.settlementBillList[i].projectPk == this.mdObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
+                            var settle = this.isPlus?parseFloat(this.mdObj.money):-parseFloat(this.mdObj.money)
+                            this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
+                            this.settlementBillList[i].remark = this.settlementBillList[i].remark+((this.mdObj.remark == null || this.mdObj.remark == "")?"":"-"+this.mdObj.remark)
+                            isNew = false
+                            break
+                        }
                     }
-                }
-                console.log(this.dataForm.agreementPk)
-                if(isNew){
-                    var bill = {
-                        settlementAmount:this.isPlus?parseFloat(this.mdObj.money):-parseFloat(this.mdObj.money),
-                        projectPk:project.projectPk,
-                        projectCode:project.code,
-                        projectName:project.projectName,
-                        remark:project.projectName+(this.mdObj.remark == null?"":"-"+this.mdObj.remark),
-                        agreementPk:this.dataForm.agreementPk,
-                        setBillPk:this.dataForm.setBillPk
+                    console.log(this.dataForm.agreementPk)
+                    if(isNew){
+                        var bill = {
+                            settlementAmount:this.isPlus?parseFloat(this.mdObj.money):-parseFloat(this.mdObj.money),
+                            projectPk:project.projectPk,
+                            projectCode:project.code,
+                            projectName:project.projectName,
+                            remark:project.projectName+(this.mdObj.remark == null?"":"-"+this.mdObj.remark),
+                            agreementPk:this.dataForm.agreementPk,
+                            setBillPk:this.dataForm.setBillPk
+                        }
+                        this.settlementBillList.push(bill)
                     }
-                    this.settlementBillList.push(bill)
-                }
 
-                this.mdDialog = false
+                    this.mdDialog = false
+                }
             })
         },
         freeSheetClick(){
@@ -380,71 +389,75 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
         },
         shouKuanSaveClick(){
             this.$refs.shoukuanObj.validate(valid => {
-                if(this.shoukuanObj.money.isNaN){
-                    this.$message({ type: 'warning', message: '请输入正确的收款金额' })
-                    return
-                }
-                var project = this.projectObj[this.shoukuanObj.projectPk]
-                var isNew = true
-                
-                for(var i=0;i<this.settlementBillList.length;i++){
-                    //判断当前是否有未保存的同项目账单
-                    if(this.settlementBillList[i].projectPk == this.shoukuanObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
-                        var settle = this.isPlus?parseFloat(this.shoukuanObj.money):-parseFloat(this.shoukuanObj.money)
-                        this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
-                        isNew = false
-                        break
+                if (valid) {
+                    if(this.shoukuanObj.money.isNaN){
+                        this.$message({ type: 'warning', message: '请输入正确的收款金额' })
+                        return
                     }
-                }
-                console.log(project)
-                if(isNew){
-                    var bill = {
-                        settlementAmount:this.isPlus?parseFloat(this.shoukuanObj.money):-parseFloat(this.shoukuanObj.money),
-                        projectPk:project.projectPk,
-                        projectCode:project.code,
-                        projectName:project.projectName,
-                        remark:project.projectName+(this.shoukuanObj.remark == null?"":"-"+this.shoukuanObj.remark),
-                        agreementPk:this.dataForm.agreementPk,
-                        setBillPk:this.dataForm.setBillPk
+                    var project = this.projectObj[this.shoukuanObj.projectPk]
+                    var isNew = true
+                    
+                    for(var i=0;i<this.settlementBillList.length;i++){
+                        //判断当前是否有未保存的同项目账单
+                        if(this.settlementBillList[i].projectPk == this.shoukuanObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
+                            var settle = this.isPlus?parseFloat(this.shoukuanObj.money):-parseFloat(this.shoukuanObj.money)
+                            this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
+                            isNew = false
+                            break
+                        }
                     }
-                    this.settlementBillList.push(bill)
-                }
+                    console.log(project)
+                    if(isNew){
+                        var bill = {
+                            settlementAmount:this.isPlus?parseFloat(this.shoukuanObj.money):-parseFloat(this.shoukuanObj.money),
+                            projectPk:project.projectPk,
+                            projectCode:project.code,
+                            projectName:project.projectName,
+                            remark:project.projectName+(this.shoukuanObj.remark == null?"":"-"+this.shoukuanObj.remark),
+                            agreementPk:this.dataForm.agreementPk,
+                            setBillPk:this.dataForm.setBillPk
+                        }
+                        this.settlementBillList.push(bill)
+                    }
 
-                this.shoukuanDialog = false
+                    this.shoukuanDialog = false
+                }
             })
         },
         otherSaveClick(){
             this.$refs.otherObj.validate(valid => {
-                if(this.otherObj.money.isNaN){
-                    this.$message({ type: 'warning', message: '请输入正确的收款金额' })
-                    return
-                }
-                var project = this.projectObj[this.otherObj.projectPk]
-                var isNew = true
-                
-                for(var i=0;i<this.settlementBillList.length;i++){
-                    //判断当前是否有未保存的同项目账单
-                    if(this.settlementBillList[i].projectPk == this.otherObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
-                        var settle = this.isPlus?parseFloat(this.otherObj.money):-parseFloat(this.otherObj.money)
-                        this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
-                        isNew = false
-                        break
+                if (valid) {
+                    if(this.otherObj.money.isNaN){
+                        this.$message({ type: 'warning', message: '请输入正确的收款金额' })
+                        return
                     }
-                }
-                if(isNew){
-                    var bill = {
-                        settlementAmount:project.inoutFlag?-parseFloat(this.otherObj.money):parseFloat(this.otherObj.money),
-                        projectPk:project.projectPk,
-                        projectCode:project.code,
-                        projectName:project.projectName,
-                        remark:project.projectName+(this.otherObj.remark == null?"":"-"+this.otherObj.remark),
-                        agreementPk:this.dataForm.agreementPk,
-                        setBillPk:this.dataForm.type == 1?this.currentSetBill.setBillPk:null
+                    var project = this.projectObj[this.otherObj.projectPk]
+                    var isNew = true
+                    
+                    for(var i=0;i<this.settlementBillList.length;i++){
+                        //判断当前是否有未保存的同项目账单
+                        if(this.settlementBillList[i].projectPk == this.otherObj.projectPk && (this.settlementBillList[i].billPk == null || this.settlementBillList[i].billPk == "")){
+                            var settle = this.isPlus?parseFloat(this.otherObj.money):-parseFloat(this.otherObj.money)
+                            this.settlementBillList[i].settlementAmount = parseInt(this.settlementBillList[i].settlementAmount)+settle
+                            isNew = false
+                            break
+                        }
                     }
-                    this.settlementBillList.push(bill)
-                }
+                    if(isNew){
+                        var bill = {
+                            settlementAmount:project.inoutFlag?-parseFloat(this.otherObj.money):parseFloat(this.otherObj.money),
+                            projectPk:project.projectPk,
+                            projectCode:project.code,
+                            projectName:project.projectName,
+                            remark:project.projectName+(this.otherObj.remark == null?"":"-"+this.otherObj.remark),
+                            agreementPk:this.dataForm.agreementPk,
+                            setBillPk:this.dataForm.type == 1?this.currentSetBill.setBillPk:null
+                        }
+                        this.settlementBillList.push(bill)
+                    }
 
-                this.otherDialog = false
+                    this.otherDialog = false
+                }
             })
         },
         otherClick(){
@@ -478,9 +491,13 @@ import {listBillByAgreement,listBillBySetBillPk} from '@/api/bill'
                 || data[i].code == 235 || data[i].code == 234 ){
                     this.quickProjectList.push(data[i])
                 }
-                if(data[i].code == 0){
+                if(data[i].code == 243){
                     this.mdProjectList.push(data[i])
                     that.mdObj.projectPk = data[i].projectPk
+                }
+                if(data[i].code == 244){
+                    this.commissionProjectList.push(data[i])
+                    that.commissionObj.projectPk = data[i].projectPk
                 }
                 if(data[i].defaultFlag == "N"){
                     this.otherProjectList.push(data[i])

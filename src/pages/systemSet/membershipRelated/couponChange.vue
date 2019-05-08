@@ -11,6 +11,7 @@
         </el-form>
         <el-table
         size="mini" 
+        ref="tableRefs"
         border 
         highlight-current-row
         :data="tableData" 
@@ -86,15 +87,24 @@
             enableFlag:"",
             total:0,
             pageNum:1,
-            pageSize:10
+            pageSize:10,
+            detailPk: null,
         },
         tableData:[],
-        multipleSelection:[]
+        multipleSelection:[],
+        couponPos: [],
       }
     },
     methods: {
         
-      showDialog () {
+      showDialog (id, pos) {
+        console.log(id)
+        console.log(pos)
+        this.pageObj.detailPk = id
+        this.couponPos = []
+        if (pos != undefined) {
+          this.couponPos = pos
+        }
         this.dialogVisible = true
         this.couponList()
       },
@@ -103,21 +113,81 @@
         couponList(this.pageObj).then(result => {
             self.tableData = result.data.data
             self.pageObj.total = result.data.total
+            self.$nextTick(() => {
+              result.data.detailPos.forEach(item => {
+                result.data.data.forEach(element => {
+                  if (item.couponPk == element.couponPk) {
+                    self.$refs.tableRefs.toggleRowSelection(element);
+                  }
+                });
+              });
+              self.couponPos.forEach(item => {
+                result.data.data.forEach(element => {
+                  if (item.pk == element.couponPk) {
+                    self.$refs.tableRefs.toggleRowSelection(element, item.status);
+                  }
+                });
+              });
+            })
         }).catch(() => {
 
         }).finally(()=>{
         })
       },
       saveData(){
+          var couponPos = [];
           var couponPks = [];
           for(var i=0;i<this.multipleSelection.length;i++){
+            couponPos.push({pk: this.multipleSelection[i].couponPk, status: this.multipleSelection[i].status})
             couponPks.push(this.multipleSelection[i].couponPk)
           }
-          this.$emit('callback',couponPks)
+          let data = {
+            couponPos: couponPos,
+            couponPks: couponPks
+          }
+          this.$emit('callback',data)
           this.dialogVisible = false
       },
       handleSelectionChange(val) {
-        this.multipleSelection = val;
+        if (val.length > 0) {
+          this.tableData.forEach(row => {
+            row.status = false
+            val.forEach(item => {
+              if (row.couponPk == item.couponPk) {
+                row.status = true
+              }
+            })
+          });
+
+          this.tableData.forEach(row => {
+            let num = 0
+            this.multipleSelection.forEach(item => {
+              if (row.couponPk == item.couponPk) {
+                item.status = row.status
+                num++;
+              }
+            });
+            if (num == 0) {
+              this.multipleSelection.push(row)
+            }
+          });
+        } else {
+          this.tableData.forEach(row => {
+            row.status =false
+            let num = 0
+            this.multipleSelection.forEach(item => {
+              if (row.couponPk == item.couponPk) {
+                item.status = row.status
+                num++;
+              }
+            });
+            if (num == 0) {
+              this.multipleSelection.push(row)
+            }
+          });
+        }
+        console.log(val)
+        console.log(this.multipleSelection)
       },
       handleClose () {
         this.dialogVisible = false
@@ -125,12 +195,12 @@
       // 分页相关
       handleSizeChange (val) {
         this.pageObj.pageSize = val
-        this.listCoupon()
+        this.couponList()
       },
       // 分页相关
       handleCurrentChange (val) {
         this.pageObj.pageNum = val
-        this.listCoupon()
+        this.couponList()
       },
     }
   }

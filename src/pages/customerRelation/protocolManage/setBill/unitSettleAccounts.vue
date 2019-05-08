@@ -608,7 +608,7 @@ import {listBillByAgreement,listBillBySetBillPk,listSetBillByAgreementPk,listSet
                 || data[i].code == 235 || data[i].code == 234 ){
                     this.quickProjectList.push(data[i])
                 }
-                if(data[i].code == 0){
+                if(data[i].code == 243){
                     this.mdProjectList.push(data[i])
                     that.mdObj.projectPk = data[i].projectPk
                 }

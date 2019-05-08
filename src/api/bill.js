@@ -144,3 +144,11 @@ export const agreementBillQuery = params => {
 }
 
 //协议单位/中介账务 end
+
+/************* 会员账单begin *************/
+/**
+ * 查询会员消费账单
+ */
+export const findMemberConsumptionBills = params => {
+  return request.get('/back/bill/findMemberConsumptionBills', {params:params})
+}
