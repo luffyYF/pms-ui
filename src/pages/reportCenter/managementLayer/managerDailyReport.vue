@@ -106,7 +106,7 @@
             <td style="width: 12.5%;padding: 6px;"></td>
           </tr>
         </table>
-        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;border-top-color: transparent;" cellpadding="6" cellspacing="0">
+        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
           <tr>
             <th colspan="6" style="text-align: left;width: 80%;font-family: 黑体;padding: 6px;">客源售房统计</th>
             <th colspan="2" style="text-align: left;width: 20%;font-family: 黑体;padding: 6px;">总房数：{{(tableData.reportPos == null ? '' : tableData.reportPos.totalRoomNum)}}</th>
@@ -135,7 +135,7 @@
             <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{(calculation(tableData.customerSource, 'totalIncome', 0)/calculation(tableData.customerSource, 'peopleNightRoomNum', 0))|toMoney}}</td>
           </tr>
         </table>
-        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;border-top-color: transparent;" cellpadding="6" cellspacing="0">
+        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
           <tr>
             <th colspan="8" style="text-align: left;width: 100%;font-family: 黑体;padding: 6px;">房型售房统计</th>
           </tr>
@@ -173,7 +173,9 @@
 
 <script>
 import { managerReport } from "@/api/reportCenter/pmsReportFormController"
+import { getLodop } from '@/utils/lodop'
 import moment from "moment"
+
 export default {
    data() {
     return {
@@ -182,6 +184,7 @@ export default {
       queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
       activeCompany:{},
       tableData: {},
+      LODOP: null
     };
   },
   created() {
@@ -235,12 +238,34 @@ export default {
     //   downloadExcel(url, '经理日报表');
     // },
      //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-managerdailyreport").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
+    // print(){
+    //   let bodyhtml = document.getElementById("print-managerdailyreport").innerHTML;
+    //   var f = document.getElementById("printIframe");
+    //   f.contentDocument.write(bodyhtml);
+    //   f.contentDocument.close();
+    //   f.contentWindow.print();
+    // },
+    //打印预览
+    print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+    createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-managerdailyreport").innerHTML);
     }
   },
   filters: {
@@ -277,6 +302,9 @@ table td {
 table th {
   height: 30px;
   line-height: 30px;
+}
+table:nth-child(1),table:nth-child(2) {
+  border-top-color: transparent;
 }
 .container {
   height: 100%;
