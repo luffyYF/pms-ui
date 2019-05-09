@@ -182,7 +182,7 @@ export default {
         department: "商品部", 
         depotPk: "", 
         voucherNo: "", 
-        createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName, 
+        createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).realName, 
         storekeeper: "", 
         personInCharge: "", 
         createTime: Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),

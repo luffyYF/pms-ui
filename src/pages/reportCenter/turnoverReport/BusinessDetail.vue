@@ -68,7 +68,7 @@
         收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;
         班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}}</span>
       </p>
-      <!-- <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p> -->
+      <!-- <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p> -->
       <el-table
         :header-cell-style="tableStyleObj"
         :cell-style="tableStyleObj"
@@ -93,7 +93,7 @@
         </el-table-column>
         <el-table-column prop="remark" align="center" label="备注"></el-table-column>
       </el-table>
-      <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+      <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p>
       <p class="note_p2"></p>
       <!-- <div style="height:50px"></div> -->
     </div>

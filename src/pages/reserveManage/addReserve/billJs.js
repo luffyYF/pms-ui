@@ -449,7 +449,7 @@
           // this.$refs.commentPrintRef.printBill(this.multipleSelection, beginDate, endDate)
           
           window.open(process.env.PRINT_ROOT+"/#/consumptionPrint?shopName="+this.companyObj.companyName
-          +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName);
+          +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.realName);
         },
         
         //结账后，确认是否打印
@@ -477,7 +477,7 @@
               let beginDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].beginDate:new Date()
               let endDate = this.currOrderInfo.guestList.length>0?this.currOrderInfo.guestList[0].endDate:new Date()
               window.open(process.env.PRINT_ROOT+"/#/consumptionPrint?shopName="+this.companyObj.companyName
-              +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName);
+              +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.realName);
             })
           })
           this.$emit('refresh-main-order', this.orderPk, 'bill')

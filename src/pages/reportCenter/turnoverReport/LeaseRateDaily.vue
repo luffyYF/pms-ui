@@ -35,7 +35,7 @@
             <el-table-column prop="companyName" label="营业点" width="300" fixed></el-table-column>
             <el-table-column v-for="(y,i) in headers"  :prop="y.code" :label="y.desc" :key="i" ></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p>
           <p class="note_p2"></p>
         </div>
       </div>
