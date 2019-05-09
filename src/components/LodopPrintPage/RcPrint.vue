@@ -12,8 +12,8 @@
         <!-- 1f65ad -->
         <div v-if="eleMode" style="height:45px"></div>
         <div v-else style="padding: 22px 0px 5px 0px; text-align:center;position: relative;">
-          <div style="position: absolute;top: 0px;left: 11px;">
-            <img src="@/assets/image/hsgl-logo.png" width="150px">
+          <div style="position: absolute;top: 6px;left: 11px;">
+            <img src="@/assets/image/hsgl-logo.png" width="250px">
           </div>
           <span style="font-size: 14px; font-family: 宋体;color:#505050;">入住登记表 </span>
           <span style="font-size: 12px; font-family: Helvetica;color:#505050;">Registration Form</span>
@@ -224,7 +224,8 @@ export default {
         6: '支票',
         7: '汇款',
         8: 'POS机'
-      }
+      },
+      LODOP: null
     }
   },
   // mounted() {
@@ -249,24 +250,31 @@ export default {
       setTimeout(()=>{
         this.loading = false
       },3000)
-      this.createOneFormPage();	
-      LODOP.PRINT();
+      this.createOneFormPage();
+      if (this.LODOP) {
+        this.LODOP.PRINT();
+      }
     },
     //打印预览
     printPreview() {
       this.createOneFormPage();	
-      LODOP.PREVIEW();
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
     },
     createOneFormPage() {
-      LODOP=getLodop();
-      LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
       // LODOP.SET_PREVIEW_WINDOW(1,);
-      LODOP.SET_PRINT_PAGESIZE(2,0,0,"A5");//2指定横向打印，指定A5纸，
-      LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+      this.LODOP.SET_PRINT_PAGESIZE(2,0,0,"A5");//2指定横向打印，指定A5纸，
+      this.LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      LODOP.ADD_PRINT_HTM(6,10,750,650,document.getElementById("printarea").innerHTML);
+      this.LODOP.ADD_PRINT_HTM(6,10,750,650,document.getElementById("printarea").innerHTML);
     }
   },
 }

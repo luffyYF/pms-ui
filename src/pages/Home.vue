@@ -294,7 +294,7 @@ export default {
     setInterval(()=>{
       this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     }, 30*60*1000)
-    this.validateToken()
+    // this.validateToken()
     this.nightTrialTask()
   },
   data() {
@@ -540,26 +540,26 @@ export default {
       }
     },
     //刷新TOKEN
-    refreshToken(time){
-      setInterval(()=>{
-        if(window.localStorage.getItem('pms_token')){
-          refreshTokenUpms().then(res=>{
-            let token = res.data.token
-            if(token!=null && token!='' && token!="-1"){
-              window.localStorage.setItem('pms_token', token);
-              console.log('token刷新成功');
-            }
-          });
-        }
-      },time);
-    },
+    // refreshToken(time){
+    //   setInterval(()=>{
+    //     if(window.localStorage.getItem('pms_token')){
+    //       refreshTokenUpms().then(res=>{
+    //         let token = res.data.token
+    //         if(token!=null && token!='' && token!="-1"){
+    //           window.localStorage.setItem('pms_token', token);
+    //           console.log('token刷新成功');
+    //         }
+    //       });
+    //     }
+    //   },time);
+    // },
     //验证TOKEN是否有效
-    validateToken(){
-      validateToken({token:localStorage.getItem('pms_token')}).then().catch(error=>{
-        //token无效，跳转登录页
-        this.$router.push('/login')
-      })
-    },
+    // validateToken(){
+    //   validateToken({token:localStorage.getItem('pms_token')}).then().catch(error=>{
+    //     //token无效，跳转登录页
+    //     this.$router.push('/login')
+    //   })
+    // },
     //预离查询等
     sysParmInit() {
       var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
@@ -759,9 +759,10 @@ export default {
     //定时检测新订单
     // this.newOrder();
     //定时5分钟刷新一次token
-    this.refreshToken(300000);
+    // this.refreshToken(300000);
 
     //选中第一个显示的目录
+    console.log(this.$refs.dirRef.getElementsByTagName('a')[0])
     let herf= this.$refs.dirRef.getElementsByTagName('a')[0].getAttribute('href')
     this.$router.push(herf.substring(1))
     this.initAlert()
