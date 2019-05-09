@@ -241,20 +241,17 @@
       <span>系统正在夜审...</span>
     </el-dialog>
 
-    <common-message ref="commonMessageRef"></common-message>
+    <MessageRemind></MessageRemind>
   </div>
-
-  
 </template>
 
 <script>
-import moment from 'moment'
-import {nightTrialTime} from '@/utils/orm'
 import "../../static/img/user.png";
-import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
-// import {logout,refreshTokenUpms }from '@/api/login'
+import moment from 'moment'
+import {nightTrialTime} from '@/utils/orm'
+import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import {logout,refreshTokenUpms,validateToken }from '@/api/upmsApi'
 import {
     currentRoomList,
@@ -270,10 +267,10 @@ import {getNewGuestOrder} from '@/api/utils/pmsTimerController'
 import { allTypeList } from '@/api/utils/pmsTypeController'
 import { Message } from 'element-ui'
 import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
-import CommonMessage from '@/pages/CommonMessage'
+import MessageRemind from '@/pages/messageRemind/Tab'
 
 export default {
-  components:{DialogCheckinVisible,CommonMessage},
+  components:{DialogCheckinVisible,MessageRemind},
   created() {
     var test = window.localStorage.getItem("current_logon_company");
     if(test){

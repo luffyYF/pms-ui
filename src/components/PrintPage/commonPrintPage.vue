@@ -1,4 +1,4 @@
-//公共打印页面
+//公共打印页面【不要用】
 <template>
   <div>
     <el-dialog class="pattern-dialog" title="账单打印" :visible.sync="dialogBillPrint" width="50%" :append-to-body=true>

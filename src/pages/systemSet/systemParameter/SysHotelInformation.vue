@@ -31,7 +31,7 @@
         <el-form-item label="酒店城市：" prop="cityName">
           <el-input v-model="companyObj.cityName"></el-input>
         </el-form-item>
-        <el-form-item label="RFL酒店标识" prop="rflCoid">
+        <el-form-item label="RFL酒店标识：" prop="rflCoid">
           <el-input v-model="companyObj.rflCoid" placeholder="请输入7位数字的酒店标识"></el-input>
         </el-form-item>
         <el-form-item label="绑定应用：">
@@ -49,6 +49,10 @@
         <el-form-item label="logo：">
           <upload-avatar :avatar.sync="companyObj.companyLogo"></upload-avatar>
         </el-form-item>
+		<el-form-item label="提供发票：">
+          <el-checkbox label="普通发票（电子）" v-model="companyObj.usingInvoiceNormal" :true-label="1" :false-label="0"></el-checkbox>
+          <el-checkbox label="专用发票（纸质）" v-model="companyObj.usingInvoiceSpecial" :true-label="1" :false-label="0"></el-checkbox>
+        </el-form-item>
         <el-form-item label="酒店介绍：">
           <el-input type="textarea"
             autosizea
@@ -58,7 +62,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label=" ">
-            <el-button type="primary" @click="saveInfo">保存酒店信息</el-button>
+          <el-button type="primary" @click="saveInfo">保存酒店信息</el-button>
         </el-form-item>
       </el-form>
       <p style="color: #F56C6C">*请点击地图，选择经纬度</p>
@@ -81,8 +85,7 @@ export default {
     return {
       companyObj: {},
       rules: {
-        companyName: [
-          {
+        companyName: [{
             required: true,
             message: "酒店名称不能为空",
             trigger: "blur,change"
