@@ -123,7 +123,7 @@ export default {
       this.reasonForm.remindFlag = 'N'
       this.reasonForm.remark = null
       this.reasonForm.typeMaster = this.formType
-      this.reasonForm.createUserName = JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName
+      this.reasonForm.createUserName = JSON.parse(localStorage.getItem('pms_userinfo')).realName
       if(moment().hour()<6){
         this.reasonForm.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
       }

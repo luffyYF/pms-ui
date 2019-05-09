@@ -115,7 +115,7 @@
     },
     methods: {
       toCms () {
-        let token = localStorage.getItem('pms_token')
+        let token = localStorage.getItem('token')
         window.open(this.CMS_ROOT + '?token=' + token)
       },
     }

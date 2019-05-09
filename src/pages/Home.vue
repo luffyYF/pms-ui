@@ -386,7 +386,7 @@ export default {
       var self = this;
       setInterval(()=>{ 
         console.log("123")
-        if(window.localStorage.getItem('pms_token')){
+        if(window.localStorage.getItem('token')){
           timerCheckNew().then((data)=>{
             
             if(data.data>0){
@@ -425,7 +425,7 @@ export default {
           localStorage.setItem('select_shift_pk','')
           localStorage.setItem('current_logon_company','');
           localStorage.setItem('pms_userinfo', '')
-          localStorage.setItem('pms_token','');
+          localStorage.setItem('token','');
           sessionStorage.removeItem("orderIsNew")
           sessionStorage.removeItem("isTime")
           this.$router.push("/login");
@@ -545,11 +545,11 @@ export default {
     //刷新TOKEN
     // refreshToken(time){
     //   setInterval(()=>{
-    //     if(window.localStorage.getItem('pms_token')){
+    //     if(window.localStorage.getItem('token')){
     //       refreshTokenUpms().then(res=>{
     //         let token = res.data.token
     //         if(token!=null && token!='' && token!="-1"){
-    //           window.localStorage.setItem('pms_token', token);
+    //           window.localStorage.setItem('token', token);
     //           console.log('token刷新成功');
     //         }
     //       });
@@ -558,7 +558,7 @@ export default {
     // },
     //验证TOKEN是否有效
     // validateToken(){
-    //   validateToken({token:localStorage.getItem('pms_token')}).then().catch(error=>{
+    //   validateToken({token:localStorage.getItem('token')}).then().catch(error=>{
     //     //token无效，跳转登录页
     //     this.$router.push('/login')
     //   })

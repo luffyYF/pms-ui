@@ -54,7 +54,7 @@ export default {
     goBack() {
       logout().then(res=>{}).finally(()=>{
         this.clearLocalInfo();
-        localStorage.setItem('pms_token','');
+        localStorage.setItem('token','');
         this.$router.push("/login");
       })
     },

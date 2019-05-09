@@ -9,7 +9,7 @@ export default function(url){
     url:process.env.API_ROOT+url,
     responseType:'blob',
     headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('pms_token'),
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
       'CompanyPk': companyPk==null?'':companyPk,
       'ShiftPk': shiftPk==null?'':shiftPk
     },
