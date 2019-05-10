@@ -22,7 +22,7 @@
     data: function () {
       return {
         //上传请求特殊，需要加上请求头，用于身份验证
-        headers: {'Authorization': 'Bearer '+localStorage.getItem('pms_token') },
+        headers: {'Authorization': 'Bearer '+localStorage.getItem('token') },
         getUploadImageAction: getUploadImageAction
       }
     },

@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
     //begin 从URL中获取TOKEN
     let url_token = getUrlParam('token');
     if(url_token){
-      localStorage.setItem('pms_token', url_token)
+      localStorage.setItem('token', url_token)
       // window.location.href=location.href.substring(0,location.href.indexOf('?')) 
       history.pushState({}, "PMS", location.href.substring(0,location.href.indexOf('?')));
       next('/classSelection')
@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
     }
     //end
     
-    let token = window.localStorage.getItem('pms_token');
+    let token = window.localStorage.getItem('token');
     if(token){
       if(to.path!=='/classSelection' && (!localStorage.getItem('pms_userinfo') || !localStorage.getItem('select_company_pk'))){
         //没有选择

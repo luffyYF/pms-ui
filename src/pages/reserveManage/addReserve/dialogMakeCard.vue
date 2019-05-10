@@ -125,7 +125,7 @@ export default {
       //     this.form.roomNumber+','+
       //     this.form.guestName+','+
       //     this.userinfo.upmsUserId+','+
-      //     this.userinfo.upmsUserName;
+      //     this.userinfo.realName;
 
       let params =  {
         rflCoid: this.form.rflCoid,
@@ -140,7 +140,7 @@ export default {
         roomNumber: this.form.roomNumber,
         guestName: this.form.guestName,
         createUserId: this.userinfo.upmsUserId,
-        createUserName: this.userinfo.upmsUserName
+        createUserName: this.userinfo.realName
       }
       let data = {
         joinParam: 'guestCard,'+ base64.Base64.encode(JSON.stringify(params))

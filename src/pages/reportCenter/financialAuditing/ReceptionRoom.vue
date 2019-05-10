@@ -63,7 +63,7 @@
             </el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
           </el-table>
-          <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.upmsUserName}}</span></p>
+          <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p>
         </div>
       </div>
     </el-col>

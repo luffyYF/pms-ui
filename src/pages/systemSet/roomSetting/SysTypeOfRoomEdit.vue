@@ -249,7 +249,7 @@ import {sourceImgUrl} from '@/api/upload'
           ],
 				},
         getUploadImageAction: getUploadImageAction,
-				headers: {'Authorization': 'Bearer '+localStorage.getItem('pms_token') },
+				headers: {'Authorization': 'Bearer '+localStorage.getItem('token') },
 				dialogFormVisible: false,
 				num: 0,
 				url: null,

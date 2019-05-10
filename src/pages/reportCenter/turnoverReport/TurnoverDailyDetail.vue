@@ -53,7 +53,7 @@
             <el-table-column prop="afterTaxes" label="实际收入"></el-table-column>
             <el-table-column prop="avgRoomPrice" label="平均房价"></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p>
           <p class="note_p2"></p>
         </div>
       </div>

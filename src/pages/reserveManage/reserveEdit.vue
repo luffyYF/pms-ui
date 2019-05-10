@@ -126,7 +126,7 @@
         companyInfo: JSON.parse(localStorage.getItem("current_logon_company")),
         getUploadExcelAction: getUploadExcelAction,
         headers: {
-          'Authorization': 'Bearer '+localStorage.getItem('pms_token'),
+          'Authorization': 'Bearer '+localStorage.getItem('token'),
           'CompanyPk': localStorage.getItem('select_company_pk') == null ? '' : localStorage.getItem('select_company_pk'),
           'ShiftPk': localStorage.getItem('select_shift_pk') == null ? '' : localStorage.getItem('select_shift_pk')
         },
