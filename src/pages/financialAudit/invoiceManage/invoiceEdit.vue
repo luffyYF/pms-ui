@@ -256,7 +256,7 @@
           })
         }else {
           this.dataForm = new InvoiceInfo()
-          if(orderNo){
+          if(orderNo) {
             this.isOrderPage = true;
             this.orderForm.orderNo = orderNo
             this.handelOrderChange(orderNo);
@@ -272,6 +272,30 @@
           this.invoiceTitleId = null
           this.invoiceTitleStatus = 0
         }
+      },
+      showDialogRo(data) {
+        this.dialogVisible = true
+        this.dataForm = new InvoiceInfo()
+        this.isOrderPage = true
+        this.dataForm.orderId = data.orderPk
+        this.orderForm.orderNo = data.orderNo
+        // this.orderForm.orderStatus = (res.data[0].orderStatus == 'LEAVENOPAY' ? '退房未结' : '结账离店');
+        this.invoiceTitleId = data.invoiceTitle
+        this.invoiceTitleStatus = 0
+        this.dataForm.status = 0;
+        this.dataForm.receivingType = "0";
+        this.dataForm.invoiceId = null;
+        this.dataForm.addresseeName = data.receiveName;
+        this.dataForm.addresseePhone = data.receivePhone;
+        this.dataForm.addresseeEmail = data.recipientEmail;
+        this.dataForm.addresseeAddress = data.receiveAddress;
+        this.dataForm.invoiceAmount = data.paymentPrice;
+        this.dataForm.invoiceTitleId = data.invoiceTitle;
+        this.dataForm.taxpayerIdNo = data.companyTaxNo;
+        this.dataForm.unitPhone = data.invoiceCompanyPhone;
+        this.dataForm.unitAddress = data.invoiceCompanyAddress;
+        this.dataForm.openingBank = data.openingBank;
+        this.dataForm.openingAccount = data.openingAccount;
       },
       handleClose () {
         this.dialogVisible = false

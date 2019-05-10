@@ -5,14 +5,19 @@
     <hour-room-remind ref="hourRoomRemindRef"></hour-room-remind>
     <!-- 钟点房提醒 -->
     <new-reserve-order-remind ref="newReserveOrderRemindRef"></new-reserve-order-remind>
+    <!-- 钟点房提醒 -->
+    <cancel-reserve-order-remind ref="cancelReserveOrderRemindRef"></cancel-reserve-order-remind>
+
   </section>
 </template>
 
 <script>
 import HourRoomRemind from './HourRoomRemind'
 import NewReserveOrderRemind from './NewReserveOrderRemind'
+import CancelReserveOrderRemind from './CancelReserveOrderRemind'
+
 export default {
-  components:{HourRoomRemind, NewReserveOrderRemind},
+  components:{HourRoomRemind, NewReserveOrderRemind,CancelReserveOrderRemind},
   data() {
     return {}
   },
@@ -42,6 +47,10 @@ export default {
           let jsonStr = data.split("hour_room_remind_:")[1]
           let array = JSON.parse(jsonStr)
           this.$refs.hourRoomRemindRef.remind(array);
+        }else if(data.indexOf('cancel_order_remind_')!=-1) {
+          let jsonStr = data.split("cancel_order_remind_:")[1]
+          let array = JSON.parse(jsonStr)
+          this.$refs.cancelReserveOrderRemindRef.remind(array);
         }
       }
     },
