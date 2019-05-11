@@ -140,7 +140,7 @@
         </div>
       </div>
     <span slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="save" :loading="loading">保存</el-button>
+      <el-button size="mini" type="primary" @click="save" :loading="loading" v-if="hasPerm('pms:hourRoomSetting:update')">保存</el-button>
       <el-button size="mini" @click="handleClose">关闭</el-button>
     </span>
   </el-dialog>

@@ -54,7 +54,7 @@ export default {
         socket.onmessage = function(msg) {
           let data = msg.data
           console.log("发现消息进入")
-          heartCheck.reset().start(); // 如果获取到消息，说明连接是正常的，重置心跳检测
+          // heartCheck.reset().start(); // 如果获取到消息，说明连接是正常的，重置心跳检测
 
           console.log(data);
           if(data) {
@@ -82,7 +82,7 @@ export default {
         };  
         //发生了错误事件  
         socket.onerror = function() {  
-          alert("Socket发生了错误");  
+          console.error("Socket发生了错误");  
           //此时可以尝试刷新页面
         }  
         //离开页面时，关闭socket
@@ -91,7 +91,7 @@ export default {
         //     socket.close();  
         //});  
       }
-
+      const _this = this
       var heartCheck = {
         timeout: 50000,        // 50秒发一次心跳，比server端设置的连接时间稍微小一点，在接近断开的情况下以通信的方式去重置连接时间。
         serverTimeoutObj: null,
@@ -104,19 +104,20 @@ export default {
           var self = this;
           this.serverTimeoutObj = setInterval(function(){
             if(socket.readyState == 1){
-                console.log("连接状态，发送消息保持连接");
-                socket.send("ping");
-                heartCheck.reset().start();    // 如果获取到消息，说明连接是正常的，重置心跳检测
+              console.log("连接状态，发送消息保持连接");
+              socket.send("ping");
+              heartCheck.reset().start();    // 如果获取到消息，说明连接是正常的，重置心跳检测
             }else{
-                console.log("断开状态，尝试重连");
-                toWebSocket();
+              console.log("断开状态，尝试重连");
+              heartCheck.reset()
+              _this.toWebSocket();
             }
           }, this.timeout)
         }
       }
     },
     createUUID() {  
-      var s = [];  
+      var s = [];
       var hexDigits = "0123456789abcdef";  
       for (var i = 0; i < 36; i++) {  
         s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);  
