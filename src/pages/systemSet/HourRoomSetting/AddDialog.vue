@@ -126,7 +126,7 @@
               label="预收费金额（元）">
               <template slot-scope="scope">
                 <el-input size="mini" v-model="scope.row.preChargePrice" ></el-input>
-              </template>
+              </template> 
             </el-table-column>
             <el-table-column
               fixed="right"      
