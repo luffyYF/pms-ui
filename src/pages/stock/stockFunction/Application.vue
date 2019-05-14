@@ -140,7 +140,6 @@ import Moment from 'moment'
 //   saveGoodsStockOrder,
 //   getGoodsByGoodsCode
 //   } from '@/api/stock/pmsStockFunction/stockOrderController'
-import Cookies from 'js-cookie'
 import {getApplySequence,toApply, inventorySelectList} from '@/api/upmsStorage'
 export default {
   components: {  },
@@ -149,7 +148,7 @@ export default {
       loading:false,
       form: {//货单表单
         applyNo:null,
-        companyPk:Cookies.get('select_company_pk'),
+        companyPk:localStorage.getItem('select_company_pk'),
         createTime:null,
         createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName,
       },
@@ -326,6 +325,9 @@ export default {
       // }
     }
   },
+  mounted () {
+    this.init()
+  }
 };
 </script>
 

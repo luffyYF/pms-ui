@@ -21,6 +21,14 @@ export const delGrade = params => {
     return request.post('/back/grade/del', params)
 }
 
+export const findGrade = params => {
+    return request.get('/back/grade/find', {params:params})
+}
+
+export const updStatusGrade = params => {
+    return request.post('/back/grade/updStatus', params)
+}
+
 
 //修改会员卡费用
 export const updateGradeCardFee = params => {
@@ -33,5 +41,9 @@ export const listGradeCardFee = params => {
 
 //查找会员-房型基础价格
 export const peiceList = params => {
-    return request.get('/back/memberRoomTypePrice/list')
+    return request.get('/back/memberRoomTypePrice/list',{params:params})
+}
+//设置会员价格
+export const priceSetting = params => {
+    return request.post('/back/memberRoomTypePrice/priceSetting', params)
 }

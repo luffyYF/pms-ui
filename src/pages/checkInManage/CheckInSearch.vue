@@ -128,13 +128,16 @@
       </el-table-column>
       <el-table-column label="房型" align="center" width="80" prop="roomTypeName">
       </el-table-column>
-      <el-table-column label="房价" align="center" width="80"  prop="price">
+      <el-table-column label="房价" align="center" width="80"  prop="currContractPrice">
       </el-table-column>
-      <!-- <el-table-column label="已交押金" align="center" width="80" prop="virtualTicketNumber">
-      </el-table-column> -->
+      <el-table-column label="已交押金" align="center" width="80" prop="settlementPrice">
+      </el-table-column>
       <el-table-column label="消费总额" align="center" width="80" prop="consumerPrice">
       </el-table-column>
-      <el-table-column label="余额" align="center" width="80" prop="settlementPrice">
+      <el-table-column label="余额" align="center" width="80">
+        <template slot-scope="scope">
+          <span>{{balance(scope.row)}}</span>
+        </template>
       </el-table-column>
       <!-- <el-table-column label="预授权金额" align="center" width="100" prop="groupPayTheAmount">
       </el-table-column> -->
@@ -157,8 +160,8 @@
       </el-table-column>
     </el-table>
     <div class="block checkPagination">
-        <el-pagination @current-change="getchenkGird" @size-change="sizeChange"  :current-page="chenkInSearchData.pageNum" :page-sizes="[5,10,20,30,40,50]" :page-size="chenkInSearchData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
+      <el-pagination @current-change="getchenkGird" @size-change="sizeChange"  :current-page="chenkInSearchData.pageNum" :page-sizes="[5,10,20,30,40,50]" :page-size="chenkInSearchData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
     </div>
     <!-- <el-dialog class="patternDialog" top="1vh" :title="orderNo" :visible.sync="dialogVisible" width="980px" :before-close="handleClose">
       <div class="pattern-dialog-container">
@@ -177,7 +180,6 @@
   import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {listType} from '@/api/utils/pmsTypeController'
   import {listProject,teamListProject} from '@/api/checkInManage/pmsCheckInManage'
-  import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController";
   import {recoverCheckoutGuestOrder, recoverReserveGuestOrder} from '@/api/order/pmsOrderController'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
 
@@ -281,13 +283,19 @@
     created () {
       this.getList(1);
       this.listMastersType();
-      this.selectPriceList();
       this.$nextTick(()=>{
         this.$refs.channelRef.load(false);
       })
     },
     watch: {
       filterText: function (value) {}
+    },
+    computed: {
+      balance() {
+        return function(obj) {
+          return parseFloat((obj.consumerPrice - obj.settlementPrice).toFixed(2))
+        }
+      },
     },
     methods: {
       showOrderInfo(row) {//查看订单
@@ -308,13 +316,6 @@
         this.total = value.length
         // var offset = (index - 1) * size
         // return items.slice(offset, offset + size)
-      },
-      selectPriceList(){
-        listPriceScheme().then(res =>{
-          if(res.code == 1) {
-            this.priceList = res.data;
-          }
-        })
       },
       listMastersType() {//查询分类类型
         const self = this;

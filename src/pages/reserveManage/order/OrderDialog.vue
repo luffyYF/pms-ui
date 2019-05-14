@@ -14,13 +14,13 @@
           <div class="dialog-form-con">
             <el-form ref="form" :inline="true" size="mini" :model="form" label-width="68px" class="main-order-class">
                 <el-form-item label="名   称" required>
-                  <el-input v-model="form.name" :disabled="currConfirmType=='edit-guest'"></el-input>
+                  <el-input v-model="form.name" ></el-input>
                 </el-form-item>
                 <el-form-item label="预订人">
-                  <el-input v-model="form.userName" :disabled="true"></el-input>
+                  <el-input v-model="form.userName"></el-input>
                 </el-form-item>
                 <el-form-item label="预订手机">
-                  <el-input v-model="form.userPhone" :disabled="true"></el-input>
+                  <el-input v-model="form.userPhone"></el-input>
                 </el-form-item>
                 <el-form-item label="是否团体">
                   <el-select v-model="form.isTeam" :disabled="currConfirmType!='add-checkin'">
@@ -33,7 +33,7 @@
                 </el-form-item> -->
                 <el-form-item label="协议单位" >
                   <el-input v-model="form.agreementName" :readonly="true">
-                    <el-button slot="append" icon="el-icon-search" @click="openAgreement" title="查询协议单位"></el-button>
+                    <el-button slot="append" icon="el-icon-search" :disabled="form.isTeam=='N'"  @click="openAgreement" title="查询协议单位"></el-button>
                   </el-input>
                 </el-form-item>
                 <el-form-item label="预订卡号">
@@ -72,7 +72,7 @@
             <div class="pattern-visitor-button" v-if="currConfirmType!='add-checkin'">
               <!--<el-button size="mini" @click="dialogCommodity = true">商品部</el-button>
                <el-button size="mini" @click="dialogRegimentPayment = true">团付账</el-button> -->
-              <!-- <el-button size="mini" v-if="hasPerm('pms:orderAss:inputIdCard')" @click="inputIdCard">录入身份证信息</el-button> -->
+              <el-button size="mini" v-if="hasPerm('pms:orderAss:inputIdCard')" @click="inputIdCard">录入身份证信息</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:priceChangeRecord')" @click="toDialogPriceChangeHistory">房价变更记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:operRecord')" @click="toDialogOperationLog">操作记录</el-button>
               <el-button size="mini" v-if="hasPerm('pms:orderAss:printRcOrder')" @click="toRcprint">打印RC单</el-button>
@@ -101,6 +101,7 @@
                     <el-button size="mini" v-if="hasPerm('pms:orderAss:saveCheckIn')" @click="saveCheckin" :loading="islock">保存入住</el-button>
                   </template>
                   <template v-else-if="currOrderInfo.order.auditStatus==null || currOrderInfo.order.auditStatus==1">
+                    <el-button size="mini" @click="hourRoomConvertToDailyRoom" v-if="hasPerm('pms:orderAss:convert') && currGuest.checkInType==1 && this.currGuest.orderStatus=='CHECKIN' && this.currGuest.mainFlag=='Y'">转为全日房</el-button>
                     <el-popover ref="occupancySort" placement="top" v-model="popoverVisible">
                       <el-button  size="mini" v-if="hasPerm('pms:orderAss:copyCheckIn')" @click="copyCheckin">复制入住</el-button>
                       <el-button  size="mini" v-if="hasPerm('pms:orderAss:addCheckIn')" @click="addCheckin">添加入住</el-button>
@@ -109,14 +110,14 @@
                       <!-- <el-button type="primary" size="mini">减少客人</el-button> -->
                     </el-popover>
                     <el-button size="mini" v-popover:occupancySort><i class="el-icon-sort"></i></el-button>
-                    <el-button size="mini" @click="addGuest" v-if="hasPerm('pms:orderAss:addGuest')" :disabled="this.currGuest.pmsCancelFlag=='Y' ||  this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">添加客人</el-button>
-                    <el-button size="mini" @click="addReserveGuest" v-if="hasPerm('pms:orderAss:addReservation')" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
-                    <el-button size="mini" @click="reserveRowRoom2" v-if="hasPerm('pms:orderAss:ReservePaiFang')" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
-                    <el-button size="mini" @click="toDialogModifyHomePrice" v-if="hasPerm('pms:orderAss:editRoomPrice')" :disabled=" currGuest.mainFlag=='N' || this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
+                    <el-button size="mini" @click="addGuest" v-if="hasPerm('pms:orderAss:addGuest')" :disabled="this.currGuest.orderStatus=='CANCEL' ||  this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">添加客人</el-button>
+                    <el-button size="mini" @click="addReserveGuest" v-if="hasPerm('pms:orderAss:addReservation')" :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">添加预订</el-button>
+                    <el-button size="mini" @click="reserveRowRoom2" v-if="hasPerm('pms:orderAss:ReservePaiFang')" :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">预订排房</el-button>
+                    <el-button size="mini" @click="toDialogModifyHomePrice" v-if="hasPerm('pms:orderAss:editRoomPrice')" :disabled=" currGuest.mainFlag=='N' || this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">修改房价</el-button>
                     <el-button size="mini" @click="toDialogGuestManger" v-if="hasPerm('pms:orderAss:guestOrderManage')" :disabled="!(this.currGuest.orderStatus=='CHECKIN' || this.currGuest.orderStatus=='RESERVE')">客单管理</el-button>
-                    <el-button size="mini" @click="toReserveManager" v-if="hasPerm('pms:orderAss:reserveManage')" :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
-                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk && hasPerm('pms:orderAss:changeRoom')" :disabled="this.currGuest.pmsCancelFlag=='Y' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">换房</el-button>
-                    <el-button size="mini" @click="confirmClick" :loading="loading"  :disabled="this.currGuest.pmsCancelFlag=='Y' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
+                    <el-button size="mini" @click="toReserveManager" v-if="hasPerm('pms:orderAss:reserveManage')" :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">预订管理</el-button>
+                    <el-button size="mini" @click="showChangeRoom" v-if="form.orderPk && hasPerm('pms:orderAss:changeRoom')" :disabled="this.currGuest.orderStatus=='CANCEL' || !this.currGuest.roomPk || this.currGuest.orderStatus=='OBLIGATION' || this.currGuest.mainFlag=='N'">换房</el-button>
+                    <el-button size="mini" @click="confirmClick" :loading="loading"  :disabled="this.currGuest.orderStatus=='CANCEL' || this.currGuest.orderStatus=='OBLIGATION'">确定</el-button>
                   </template>
                 </div>
               </el-tab-pane>
@@ -198,7 +199,9 @@
     <dialog-batch-add-checkin ref="dialogBatchAddCheckin" @callback="initOrderInfo"></dialog-batch-add-checkin>
     <!-- 录入身份证信息 -->
     <IdCardInputDialog ref="idCardInputDialogRef"></IdCardInputDialog>
-
+    <!-- 收费提醒 -->
+    <remind-dialog ref="remindDialogRef"></remind-dialog>
+    <RcPrint ref="rcPrintRef"></RcPrint>
   </div>
 </template>
 <script>
@@ -213,9 +216,9 @@ import {formatDate, copyObj} from '@/utils/index'
 import {validatePhone} from '@/utils/validate'
 
 // API
+import {saveCheckin, addCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder, convertToDailyRoom} from '@/api/order/pmsOrderController'
+import {listProject,addBill,authBill,checkoutauthBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill} from '@/api/bill'
 import {gmCount} from "@/api/goods/goodsManageController";
-import {saveCheckin, addCheckin, findOrder, rowRoomList, rowRoom, changeRoom, editOrder} from '@/api/order/pmsOrderController'
-import {listProject,addBill,authBill,checkoutauthBill,listBill,offsetBill,partialCheckoutBill,singleRoomCheckoutBill,splitBill,transBill} from '@/api/bill'
 import {listType} from '@/api/utils/pmsTypeController'
 
 // 组件
@@ -233,6 +236,8 @@ import GuestManagerDialog from './GuestManagerDialog'
 import Agreement from "@/components/Agreement/Agreement";
 import DialogBatchAddCheckin from './dialogBatchAddCheckin'
 import IdCardInputDialog from '@/pages/reserveManage/order/IdCardInputDialog'
+import RemindDialog from '@/pages/reserveManage/addReserve/bill/RemindDialog'
+import RcPrint from '@/components/LodopPrintPage/RcPrint'
 
 export default {
   components: {
@@ -249,7 +254,9 @@ export default {
     Agreement,
     DialogBatchContinueRoom,
     DialogBatchAddCheckin,
-    IdCardInputDialog
+    IdCardInputDialog,
+    RemindDialog,
+    RcPrint
   },
   data() {
     return {
@@ -367,7 +374,6 @@ export default {
       @augments guestOrderPk 客单主键 (可选，用于选中客单)
      */
     initOrderInfo(orderPk, activeName, guestOrderPk) {
-      console.log("321");
       this.dialogVisible = true
       this.loading = false
       this.currOrderPk = orderPk
@@ -415,7 +421,7 @@ export default {
           this.dialogVisibleTitle += " (审批拒绝)";
         }
         //设置页面类型
-        if(res.data.order.pmsCancelFlag=='Y' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
+        if(res.data.order.orderStatus=='CANCEL' || res.data.order.orderStatus=='LEAVENOPAY' || res.data.order.orderStatus=='LEAVE' || res.data.order.orderStatus=='NOSHOW'){
           this.currConfirmType = 'leave-info'
         }else{
           this.currConfirmType = 'edit-guest'
@@ -455,7 +461,7 @@ export default {
       this.listRowRoomList(this.currGuest.roomTypePk)
     },
     //查找可更换的房间
-    listRowRoomList(roomTypePk) { 
+    listRowRoomList(roomTypePk) {
       let data = {
         roomTypePk: roomTypePk,
         beginDateTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -490,6 +496,20 @@ export default {
       const guestOrderPo = this.$refs.visitorForm.form
 
       //校验
+      // if(!orderPo.userName) {
+      //   this.$message({type:'warning', message:'主单名称不能为空'})
+      //   return false
+      // }
+      // if(!orderPo.userName) {
+      //   this.$message({type:'warning', message:'预订人不能为空'})
+      //   return false
+      // }
+      if(orderPo.userPhone) {
+        if(!validatePhone(orderPo.userPhone)){
+          this.$message({type:'warning', message:'预定手机号不合法'})
+          return false
+        }
+      }
       if(!guestOrderPo.channelTypePk){
         this.$message({type:'warning', message:'客源渠道不能为空'})
         return false
@@ -522,26 +542,12 @@ export default {
         this.$message({type:'warning', message:'离店日期不能为空'})
         return false
       }
-      // if(this.currConfirmType=='add-checkin' || this.currConfirmType=='add-guest'){
-      //   if(!guestOrderPo.guestPhone){
-      //     this.$message({type:'warning', message:'请填写手机号'})
-      //     return false
-      //   }
-      // }
       if(guestOrderPo.guestPhone) {
         if(!validatePhone(guestOrderPo.guestPhone)){
           this.$message({type:'warning', message:'手机号不合法'})
           return false
         }
       }
-
-      //TODO 协议单位校验
-      // if(orderPo.isTeam=='Y'){
-      //   if(guestOrderPo.agreementPk==null || guestOrderPo.agreementPk==''){
-      //     this.$message({type:'warning', message: '协议单位不能为空'})
-      //     return false
-      //   }
-      // }
 
       return true
     },
@@ -610,7 +616,9 @@ export default {
     },
     toBillTab() {//切换到账单
       this.activeName = 'bill'
-      this.$refs.billTagForm.lookupBillList(this.currOrderPk);
+      this.$nextTick(()=>{
+        this.$refs.billTagForm.lookupBillList(this.currOrderPk);
+      })
     },
     handleCloseRowRoom() {//排房窗口关闭
       this.dialogRowRoom = false
@@ -678,7 +686,9 @@ export default {
      
       addCheckin(data).then(res=>{
         this.$message({type:'success', message:'入住成功'})
-        this.initOrderInfo(res.data, 'visitor')
+        this.initOrderInfo(res.data.orderPk, 'visitor')
+        
+        this.$refs.remindDialogRef.showPreChargeDialog(res.data.orderPk, res.data.guestPk)
       }).finally(()=>{
         this.islock = false;
       })
@@ -735,6 +745,9 @@ export default {
           remark: this.form.remark,
           agreementName:this.form.agreementName,
           AgreementPk:this.form.agreementPk,
+          name: this.form.name,
+          userName: this.form.userName,
+          userPhone: this.form.userPhone
         }
 
         editOrder(data).then(res=>{})
@@ -789,8 +802,9 @@ export default {
         this.$message.warning('请选择一个客单');
         return;
       }
-      window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
-      +"&guestOrderPk="+this.currGuest.guestOrderPk);
+      this.$refs.rcPrintRef.showDialog(this.currGuest.guestOrderPk,this.companyObj.companyName);
+      // window.open(process.env.PRINT_ROOT+"/#/rcPrint?shopName="+this.companyObj.companyName
+      // +"&guestOrderPk="+this.currGuest.guestOrderPk);
     },
     //打印房间表
     toRoomTablePrint() {
@@ -837,15 +851,6 @@ export default {
         roomNumberArr:roomNumberArr
       }
       window.open(process.env.PRINT_ROOT+"/#/teamRoomPrint?data="+JSON.stringify(data));
-      // console.log('personCount', personCount)
-      // console.log('roomsCount', roomsCount)
-      console.log('roomNumberArr', roomNumberArr)
-      // console.log(beginDate)
-      // console.log(this.currOrderInfo)
-      // console.log( JSON.stringify(data))
-      // this.openPostWindow(process.env.PRINT_ROOT+"#/teamRoomPrint",data, '_blank');
-      // TODO base64.Base64.encode()
-      // window.open(process.env.PRINT_ROOT+"/#/teamRoomPrint",data,'height=400, width=400, top=0, left=0, toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes,location=yes, status=yes');
     },
     toDialogGuestManger() {
       this.$refs.guestManagerDialogRef.showDialog(this.currOrderPk)
@@ -866,8 +871,22 @@ export default {
       this.$refs.dialogBatchContinueRoomRef.showDialog(this.currOrderInfo.order.orderPk)
     },
     inputIdCard() {
-      this.$refs.idCardInputDialogRef.showDialog()
+      this.$refs.idCardInputDialogRef.showDialog(this.currOrderInfo.order.orderPk)
     },
+
+    hourRoomConvertToDailyRoom() {
+      this.$confirm('确定转为全日房吗，此操作不可逆转?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        convertToDailyRoom(this.currGuest.guestOrderPk).then(res=>{
+          this.$message.success('转换成功');
+          this.loadOrderInfo()
+        })
+        
+      })
+    }
 
   },
   mounted() {

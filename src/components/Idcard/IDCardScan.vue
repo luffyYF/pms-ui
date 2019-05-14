@@ -35,17 +35,15 @@ export default {
   methods: {
     //调用读取身份证信息
     readIDCard() {
-      console.log(this.cssStyle)
-
       //end
       const curr = this
       this.idcLoading = true
       readCVR({}, res=>{
         if(res.code==0){
-          let callbackData = curr.matchingData(res.data);
+          let idCard = curr.matchingData(res.data);
           // 保存身份证读取记录
           saveCvrRecord(res.data).then(res=>{})
-          curr.$emit('callback', callbackData)
+          curr.$emit('callback', idCard)
         }else {
           this.$message.error(res.msg);
         }
@@ -56,28 +54,27 @@ export default {
     },
 
     matchingData(idCard) {
-      let callbackData = {}
-      callbackData.guestName = idCard.peopleName
-      callbackData.certificateNo = idCard.peopleIDCode
-      callbackData.bornDate = moment(idCard.peopleBirthday, "YYYYMMDD").format('YYYY-MM-DD');
-      callbackData.detailAddress = idCard.peopleAddress
+      idCard.peopleBirthday = moment(idCard.peopleBirthday, "YYYYMMDD").format('YYYY-MM-DD');
       if(idCard.peopleSex === '男'){
-        callbackData.guestGender = 'M'
+        idCard.peopleSex = 'M'
       }else if(idCard.peopleSex === '女'){
-        callbackData.guestGender = 'W'
+        idCard.peopleSex = 'W'
       }else {
-        callbackData.guestGender = null
+        idCard.peopleSex = null
       }
       if(""===idCard.certType){
-        callbackData.nationality = 'DL'
+        idCard.certType = 'DL'
       }else if("J"===idCard.certType){
-        callbackData.nationality = 'GAT'
+        idCard.certType = 'GAT'
       }else if("I"===idCard.certType){
-        callbackData.nationality = 'GW'
+        idCard.certType = 'GW'
       }else {
-        callbackData.nationality = null
+        idCard.certType = null
       }
-      return callbackData
+      idCard.startDate = moment(idCard.startDate, "YYYYMMDD").format('YYYY-MM-DD');
+      idCard.endDate = moment(idCard.endDate, "YYYYMMDD").format('YYYY-MM-DD');
+      idCard.peopleIdCode = idCard.peopleIDCode
+      return idCard
     },
   }
 }
@@ -88,7 +85,7 @@ export default {
   background-repeat: no-repeat;
   /* background-position: -1225px -17px; */
   background-position: -1100px -17px;
-  /* width: 27px; */
+  width: 24px;
   display: table;
   cursor: pointer;
 }

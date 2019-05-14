@@ -66,7 +66,7 @@
           }
         }
         for (let k = 0; k < subjectRouter.length; k++) {
-          console.log(subjectRouter[k].alias)
+          // console.log(subjectRouter[k].alias)
           var subjName = subjectRouter[k].alias;
           if(subjName == 'ReportCenterTag'){//获取报表中心下属路由
             this.reportRouter = subjectRouter[k].children;
@@ -74,7 +74,7 @@
         }
       },
       handleNodeCommonReport(data) {
-        console.log(data.label)
+        // console.log(data.label)
         this.decomposeRouter();
         for (let index = 0; index < this.reportRouter.length; index++) {
           var labelName = this.reportRouter[index].pointer;
@@ -85,7 +85,7 @@
         }
       },
       handleClick (tab, event) {
-        console.log(tab, event)
+        // console.log(tab, event)
       },
       // powerJudge(id){
       //   return powerJudge(id);

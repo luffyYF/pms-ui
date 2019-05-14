@@ -1,8 +1,8 @@
 <template>
-  <el-dialog class="guest-manager-dialog" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
-    <el-table ref="guestManagerTab" 
+  <el-dialog class="guest-manager-page" title="客单管理" :visible.sync="dialogVisible" width="800px" :append-to-body="true" :before-close="handleClose">
+    <el-table ref="guestManagerTab"
       :row-class-name="tableRowClassName"
-      :data="guestTable" 
+      :data="guestTable"
       tooltip-effect="dark"
       style="width: 100%"
       height="400" 
@@ -39,25 +39,37 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="certificateNo" label="证件号码" width="160" align="center">
-        <template slot-scope="scope"> 
-          <el-input type="text" size="mini" v-model="scope.row.certificateNo"></el-input>
+      <el-table-column prop="certificateNo" label="证件号码" width="180" align="center">
+        <template slot-scope="scope">
+          <el-autocomplete
+            popper-class="my-autocomplete"
+            v-model="scope.row.certificateNo"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入或选择身份证号"
+            size="mini"
+            value-key="peopleIdCode"
+            @select="setIdCardInfo(scope.$index, $event)">
+            <i class="el-icon-delete el-input__icon" slot="suffix" @click="clearCardInfo(scope.$index)"></i>
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.peopleName }}</div>
+              <span class="addr">{{ item.peopleIdCode }}</span>
+            </template>
+          </el-autocomplete>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="right">
         <template slot-scope="scope">
           <el-button v-if="!scope.row.guestOrderPk" title="移除" icon="el-icon-remove" size="mini" type="text" @click="removeGuest(scope.$index)" style="color:#f56c6c"></el-button>
           <el-button v-if="scope.row.mainFlag=='Y'" title="添加客人" icon="el-icon-circle-plus" size="mini" type="text" @click="addGuest(scope.$index)"></el-button>
-          <IDCardScan @callback="getIDCardInfo(scope.$index, $event)"></IDCardScan>
+          <IDCardScan @callback="readIdCardInfo(scope.$index, $event)"></IDCardScan>
           <el-button size="mini" type="text" @click="submitItem(scope.row)">保存</el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <span slot="footer" class="dialog-footer">
-    <el-button size="mini" type="primary" @click="submitBatch" :loading="loading">批量保存</el-button>
-    <el-button size="mini" @click="handleClose">关闭</el-button>
-  </span>
+      <el-button size="mini" type="primary" @click="submitBatch" :loading="loading">批量保存</el-button>
+      <el-button size="mini" @click="handleClose">关闭</el-button>
+    </span>
   </el-dialog>
   
 </template>
@@ -67,6 +79,7 @@
 import {credentialsMap} from '@/utils/orm'
 import {validatePhone} from '@/utils/validate'
 import {listSimpleGuestMemberInfo, editOrderMemberBatch} from '@/api/order/pmsOrderController'
+import {list as idCardInfoList} from '@/api/order/pmsIdCardInfoController'
 import IDCardScan from '@/components/Idcard/IDCardScan'
 
 export default {
@@ -78,7 +91,9 @@ export default {
       credentialsMap:credentialsMap,
       guestTable: [],
       currOrderPk: null,
-      multipleSelection: []
+      multipleSelection: [],
+      tempIdCardInfo:[],
+      deleteIdCardInfo:[]
     };
   },
   methods: {
@@ -89,12 +104,29 @@ export default {
       this.currOrderPk=orderPk;
       this.guestTable = [];
       this.multipleSelection = []
+      this.tempIdCardInfo = []
+      this.deleteIdCardInfo = []
       this.dialogVisible = true;
       this.getList()
     },
     getList(){
       listSimpleGuestMemberInfo({orderPk:this.currOrderPk}).then(res=>{
         this.guestTable = res.data;
+        idCardInfoList({orderPk:this.currOrderPk}).then(res=>{
+          this.tempIdCardInfo = res.data
+          // let idNos = ""
+          // this.guestTable.forEach(item=>[
+          //   idNos += item.certificateNo + ","
+          // ])
+          // this.tempIdCardInfo = res.data.filter(ele=>{
+          //   if (idNos.indexOf(ele.peopleIdCode)==-1) {
+          //     return true
+          //   }else {
+          //     this.deleteIdCardInfo.push(ele)
+          //     return false
+          //   }
+          // })
+        })
       })
     },
     tableRowClassName({row, rowIndex}) {
@@ -149,16 +181,47 @@ export default {
       
       return true;
     },
-    //获取身份证信息
-    getIDCardInfo(index, data){
-      this.$set(this.guestTable[index], 'guestName', data.guestName)
-      this.$set(this.guestTable[index], 'certificateNo', data.certificateNo)
-      this.$set(this.guestTable[index], 'birthday', data.bornDate)
-      this.$set(this.guestTable[index], 'address', data.detailAddress)
-      this.$set(this.guestTable[index], 'memSex', data.guestGender)
-      this.$set(this.guestTable[index], 'nationality', data.nationality)
+
+    readIdCardInfo(index, data) {
+      let idNos = ""
+      this.guestTable.forEach(item=>{
+        idNos += item.certificateNo+','
+      })
+      if(idNos.indexOf(data.peopleIdCode)!=-1) {
+        this.$message.warning("该身份信息已存在，请不要重复读取")
+        return
+      }
+      this.setIdCardInfo(index, data)
+    },
+    //设置身份证信息
+    setIdCardInfo(index, data) {
+      this.$set(this.guestTable[index], 'guestName', data.peopleName)
+      this.$set(this.guestTable[index], 'certificateNo', data.peopleIdCode)
+      this.$set(this.guestTable[index], 'birthday', data.peopleBirthday)
+      this.$set(this.guestTable[index], 'address', data.peopleAddress)
+      this.$set(this.guestTable[index], 'memSex', data.peopleSex)
+      this.$set(this.guestTable[index], 'nationality', data.certType)
+      this.$set(this.guestTable[index], 'certificateType', 'TWO_IDENTITY')
+
+      // this.tempIdCardInfo.forEach( (item,index) =>{
+      //   if(data.peopleIdCode==item.peopleIdCode) {
+      //     this.tempIdCardInfo.splice(index, 1)
+      //     this.deleteIdCardInfo.push(item)
+      //   }
+      // })
+    },
+    //清除身份信息
+    clearCardInfo(index) {
+      // let inputIdNo = this.guestTable[index].certificateNo;
+      this.$set(this.guestTable[index], 'guestName', '新客人')
+      this.$set(this.guestTable[index], 'certificateNo', '')
+      this.$set(this.guestTable[index], 'birthday', null)
+      this.$set(this.guestTable[index], 'address', null)
+      this.$set(this.guestTable[index], 'memSex', null)
+      this.$set(this.guestTable[index], 'nationality', null)
       this.$set(this.guestTable[index], 'certificateType', 'TWO_IDENTITY')
     },
+
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -184,22 +247,59 @@ export default {
       this.guestTable.splice(index+1,0,temp)
       this.$refs.guestManagerTab.toggleRowSelection(this.guestTable[index+1]);
     },
+
     //移除客人
     removeGuest(index){
-      this.guestTable.splice(index,1)
+      // this.clearCardInfo(index)
+      this.guestTable.splice(index, 1)
     },
     handleClose() {
       this.$emit('refresh', this.currOrderPk, 'visitor');
       this.dialogVisible = false;
-      // this.initOrderInfo(this.currOrderPk, 'visitor')
-    }
-
+    },
+    querySearch(queryString, cb) {
+      let idNos = ""
+      this.guestTable.forEach(item=>[
+        idNos += item.certificateNo + ","
+      ])
+      let restaurants = this.tempIdCardInfo.filter(ele=>{
+        return idNos.indexOf(ele.peopleIdCode)==-1
+      })
+      var results = restaurants.filter(this.createFilter(queryString));
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        if(queryString) {
+          let temp = restaurant.peopleName + restaurant.peopleIdCode
+          return (temp.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
+        }else {
+          return true
+        }
+      };
+    },
   }
 };
 </script>
 
-<style>
-.guest-manager-dialog .el-table .success-row {
+<style lang="less">
+.el-table .success-row {
   background: #f6faff
+}
+.my-autocomplete li{
+  line-height: normal;
+  padding: 1px 14px;
+}
+.my-autocomplete li .name{
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.my-autocomplete li .addr{
+  font-size: 12px;
+  color: #b4b4b4;
+}
+.my-autocomplete li .highlighted .addr{
+  color: #ddd;
 }
 </style>

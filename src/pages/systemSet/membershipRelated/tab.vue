@@ -23,12 +23,12 @@
       <el-tab-pane label="积分商品管理" name="memberIntegralCommodity">
         <member-integral-commodity ref="memberIntegralCommodity"/>
       </el-tab-pane>
-      <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount">
+      <!-- <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount">
         <member-recharge-discount ref="memberRechargeDiscount"/>
       </el-tab-pane>
       <el-tab-pane label="会员卡费管理" name="memberCardFee">
         <member-card-fee ref="memberCardFee"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       
     </el-tabs>
   </div>

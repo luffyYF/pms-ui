@@ -4,7 +4,7 @@
   <div class="app-container">
     <!--搜索条件-->
     <el-row :gutter="24">
-      <el-col :span="17">
+      <el-col :span="20">
         <el-form :model="listQuery" label-width="70px" size="mini" :inline="true">
           <el-form-item label="物品名称">
             <el-input placeholder="请输入物品名称" v-model="listQuery.name" @keyup.enter.native="listSearch" size="mini" clearable/>
@@ -39,7 +39,7 @@
           <el-button type="primary" size="mini" icon="el-icon-search" @click="listSearch">查询</el-button>
         </el-form>
       </el-col>
-      <el-col :span="7" class="btn-right">
+      <el-col :span="4" class="btn-right">
         <el-button type="primary" size="mini" @click="addClick" v-if="hasPerm('pms:lostArticles:add')">存放物品</el-button>
       </el-col>
     </el-row>
@@ -51,32 +51,32 @@
         fit
         size="small"
         highlight-current-row
-        max-height="451" style="width: 100%; margin-top: 5px" 
+        height="451" style="width: 100%; margin-top: 5px" 
         v-loading="loading">
         <!-- 需要映射的表 -->
-        <el-table-column prop="createTime" label="存放时间" align="left" width="156" show-overflow-tooltip/>
-        <el-table-column prop="type" label="类型" align="left" width="130" show-overflow-tooltip>
+        <el-table-column prop="createTime" label="存放时间" align="left" min-width="156" show-overflow-tooltip/>
+        <el-table-column prop="type" label="类型" align="left" min-width="130" show-overflow-tooltip>
           <template slot-scope="scope">
             <span v-if="scope.row.type == 0">遗留物品</span>
             <span v-else>贵重物品</span>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名称" align="left" width="130" show-overflow-tooltip/>
-        <el-table-column prop="userName" label="客人姓名" align="left" width="130" show-overflow-tooltip/>
-        <el-table-column prop="userPhone" label="电话" align="left" width="140" show-overflow-tooltip/>
-        <el-table-column prop="roomNumber" label="房间号" align="left" width="150" show-overflow-tooltip/>
-        <el-table-column prop="orderNo" label="订单号" align="left" width="150" show-overflow-tooltip/>
-        <el-table-column prop="referenceValue" label="参考价值" align="left" width="150" show-overflow-tooltip/>
-        <el-table-column prop="remark" label="备注" align="left" width="150" show-overflow-tooltip/>
-        <el-table-column prop="depositUserName" label="存放操作员" align="left" width="150" show-overflow-tooltip/>
-        <el-table-column prop="updateTime" label="领取时间" align="left" width="156" show-overflow-tooltip>
+        <el-table-column prop="name" label="名称" align="left" min-width="130" show-overflow-tooltip/>
+        <el-table-column prop="userName" label="客人姓名" align="left" min-width="130" show-overflow-tooltip/>
+        <el-table-column prop="userPhone" label="电话" align="left" min-width="140" show-overflow-tooltip/>
+        <el-table-column prop="roomNumber" label="房间号" align="left" min-width="150" show-overflow-tooltip/>
+        <el-table-column prop="orderNo" label="订单号" align="left" min-width="150" show-overflow-tooltip/>
+        <el-table-column prop="referenceValue" label="参考价值" align="left" min-width="150" show-overflow-tooltip/>
+        <el-table-column prop="remark" label="备注" align="left" min-width="150" show-overflow-tooltip/>
+        <el-table-column prop="depositUserName" label="存放操作员" align="left" min-width="150" show-overflow-tooltip/>
+        <el-table-column prop="updateTime" label="领取时间" align="left" min-width="156" show-overflow-tooltip>
           <template slot-scope="scope">
             <span v-if="scope.row.status == 1">{{scope.row.updateTime}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="receiveUserName" label="领取操作员" align="left" width="150" show-overflow-tooltip/>
+        <el-table-column prop="receiveUserName" label="领取操作员" align="left" min-width="150" show-overflow-tooltip/>
     
-        <el-table-column label="操作" align="left" fixed="right" width="150">
+        <el-table-column label="操作" align="left" fixed="right" min-width="150">
           <template slot-scope="scope">
             <el-button type="primary" @click="editClick(scope.row)" v-if="hasPerm('pms:lostArticles:update')" size="mini" :disabled="scope.row.status == 1">领取</el-button>
           </template>
@@ -120,6 +120,7 @@
           type: null,
           beginDate: null,
           endDate: null,
+          companyPk: JSON.parse(localStorage.getItem('current_logon_company')).companyPk,
         },
         dateTimeRange: [],
         total: 0,
@@ -189,7 +190,6 @@
         this.listSearch()
       },
       handleDateTimeChange (val) {
-        console.log(val)
         if (val == null) {
           this.listQuery.beginDate = null
           this.listQuery.endDate = null

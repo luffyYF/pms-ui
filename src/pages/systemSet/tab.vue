@@ -13,9 +13,6 @@
       <el-tab-pane label="客房设置" name="fourth" class="aLayerOfPage" v-if="powerJudge('2404')">
         <room-setting/>
       </el-tab-pane>
-      <el-tab-pane label="钟点特殊房" name="fifth" class="aLayerOfPage" v-if="powerJudge('2405')">
-        <bell-special-room/>
-      </el-tab-pane>
       <el-tab-pane label="消费项目设置" name="consumerProjects" class="aLayerOfPage" v-if="powerJudge('2406')">
         <consumer-projects ref="consumerProjects"/>
       </el-tab-pane>
@@ -29,11 +26,11 @@
         <PriceSetting ref="priceSettingRef"/>
       </el-tab-pane>
     </el-tabs> -->
-    
+
       <!-- <el-tab-pane label="价格方案设置" name="tenth" class="aLayerOfPage" v-if="powerJudge('2410')">
         <price-scheme/>
       </el-tab-pane> -->
-         <!-- <el-tab-pane label="团付模板设置" name="seventh" class="aLayerOfPage" v-if="powerJudge('2407')">
+      <!-- <el-tab-pane label="团付模板设置" name="seventh" class="aLayerOfPage" v-if="powerJudge('2407')">
         <regiment-payment-template/>
       </el-tab-pane> -->
     <el-menu
@@ -51,9 +48,15 @@
       <el-menu-item index="/systemSet/roomSetting" v-if="hasPerm('pms:systemSet:roomSetting')">
         <span slot="title">客房设置</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/systemSet/clockSpecial" v-if="hasPerm('pms:systemSet:clockSpecial')">
-        <span slot="title">钟点特殊房</span>
-      </el-menu-item> -->
+      <el-menu-item index="/systemSet/hourRoomSetting" v-if="hasPerm('pms:systemSet:hourRoom')">
+        <span slot="title">钟点房设置</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/specialRoomSetting" v-if="hasPerm('pms:systemSet:specialRoom')">
+        <span slot="title">特殊房设置</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/dailyRoomSetting" v-if="hasPerm('pms:systemSet:dailyRoomSetting')">
+        <span slot="title">全天房设置</span>
+      </el-menu-item>
       <el-menu-item index="/systemSet/settleSetting" v-if="hasPerm('pms:systemSet:consItemSetting')">
         <span slot="title">消费项目设置</span>
       </el-menu-item>
@@ -68,6 +71,14 @@
       </el-menu-item>
       <el-menu-item index="/systemSet/marketingSetting" v-if="hasPerm('pms:systemSet:marketing')">
         <span slot="title">营销</span>
+      </el-menu-item>
+      <el-menu-item index="/systemSet/pay" v-if="hasPerm('pms:pay:paramsSetting')">
+        <span slot="title">支付参数配置</span>
+      </el-menu-item>
+      <el-menu-item index="" v-if="hasPerm('pms:systemSet:cmsManage')">
+        <a class="hover" target="_blank" @click="toCms">
+          <span slot="title">cms管理</span>
+        </a>
       </el-menu-item>
       <!-- <el-menu-item index="/systemSet/zlRoomStatusSetting" >
         <span slot="title">直连房态</span>
@@ -90,6 +101,7 @@
     data () {
       return {
         activeMenu:'',
+        CMS_ROOT: process.env.CMS_ROOT,
         // activeName: ''
       }
     },
@@ -102,6 +114,10 @@
       // this.activeName = this.$refs.checkTabs.panes[0].name
     },
     methods: {
+      toCms () {
+        let token = localStorage.getItem('pms_token')
+        window.open(this.CMS_ROOT + '?token=' + token)
+      },
     }
   }
 </script>
@@ -114,6 +130,13 @@
 }
 .el-tabs__nav-scroll{
   padding-left: 10px;
+}
+.hover {
+  display: inline-block;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  line-height: 32px;
 }
 </style>
 

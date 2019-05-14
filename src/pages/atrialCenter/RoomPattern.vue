@@ -4,9 +4,10 @@
       <el-aside width="280px">
         <el-form :inline="true" size="mini" class="demo-form-inline">
           <el-form-item class="form-screh">
-            <el-input class="screhhome" v-model="roomNumber" placeholder="搜索房号"></el-input>
+            <el-input v-if="hasPerm('pms:roomManager:list')" class="screhhome" v-model="roomNumber" placeholder="搜索房号"></el-input>
+            <el-input v-else class="screhhome2" v-model="roomNumber" placeholder="搜索房号"></el-input>
             <el-button class="screhbtn" @click="init">搜索</el-button>
-            <el-button @click="clickRoomManager">房间管理</el-button>
+            <el-button @click="clickRoomManager" v-if="hasPerm('pms:roomManager:list')">房间管理</el-button>
           </el-form-item>
         </el-form>
 
@@ -343,6 +344,7 @@
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='REPAIR_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:endRepair')" @click="finshRoomReason(item,'REPAIR')">结束维修</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DISABLE_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:endDisable')" @click="finshRoomReason(item,'DISABLE')">结束停用</el-button></el-dropdown-item>
                 <el-dropdown-item class="el-dropdown-menu__item" v-if="item.orderPk"><el-button type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:showOrderInfo')">查看订单信息</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.orderPk || item.arrivalOrderPk"><el-button type="text" @click="joinRoom(item)">联房</el-button></el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -479,23 +481,20 @@
           <el-button size="mini" type="primary" @click="dialogDisableRoom = false">关闭</el-button>
         </span>
       </el-dialog>
+
       <!-- 订单详细弹窗 -->
       <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="closeOrderDialog($event)"/>
       <!-- 房间管理弹窗 -->
       <RoomManager ref="roomManagerRef" @callback="init"></RoomManager>
+      <!-- 联房 -->
+      <join-room-dialog ref="joinRoomDialogRef" @callback="init"></join-room-dialog>
     </el-container>
 </template>
 <script>
   import bus from '@/utils/bus'
   import moment from 'moment'
   import {nightTrialTime} from '@/utils/orm'
-  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
-  import RoomManager from '@/pages/atrialCenter/roomPattern/roomManager'
-  import {checkInTypeMap, orderStatusMap} from '@/utils/orm'
-  import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
-  import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
-  import {findToday} from '@/api/order/pmsOrderController'
-  import {listRoomForWordByRoomPk} from '@/api/atrialCenter/roomForwardStatus'
+
   import {
     currentRoomList,
     updateRoomStatus,
@@ -504,13 +503,24 @@
     findRoomReason,
     loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
+  import {checkInTypeMap, orderStatusMap} from '@/utils/orm'
+  import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
+  import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
+  // import {findToday} from '@/api/order/pmsOrderController'
+  import {listRoomForWordByRoomPk} from '@/api/atrialCenter/roomForwardStatus'
   import {listType} from '@/api/utils/pmsTypeController'
   import {find} from '@/api/systemSet/pmsSysParamController'
+
+  import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
+  import RoomManager from '@/pages/atrialCenter/roomPattern/roomManager'
+  import JoinRoomDialog from '@/pages/atrialCenter/JoinRoom/MainDialog'
+
   export default {
     components: { 
       "full-calendar": require("vue-fullcalendar"), 
       DialogCheckinVisible,
-      RoomManager
+      RoomManager,
+      JoinRoomDialog
     },
     data() {
       return {
@@ -671,10 +681,8 @@
           .catch(_ => {});
       },
       onSubmit() { //11
-        console.log('submit!');
       },
       handleClick(tab, event) {
-        console.log(tab, event);
       },
       classRoomStatusObject(item) {// 控制房间的背景颜色
         return {
@@ -726,7 +734,6 @@
         }
       },
       showDisable(room) {//转停用房
-        console.log(room)
         this.dialogDisableRoom = true
         this.btnlock=false
         this.disableForm = {
@@ -1007,6 +1014,15 @@
       clickRoomManager() {
         this.$refs.roomManagerRef.showDialog();
       },
+
+      //联房
+      joinRoom(item){
+        if(item.orderPk) {
+          this.$refs.joinRoomDialogRef.showDialog(item.orderPk);
+        }else if(item.arrivalOrderPk){
+          this.$refs.joinRoomDialogRef.showDialog(item.arrivalOrderPk);
+        }
+      }
     },
     mounted() {
       this.repairType = []
@@ -1270,6 +1286,9 @@
 .screhhome{
   /* width: calc(100% - 80px); */
   width:122px
+}
+.screhhome2 {
+  width: calc(100% - 54px);
 }
 .screhbtn{
   width: 50px;

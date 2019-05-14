@@ -34,7 +34,7 @@
         <span slot="title">发票管理</span>
       </el-menu-item>
       <el-menu-item index="/financialAudit/outsideBillOrder" v-if="hasPerm('pms:finance:outsideBillOrder')">
-        <span slot="title">外账单</span>
+        <span slot="title">外账</span>
       </el-menu-item>
     </el-menu>
     <el-col class="menu-content" :span="24">

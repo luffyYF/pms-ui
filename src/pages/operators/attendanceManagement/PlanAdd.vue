@@ -53,7 +53,6 @@
 </template>
 
 <script>
-  import Cookies from 'js-cookie'
   import {attendanceTypeMap} from '@/utils/orm'
   import { attendancePlanAdd,attendanceClassCascaderList,attendanceClassSelect } from '@/api/oaApi'
 

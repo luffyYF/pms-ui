@@ -9,6 +9,11 @@ export const commonReport = [{
       pointer: 'pms:reportCenter:dailyReptor'
     },
     {
+      label: '经理日报1',
+      path: '/reportCenter/managerDailyReport',
+      pointer: 'pms:reportCenter:dailyManage'
+    },
+    {
       label: '经理日报',
       path: '/reportCenter/roomDailyReport',
       pointer: 'pms:reportCenter:dailyManage'

@@ -1,7 +1,7 @@
 <template>
   <div class="heightOverflow100">
     <div class="bg-reserve">
-      <el-button type="primary" size="mini" class="add-pro" @click="addRows">添加会员级别</el-button>
+      <el-button type="primary" size="mini" class="add-pro" @click="addClick">添加会员级别</el-button>
       <el-table
         size="mini" 
         border 
@@ -10,122 +10,65 @@
         max-height="650"
         v-loading="loading"
         style="width: 98%; margin:10px;">
-        <el-table-column prop="gradeLevel" label="级别" align="center" width="90">
+        <el-table-column prop="gradeLevel" label="级别" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="gradeName" label="名称" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="upgradeMemPk" label="升级后级别" align="center" min-width="110" show-overflow-tooltip>
           <template slot-scope="scope">
-            <span v-if="scope.row.gradePk != ''">{{scope.row.gradeLevel}}</span>
-            <el-input v-model="scope.row.gradeLevel" v-if="scope.row.gradePk == ''" size="mini" placeholder="级别"></el-input>
+            {{udGradeMember[scope.row.upgradeMemPk]}}
           </template>
         </el-table-column>
-        <el-table-column prop="gradeName" label="级别名称" align="center" width="120">
+        <el-table-column prop="cardFee" label="卡费" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="rechargeFlag" label="是否可充值" align="center" min-width="110" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-input v-model="scope.row.gradeName" class="claName" size="mini" placeholder="请输入会员级别名称"></el-input>
+            {{scope.row.rechargeFlag == 'Y' ? '是' : '否'}}
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="autoUpgradeFlag" label="自动升级" align="center" width="110">
+        <el-table-column prop="overdrawFlag" label="是否可透支" align="center" min-width="110" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-radio-group v-model="scope.row.autoUpgradeFlag">
-              <el-radio size="mini" label="Y">自动升级</el-radio>
-              <el-radio size="mini" label="N">手工升级</el-radio>
-            </el-radio-group>
-          </template>
-        </el-table-column> -->
-        <el-table-column prop="upgradeMemPk" label="升级后级别" align="center" width="150">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.upgradeMemPk" size="mini" placeholder="请选择状态">
-              <el-option
-                v-for="item in options"
-                :key="item.gradePk"
-                :label="item.gradeName"
-                :value="item.gradePk">
-              </el-option>
-            </el-select>
+            {{scope.row.overdrawFlag == 'Y' ? '是' : '否'}}
           </template>
         </el-table-column>
-        <el-table-column prop="totalFraction" label="升级条件" align="center" width="220">
+        <el-table-column prop="accumulatedPoints" label="累计积分要求" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="accumulatedValue" label="累计储值要求" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="upgradePointsDeduction" label="升级积分扣除" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="upgradeCardFeeDeduction" label="升级卡费扣除" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="autoUpgradeFlag" label="是否自动升级" align="center" min-width="110" show-overflow-tooltip>
           <template slot-scope="scope">
-            <div class="checked"><el-checkbox v-model="scope.row.totalFractionFlag" true-label="Y" false-label="N" size="mini">总积分数</el-checkbox><el-input size="mini"  v-model="scope.row.totalFraction" placeholder="0"></el-input>分</div>
-            <div class="checked" style="padding-left:52px;">扣除<el-input size="mini" v-model="scope.row.deductionFraction" placeholder="0"></el-input>分</div>
-            <div class="checked"><el-checkbox size="mini" v-model="scope.row.occupancyNumFlag" true-label="Y" false-label="N">入住次数</el-checkbox><el-input size="mini" v-model="scope.row.occupancyNum" placeholder="0"></el-input>次</div>
-            <div class="checked"><el-checkbox size="mini" v-model="scope.row.websiteReserveFlag" true-label="Y" false-label="N">网站预订</el-checkbox><el-input size="mini" v-model="scope.row.websiteReserve" placeholder="0"></el-input>次</div>
+            {{scope.row.autoUpgradeFlag == 'Y' ? '启用' : '禁用'}}
           </template>
         </el-table-column>
-        <el-table-column prop="checkOutDelay" label="本店退房延迟" align="center" width="150">
+        <el-table-column prop="status" label="状态" align="center" min-width="110" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-time-picker
-              size="mini"
-              :value="scope.row.checkOutDelay"
-              v-model="scope.row.checkOutDelay"
-              value-format="HH:mm:ss"
-              :picker-options="{
-                format:'HH:mm'
-              }"
-              placeholder="任意时间点">
-            </el-time-picker>
+            {{scope.row.status == 1 ? '启用' : '禁用'}}
           </template>
         </el-table-column>
-        <el-table-column prop="bookRetain" label="预订保留" align="center" width="150">
-          <template slot-scope="scope">
-            <el-time-picker
-              size="mini"
-              :value="scope.row.bookRetain"
-              v-model="scope.row.bookRetain"
-              value-format="HH:mm:ss"
-              :picker-options="{
-                format:'HH:mm:ss'
-              }"
-              placeholder="任意时间点">
-            </el-time-picker>
-          </template>
-        </el-table-column>
-        <el-table-column prop="autoCancelFlag" label="预订保留自动取消" align="center" width="160">
-          <template slot-scope="scope">
-            <el-radio-group v-model="scope.row.autoCancelFlag">
-              <el-radio size="mini" label="Y" class="span">取消</el-radio>&nbsp;&nbsp;
-              <el-radio size="mini" label="N" class="span">不取消</el-radio>
-            </el-radio-group>
-          </template>
-        </el-table-column>
-        <el-table-column prop="integralFlag" label="超出有效期积分设置" align="center" width="160">
-          <template slot-scope="scope">
-            <el-radio-group v-model="scope.row.integralFlag">
-              <el-radio size="mini" label="Y" class="span">清零</el-radio>&nbsp;&nbsp;
-              <el-radio size="mini" label="N" class="span">保留</el-radio>
-            </el-radio-group>
-          </template>
-        </el-table-column>
-        <el-table-column prop="discountFlag" label="超出有效期折扣设置" align="center" width="160">
-          <template slot-scope="scope">
-            <el-radio-group v-model="scope.row.discountFlag">
-              <el-radio size="mini" label="Y">不能打折</el-radio>&nbsp;&nbsp;
-              <el-radio size="mini" label="N">可以打折</el-radio>
-            </el-radio-group>
-          </template>
-        </el-table-column>
-        <el-table-column prop="registerIntegral" label="注册送积分" align="center" width="120px">
-          <template slot-scope="scope">
-            <el-input size="mini" v-model="scope.row.registerIntegral" placeholder="0"></el-input>分
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center">
+        <el-table-column prop="remark" label="备注" align="center" min-width="110" show-overflow-tooltip></el-table-column>
+
+        <el-table-column fixed="right" label="操作" align="center" min-width="150">
           <!-- 操作 -->
           <template slot-scope="scope">
-            <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
-            <el-button v-if="scope.row.gradePk == ''" @click="deleteRow(scope.$index,tableData)" type="text" size="mini">取消</el-button>
+            <el-button @click="editClick(scope.row)" type="text" size="mini">修改</el-button>
+            <el-button @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
+            <el-button @click="disabledClick(scope.row)" type="text" size="mini">{{scope.row.status == 1 ? '禁用' : '启用'}}</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <MemberLevelEdit ref="MemberLevelEditRef" @callback="listGrade" />
   </div>
 </template>
 
 <script>
-  import {listGrade,addGrade,updateGrade} from '@/api/systemSet/member/pmsMemberGradeController'
+  import {listGrade,addGrade,updateGrade,delGrade,updStatusGrade} from '@/api/systemSet/member/pmsMemberGradeController'
+  import MemberLevelEdit from './MemberLevelEdit'
   export default {
+    components: { MemberLevelEdit },
     data() {
       return {
         options:[],
         tableData: [],
         loading:false,
+        udGradeMember: {},
       }
     },
     created() {
@@ -134,6 +77,10 @@
     methods: {
       init() {
         this.listGrade()
+      },
+      editClick(row){
+        // var temoObj = JSON.parse(JSON.stringify(row))
+        this.$refs.MemberLevelEditRef.showDialog(row.gradePk, this.options)
       },
       saveClick(row) {
         row.autoUpgradeFlag = (row.upgradeMemPk == null || row.upgradeMemPk == "")?"N":"Y"
@@ -164,31 +111,52 @@
         }
       },
       deleteClick(row) {
-        console.log(row)
-      },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
-      },
-      addRows() {
-        if(this.tableData.length == 0 || this.tableData[0].gradePk != ''){
-          this.tableData.unshift({
-            "autoCancelFlag": "Y",
-            "autoUpgradeFlag": "Y",
-            "bookRetain": '00:00:00',
-            "checkOutDelay": '00:00:00',
-            "deductionFraction": 0,
-            "discountFlag": "Y",
-            "gradeLevel": 0,
-            "gradeName": '',
-            "gradePk": '',
-            "integralFlag": "Y",
-            "occupancyNum": 0,
-            "registerIntegral": 0,
-            "totalFraction": 0,
-            "upgradeMemPk": '',
-            "websiteReserve": 0
+        this.$confirm('确定删除当前选中项?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delGrade(row).then(res => {
+            if (res.code == 1) {
+              this.$message({type: 'success', message: '删除成功!'});
+              this.listGrade()
+            } else {
+              this.$message({type: 'error', message: sub_msg});
+            }
           })
+        }).catch(() => {
+        });
+      },
+      disabledClick (row) {
+        let str = ''
+        if (row.status == 1) {
+          str = '禁用'
+        } else {
+          str = '启用'
         }
+        this.$confirm('确定' + str + '当前选中项?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let data = {
+            gradePk: row.gradePk,
+            status: row.status == 1 ? 0 : 1
+          }
+
+          updStatusGrade(data).then(res => {
+            if (res.code == 1) {
+              this.$message({type: 'success', message: '操作成功!'});
+              this.listGrade()
+            } else {
+              this.$message({type: 'error', message: sub_msg});
+            }
+          })
+        }).catch(() => {
+        });
+      },
+      addClick() {
+        this.$refs.MemberLevelEditRef.showDialog(null, this.options)
       },
       listGrade(){
         const self = this
@@ -204,15 +172,17 @@
               "gradeName": element.gradeName,
               "gradePk": element.gradePk
             })
+            self.udGradeMember[element.gradePk] = element.gradeName
           });
           self.loading = false
         }).catch(() => {
           self.loading = false
         }).finally(()=>{
           self.options.unshift({
-            "gradeName": '非自动升级',
-            "gradePk": ''
+            "gradeName": '无',
+            "gradePk": '0'
           })
+          self.udGradeMember['0'] = '无'
           self.loading = false
         })
       }
@@ -259,7 +229,7 @@
   background: #f7f7f7;
 }
 .add-pro{
-  float:left;
+  float: left;
   margin-bottom: 10px;
   margin-left: 10px;
 }

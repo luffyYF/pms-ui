@@ -317,4 +317,20 @@ export const toDayHouseDoBusinessStatistics = params =>{
     return request.get('/pms/report/toDayHouseDoBusinessStatistics',{params:params})
 }
 
+/* ********** 房态报表begin ********** */
+/**
+ * 房态报表
+ */
+export const roomStateReport = params =>{
+    return request.get('/pms/report/roomStateReport',{params:params})
+}
+/* ********** 房态报表end ********** */
 
+/* ********** 常用报表begin ********** */
+/**
+ * 经理日报报表
+ */
+export const managerReport = params =>{
+    return request.get('/pms/report/managerReport',{params:params})
+}
+/* ********** 常用报表end ********** */

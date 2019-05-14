@@ -1,7 +1,7 @@
 // 结账弹窗
 <template>
   <!-- 结账 -->
-  <el-dialog class="pattern-dialog height280" title="结账" :visible.sync="dialogPartialCheckout" width="650px" :close-on-click-modal="false" :append-to-body="true">
+  <el-dialog class="pattern-dialog height280" title="结账" :visible.sync="dialogPartialCheckout" :before-close="handleClose" width="650px" :close-on-click-modal="false" :append-to-body="true">
     <div class="pattern-dialog-container" style="padding: 25px 4px;">
       <el-col :span="24">
         <el-col :span="12">
@@ -88,7 +88,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button size="mini" type="primary" @click="confirm" :disabled="islock">确认</el-button>
-      <el-button size="mini" @click="dialogPartialCheckout = false">取消</el-button>
+      <el-button size="mini" @click="handleClose">取消</el-button>
     </span>
   </el-dialog>
 </template>
@@ -357,6 +357,11 @@ export default {
     remindPrint() {
       this.$emit('callback')
     },
+    //关闭
+    handleClose(){
+      this.$emit('cancel')
+      this.dialogPartialCheckout = false
+    }
 
   }
 };

@@ -35,7 +35,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="营业日期">
-                <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 152px;"></el-date-picker>
+                <el-date-picker type="date" @change="listBill" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="serachForm.currentData" style="width: 130px;"></el-date-picker>
               </el-form-item>
             </div>
           </el-form>
@@ -83,7 +83,7 @@
         </el-col>
         <el-col :span="24" class="bill-opr">
           结账处理：
-          <el-button size="mini" @click="settlement(0)" v-if="(currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm) && hasPerm('pms:billAss:billSettle')" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)  ">结账</el-button>
+          <el-button size="mini" @click="settlement(0)" v-if="(currOrderInfo.order.orderStatus=='CHECKIN' || currOrderInfo.order.orderStatus=='LEAVENOPAY' || isDubm) && hasPerm('pms:billAss:billSettle')" :disabled="(currOrderInfo.order.hfFlag=='Y' && currOrderInfo.order.orderStatus=='CHECKIN') || (dumbData.checkoutFlag == 'Y' && isDubm)">结账</el-button>
           <el-button size="mini" @click="settlement(1)" v-if="hasPerm('pms:billAss:checkOut')" :disabled="currOrderInfo.order.orderStatus!='CHECKIN' || (dumbData.checkoutFlag == 'Y' && isDubm) ">退房未结</el-button>
           <el-button size="mini" @click="settlement(2)" v-if="hasPerm('pms:billAss:partialCheckout')" :disabled="currOrderInfo.order.orderStatus=='LEAVE' || (dumbData.checkoutFlag == 'Y' && isDubm) ">部分结账</el-button>
           <el-button size="mini" @click="toDialogRecoverBill" v-if="hasPerm('pms:billAss:partialCheckoutRec')" :disabled="currOrderInfo.order.orderStatus=='LEAVE'">部分结账恢复</el-button>
@@ -126,7 +126,7 @@
       </el-col>
       <el-col :span="8">
         <el-row :gutter="24">
-          <el-tabs v-model="summary" >
+          <el-tabs v-model="summary">
             <el-tab-pane label="财务信息" name="first" style="max-height:144px;overflow:auto;">
                 <el-col class="colGreen bgBlue" :span="8">所选消费</el-col>
                 <el-col class="colBlue bgBlue" :span="8">所选结算</el-col>
@@ -334,7 +334,6 @@
     </el-dialog>
     <!-- 虚拟账单 -->
     <el-dialog class="pattern-dialog height600" title="虚拟账单" :visible.sync="virDialog" width="1000px" :close-on-click-modal="false" :append-to-body="true">
-
         <el-form ref="serachForm" :inline="true" :model="serachForm" size="mini" label-width="70px">
             <el-col :span="24">
                 <!-- <el-form-item label="请选择结账客单">
@@ -401,9 +400,9 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="发生日期"  width="175">
+            <el-table-column prop="createTime" label="发生日期" width="130">
               <template slot-scope="scope">
-                  <el-date-picker size="mini" style="width:100%;" v-model="scope.row.createTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="营业日期"/>
+                  <el-date-picker size="mini" style="width:130px;" v-model="scope.row.createTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="营业日期"/>
               </template>
             </el-table-column>
             <el-table-column prop="createUserName" width="95" label="操作员"></el-table-column>
@@ -440,19 +439,22 @@
     <!-- 打印组件 -->
     <comment-print ref="commentPrintRef"></comment-print>
     <!-- 结账 -->
-    <bill-settlement ref="billSettlementRef" @callback="printCallback"></bill-settlement>
+    <bill-settlement ref="billSettlementRef" @callback="printCallback" @cancel="listBill"></bill-settlement></bill-settlement>
     <!-- 部分结账恢复 -->
     <dialog-recover-bill ref="dialogRecoverBillRef" @callback="listBill"></dialog-recover-bill>
     <!-- 退房超时提醒 -->
-    <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckoutRemind" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind>
+    <!-- <dialog-timeout-remind ref="dialogTimeoutRemindRef" @to-notcharge="toCheckoutRemind" @to-addbill="timeoutRemindToAddBill"></dialog-timeout-remind> -->
     <!-- 提前退房收费提示 -->
-    <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="toSettle" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind>
+    <!-- <dialogAdvanceCheckoutRemind ref="dialogAdvanceCheckoutRemindRef" @to-notcharge="toSettle" @to-addbill="advanceCheckoutToAddBill"></dialogAdvanceCheckoutRemind> -->
     <!-- 批量入账 -->
     <dialog-batch-addBill ref="dialogBatchAddBillRef" @to-settle="addBillToSettle" @callback="listBill" ></dialog-batch-addBill>
     <!-- 单房结账 -->
     <dialog-singleSettl ref="dialogSingleSettlRef" @callback="listBill" @to-settle="toSettle"></dialog-singleSettl>
     <!-- 押金打印 -->
     <dialog-deposit-print ref="dialogDepositPrintRef"></dialog-deposit-print>
+
+    <!-- 收费提醒 -->
+    <remind-dialog ref="remindDialogRef" @callback="toSettle"></remind-dialog>
   </div>
 </template>
 

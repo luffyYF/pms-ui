@@ -32,7 +32,6 @@
 </template>
 
 <script>
-  import Cookies from 'js-cookie'
   import {attendanceTypeMap} from '@/utils/orm'
   import { attendanceGroupAdd,attendanceGroupUpdate,attendanceGroupDetail } from '@/api/oaApi'
 
@@ -44,7 +43,7 @@
       this.type = null
       this.deptNameList = null
       this.orderNum = null
-      this.companyPk = Cookies.get('select_company_pk')
+      this.companyPk = localStorage.getItem('select_company_pk')
     }
 
     set attendanceGroup (attendanceGroup) {

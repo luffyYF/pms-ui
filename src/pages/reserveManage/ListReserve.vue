@@ -94,7 +94,7 @@
         </el-form-item>
       <!-- </el-col> -->
     </el-form>
-    <el-table v-loading="loading" ref="singleTable" size="mini" cell-style="font-size:10px;-webkit-text-size-adjust: none;" :expand-row-keys="orderExpands" row-key="orderNo" :data="tableData" filter-change="handlerFilterChange" @expand-change="handExpandChange" border max-height="628">
+    <el-table v-loading="loading" ref="singleTable" size="mini" :cell-style="function() {return 'font-size:10px;-webkit-text-size-adjust: none;'}" :expand-row-keys="orderExpands" row-key="orderNo" :data="tableData" filter-change="handlerFilterChange" @expand-change="handExpandChange" border max-height="628">
       <el-table-column type="expand" width="30">
         <template slot-scope="scope">
           <orderGuestList  :ref="scope.row.orderNo"/>
@@ -194,7 +194,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="80">
+      <el-table-column label="状态" width="100">
         <template slot-scope="scope">
             <template v-if="getOrderStatus(scope.row.guestDtos).noShowCount > 0" >
               <span>NOSHOW：{{getOrderStatus(scope.row.guestDtos).noShowCount}}</span><br>
@@ -240,7 +240,7 @@
 
     <!-- DIALOG -->
     <!-- 订单页面 -->
-    <DialogCheckinVisible ref="checkinDialogRef" />
+    <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="init()" />
 
     <invoice-edit ref="invoiceEditRef"  @callback="listMastersType"></invoice-edit>
     <!-- 预订信息编辑页面 -->
@@ -253,7 +253,6 @@
   import {orderStatusMap, checkInTypeMap} from '@/utils/orm'
   import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import {listReserve, cancelGuestOrder} from '@/api/order/pmsOrderController'
-  import { listPriceScheme } from "@/api/systemSet/priceScheme/priceSchemeController"
   import {listChannelType} from '../../api/systemSet/type/typeController'
   import {listType} from '@/api/utils/pmsTypeController'
   import exportExcel from '@/components/download/exportExcel'
@@ -446,7 +445,6 @@
         }
         if(bol){
           this.orderExpands = [row.orderNo]
-          console.log(that.$refs)
           this.$nextTick(()=>{
             that.$refs[row.orderNo].showDialog(row.guestDtos)
           })
@@ -523,14 +521,15 @@
         let noRowRooms = 0
         var roomNumber = '无';
         guestDots.forEach(guest => {
+
           if (guest['mainFlag'] == 'Y') {
             if(guest['roomPk'] && guest['roomNumber']){
               if(guest['roomNumber']!= roomNumber  ){
                 rowRooms.push(guest.roomNumber);
                 roomNumber = guest['roomNumber']
               }
-            }else{
-              noRowRooms++
+            }else if(guest['orderStatus'] != "CANCEL" ){
+                 noRowRooms++
             }
           }
         });

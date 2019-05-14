@@ -8,23 +8,32 @@
         border 
         :data="tableData" 
         style="width: 98%; margin:10px;">
-        <el-table-column prop="typeCode" label="代码" align="center" width="120">
+        <!-- <el-table-column prop="typeCode" label="代码" align="center" width="120">
           <template slot-scope="scope">
             <el-input v-if="scope.row.typePk == ''" v-model="scope.row.typeCode" size="mini" placeholder="请输入代码"></el-input>
             {{scope.row.typePk != ''?scope.row.typeCode:''}}
           </template>
-        </el-table-column>
-        <el-table-column prop="typeName" label="名称" align="center" width="250">
+        </el-table-column> -->
+        <el-table-column prop="typeName" label="名称" align="center" width="160">
           <template slot-scope="scope">
-            <el-input size="mini" v-model="scope.row.typeName"></el-input>
+            <el-input size="mini" v-model="scope.row.typeName" :readonly="scope.row.defaultFlag == 'Y'"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sortNum" label="排序" align="center" width="120">
+        <el-table-column prop="sortNum" label="排序" align="center" width="110">
           <template slot-scope="scope">
             <el-input size="mini" v-model="scope.row.sortNum"></el-input>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center">
+        <el-table-column prop="remark" label="备注" align="center" width="260">
+          <template slot-scope="scope">
+            <el-input size="mini" v-model="scope.row.remark" :readonly="scope.row.defaultFlag == 'Y'"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createUserName" label="创建人" align="center" width="130">
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center" width="190">
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" align="center" min-width="90">
           <!-- 操作 -->
           <template slot-scope="scope">
             <el-button @click="saveClick(scope.row)" type="text" size="mini">保存</el-button>
@@ -41,6 +50,8 @@
 <script>
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
+import Moment from 'moment'
+
   export default {
     data() {
       return {
@@ -53,6 +64,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
           pageNum: 1
         },
         total: 0,
+        pms_userinfo: JSON.parse(localStorage.getItem('pms_userinfo'))
       }
     },
     methods: {
@@ -126,8 +138,12 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
             typeName: '', 
             integralFlag:'N',
             monthlyRent:'',
-            sortNum:'',
-            usingFlag:'N'
+            sortNum:0,
+            usingFlag:'N',
+            remark: '',
+            createUserId: this.pms_userinfo.upmsUserId,
+            createUserName: this.pms_userinfo.upmsRealName,
+            createTime: Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
           })
         }
       },
@@ -135,6 +151,11 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
         const self = this
         self.queryParams.pageNum = val;
         listType(self.queryParams).then(result => {
+          result.data.data.forEach(element => {
+            if (element.sortNum == null) {
+              element.sortNum = 0
+            }
+          });
           self.tableData = result.data.data;
           self.total = result.data.pageSize;
         }).catch(() => {
@@ -163,7 +184,7 @@ import {listType,delType,updateype,addType} from '@/api/utils/pmsTypeController'
 
 <style scoped>
 .bg-reserve {
-  width: 865px;
+  width: 1000px;
   position: relative;
   background: #f7f7f7;
   margin-top: 10px;

@@ -55,9 +55,9 @@ export const splitBill = params => {
 }
 
 //账单转账处理
-export const transBill = params => {
-  return request.post('/back/bill/trans', params)
-}
+// export const transBill = params => {
+//   return request.post('/back/bill/trans', params)
+// }
 
 //账单转账处理
 export const transferAccountsBill = params => {
@@ -112,4 +112,43 @@ export const checkoutGuest = params => {
 // 查找押金
 export const findDepositFromBills = params => {
   return request.get('/back/bill/findDepositFromBills', {params:params})
+}
+
+
+//协议单位/中介账务 begin
+
+
+// 根据协议单位查找消费项账单
+export const listBillByAgreement = params => {
+  return request.get('/back/bill/listBillByAgreement', {params:params})
+}
+// 根据账套查找账单
+export const listBillBySetBillPk = params => {
+  return request.get('/back/bill/listBillBySetBillPk', {params:params})
+}
+// 根据协议单位查找结算项账单
+export const listSettleBillByAgreement = params => {
+  return request.get('/back/bill/listSettleBillByAgreement', {params:params})
+}
+// 根据协议单位查找账套
+export const listSetBillByAgreementPk = params => {
+  return request.get('/back/bill/listSetBillByAgreementPk', {params:params})
+}
+// 根据账单结账
+export const unitSettleAccounts = params => {
+  return request.post('/back/bill/unitSettleAccounts', params)
+}
+// 查询单位/中介,账务/收款
+export const agreementBillQuery = params => {
+  return request.get('/back/bill/agreementBillQuery', {params:params})
+}
+
+//协议单位/中介账务 end
+
+/************* 会员账单begin *************/
+/**
+ * 查询会员消费账单
+ */
+export const findMemberConsumptionBills = params => {
+  return request.get('/back/bill/findMemberConsumptionBills', {params:params})
 }

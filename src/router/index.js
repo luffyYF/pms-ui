@@ -53,12 +53,14 @@ import ShiftTab from '@/pages/atrialCenter/shiftReport/tab.vue'
 import ListReserve from '@/pages/reserveManage/ListReserve.vue'
 import TeamReserve from '@/pages/reserveManage/TeamReserve.vue'
 import AddReserve from '@/pages/reserveManage/addReserve.vue'
+import MiniappOrderList from '@/pages/reserveManage/miniapp/MiniappOrderList.vue'
 
 //客户关系
 import MemberManage from '@/pages/customerRelation/memberManage/tab.vue'
 import GuestManage from '@/pages/customerRelation/guestManage/tab.vue'
 import VirtualOrder from '@/pages/customerRelation/VirtualOrder.vue'
 import ProtocolManage from '@/pages/customerRelation/ProtocolManage/tab.vue'
+import intermediaryTab from '@/pages/customerRelation/ProtocolManage/intermediaryTab.vue'
 import Invoice from '@/pages/customerRelation/invoice/tab.vue'
 import PassengerInformationUploading from '@/pages/customerRelation/passengerInformationUploading/tab.vue'
 
@@ -88,6 +90,7 @@ import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAu
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
+import ManagerDailyReport from '@/pages/reportCenter/managementLayer/managerDailyReport.vue'
 import ManaghouseDoBusinessStatistics from '@/pages/reportCenter/houseDoBusinessStatistics/houseDoBusinessStatistics.vue'
 import ManagSalesGuests from '@/pages/reportCenter/managementSales/SalesGuests.vue'
 import ManagSalesAgreement from '@/pages/reportCenter/managementSales/SalesAgreement.vue'
@@ -126,17 +129,29 @@ import StockTab from '@/pages/stock/tab';
 import StockFunction from "@/pages/stock/stockFunction/tab";
 import StockSetUp from "@/pages/stock/stockSetUp/tab";
 import InventoryConsumeDetail from "@/pages/stock/stockFunction/InventoryConsumeDetail.vue"
+import Application from "@/pages/stock/stockFunction/Application.vue"
+import ApplicationList from "@/pages/stock/stockFunction/ApplicationList.vue"
+import InventoryIn from "@/pages/stock/stockFunction/InventoryIn.vue"
+import StockList from "@/pages/stock/stockFunction/StockList.vue"
+import InventoryConsume from "@/pages/stock/stockFunction/InventoryConsume.vue"
+import InventoryConsumeList from "@/pages/stock/stockFunction/InventoryConsumeList.vue"
+import TakeStock from "@/pages/stock/stockFunction/TakeStock.vue"
+import TakeStockList from "@/pages/stock/stockFunction/TakeStockList.vue"
+import StorageSetting from "@/pages/stock/stockSetUp/StorageSetting.vue"
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
 import MembershipRelated from '@/pages/systemSet/MembershipRelated/tab'
 import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
-import BellSpecialRoom from '@/pages/systemSet/BellSpecialRoom/tab'
+import HourRoomSetting from '@/pages/systemSet/HourRoomSetting/Tab'
+import SpecialRoomSetting from '@/pages/systemSet/SpecialRoomSetting/Tab'
+import DailyRoomSetting from '@/pages/systemSet/DailyRoomSetting/Tab'
 import ConsumerProjects from '@/pages/systemSet/ConsumerProjects'
 import ChannelManagement from '@/pages/systemSet/ChannelManagement'
 import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
 import marketingSetting from '@/pages/systemSet/marketing/tab'
+import payConfig from '@/pages/systemSet/pay/tab'
 // import zlRoomStatusSetting from '@/pages/systemSet/zlRoomStatusSetting/tab'
 // import zlPriceSetting from '@/pages/systemSet/zlRoomStatusSetting/zlPriceSetting'
 
@@ -150,9 +165,6 @@ import zlFliggyConfig from '@/pages/zl/ZlFliggyConfig/ZlFliggyConfigList'
 import zlOpenConfig from '@/pages/zl/zlOpenConfig/zlOpenConfigList'
 import housePriceCode from '@/pages/zl/housePriceCode/housePriceCode'
 
-
-
-
 // 财务稽核
 import FinancialAuditTag from '@/pages/financialAudit/tab.vue'
 import BillChecking from '@/pages/financialAudit/BillChecking'
@@ -164,6 +176,17 @@ import OutsideBillOrder from '@/pages/financialAudit/OutsideBillOrder/OutsideBil
 // 房务管理
 import roomServiceTab from '@/pages/roomService/tab.vue'
 import LostArticlesList from '@/pages/roomService/lostArticles/LostArticlesList.vue'
+import RoomPatternPage from '@/pages/roomService/roomState/RoomPattern.vue'
+import RoomManager from '@/pages/roomService/roomManager/RoomManager.vue'
+import RepairRecordList from '@/pages/roomService/repairRecord/RepairRecordList.vue'
+import RoomStatePrint from '@/pages/roomService/roomStatePrint/RoomStatePrint.vue'
+import StateLogList from '@/pages/roomService/stateLog/StateLogList.vue'
+import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepingLogList.vue'
+
+//交班
+import shiftData from '@/pages/shiftData/tab.vue'
+import advanceClass from '@/pages/shiftData/advanceClass.vue'
+import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
 
 Vue.use(Router)
 /**
@@ -210,7 +233,8 @@ export const constantRouterMap = [
         children: [
           {path: '/reserveManage/addReserve', component: AddReserve, label: '新增预定'},
           {path: '/reserveManage/teamReserve',  component: TeamReserve, label: '团队预定'},
-          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'}
+          {path: '/reserveManage/listReserve', component: ListReserve, label: '订单列表'},
+          {path: '/reserveManage/miniappOrder', component: MiniappOrderList, label: '小程序订单'}
         ]
       },
       { 
@@ -223,6 +247,16 @@ export const constantRouterMap = [
           {path: '/checkInManage/teamSearch',  component: TeamSearch, label: '团队查询'},
         ]
       },
+      { 
+        path: '/shiftData', 
+        component: shiftData, 
+        name: '入住管理', 
+        hidden: false,
+        children:[
+          {path: '/shiftData/advanceClass',  component: advanceClass, label: '交班预览'},
+          {path: '/shiftData/advanceClassInf',  component: advanceClassInf, label: '交班信息查询'},
+        ]
+      },
       {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
       {
         path: '/customerRelation',
@@ -233,6 +267,8 @@ export const constantRouterMap = [
           {path: '/customerRelation/memberManage',  component: MemberManage, label: '会员管理'},
           {path: '/customerRelation/guestManage', component: GuestManage, label: '客人管理'},
           {path: '/customerRelation/protocolManage',component: ProtocolManage, label: '协议管理'},
+          {path: '/customerRelation/intermediary',component: intermediaryTab, label: '协议管理'},
+          
           {path: '/customerRelation/virtualOrder', component: VirtualOrder, label: '虚拟账单'},
           {path: '/customerRelation/invoice', component: Invoice, label: '发票'},
           {path: '/customerRelation/passengerInformationUploading', component: PassengerInformationUploading, label: '旅客信息上传'}
@@ -253,6 +289,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/narpCheck', component: NightAuditRentPriceCheck, label: '夜审房费前核对报表'},
           {path: '/reportCenter/dailyReport', component: ManagDailyReport, label: '管理层日报表'},
           {path: '/reportCenter/roomDailyReport', component: ManagRoomDailyReport, label: '查看每天的订房报表情况'},
+          {path: '/reportCenter/managerDailyReport', component: ManagerDailyReport, label: '经理日报'},
           {path: '/reportCenter/houseDoBusinessStatistics', component: ManaghouseDoBusinessStatistics, label: '查看每天的订房报表情况'},
           {path: '/reportCenter/salesGuests', component: ManagSalesGuests, label: '销售分析报表-客人来源'},
           {path: '/reportCenter/salesAgreement', component: ManagSalesAgreement, label: '销售分析报表-协议单位'},
@@ -292,9 +329,18 @@ export const constantRouterMap = [
         name: '库存',
         hidden: false,
         children: [
-          {path: '/stock/stockopr', name: 'stockopr', component: StockFunction, label: '库存功能'},
-          {path: '/stock/setting',  component: StockSetUp, label: '库存相关设置'},
+          // {path: '/stock/stockopr', name: 'stockopr', component: StockFunction, label: '库存功能'},
+          // {path: '/stock/setting',  component: StockSetUp, label: '库存相关设置'},
+          {path: '/stock/applications',  component: Application, label: '物品申领'},
+          {path: '/stock/applicationList',  component: ApplicationList, label: '申领记录'},
+          {path: '/stock/inventoryIn/O:outId',  component: InventoryIn, label: '入库'},
+          {path: '/stock/stockList',  component: StockList, label: '库存'},
+          {path: '/stock/inventoryConsumes',  component: InventoryConsume, label: '消耗'},
+          {path: '/stock/inventoryConsumeList',  component: InventoryConsumeList, label: '消耗记录'},
           {path: '/stock/InventoryConsumeRecord/O:outId',  component: InventoryConsumeDetail, label: '消耗详细'},
+          {path: '/stock/takeStocks',  component: TakeStock, label: '库存盘点'},
+          {path: '/stock/takeStockList',  component: TakeStockList, label: '盘点记录'},
+          {path: '/stock/storageSetting',  component: StorageSetting, label: '仓库设置'},
         ]
       },
 
@@ -346,12 +392,15 @@ export const constantRouterMap = [
           {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
           {path: '/systemSet/userSetting',  component: MembershipRelated, label: '会员相关设置'},
           {path: '/systemSet/roomSetting', component: RoomSetting , label: '客房设置'},
-          {path: '/systemSet/clockSpecial',  component: BellSpecialRoom, label: '钟点特殊房'},
+          {path: '/systemSet/hourRoomSetting',  component: HourRoomSetting, label: '钟点房设置'},
+          {path: '/systemSet/specialRoomSetting',  component: SpecialRoomSetting, label: '特殊房设置'},
+          {path: '/systemSet/dailyRoomSetting',  component: DailyRoomSetting, label: '全天房设置'},
           {path: '/systemSet/settleSetting',  component: ConsumerProjects, label: '消费项目设置'},
           {path: '/systemSet/channelManage', component: ChannelManagement, label: '渠道管理'},
           {path: '/systemSet/projectSetting', component: ProjectSetting, label: '入账项目显示设置'},
           {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},,
           {path: '/systemSet/marketingSetting', component: marketingSetting, label: '营销'},
+          {path: '/systemSet/pay', component: payConfig, label: '支付配置'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
         ]
@@ -377,6 +426,12 @@ export const constantRouterMap = [
         name: '房务管理', 
         hidden: false,
         children: [
+          {path: '/roomService/RoomPattern', component:RoomPatternPage , label: '房态'},
+          {path: '/roomService/RoomManager', component:RoomManager , label: '房间管理'},
+          {path: '/roomService/RepairRecordList', component:RepairRecordList , label: '维修记录管理'},
+          {path: '/roomService/RoomStatePrint', component:RoomStatePrint , label: '房态打印'},
+          {path: '/roomService/StateLogList', component:StateLogList , label: '房态日志'},
+          {path: '/roomService/RoomSweepingLogList', component:RoomSweepingLogList , label: '房扫查询'},
           {path: '/roomService/LostArticlesList', component:LostArticlesList , label: '客人物品管理'},
         ]
       },

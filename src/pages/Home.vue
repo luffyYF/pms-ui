@@ -48,6 +48,12 @@
             <div class="nav-txt">入住管理</div>
           </div>
         </router-link>
+        <router-link to="/shiftData" v-if="hasPerm('pms:dir:handoverDuty')">
+          <div class="nav-li">
+            <div class="nav-icon check-manage-icon"></div>
+            <div class="nav-txt">交班</div>
+          </div>
+        </router-link>
         <router-link to="/customerRelation" v-if="hasPerm('pms:dir:customerRelationship')">
           <div class="nav-li">
             <div class="nav-icon customer-relation-icon"></div>
@@ -202,26 +208,26 @@
           </el-table-column> -->
       </el-table>
     </el-dialog>
-      <el-dialog title="离店提醒" :center="true" style="position: absolute;width:480px;left: calc(100% - 480px);top: auto;padding:0;" top="0" 
-      :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="480px" >
-        <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
-          <el-table-column align="center"  prop="channelName" label="渠道" width="80"></el-table-column>
-          <el-table-column align="center" prop="guestName" label="客人" width="80"></el-table-column>
-          <el-table-column align="center" prop="roomNumber" label="房号" width="80"></el-table-column>
-          <el-table-column align="center" prop="roomTypeName" label="房型" width="80"></el-table-column>
-          <el-table-column align="center" label="预离时间" >
+    <el-dialog title="离店提醒" :center="true" style="position: absolute;width:488px;left: calc(100% - 488px);top: auto;padding:0;" top="0" 
+    :modal="false"  custom-class="ylDialog" :modal-append-to-body="false" :visible.sync="dialogVisible" :append-to-body="false" :close-on-click-modal="false" width="488px" >
+      <el-table :data="ylList" height="200px" @row-click="toDialogVisible">
+        <el-table-column align="center"  prop="channelName" label="渠道" width="80"></el-table-column>
+        <el-table-column align="center" prop="guestName" label="客人" width="80"></el-table-column>
+        <el-table-column align="center" prop="roomNumber" label="房号" width="80"></el-table-column>
+        <el-table-column align="center" prop="roomTypeName" label="房型" width="80"></el-table-column>
+        <el-table-column align="center" label="预离时间" width="114">
+          <template slot-scope="scope">
+          {{scope.row.guestEndDate | dateFormat('YYYY-MM-DD HH:mm')}}
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="操作"  width="80">
             <template slot-scope="scope">
-            {{scope.row.guestEndDate | dateFormat('YYYY-MM-DD HH:mm')}}
+                <el-button size="mini" type="text" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
             </template>
-          </el-table-column>
-          <!-- <el-table-column label="操作"  width="80">
-              <template slot-scope="scope">
-                 <el-button size="mini" type="text" @click="toDialogVisible(scope.row, 'info')">查看</el-button>
-              </template>
-          </el-table-column> -->
-          
-        </el-table>
-      </el-dialog>
+        </el-table-column> -->
+        
+      </el-table>
+    </el-dialog>
     </div> 
     <DialogCheckinVisible ref="checkinDialogRef" v-on:closecheckin="getCurrentRoomList()" />
     <el-dialog
@@ -234,21 +240,18 @@
       center>
       <span>系统正在夜审...</span>
     </el-dialog>
-  </div>
 
-  
+    <MessageRemind></MessageRemind>
+  </div>
 </template>
 
 <script>
-import moment from 'moment'
-import Cookies from 'js-cookie'
-import {nightTrialTime} from '@/utils/orm'
 import "../../static/img/user.png";
-import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
-import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
-// import {logout,refreshTokenUpms }from '@/api/login'
+import moment from 'moment'
+import {nightTrialTime} from '@/utils/orm'
+import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import {logout,refreshTokenUpms,validateToken }from '@/api/upmsApi'
 import {
     currentRoomList,
@@ -259,13 +262,15 @@ import {
     loadOrderInfo,
   } from '@/api/roomStatus/pmsRoomStatusController'
 import {find} from '@/api/systemSet/pmsSysParamController'
-import {getNewGuestOrder} from '@/api/order/pmsOrderController'
+import {getNewGuestOrder} from '@/api/utils/pmsTimerController'
 
 import { allTypeList } from '@/api/utils/pmsTypeController'
-import { Message } from 'element-ui';
+import { Message } from 'element-ui'
+import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
+import MessageRemind from '@/pages/messageRemind/Tab'
 
 export default {
-  components:{DialogCheckinVisible},
+  components:{DialogCheckinVisible,MessageRemind},
   created() {
     var test = window.localStorage.getItem("current_logon_company");
     if(test){
@@ -289,7 +294,7 @@ export default {
     setInterval(()=>{
       this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     }, 30*60*1000)
-    this.validateToken();
+    this.validateToken()
     this.nightTrialTask()
   },
   data() {
@@ -361,7 +366,7 @@ export default {
             if(date.getHours() >= 6 && date.getMinutes() >= 0 && date.getSeconds() >20){
               clearInterval(this.nightTrialTimer)
             }
-            console.log(false)
+            // console.log(false)
             this.centerDialogVisible = false
             this.nightTrialFlag = false
           }
@@ -413,8 +418,8 @@ export default {
       })
       .then(() => {
         logout().then(res=>{}).finally(()=>{
-          Cookies.set('select_company_pk','')
-          Cookies.set('select_shift_pk','')
+          localStorage.setItem('select_company_pk','')
+          localStorage.setItem('select_shift_pk','')
           localStorage.setItem('current_logon_company','');
           localStorage.setItem('pms_userinfo', '')
           localStorage.setItem('pms_token','');
@@ -556,18 +561,18 @@ export default {
       })
     },
     //预离查询等
-      sysParmInit() {
-        var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
-        //每天只获取一次
-        if(tempSysParm == null || tempSysParm.queryTime != moment().format('YYYY-MM-DD')){
-          find().then(res=>{
-            var sysParm =  res.data
-            sysParm.queryTime = moment().format('YYYY-MM-DD')
-            localStorage.setItem("sysParm",JSON.stringify(sysParm))
-            this.getCurrentRoomList()
-          })
-        }
-      },
+    sysParmInit() {
+      var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
+      //每天只获取一次
+      if(tempSysParm == null || tempSysParm.queryTime != moment().format('YYYY-MM-DD')){
+        find().then(res=>{
+          var sysParm =  res.data
+          sysParm.queryTime = moment().format('YYYY-MM-DD')
+          localStorage.setItem("sysParm",JSON.stringify(sysParm))
+          this.getCurrentRoomList()
+        })
+      }
+    },
       initAlert(){
         //预离提示
         this.timer = setInterval(() => {

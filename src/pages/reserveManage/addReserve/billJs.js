@@ -7,11 +7,12 @@
   import commentPrint from '@/components/PrintPage/commonPrintPage'
   import billSettlement from './bill/billSettlement'
   import dialogRecoverBill from './bill/dialogRecoverBill'
-  import dialogTimeoutRemind from './bill/dialogTimeoutRemind'
-  import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
+  // import dialogTimeoutRemind from './bill/dialogTimeoutRemind'
+  // import dialogAdvanceCheckoutRemind from '@/pages/reserveManage/addReserve/bill/dialogAdvanceCheckoutRemind'
   import dialogBatchAddBill from './bill/dialogBatchAddBill'
   import dialogSingleSettl from './bill/dialogSingleSettl'
   import dialogDepositPrint from './bill/dialogDepositPrint'
+  import RemindDialog from './bill/RemindDialog'
 
   //转账组单选择
   import transferAccounts from './transferAccounts'
@@ -24,20 +25,13 @@
 
   import {
     addBill,
-    // addBills,
     transferAccountsBill,
     addDumbBill,
-    addDumbBills,
-    authBill,
     listBill,
     offsetBill,
-    partialCheckoutBill,
-    singleRoomCheckoutBill,
     splitBill,
-    transBill,
     selectGuestOrderBill,
     countCheckoutBill,
-    overtimeRemind
   } from '@/api/bill'
   import {addVirtual} from '@/api/pmsVirtualBill/pmsVirtualBill'
   import Moment from 'moment'
@@ -48,12 +42,13 @@
         commentPrint,
         billSettlement,
         dialogRecoverBill,
-        dialogTimeoutRemind,
-        dialogAdvanceCheckoutRemind,
+        // dialogTimeoutRemind,
+        // dialogAdvanceCheckoutRemind,
         dialogBatchAddBill,
         transferAccounts,
         dialogSingleSettl,
-        dialogDepositPrint
+        dialogDepositPrint,
+        RemindDialog
       },
       data() {
         return {
@@ -77,17 +72,7 @@
             remark: '',
             // payment: '0',
           },
-          // formAddBills:[{
-          //   projectPk:'',
-          //   guestOrderPk: null,
-          //   channelTypePk: null,
-          //   projectName: '',
-          //   consumptionAmount: '',
-          //   remark: '',
-          //   payment: '0',
-          // }],
           multipleSelection: [],
-          // addBillMultipleSelection:[],
           splitForm: {
             billPk: '',
             consumptionAmount: '',
@@ -495,7 +480,6 @@
               +"&billPks="+billPks+"&beginDate="+beginDate+"&endDate="+endDate+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName);
             })
           })
-          //刷新订单
           this.$emit('refresh-main-order', this.orderPk, 'bill')
         },
 
@@ -549,14 +533,19 @@
                       return;
                     }
                   }
-                  select.forEach(row=>{
+                  select.forEach(row=> {
                     pks.push(row.billPk)
                   })
-                  this.$refs.billSettlementRef.init(this.orderPk, 2,pks.toString())
-                }else if(type==0){
+                  this.$refs.billSettlementRef.init(this.orderPk, 2, pks.toString())
+                }else if(type==0) {
                   //结账+退房
-                  this.$refs.dialogTimeoutRemindRef.showDialog(this.orderPk)
-                  // this.$refs.billSettlementRef.init(this.orderPk, 0)
+                  // this.$refs.dialogTimeoutRemindRef.showDialog(this.orderPk)
+                  this.$refs.remindDialogRef.showDialog(this.orderPk)
+                  
+                  /**
+                   * 普通客单、钟点房客单混合，提醒
+                   * 可以单独客单提醒
+                   */
                 }
               }
             });
@@ -598,10 +587,10 @@
             }
           }
         },
-        //打开检测提前退房收费提醒
-        toCheckoutRemind() {
-          this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.orderPk)
-        },  
+        // //打开检测提前退房收费提醒
+        // toCheckoutRemind() {
+        //   this.$refs.dialogAdvanceCheckoutRemindRef.showDialog(this.orderPk)
+        // },
         //打开结账页面
         toSettle() {
           this.$refs.billSettlementRef.init(this.orderPk, 0)
@@ -881,21 +870,21 @@
           this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm,null,this.dumbPk)
         },
         //退房超时提醒,跳转批量入账
-        timeoutRemindToAddBill(guestPks) {
-          let billItems = []
-          guestPks.forEach(guestPk=>{
-            billItems.push({
-              projectCode:112,
-              guestOrderPk:guestPk,
-              price:null
-            })
-          })
-          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, billItems)
-        },
+        // timeoutRemindToAddBill(guestPks) {
+        //   let billItems = []
+        //   guestPks.forEach(guestPk=>{
+        //     billItems.push({
+        //       projectCode:112,
+        //       guestOrderPk:guestPk,
+        //       price:null
+        //     })
+        //   })
+        //   this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, billItems)
+        // },
 
-        advanceCheckoutToAddBill(billItems) {
-          this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, billItems)
-        },
+        // advanceCheckoutToAddBill(billItems) {
+        //   this.$refs.dialogBatchAddBillRef.showDialog(this.currOrderInfo.order.orderPk, this.isDubm, billItems)
+        // },
 
         // dialogBatchEntryClick(){
         //   this.formAddBills = [{

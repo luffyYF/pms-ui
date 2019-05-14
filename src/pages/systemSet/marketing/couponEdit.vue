@@ -1,82 +1,96 @@
 // 会员积分换房规则编辑
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
-  <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="500px"
+  <el-dialog class="add-permission" :title="title" top="100px" :visible.sync="dialogVisible" width="1000px"
              :close-on-click-modal="false" :before-close="handleClose">
     <el-form ref="dataForm" size="mini" :rules="rules" :model="dataForm" label-width="110px">
+        <el-col :span="24">
+            <el-row class="info-li">
+                <el-col :span="12">
+                    <el-form-item label="优惠券类型">
+                        <el-select size="mini" style="width:90%;" :disabled="dataForm.couponPk != '' && dataForm.couponPk != null" v-model="dataForm.type" placeholder="类型">
+                            <el-option v-for="y in typeList" :label="y.label" :value="y.value" :key="y.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="规则名称" prop="couponName">
+                        <el-input size="mini" style="width:90%;" v-model="dataForm.couponName" type="text"/>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-form-item label="属性" prop="property">
+                <el-radio v-model="dataForm.property" size="mini" :label="0">电子券</el-radio>
+                <el-radio v-model="dataForm.property" size="mini" :label="1">纸质券</el-radio>
+            </el-form-item>
+            <el-row class="info-li">
+                <el-col :span="12">
+                    <el-form-item label="数量" prop="amount">
+                        <el-input-number size="mini" style="width:90%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.amount" ></el-input-number>
+                        <span style="margin-left:10px;">张</span>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="价值" prop="value">
+                        <el-input-number size="mini" style="width:90%;" :precision="2" :step="1" :min="0" :controls="false" v-model="dataForm.value" ></el-input-number>
+                        <span style="margin-left:10px;">元</span>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
-        <el-form-item label="优惠券类型">
-            <el-select size="mini" style="width:90%;" :disabled="dataForm.couponPk != '' && dataForm.couponPk != null" v-model="dataForm.type" placeholder="类型">
-                <el-option v-for="y in typeList" :label="y.label" :value="y.value" :key="y.value"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="规则名称" prop="couponName">
-            <el-input size="mini" style="width:90%;" v-model="dataForm.couponName" type="text"/>
-        </el-form-item>
-        <el-form-item label="属性" prop="property">
-            <el-radio v-model="dataForm.property" size="mini" :label="0">电子券</el-radio>
-            <el-radio v-model="dataForm.property" size="mini" :label="1">纸质券</el-radio>
-        </el-form-item>
-        <el-form-item label="数量" prop="amount">
-            <el-input-number size="mini" style="width:90%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.amount" ></el-input-number>
-            <span style="margin-left:10px;">张</span>
-        </el-form-item>
-        <el-form-item label="价值" prop="value">
-            <el-input-number size="mini" style="width:90%;" :precision="2" :step="1" :min="0" :controls="false" v-model="dataForm.value" ></el-input-number>
-            <span style="margin-left:10px;">元</span>
-        </el-form-item>
-
-        <el-form-item label="有效日期" prop="effectiveDateType">
-            <el-select size="mini" style="width:30%;" v-model="dataForm.effectiveDateType" placeholder="有效日期">
-                <el-option v-for="y in effectiveDateTypeList" :label="y.label" :value="y.value" :key="y.value"></el-option>
-            </el-select>
-            <el-date-picker v-if="dataForm.effectiveDateType == 0" style="width:60%;" v-model="dataForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
-            </el-date-picker>
-            <span v-if="dataForm.effectiveDateType == 1">
-            <el-input-number size="mini" style="width:20%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.beginNum" ></el-input-number>
-            天到第
-            <el-input-number size="mini" style="width:20%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.endNum" ></el-input-number>
-            <span style="margin-left:10px;">天</span>
-            </span>
-        </el-form-item>
-        <el-form-item label="有效星期:" prop="week">
-            <el-checkbox-group v-model="dataForm.week" :min="1">
-                <el-checkbox v-for="obj in weekList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
-            </el-checkbox-group>
-        </el-form-item>
-        
-        <el-form-item label="到期提醒:" prop="expireRemindFlag">
-            <el-checkbox v-model="dataForm.expireRemindFlag" true-label="Y" false-label="N">优惠券到期前</el-checkbox>
-            <el-input-number size="mini" style="200px" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.remindNum" >
-            </el-input-number>
-            <span style="margin-left:10px;">天</span>
-        </el-form-item>
-
-        <el-form-item label="最低限制消费" v-if="dataForm.type == 0 ||dataForm.type == '0'" prop="threshold">
-            <el-input-number size="mini" style="width:90%;" :precision="2" :step="1" :min="0" :controls="false" v-model="dataForm.threshold" ></el-input-number>
-            <span style="margin-left:10px;">元</span>
-        </el-form-item>
-        
-        <el-form-item v-else label="入住类型" prop="checkInType">
-            <el-checkbox-group v-model="dataForm.checkInTypes" :min="1">
-                <el-checkbox v-for="obj in checkInTypeList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
-            </el-checkbox-group>
-        </el-form-item>
-
-        <el-form-item label="不适用房型" prop="roomTypePks">
-            <el-checkbox-group v-model="dataForm.roomTypePks" :min="1">
-                <el-checkbox v-for="obj in roomTypeList" :label="obj.typePk" :key="obj.typePk">{{obj.typeName}}</el-checkbox>
-            </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="核销范围" prop="writeOffScope">
-            <el-checkbox-group v-model="dataForm.writeOffScopes" :min="1">
-                <el-checkbox v-for="obj in writeOffScopeList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
-            </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="优惠详情" prop="detail">
-            <el-input size="mini" style="width:90%;" v-model="dataForm.detail" type="textarea"/>
-        </el-form-item>
-
+            <el-form-item label="有效日期" prop="effectiveDateType">
+                <el-select size="mini" style="width:30%;" v-model="dataForm.effectiveDateType" placeholder="有效日期">
+                    <el-option v-for="y in effectiveDateTypeList" :label="y.label" :value="y.value" :key="y.value"></el-option>
+                </el-select>
+                <el-date-picker v-if="dataForm.effectiveDateType == 0" style="width:60%;" v-model="dataForm.datepicker" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini">
+                </el-date-picker>
+                <span v-if="dataForm.effectiveDateType == 1">
+                <el-input-number size="mini" style="width:20%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.beginNum" ></el-input-number>
+                天到第
+                <el-input-number size="mini" style="width:20%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.endNum" ></el-input-number>
+                <span style="margin-left:10px;">天</span>
+                </span>
+            </el-form-item>
+            <el-form-item label="有效星期:" prop="week">
+                <el-checkbox-group v-model="dataForm.week" :min="1">
+                    <el-checkbox v-for="obj in weekList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
+            <el-row class="info-li">
+                <el-col :span="12">
+                    <el-form-item label="到期提醒:" prop="expireRemindFlag">
+                        <el-checkbox v-model="dataForm.expireRemindFlag" true-label="Y" false-label="N">优惠券到期前</el-checkbox>
+                        <el-input-number size="mini" style="200px" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.remindNum" >
+                        </el-input-number>
+                        <span style="margin-left:10px;">天</span>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                <el-form-item label="最低限制消费" v-if="dataForm.type == 0 ||dataForm.type == '0'" prop="threshold">
+                    <el-input-number size="mini" style="width:90%;" :precision="2" :step="1" :min="0" :controls="false" v-model="dataForm.threshold" ></el-input-number>
+                    <span style="margin-left:10px;">元</span>
+                </el-form-item>
+                <el-form-item v-else label="入住类型" prop="checkInType">
+                    <el-checkbox-group v-model="dataForm.checkInTypes" :min="1">
+                        <el-checkbox v-for="obj in checkInTypeList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+                </el-col>
+            </el-row>
+            <el-form-item label="不适用房型" prop="roomTypePks">
+                <el-checkbox-group v-model="dataForm.roomTypePks" :min="1">
+                    <el-checkbox v-for="obj in roomTypeList" :label="obj.typePk" :key="obj.typePk">{{obj.typeName}}</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="核销范围" prop="writeOffScope">
+                <el-checkbox-group v-model="dataForm.writeOffScopes" :min="1">
+                    <el-checkbox v-for="obj in writeOffScopeList" :label="obj.value" :key="obj.value">{{obj.label}}</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="优惠详情" prop="detail">
+                <el-input size="mini" style="width:90%;" v-model="dataForm.detail" type="textarea"/>
+            </el-form-item>
+        </el-col>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" size="mini">取 消</el-button>

@@ -40,7 +40,7 @@
         </el-form-item>
 
         <el-form-item label="所需积分" prop="integral">
-            <el-input-number size="mini" style="width:100%;" :precision="0" :step="1" :min="0" :controls="false" v-model="dataForm.integral" ></el-input-number>
+            <el-input-number size="mini" style="width:100%;" :precision="0" :step="1" :controls="false" v-model="dataForm.integral" ></el-input-number>
         </el-form-item>
 
         <el-form-item label="活动时间" prop="datepicker">
@@ -83,7 +83,7 @@
           gradePks: [{ required: true, message: '请选择会员卡类型', trigger: 'change' }],
           datepicker:  [{ required: true, message: '请选择活动日期', trigger: 'change' }],
           roomTypePk:  [{ required: true, message: '请选择兑换房型', trigger: 'change' }],
-          week: [{ required: true, message: '请选择有效日期', trigger: 'change' }],
+          week: [{ required: true, message: '请选择有效星期', trigger: 'change' }],
         },
         title:"添加规则",
         gradeList:[],
