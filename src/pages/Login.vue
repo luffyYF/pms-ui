@@ -26,6 +26,7 @@
 import "../../static/img/background.jpg";
 // import {loginByUsername} from '@/api/login';
 import {loginByUsername} from '@/api/upmsApi';
+
 export default {
   data() {
     return {
@@ -50,6 +51,10 @@ export default {
       pwdType: "password",
       checked: true
     };
+  },
+  mounted() {
+      this.init();
+      this.animate()
   },
   methods: {
     showPwd() {
