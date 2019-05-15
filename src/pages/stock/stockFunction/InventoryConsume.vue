@@ -101,7 +101,7 @@ export default {
         outId: null,
         inventoryNo: null,
         outTime: null,
-        userName: JSON.parse(localStorage.getItem("pms_userinfo")).upmsRealName,
+        userName: JSON.parse(localStorage.getItem("pms_userinfo")).realName,
         companyPk: null,
         userId: JSON.parse(localStorage.getItem("pms_userinfo")).upmsUserId,
         status: 0,

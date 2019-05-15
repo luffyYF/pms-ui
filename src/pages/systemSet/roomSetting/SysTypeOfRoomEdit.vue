@@ -354,15 +354,21 @@ import {sourceImgUrl} from '@/api/upload'
 			},
       // 头像上传成功回调
       handleAvatarSuccess (res, file) {
+        if (res.code != 1) {
+					this.$message({type: 'error', message: res.sub_msg})
+					this.dataForm.imagePos.splice(0,1)
+          return
+				}
+				
 				let url
 				// 图片包含http 或 https
-				if (res.data.indexOf('http://') > -1 || res.data.indexOf('https://') > -1) {
-					url = res.data
+				if (res.data[0].path.indexOf('http://') > -1 || res.data[0].path.indexOf('https://') > -1) {
+					url = res.data[0].path
 				} else {
 					// 拼接上项目前缀http或https
-					url = sourceImgUrl + res.data
+					url = sourceImgUrl + res.data[0].path
 				}
-				this.dataForm.imagePos.push({name: file.name, imgUrl: res.data, url: url, sortNum: 0})
+				this.dataForm.imagePos.push({name: file.name, imgUrl: res.data[0].path, url: url, sortNum: 0, type: 0})
         // this.$emit('update:avatar', res.data)
       },
       // 头像上传前执行

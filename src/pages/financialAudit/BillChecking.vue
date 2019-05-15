@@ -170,7 +170,7 @@ export default {
         orderPk: null,
         orderNo: null,
       },
-      createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName
+      createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).realName
     };
   },
   mounted() {

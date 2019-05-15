@@ -184,7 +184,7 @@
       酒店编码：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp;
       营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
       {{footerData.currTime}}
-      <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
+      <span style="float:right">操作员：{{footerData.realName}}</span>
       
     </el-col>
     <div class="asd">
@@ -285,7 +285,7 @@ export default {
     }
     this.userinfo = JSON.parse(localStorage.getItem('pms_userinfo'))
     this.footerData.companyCode = this.activeCompany.companyCode
-    this.footerData.upmsRealName = this.userinfo.upmsRealName
+    this.footerData.realName = this.userinfo.realName
     this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
     this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     setInterval(()=>{
@@ -310,7 +310,7 @@ export default {
       footerData: {
         companyCode:null,
         bussinessDate: null,
-        upmsRealName: null,
+        realName: null,
         currTime: null,
       },
       timer:null,

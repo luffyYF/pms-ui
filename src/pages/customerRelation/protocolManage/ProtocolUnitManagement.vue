@@ -24,8 +24,8 @@
               <el-option
                 v-for="(item,index) in saleOptions"
                 :key="index"
-                :label="item.typeName"
-                :value="item.typePk">
+                :label="item.saleName"
+                :value="item.salePk">
               </el-option>
             </el-select>
           </el-form-item>
@@ -170,9 +170,9 @@
                 <el-select v-model="form.saleTypePk" placeholder="请选择销售员" style="width:178px">
                   <el-option
                     v-for="item in saleOptions"
-                    :key="item.typePk"
-                    :label="item.typeName"
-                    :value="item.typePk">
+                    :key="item.salePk"
+                    :label="item.saleName"
+                    :value="item.salePk">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -399,6 +399,8 @@ import {addPriceProject,delPriceProject,listPriceProject} from '@/api/customerRe
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 import addProtocolUnit from './addProtocolUnit'
 import moment from "moment"
+import {allAgreementSale} from '@/api/customerRelation/agreementSale/agreementSale'
+
 export default {
   components:{
     moment,addProtocolUnit
@@ -528,7 +530,13 @@ export default {
     init(type) {
       this.conditionalQuery.type = type
     this.agreementList(1);
+      this.allAgreementSale()
       this.listMastersType(1)
+    },
+    allAgreementSale(){
+      allAgreementSale().then(res=>{
+          this.saleOptions = res.data;
+      })
     },
     // powerJudge(id){
     //   return powerJudge(id);
@@ -629,7 +637,7 @@ export default {
       self.roomTypeOptions = [];
       self.agreementOptions = [];
       self.industryOptions = [];
-      self.saleOptions = [];
+      // self.saleOptions = [];
       // listType({typeMasters: 'ROOM_TYPE,AGREEMENT,INDUSTRY,SALE'}).then(result => {
       //   const listTypeData = result.data.data;
       // for (let index = 0; index < listTypeData.length; index++) {
@@ -655,16 +663,16 @@ export default {
         else if(item.typeMaster == "INDUSTRY"){
           self.industryOptions.push(item);
         }
-        else if(item.typeMaster == "SALE"){
-          self.saleOptions.push(item);
-        }
+        // else if(item.typeMaster == "SALE"){
+        //   self.saleOptions.push(item);
+        // }
       })
         if(i){
           // self.form.beginDate = moment(new Date()).format("YYYY-MM-DD")
           // self.form.endDate = moment(new Date()).format("YYYY-MM-DD")
           self.form.billFlag = 'Y'
           self.form.priceSchemePk = 'fanganyi'
-          self.form.saleTypePk = self.saleOptions.length>0?self.saleOptions[0].typePk:null
+          self.form.saleTypePk = self.saleOptions.length>0?self.saleOptions[0].salePk:null
           self.form.industryTypePk = self.industryOptions.length>0?self.industryOptions[0].typePk:null
           self.form.agreementTypePk = self.agreementOptions.length>0?self.agreementOptions[0].typePk:null
           console.log(self.form)

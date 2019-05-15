@@ -371,7 +371,7 @@
             } else {
               this.dataForm.companyId = this.companyInfo.companyPk
               this.dataForm.createUserId = this.userInfo.upmsUserId
-              this.dataForm.createUserName = this.userInfo.upmsRealName
+              this.dataForm.createUserName = this.userInfo.realName
               api = addApi(this.dataForm)
             }
             api.then(res => {
@@ -397,7 +397,7 @@
 
           this.dataForm.companyId = this.companyInfo.companyPk
           this.dataForm.createUserId = this.userInfo.upmsUserId
-          this.dataForm.createUserName = this.userInfo.upmsRealName
+          this.dataForm.createUserName = this.userInfo.realName
         }
 
         this.$confirm('是否继续将此发票提交至财务审核，一旦提交发票信息将不可修改', '提示', {
