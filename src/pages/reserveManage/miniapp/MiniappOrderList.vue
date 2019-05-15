@@ -59,13 +59,13 @@
       </el-table-column> -->
       <el-table-column label="操作" >
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="orderDetail(scope.row)">详情</el-button>
-          <el-button v-if="scope.row.orderStatus==1" @click="takeOrder(scope.row)" size="mini" type="primary">接单</el-button>
-          <el-button v-if="scope.row.orderStatus==2" @click="confirmCheckin(scope.row)" size="mini" type="primary">确认入住</el-button>
-          <el-button v-if="scope.row.orderStatus==2 || scope.row.orderStatus==3" @click="finishOrder(scope.row)" size="mini" type="success">完成订单</el-button>
-          <el-button v-if="scope.row.orderStatus>0" @click="refundClick(scope.row)" size="mini" type="primary">退款</el-button>
-          <el-button v-if="scope.row.orderStatus<=4" @click="cancelOrder(scope.row)" size="mini" type="primary">取消订单</el-button>
-          <el-button size="mini" type="primary" @click="orderLog(scope.row)">操作记录</el-button>
+          <el-button v-if="hasPerm('pms:miniappOrder:detail')" size="mini" type="primary" @click="orderDetail(scope.row)">详情</el-button>
+          <el-button v-if="scope.row.orderStatus==1 && hasPerm('pms:miniappOrder:takeOrder')" @click="takeOrder(scope.row)" size="mini" type="primary">接单</el-button>
+          <el-button v-if="scope.row.orderStatus==2 && hasPerm('pms:miniappOrder:confirmCheckin')" @click="confirmCheckin(scope.row)" size="mini" type="primary">确认入住</el-button>
+          <el-button v-if="(scope.row.orderStatus==2 || scope.row.orderStatus==3) && hasPerm('pms:miniappOrder:finish')" @click="finishOrder(scope.row)" size="mini" type="success">完成订单</el-button>
+          <el-button v-if="scope.row.orderStatus>0 && hasPerm('pms:miniappOrder:refund')" @click="refundClick(scope.row)" size="mini" type="primary">退款</el-button>
+          <el-button v-if="scope.row.orderStatus<=4 && hasPerm('pms:miniappOrder:cancel')" @click="cancelOrder(scope.row)" size="mini" type="primary">取消订单</el-button>
+          <el-button v-if="hasPerm('pms:miniappOrder:oprLog')" size="mini" type="primary" @click="orderLog(scope.row)">操作记录</el-button>
         </template>
       </el-table-column>
     </el-table>
