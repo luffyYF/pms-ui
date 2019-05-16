@@ -22,25 +22,42 @@
         <el-button type="primary" size="mini">PDF预览</el-button>
         <el-button type="primary" size="mini">导出EXCEL</el-button>
         <el-button type="primary" size="mini">添加到收藏夹</el-button>
-        <el-button type="primary" size="mini">打印预览</el-button>
+        <el-button type="primary" size="mini" @click="print">打印预览</el-button>
       </div>
     </el-col>
-    <el-col :span="24">
+    <el-col :span="24" id="print-salesAgreementConsumptionDetails">
       <div class="tabs">
         <div class="tavs-title">
-          <h3>深圳市前海豪斯菲尔信息科技有限公司</h3>
-          <h3>销售员发展协议单位消费明细报表</h3>
+          <h3 style="text-align:center">深圳市前海豪斯菲尔信息科技有限公司</h3>
+          <h4 style="text-align:center">销售员发展协议单位消费明细报表</h4>
         </div>
         <div class="detail-content">
-          <p style="margin: 0px">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售员：{{printDate.saleName}}</p>
+          <p style="margin: 0px;text-align:center">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售员：{{printDate.saleName}}</p>
           <!-- show-summary :summary-method="getSummaries" -->
-          <el-table :span-method="objectSpanMethod" :data="tableData" v-loading="loading" border max-height="450"  style="width: 100%; margin:0 auto;margin-top: 5px;">
+          <!-- <el-table :header-cell-style="tableStyleObj" 
+            :cell-style="tableStyleObj"  :span-method="objectSpanMethod" :data="tableData" v-loading="loading" border  style="width: 100%; margin:0 auto;margin-top: 5px;border:1px solid black">
             <el-table-column prop="agreementCode" label="协议号" align="center"></el-table-column>
             <el-table-column prop="agreementName" label="协议单位" align="center"></el-table-column>
             <el-table-column prop="typeName" label="房型" align="center"></el-table-column>
             <el-table-column prop="rentalRoomNum" label="房晚数" align="right" width="70"></el-table-column>
             <el-table-column prop="houseFeeIncome" label="房租收入" align="right"></el-table-column>
-          </el-table>
+          </el-table> -->
+            <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
+            <tr>
+              <th>协议号</th>
+              <th>协议单位</th>
+              <th>房型</th>
+              <th>房晚数</th>
+              <th>房租收入</th>
+            </tr>
+            <tr v-for="(item, index) in tableData" :key="index">
+              <td style="align:center">{{item.agreementCode}}</td>
+              <td style="align:center">{{item.agreementName}}</td>
+              <td style="align:center">{{item.typeName}}</td>
+              <td style="align:right">{{item.rentalRoomNum}}</td>
+              <td style="align:right">{{item.houseFeeIncome}}</td>
+            </tr>
+          </table>
           <p style="height:20px;"><span class="left">打印日期：{{printDate.now}}</span><span class="right">	操作员：{{userInfo.upmsRealName}}</span></p>
           <p style="height:20px;color:red">	注：此报表为夜审报表，数据统计截止到昨天。。</p>
         </div>
@@ -53,6 +70,7 @@ import DatePicker from '@/components/DateComponent/DatePicker';
 import {saleAgreementConsumptionDetails} from '@/api/reportCenter/pmsReportFormController'
 import {listType} from '@/api/systemSet/type/typeController'
 import moment from 'moment'
+import { getLodop } from '@/utils/lodop'
 export default {
   components:{moment,DatePicker},
   data() {
@@ -64,6 +82,7 @@ export default {
       tableData: [],
       typeList:[],
       loading:false,
+       LODOP: null,
       queryObj:{
         begin:moment().subtract(2, "days").format("YYYY-MM-DD"),
         end:moment().subtract(1, "days").format("YYYY-MM-DD")
@@ -76,6 +95,15 @@ export default {
         endDate:moment().subtract(1, "days").format("YYYY-MM-DD"),
         now:moment().format("YYYY-MM-DD hh:mm:ss"),
         saleTypePk:""
+      },
+      tableStyleObj:{
+        border: '1px solid black',
+        padding: '8px',
+        'text-align':'center',
+        'font-family': '宋体',
+        'font-size': '14px',
+        'color':'black',
+       'border-color':'black'
       },
       userInfo:JSON.parse(localStorage.getItem("pms_userinfo")),
       agreementPk:""
@@ -216,6 +244,27 @@ export default {
         }
         this.loading = false
       });
+    },
+     print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+      createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-salesAgreementConsumptionDetails").innerHTML);
     }
   },
   filters:{

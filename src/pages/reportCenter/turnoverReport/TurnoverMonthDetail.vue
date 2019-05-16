@@ -21,7 +21,7 @@
     <el-col :span="24" id="print-turnoverofbusinessincome">
       <div class="tabs">
         <div class="tavs-title">
-          <h3>各营业点收入月报表</h3>
+          <h3 style="text-align:center;">各营业点收入月报表</h3>
         </div>
         <div class="tabs-contetn">
           <el-table
@@ -32,7 +32,7 @@
             :summary-method="getSummaries"
             @expand-change="expandChange"
             border
-            style="width: 100%; margin-top: 5px">
+            style="width: 100%; margin-top: 5px;border:1px solid black">
             <el-table-column prop="companyName" label="营业点" width="300"></el-table-column>
             <el-table-column type="expand">
               <template slot-scope="scope">
@@ -65,6 +65,7 @@
 import common from "@/api/common"
 import {turnoverMoth,turnoverMonthDetail} from '@/api/reportCenter/pmsReportFormController'
 import moment from "moment"
+import { getLodop } from '@/utils/lodop'
 export default {
   data() {
     return {
@@ -80,11 +81,15 @@ export default {
         }
       },
       tableStyleObj:{
-        border: '1px solid #ebeef5',
+        border: '1px solid black',
         padding: '8px',
-        'text-align':'center'
+        'text-align':'center',
+         'font-family': '宋体',
+        'font-size': '14px',
+        'color':'black',
       },
       userInfo: JSON.parse(localStorage.getItem('pms_userinfo')),
+       LODOP: null
     }
   },
   created(){
@@ -145,12 +150,33 @@ export default {
       })
     },
     //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-turnoverofbusinessincome").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
+    // print(){
+    //   let bodyhtml = document.getElementById("print-turnoverofbusinessincome").innerHTML;
+    //   var f = document.getElementById("printIframe");
+    //   f.contentDocument.write(bodyhtml);
+    //   f.contentDocument.close();
+    //   f.contentWindow.print();
+    // }
+    print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+      createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-turnoverofbusinessincome").innerHTML);
     }
   }
 }

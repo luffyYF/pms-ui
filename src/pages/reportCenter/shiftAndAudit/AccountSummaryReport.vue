@@ -47,36 +47,61 @@
       </el-form-item>
     </el-form>
     <div class="table-container" id="print-accountsummaryreport">
-       <h3>{{activeCompany.companyName}}</h3>
-      <h4>收银入账汇总报表</h4>
+       <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
+      <h4 style="text-align:center;">收银入账汇总报表</h4>
       <div class="table-box">
-        <p>
+        <p style="text-align:center;">
           营业日期从：{{reportBeginDate}}&nbsp;&nbsp;到&nbsp;&nbsp;{{reportEndDate}}&nbsp;&nbsp;&nbsp;&nbsp;
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
         </p>
-        <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
-        <el-table
+        <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
+        <!-- <el-table
           :header-cell-style="tableStyleObj"
           :cell-style="tableStyleObj"
           :data="listData"
           border
-          style="width: 100% margin-top:-2px;"
+          style="width: 100% margin-top:-2px;border:1px solid black"
           :span-method="arraySpanMethod"
           :row-class-name="tableRowClassName">
-          <el-table-column prop="createUserName" align="center" label="收银员">
+          <el-table-column prop="createUserName" align="center" label="收银员" min-width="100px">
             <template slot-scope="scope">
               <span>{{scope.row.project?scope.row.projectName:scope.row.createUserName}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderGuestNo" align="center" label="组单"></el-table-column>
-          <el-table-column prop="orderNo" align="center" label="客单"></el-table-column>
-          <el-table-column prop="roomNumber" align="center" label="房号"></el-table-column>
-          <el-table-column prop="memName" align="center" label="姓名"></el-table-column>
-          <el-table-column prop="consumptionAmount" align="center" label="消费金额"></el-table-column>
-          <el-table-column prop="settlementAmount" align="center"  label="结算金额"></el-table-column>
-          <el-table-column prop="createTime" align="center" label="发生日期"></el-table-column>
-          <el-table-column prop="remark" align="center" label="备注"></el-table-column>
-        </el-table>
+          <el-table-column prop="orderGuestNo" align="center" label="组单" min-width="100px"></el-table-column>
+          <el-table-column prop="orderNo" align="center" label="客单" min-width="100px"></el-table-column>
+          <el-table-column prop="roomNumber" align="center" label="房号" min-width="100px"></el-table-column>
+          <el-table-column prop="memName" align="center" label="姓名" min-width="100px"></el-table-column>
+          <el-table-column prop="consumptionAmount" align="center" label="消费金额" min-width="100px"></el-table-column>
+          <el-table-column prop="settlementAmount" align="center"  label="结算金额" min-width="100px"></el-table-column>
+          <el-table-column prop="createTime" align="center" label="发生日期" min-width="100px"></el-table-column>
+          <el-table-column prop="remark" align="center" label="备注" min-width="100px"></el-table-column>
+        </el-table> -->
+        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <tr>
+              <th>收银员</th>
+              <th>组单</th>
+              <th>客单</th>
+              <th>房号</th>
+              <th style="width:10%">姓名</th>
+              <th style="width:7%">消费金额</th>
+              <th style="width:7%">结算金额</th>
+              <th>发生日期</th>
+              <th>备注</th>
+            </tr>
+            <tr v-for="(item, index) in listData" :key="index">
+              <td v-if="item.project == true" colspan="9"  style="background: oldlace;text-align: center"><span>{{item.project?item.projectName:item.createUserName}}</span></td>
+              <td v-else>{{item.project?item.projectName:item.createUserName}}</td>
+              <td v-if="item.project == false">{{item.orderGuestNo}}</td>
+              <td v-if="item.project == false">{{item.orderNo}}</td>
+              <td v-if="item.project == false">{{item.roomNumber}}</td>
+              <td v-if="item.project == false">{{item.memName}}</td>
+              <td v-if="item.project == false">{{item.consumptionAmount}}</td>
+              <td v-if="item.project == false">{{item.settlementAmount}}</td>
+              <td v-if="item.project == false">{{item.createTime}}</td>
+              <td v-if="item.project == false">{{item.remark}}</td>
+            </tr>
+          </table>
       </div>
     </div>
 
@@ -92,6 +117,7 @@ import {selectShift} from "@/api/utils/pmsShiftController"
 import {listCashierOperator} from "@/api/operators/pmsUserController"
 import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
+import { getLodop } from '@/utils/lodop'
 export default {
    data() {
     return {
@@ -113,12 +139,16 @@ export default {
       listCashierOperatorData:[],
       activeCompany:{},
       tableStyleObj:{
-        border: '1px solid #ebeef5',
+        border: '1px solid black',
         padding: '8px',
-        'text-align':'center'
+        'text-align':'center',
+        'font-family': '宋体',
+        'font-size': '14px',
+        'color':'black',
       },
       reportBeginDate: null,
       reportEndDate: null,
+       LODOP: null
       // baseUrl:common.baseUrl
       // ,ziurl:"/pms/report/shouYinYuanHuiZongExcel?"
     };
@@ -247,12 +277,33 @@ export default {
       downloadExcel(url, '收银入账汇总报表');
     },
     //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-accountsummaryreport").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
+    // print(){
+    //   let bodyhtml = document.getElementById("print-accountsummaryreport").innerHTML;
+    //   var f = document.getElementById("printIframe");
+    //   f.contentDocument.write(bodyhtml);
+    //   f.contentDocument.close();
+    //   f.contentWindow.print();
+    // }
+     print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+      createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-accountsummaryreport").innerHTML);
     }
   }
 }

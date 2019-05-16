@@ -57,17 +57,17 @@
       </el-form-item>
     </el-form>
     <div class="table-container" id="print-receiptsreport">
-      <h3>{{activeCompany.companyName}}</h3>
-      <h3>冲减明细报表</h3>
+      <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
+      <h4 style="text-align:center;">冲减明细报表</h4>
       <div>
-        <p>
+        <p style="text-align:center;">
           营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
         </p>
-        <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
-        <el-table :data="tableData" 
+        <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
+        <!-- <el-table :data="tableData" 
         :header-cell-style="tableStyleObj"
-            :cell-style="tableStyleObj" border style="width: 100%; margin:0 auto;" size="mini">
+            :cell-style="tableStyleObj" border style="width: 100%; margin:0 auto;border:1px solid black" size="mini">
           <el-table-column prop="roomNumber" label="房号"></el-table-column>
           <el-table-column prop="memName" label="客人姓名"></el-table-column>
           <el-table-column prop="projectName" label="项目名称"></el-table-column>
@@ -75,9 +75,33 @@
           <el-table-column prop="consumptionAmount" label="消费金额"></el-table-column>
           <el-table-column prop="settlementAmount" label="结算金额"></el-table-column>
           <el-table-column prop="createUserName" label="收银员"></el-table-column>
-          <!-- <el-table-column prop="amount3" label="授权人"></el-table-column> -->
-          <el-table-column prop="remark" label="备注"></el-table-column>
-        </el-table>
+          <el-table-column prop="amount3" label="授权人"></el-table-column> -->
+           <!--<el-table-column prop="remark" label="备注"></el-table-column>
+        </el-table>  -->
+          <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <tr>
+              <th>房号</th>
+              <th>客人姓名</th>
+              <th>项目名称</th>
+              <th>入账时间</th>
+              <th>消费金额</th>
+              <th>结算金额</th>
+              <th>收银员</th>
+              <th>授权人</th>
+              <th>备注</th>
+            </tr>
+            <tr v-for="(item, index) in tableData" :key="index">
+              <td>{{item.roomNumber}}</td>
+              <td>{{item.memName}}</td>
+              <td>{{item.projectName}}</td>
+              <td>{{item.createTime}}</td>
+               <td>{{item.consumptionAmount}}</td>
+              <td>{{item.settlementAmount}}</td>
+              <td>{{item.createUserName}}</td>
+              <td>{{item.amount3}}</td>
+              <td>{{item.remark}}</td>
+            </tr>
+          </table>
       </div>
     </div>
     <!-- 打印填充 iframe-->
@@ -92,6 +116,7 @@ import moment from "moment"
 import { listProjects } from '@/api/systemSet/pmsProjectController'
 import common from "@/api/common"
 import exportExcel from '@/components/download/exportExcel'
+import { getLodop } from '@/utils/lodop'
 
 export default {
   data() {
@@ -105,12 +130,16 @@ export default {
       listCashierOperatorData:[],
       listProjectData: [],
       tableStyleObj:{
-        border: '1px solid #ebeef5',
+        border: '1px solid black',
         padding: '8px',
-        'text-align':'center'
+        'text-align':'center',
+        'font-family': '宋体',
+        'font-size': '14px',
+        'color':'black',
       },
       baseUrl:common.baseUrl,
-      ziurl:"/report/offsetDetailExcel"
+      ziurl:"/report/offsetDetailExcel",
+       LODOP: null
     };
   },
   created() {
@@ -195,12 +224,33 @@ export default {
       return sums;
     },
     //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-receiptsreport").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
+    // print(){
+    //   let bodyhtml = document.getElementById("print-receiptsreport").innerHTML;
+    //   var f = document.getElementById("printIframe");
+    //   f.contentDocument.write(bodyhtml);
+    //   f.contentDocument.close();
+    //   f.contentWindow.print();
+    // },
+    print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+     createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-receiptsreport").innerHTML);
     },
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.queryObj.begin + "&end=" + this.queryObj.end + "&shiftPk=" + this.queryObj.shiftPk + "&projectPk=" + this.queryObj.projectPk + "&userPk=" + this.queryObj.userPk);

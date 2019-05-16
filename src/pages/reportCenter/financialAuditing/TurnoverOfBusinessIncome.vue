@@ -16,16 +16,16 @@
     <el-col :span="24" id="print-turnoverofbusinessincome">
       <div class="tabs">
         <div class="tavs-title">
-          <h3>{{activeCompany.companyName}}</h3>
-          <h3>营业收入报表</h3>
+          <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
+          <h4 style="text-align:center;">营业收入报表</h4>
         </div>
         <div class="tabs-contetn">
-          <el-table
+          <!-- <el-table
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
             :data="tableData"
             border
-            style="width: 100%; margin-top: 5px">
+            style="width: 100%; margin-top: 5px;border:1px solid black">
             <el-table-column prop="projectName" label="营业项目"></el-table-column>
             <el-table-column prop="dayCumulative" label="本年实际情况">
               <template>					
@@ -43,7 +43,35 @@
                 <el-table-column prop="annualDifference" label="年差异"></el-table-column>
               </template>
             </el-table-column>		
-          </el-table>
+          </el-table> -->
+           <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <tr>
+              <th rowspan="2">营业项目</th>
+              <th colspan="4">本年实际情况</th>
+              <th colspan="4">去年同期</th>
+            </tr>
+            <tr>
+              <th>当日</th>
+              <th>月累计</th>
+              <th>上月累计</th>
+              <th>年累计</th>
+              <th>月累计</th>
+              <th>月差异</th>
+              <th>年累计</th>
+              <th>年差异</th>
+            </tr>
+            <tr v-for="(item, index) in tableData" :key="index">
+              <td>{{item.projectName}}</td>
+              <td>{{item.dayCumulative}}</td>
+              <td>{{item.monthCumulative}}</td>
+              <td>{{item.upMonthCumulative}}</td>
+              <td>{{item.yearCumulative}}</td>
+              <td>{{item.monthCumulativeLastYear}}</td>
+              <td>{{item.monthlyDifference}}</td>
+              <td>{{item.yearCumulativeLastYear}}</td>
+              <td>{{item.annualDifference}}</td>
+            </tr>
+          </table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
           <p class="note_p">注：宾客账=借方总计-结算【当宾客账为负数时，代表结算大于消费，即多收客人的押金】</p>
           <p class="note_p1">自动房费：夜核房费、公寓租金</p>
@@ -66,6 +94,7 @@ import common from "@/api/common"
 import {reportBusinessIncome} from '@/api/reportCenter/pmsReportFormController'
 import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
+import { getLodop } from '@/utils/lodop'
 export default {
   data() {
     return {
@@ -79,10 +108,14 @@ export default {
         }
       },
       tableStyleObj:{
-        border: '1px solid #ebeef5',
+        border: '1px solid black',
         padding: '8px',
-        'text-align':'center'
+        'text-align':'center',
+        'font-family': '宋体',
+        'font-size': '14px',
+        'color':'black',
       },
+       LODOP: null
       // baseUrl:common.baseUrl,
       // ziurl:"/pms/report/businessIncomeExcel?"
     }
@@ -115,13 +148,34 @@ export default {
       downloadExcel(url, '营业收入报表');
     },
     //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-turnoverofbusinessincome").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
-    }
+    // print(){
+    //   let bodyhtml = document.getElementById("print-turnoverofbusinessincome").innerHTML;
+    //   var f = document.getElementById("printIframe");
+    //   f.contentDocument.write(bodyhtml);
+    //   f.contentDocument.close();
+    //   f.contentWindow.print();
+    // }
+      print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+     createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-turnoverofbusinessincome").innerHTML);
+    },
   }
 }
 </script>

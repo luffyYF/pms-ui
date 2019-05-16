@@ -12,25 +12,39 @@
         <el-button type="primary" size="mini" @click="print">打印预览</el-button>
       </div>
     </el-col>
-    <el-col :span="24" id="print-dailyreport">
+    <el-col :span="24" id="print-dailyreport" style="padding:20px">
       <div class="tabs">
         <div class="tavs-title" style="text-align:center">
           <h3>{{activeCompany.companyName}}</h3>
-          <h3>管理层日报表</h3>
+          <h4>管理层日报表</h4>
         </div>
-        <div class="tabs-contetn">
+        <div class="tabs-container">
           <!-- <p style="margin: 0px">打印日期：<span>自 2018-03-09 至 2018-03-09</span>&nbsp;&nbsp;&nbsp;&nbsp;营业日期：<span>2018-03-09</span> </p> -->
-          <el-table 
+          <!-- <el-table 
             :header-cell-style="tableStyleObj" 
             :cell-style="tableStyleObj" 
             :data="tableData" 
-            border  
-            style="width: 100%; margin-top: 5px;">
+            border 
+            style="width: 100%; margin-top: -5px;border:1px solid black;">
             <el-table-column prop="name" label="项目"></el-table-column>
             <el-table-column prop="day" label="当日"></el-table-column>
             <el-table-column prop="month" label="本月累计"></el-table-column>
             <el-table-column prop="year" label="本年累计"></el-table-column>
-          </el-table>
+          </el-table> -->
+          <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <tr>
+              <th>项目</th>
+              <th>当日</th>
+              <th>本月累计</th>
+              <th>本年累计</th>
+            </tr>
+            <tr v-for="(item, index) in tableData" :key="index">
+              <td>{{item.name}}</td>
+              <td>{{item.day}}</td>
+              <td>{{item.month}}</td>
+              <td>{{item.year}}</td>
+            </tr>
+          </table>
           <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
           <p style="height:20px;color:red">注(1)：此报表为夜审报表，数据统计截止到昨天。</p>
           <p style="height:20px;color:red">注(1)：房晚数 = 夜核房晚数 + 日租房晚数 + 钟点房晚数 + 特殊房晚数 + 公寓房晚数</p>
@@ -50,6 +64,7 @@
 <script>
 import common from "@/api/common"
 import {dailyMgReport} from '@/api/reportCenter'
+import { getLodop } from '@/utils/lodop'
 import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
 
@@ -61,12 +76,17 @@ export default {
       tableData: [],
       activeCompany:{},
       tableStyleObj:{
-        border: '1px solid #ebeef5',
+        border: '1px solid black',
         padding: '8px',
-        'text-align':'center'
+        'text-align':'center',
+        'font-family': '宋体',
+        'font-size': '20px',
+        'color':'black',
+       'border-color':'black'
       },
       // baseUrl:common.baseUrl,
       // ziurl:"/pms/report/mg/dailyExcel?"
+       LODOP: null
     }
   },
   created(){
@@ -97,12 +117,33 @@ export default {
       downloadExcel(url, '管理层日报表');
     },
     //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-dailyreport").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
+    // print(){
+    //   let bodyhtml = document.getElementById("print-dailyreport").innerHTML;
+    //   var f = document.getElementById("printIframe");
+    //   f.contentDocument.write(bodyhtml);
+    //   f.contentDocument.close();
+    //   f.contentWindow.print();
+    // }
+     print() {
+      this.createOneFormPage();	
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+     createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      //LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
+      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-dailyreport").innerHTML);
     }
   }
 }
@@ -118,6 +159,10 @@ export default {
 }
 .tavs-title{
   text-align: center;
+  padding: 20px;
+  height: calc(100% - 200px);
+  overflow-y: auto;
+  border-top: 3px solid #eee;
 }
 .left{
   float: left;
