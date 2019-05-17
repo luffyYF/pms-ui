@@ -184,7 +184,7 @@
       酒店编码：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp;
       营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
       {{footerData.currTime}}
-      <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
+      <span style="float:right">操作员：{{footerData.realName}}</span>
       
     </el-col>
     <div class="asd">
@@ -241,20 +241,17 @@
       <span>系统正在夜审...</span>
     </el-dialog>
 
-    <common-message ref="commonMessageRef"></common-message>
+    <MessageRemind></MessageRemind>
   </div>
-
-  
 </template>
 
 <script>
-import moment from 'moment'
-import {nightTrialTime} from '@/utils/orm'
 import "../../static/img/user.png";
-import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import "@/utils/sockjs.min.js"
 import "@/utils/stomp.min.js"
-// import {logout,refreshTokenUpms }from '@/api/login'
+import moment from 'moment'
+import {nightTrialTime} from '@/utils/orm'
+import {timerCheckNew} from "@/api/hfApi/hfApiOrderController";
 import {logout,refreshTokenUpms,validateToken }from '@/api/upmsApi'
 import {
     currentRoomList,
@@ -270,10 +267,10 @@ import {getNewGuestOrder} from '@/api/utils/pmsTimerController'
 import { allTypeList } from '@/api/utils/pmsTypeController'
 import { Message } from 'element-ui'
 import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
-import CommonMessage from '@/pages/CommonMessage'
+import MessageRemind from '@/pages/messageRemind/Tab'
 
 export default {
-  components:{DialogCheckinVisible,CommonMessage},
+  components:{DialogCheckinVisible,MessageRemind},
   created() {
     var test = window.localStorage.getItem("current_logon_company");
     if(test){
@@ -288,7 +285,7 @@ export default {
     }
     this.userinfo = JSON.parse(localStorage.getItem('pms_userinfo'))
     this.footerData.companyCode = this.activeCompany.companyCode
-    this.footerData.upmsRealName = this.userinfo.upmsRealName
+    this.footerData.realName = this.userinfo.realName
     this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
     this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     setInterval(()=>{
@@ -313,7 +310,7 @@ export default {
       footerData: {
         companyCode:null,
         bussinessDate: null,
-        upmsRealName: null,
+        realName: null,
         currTime: null,
       },
       timer:null,
@@ -386,7 +383,7 @@ export default {
       var self = this;
       setInterval(()=>{ 
         console.log("123")
-        if(window.localStorage.getItem('pms_token')){
+        if(window.localStorage.getItem('token')){
           timerCheckNew().then((data)=>{
             
             if(data.data>0){
@@ -425,7 +422,7 @@ export default {
           localStorage.setItem('select_shift_pk','')
           localStorage.setItem('current_logon_company','');
           localStorage.setItem('pms_userinfo', '')
-          localStorage.setItem('pms_token','');
+          localStorage.setItem('token','');
           sessionStorage.removeItem("orderIsNew")
           sessionStorage.removeItem("isTime")
           this.$router.push("/login");
@@ -545,11 +542,11 @@ export default {
     //刷新TOKEN
     // refreshToken(time){
     //   setInterval(()=>{
-    //     if(window.localStorage.getItem('pms_token')){
+    //     if(window.localStorage.getItem('token')){
     //       refreshTokenUpms().then(res=>{
     //         let token = res.data.token
     //         if(token!=null && token!='' && token!="-1"){
-    //           window.localStorage.setItem('pms_token', token);
+    //           window.localStorage.setItem('token', token);
     //           console.log('token刷新成功');
     //         }
     //       });
@@ -558,7 +555,7 @@ export default {
     // },
     //验证TOKEN是否有效
     // validateToken(){
-    //   validateToken({token:localStorage.getItem('pms_token')}).then().catch(error=>{
+    //   validateToken({token:localStorage.getItem('token')}).then().catch(error=>{
     //     //token无效，跳转登录页
     //     this.$router.push('/login')
     //   })

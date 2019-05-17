@@ -2,7 +2,7 @@
 <template>
   <div class="hour-room-setting-class">
       <div class="opr">
-        <el-button type="primary" size="mini" @click="add">添加</el-button>
+        <el-button type="primary" size="mini" @click="add" v-if="hasPerm('pms:hourRoomSetting:add')">添加</el-button>
       </div>
       <el-table
         size="mini" 
@@ -22,10 +22,10 @@
         <el-table-column fixed="right" label="操作" align="center">
           <!-- 操作 -->
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="edit(scope.row)">查看</el-button>
-            <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
-            <el-button type="success" size="mini" v-if="scope.row.enableFlag==1" @click="enableOrDisable(scope.row, 0)">已启用</el-button>
-            <el-button type="info" size="mini" v-if="scope.row.enableFlag==0" @click="enableOrDisable(scope.row, 1)">已禁用</el-button>
+            <el-button type="primary" size="mini" @click="edit(scope.row)" v-if="hasPerm('pms:hourRoomSetting:detail')">查看</el-button>
+            <el-button type="danger" size="mini" @click="del(scope.row)" v-if="hasPerm('pms:hourRoomSetting:del')">删除</el-button>
+            <el-button type="success" size="mini" v-if="scope.row.enableFlag==1 && hasPerm('pms:hourRoomSetting:disAct')" @click="enableOrDisable(scope.row, 0)">已启用</el-button>
+            <el-button type="info" size="mini" v-if="scope.row.enableFlag==0 && hasPerm('pms:hourRoomSetting:disAct')" @click="enableOrDisable(scope.row, 1)">已禁用</el-button>
           </template>
         </el-table-column>
       </el-table>

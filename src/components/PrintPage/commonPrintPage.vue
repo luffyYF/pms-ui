@@ -1,4 +1,4 @@
-//公共打印页面
+//公共打印页面【不要用】
 <template>
   <div>
     <el-dialog class="pattern-dialog" title="账单打印" :visible.sync="dialogBillPrint" width="50%" :append-to-body=true>
@@ -93,7 +93,7 @@ export default {
      * @augments data 数据
      * */
     printBill(data, beginDate, endDate) {
-      this.oprUserName = JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName
+      this.oprUserName = JSON.parse(localStorage.getItem('pms_userinfo')).realName
       this.oprCompanyName = JSON.parse(localStorage.current_logon_company).companyName
       this.dialogBillPrint = true;
       this.beginDate = moment(beginDate).format('YYYY-MM-DD HH:mm');

@@ -124,7 +124,7 @@ export default {
         settlePromotion: 0,//优惠总额
         settleOtherConsume: 0,//优惠总额
       },
-      createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName
+      createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).realName
     };
   },
   mounted() {

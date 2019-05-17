@@ -16,153 +16,165 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
-    <div class="table-container" id="print-managerdailyreport">
-      <h3>{{activeCompany.companyName}}</h3>
-      <h4>经理日报表</h4>
-      <div class="table-box">
-        <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
-        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">营业收入</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.totalIncome)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">房费收入</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.houseFeeIncome)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">全日租</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.commonRoomIncome)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">半日租</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.halfDayRoomIncome)|toMoney}}</td>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">钟点房费</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.hourRoomIncome)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">房费折扣</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.roomDiscount)}}</td>
-            <td style="width: 12.5%;padding: 6px;">其他收入</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.orderFeeIncome)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">会员新增</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.newMemberNum)}}</td>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">会员充值</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.memberRecharge)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">单位挂账</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.unitLedger)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">中介挂账</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.intermediaryLedger)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">前台收款</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.receptionIncome)|toMoney}}</td>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">总房数</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.totalRoomNum)}}</td>
-            <td style="width: 12.5%;padding: 6px;">可用房</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.leasedRoomsNum)}}</td>
-            <td style="width: 12.5%;padding: 6px;">维修房</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.repairRoomNum)}}</td>
-            <td style="width: 12.5%;padding: 6px;">总售房数</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.individualRoomNum + tableData.reportPos.teamRoomNum)}}</td>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">散客售房数</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.individualRoomNum)}}</td>
-            <td style="width: 12.5%;padding: 6px;">团队售房数</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.teamRoomNum)}}</td>
-            <td style="width: 12.5%;padding: 6px;">出租率(可用房)</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.leaseRate.toFixed(3))}}</td>
-            <td style="width: 12.5%;padding: 6px;">平均房价</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.averageRoomRate)|toMoney}}</td>
-          </tr>
-          <tr>
-            <th colspan="8" style="text-align: left;font-family: 黑体;padding: 6px;">前台收银分类统计</th>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">现金</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterCash)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">银行卡</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterBank)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">支付宝</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterAlipay)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">微信支付</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterWechat)|toMoney}}</td>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">预授权</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterAuth)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">刷卡</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterPos)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">AR账</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.arAccount)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">支票</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterCheque)|toMoney}}</td>
-          </tr>
-          <tr>
-            <td style="width: 12.5%;padding: 6px;">汇款</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterRemittance)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;">其他账</td>
-            <td style="width: 12.5%;padding: 6px;text-align: right">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterOrderPayment)|toMoney}}</td>
-            <td style="width: 12.5%;padding: 6px;"></td>
-            <td style="width: 12.5%;padding: 6px;"></td>
-            <td style="width: 12.5%;padding: 6px;"></td>
-            <td style="width: 12.5%;padding: 6px;"></td>
-          </tr>
-        </table>
-        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
-          <tr>
-            <th colspan="6" style="text-align: left;width: 80%;font-family: 黑体;padding: 6px;">客源售房统计</th>
-            <th colspan="2" style="text-align: left;width: 20%;font-family: 黑体;padding: 6px;">总房数：{{(tableData.reportPos == null ? '' : tableData.reportPos.totalRoomNum)}}</th>
-          </tr>
-          <tr>
-            <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px;">客源类型</td>
-            <td style="text-align: center;background-color: #dcdcdc;width: 12.5%;padding: 6px;">夜间数</td>
-            <td style="text-align: center;background-color: #dcdcdc;width: 12.5%;padding: 6px;">出租率</td>
-            <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px;">总收入</td>
-            <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px;">平均房价</td>
-          </tr>
-          <tr v-for="(item, index) in tableData.customerSource" :key="index">
-            <td colspan="2" style="text-align: left;width: 25%;padding: 6px;">
-              {{(item.type == 0 ? '散客' : (item.type == 1 ? '会员' : (item.type == 2 ? '单位' : '中介')))}}
-            </td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{item.peopleNightRoomNum}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{(Number(item.leaseRate)*100).toFixed(2)}}%</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{item.totalIncome|toMoney}}</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{item.averageRoomRate|toMoney}}</td>
-          </tr>
-          <tr>
-            <td colspan="2" style="text-align: left;width: 25%;padding: 6px;">合计</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{calculation(tableData.customerSource, 'peopleNightRoomNum', 0)}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{(Number(calculation(tableData.customerSource, 'leaseRate', 0))*100).toFixed(2)}}%</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{calculation(tableData.customerSource, 'totalIncome', 0)|toMoney}}</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{(calculation(tableData.customerSource, 'totalIncome', 0)/calculation(tableData.customerSource, 'peopleNightRoomNum', 0))|toMoney}}</td>
-          </tr>
-        </table>
-        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
-          <tr>
-            <th colspan="8" style="text-align: left;width: 100%;font-family: 黑体;padding: 6px;">房型售房统计</th>
-          </tr>
-          <tr>
-            <td style="text-align: center;background-color: #dcdcdc;width: 12.5%;padding: 6px;">房型</td>
-            <td style="text-align: center;background-color: #dcdcdc;width: 12.5%;padding: 6px;">总房数</td>
-            <td style="text-align: center;background-color: #dcdcdc;width: 12.5%;padding: 6px;">入住数</td>
-            <td style="text-align: center;background-color: #dcdcdc;width: 12.5%;padding: 6px;">出租率</td>
-            <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px;">总收入</td>
-            <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px;">平均房价</td>
-          </tr>
-          <tr v-for="(ele, i) in tableData.roomType" :key="i">
-            <td style="text-align: left;width: 12.5%;padding: 6px;">{{ele.roomTypeName}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{ele.onlineRoomNum == null ? 0 : ele.onlineRoomNum}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{ele.rentalRoomNum}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{(Number(ele.leaseRate == null ? 0 : ele.leaseRate)*100).toFixed(2)}}%</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{ele.totalIncome|toMoney}}</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{ele.averageRoomRate|toMoney}}</td>
-          </tr>
-          <tr>
-            <td style="text-align: left;width: 12.5%;padding: 6px;">合计</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{calculation(tableData.roomType, 'onlineRoomNum', 0)}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{calculation(tableData.roomType, 'rentalRoomNum', 0)}}</td>
-            <td style="text-align: right;width: 12.5%;padding: 6px;">{{(isNaN(calculation(tableData.roomType, 'rentalRoomNum', 0)/calculation(tableData.roomType, 'onlineRoomNum', 0)) ? 0 : (calculation(tableData.roomType, 'rentalRoomNum', 0)/calculation(tableData.roomType, 'onlineRoomNum', 0))).toFixed(2)}}%</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{calculation(tableData.roomType, 'totalIncome', 0)|toMoney}}</td>
-            <td colspan="2" style="text-align: right;width: 25%;padding: 6px;">{{(calculation(tableData.roomType, 'totalIncome', 0)/calculation(tableData.roomType, 'rentalRoomNum', 0))|toMoney}}</td>
-          </tr>
+    <div class="table-container">
+      <div id="print-managerdailyreportTitle">
+        <div style="margin-left: 7px;text-align: left;">
+          <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+        </div>
+        <h3 style="text-align: center">经理日报表</h3>
+      </div>
+      <div class="table-box" id="print-managerdailyreportTable">
+        <table width="100%" border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
+          <thead>
+            <tr>
+              <th colspan="8" style="text-align: left;font-size: 12px;">店铺：{{activeCompany.companyName}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">营业收入</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.totalIncome)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房费收入</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.houseFeeIncome)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">全日租</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.commonRoomIncome)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">半日租</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.halfDayRoomIncome)|toMoney}}</td>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">钟点房费</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.hourRoomIncome)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房费折扣</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.roomDiscount)}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">其他收入</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.orderFeeIncome)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">会员新增</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.newMemberNum)}}</td>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">会员充值</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.memberRecharge)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">单位挂账</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.unitLedger)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">中介挂账</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.intermediaryLedger)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">前台收款</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.receptionIncome)|toMoney}}</td>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">总房数</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.totalRoomNum)}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">可用房</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.leasedRoomsNum)}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">维修房</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.repairRoomNum)}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">总售房数</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.individualRoomNum + tableData.reportPos.teamRoomNum)}}</td>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">散客售房数</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.individualRoomNum)}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">团队售房数</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.teamRoomNum)}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">出租率(可用房)</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : (Number(tableData.reportPos.leaseRate)*100).toFixed(2))}}%</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">平均房价</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.averageRoomRate)|toMoney}}</td>
+            </tr>
+            <tr>
+              <th colspan="8" style="text-align: left;font-family: 黑体;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">前台收银分类统计</th>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">现金</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterCash)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">银行卡</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterBank)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">支付宝</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterAlipay)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">微信支付</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterWechat)|toMoney}}</td>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">预授权</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterAuth)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">刷卡</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterPos)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">AR账</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.arAccount)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">支票</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterCheque)|toMoney}}</td>
+            </tr>
+            <tr>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">汇款</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterRemittance)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">其他账</td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;text-align: right;border: 1px solid #000;font-size: 12px;">{{(tableData.reportPos == null ? 0 : tableData.reportPos.counterOrderPayment)|toMoney}}</td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;"></td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;"></td>
+              <td style="width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;"></td>
+              <td style="width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;"></td>
+            </tr>
+            <tr>
+              <th colspan="6" style="text-align: left;width: 75%;font-family: 黑体;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">客源售房统计</th>
+              <th colspan="2" style="text-align: left;width: 25%;font-family: 黑体;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">总房数：{{(tableData.reportPos == null ? '' : tableData.reportPos.totalRoomNum)}}</th>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">客源类型</td>
+              <td style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">夜间数</td>
+              <td style="text-align: center;background-color: #dcdcdc;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">出租率</td>
+              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">总收入</td>
+              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">平均房价</td>
+            </tr>
+            <tr v-for="(item, index) in tableData.customerSource" :key="index">
+              <td colspan="2" style="text-align: left;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">
+                {{(item.type == 0 ? '散客' : (item.type == 1 ? '会员' : (item.type == 2 ? '单位' : '中介')))}}
+              </td>
+              <td style="text-align: right;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{item.peopleNightRoomNum}}</td>
+              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{(Number(item.leaseRate)*100).toFixed(2)}}%</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{item.totalIncome|toMoney}}</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{item.averageRoomRate|toMoney}}</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align: left;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">合计</td>
+              <td style="text-align: right;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.customerSource, 'peopleNightRoomNum', 0)}}</td>
+              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(Number(calculation(tableData.customerSource, 'leaseRate', 0))*100).toFixed(2)}}%</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.customerSource, 'totalIncome', 0)|toMoney}}</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(calculation(tableData.customerSource, 'totalIncome', 0)/calculation(tableData.customerSource, 'peopleNightRoomNum', 0))|toMoney}}</td>
+            </tr>
+            <tr>
+              <th colspan="8" style="text-align: left;width: 100%;font-family: 黑体;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房型售房统计</th>
+            </tr>
+            <tr>
+              <td style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房型</td>
+              <td style="text-align: center;background-color: #dcdcdc;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">总房数</td>
+              <td style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">入住数</td>
+              <td style="text-align: center;background-color: #dcdcdc;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">出租率</td>
+              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房费总收入</td>
+              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">平均房价</td>
+            </tr>
+            <tr v-for="ele in tableData.roomType" :key="ele.reportPk">
+              <td style="text-align: left;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.roomTypeName}}</td>
+              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.onlineRoomNum == null ? 0 : ele.onlineRoomNum}}</td>
+              <td style="text-align: right;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.rentalRoomNum}}</td>
+              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{(Number(ele.leaseRate == null ? 0 : ele.leaseRate)*100).toFixed(2)}}%</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.houseFeeIncome|toMoney}}</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.averageRoomRate|toMoney}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: left;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">合计</td>
+              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'onlineRoomNum', 0)}}</td>
+              <td style="text-align: right;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'rentalRoomNum', 0)}}</td>
+              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(isNaN(calculation(tableData.roomType, 'rentalRoomNum', 0)/calculation(tableData.roomType, 'onlineRoomNum', 0)) ? 0 : (calculation(tableData.roomType, 'rentalRoomNum', 0)/calculation(tableData.roomType, 'onlineRoomNum', 0))*100).toFixed(2)}}%</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'houseFeeIncome', 0)|toMoney}}</td>
+              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(calculation(tableData.roomType, 'houseFeeIncome', 0)/calculation(tableData.roomType, 'rentalRoomNum', 0))|toMoney}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" style="text-align: left;font-size: 12px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="4" style="text-align: right;font-size: 12px;">打印日期：<span>{{sDate}}</span></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -259,14 +271,23 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
       this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
-      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-managerdailyreport").innerHTML);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题 1123 1023 963
+      this.LODOP.ADD_PRINT_TABLE(90,10,774,903,document.getElementById("print-managerdailyreportTable").innerHTML);
+      // LODOP.ADD_PRINT_TABLE(128,"5%","90%",314,strStyle+document.getElementById("div2").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);	
+      this.LODOP.ADD_PRINT_HTM(10,10,774,80,document.getElementById("print-managerdailyreportTitle").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
     }
   },
   filters: {
@@ -326,7 +347,7 @@ table:nth-child(1),table:nth-child(2) {
   border-right:1px solid #ebeef5; */
   margin: 0;
   line-height: 60px;
-  font-size: 14px;
+  /* font-size: 14px; */
   color: #909399;
 }
 </style>

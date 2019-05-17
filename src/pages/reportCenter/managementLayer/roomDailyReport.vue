@@ -21,7 +21,7 @@
        <h3>{{activeCompany.companyName}}</h3>
       <h4>经理日报表</h4>
       <div class="table-box">
-        <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
+        <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p>
         <el-table 
           :header-cell-style="tableStyleObj" 
           :cell-style="tableStyleObj" 
