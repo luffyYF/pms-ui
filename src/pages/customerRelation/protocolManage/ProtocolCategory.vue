@@ -142,7 +142,7 @@ import Moment from 'moment'
             usingFlag:'N',
             remark: '',
             createUserId: this.pms_userinfo.upmsUserId,
-            createUserName: this.pms_userinfo.upmsRealName,
+            createUserName: this.pms_userinfo.realName,
             createTime: Moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
           })
         }

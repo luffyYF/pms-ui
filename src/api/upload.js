@@ -19,7 +19,7 @@ let apiRoot = process.env.API_ROOT
  * 上传公共图片
  */
 export const getUploadImageAction = () => {
-  return uploadRoot + '/back/file/uploadImage';
+  return uploadRoot + '/upload/image';
 }
 
 /**

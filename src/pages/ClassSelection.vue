@@ -60,7 +60,7 @@ export default {
     },
     //设置公司主键和班次到cookies跳转首页
     toHome(company) {
-      getUserInfo().then(res => {
+      getUserInfo({systemId: '473891058107809792'}).then(res => {
         if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != company.companyPk){
           localStorage.removeItem("roomList")
           localStorage.removeItem("statisticsData")

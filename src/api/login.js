@@ -7,7 +7,7 @@ import requestUpms from '../utils/requestJsonUpms'
 // }
 
 export const getUserInfo = params => {
-  return request.get('/auth/getUserInfo', params)
+  return request.get('/auth/getUserInfo', {params: params})
 }
 
 //废

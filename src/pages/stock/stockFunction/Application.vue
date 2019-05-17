@@ -150,7 +150,7 @@ export default {
         applyNo:null,
         companyPk:localStorage.getItem('select_company_pk'),
         createTime:null,
-        createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName,
+        createUserName:JSON.parse(localStorage.getItem('pms_userinfo')).realName,
       },
       form2: {//货单详单表单
         inventoryId:null,

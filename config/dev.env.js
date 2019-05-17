@@ -7,7 +7,7 @@ module.exports = merge(prodEnv, {
   API_ROOT: '"/pms"',
   IMAGE_ROOT: '"/fs/"',
   UPMS_ROOT:'"http://localhost:8080/"',
-  UPLOAD_ROOT: '"http://localhost"',//上传文件的地址 微云系统
+  UPLOAD_ROOT: '"http://localhost:8100"',//上传文件的地址 微云系统
   OA_ROOT:'"http://192.168.5.6/oa-back"',
   PRINT_ROOT: '"http://localhost:8083/"',
   PAY_ROOT: '"http://localhost/"',
