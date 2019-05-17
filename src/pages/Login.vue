@@ -72,7 +72,7 @@ export default {
         if (valid) {
           this.loading = true;
           loginByUsername(this.loginForm).then(res=>{
-            window.localStorage.setItem('pms_token', res.token)
+            window.localStorage.setItem('token', res.data.token)
             this.$router.push({ path: "/classSelection" });
             this.loading = false;
           },error=>{
@@ -83,7 +83,7 @@ export default {
           //   .then(res => {
           //     console.log("-----------------");
           //     console.log(res);
-          //     window.localStorage.setItem('pms_token', res.data.token)
+          //     window.localStorage.setItem('token', res.data.token)
           //     this.$router.push({ path: "/classSelection" });
           //   })
           //   .finally(() => {

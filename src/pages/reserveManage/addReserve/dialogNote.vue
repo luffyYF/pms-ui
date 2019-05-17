@@ -179,7 +179,7 @@ export default {
       this.currRow = null;
       this.form = {};
       this.form.orderPk = this.currOrderPk;
-      this.form.createUserName = JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName;
+      this.form.createUserName = JSON.parse(localStorage.getItem('pms_userinfo')).realName;
       this.form.beginDate = formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
       this.form.type = "LY";
       this.form.status = "NOREAD";

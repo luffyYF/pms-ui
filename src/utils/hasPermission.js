@@ -8,7 +8,7 @@ export function hasPermission(permission) {
       //是超级管理员
       return true;
     }else{
-      let myPermissions = obj.permissionValues
+      let myPermissions = obj.perms
       return myPermissions.indexOf(permission) > -1;
     }
   }else{

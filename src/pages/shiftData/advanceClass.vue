@@ -257,10 +257,10 @@ export default {
     },
     shiftData(){
         var that = this
-        if(that.datePicker != null && that.datePicker.length == 2){
-            that.preShiftDataObj.beginDate = that.datePicker[0]
-            that.preShiftDataObj.endDate = that.datePicker[1]
-        }
+        // if(that.datePicker != null && that.datePicker.length == 2){
+        //     that.preShiftDataObj.beginDate = that.datePicker[0]
+        //     that.preShiftDataObj.endDate = that.datePicker[1]
+        // }
         getPreShiftInf(that.preShiftDataObj).then(res=>{
             that.datePicker = [
                 res.data.beginDate,

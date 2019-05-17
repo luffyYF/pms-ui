@@ -121,7 +121,7 @@ export default {
      * @param outId 出库单主键
      */
     init(outId){
-      this.inForm.userName = JSON.parse(localStorage.getItem('pms_userinfo')).upmsRealName;
+      this.inForm.userName = JSON.parse(localStorage.getItem('pms_userinfo')).realName;
       this.inForm.inTime = Moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
       //获取入库编号
       getInSequence().then(res=>{

@@ -45,7 +45,7 @@
             <!-- <el-table-column prop="authPerson" label="授权人"></el-table-column> -->
             <el-table-column prop="remark" label="备注"></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p>
           <p style="height:60px;color:red">	注：此报表在2017年-11月升级后，新操作的换房数据才会显示房型、换房类型。</p>
         </div>
       </div>

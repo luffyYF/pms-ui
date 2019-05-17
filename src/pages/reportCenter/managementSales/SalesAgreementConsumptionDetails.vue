@@ -41,7 +41,7 @@
             <el-table-column prop="rentalRoomNum" label="房晚数" align="right" width="70"></el-table-column>
             <el-table-column prop="houseFeeIncome" label="房租收入" align="right"></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{printDate.now}}</span><span class="right">	操作员：{{userInfo.upmsRealName}}</span></p>
+          <p style="height:20px;"><span class="left">打印日期：{{printDate.now}}</span><span class="right">	操作员：{{userInfo.realName}}</span></p>
           <p style="height:20px;color:red">	注：此报表为夜审报表，数据统计截止到昨天。。</p>
         </div>
       </div>

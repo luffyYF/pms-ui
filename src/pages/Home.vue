@@ -184,7 +184,7 @@
       酒店编码：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp;
       营业日期：{{footerData.bussinessDate}} &nbsp;&nbsp;&nbsp;
       {{footerData.currTime}}
-      <span style="float:right">操作员：{{footerData.upmsRealName}}</span>
+      <span style="float:right">操作员：{{footerData.realName}}</span>
       
     </el-col>
     <div class="asd">
@@ -285,7 +285,7 @@ export default {
     }
     this.userinfo = JSON.parse(localStorage.getItem('pms_userinfo'))
     this.footerData.companyCode = this.activeCompany.companyCode
-    this.footerData.upmsRealName = this.userinfo.upmsRealName
+    this.footerData.realName = this.userinfo.realName
     this.footerData.currTime = moment().format('dddd MM月DD日 HH:mm')
     this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     setInterval(()=>{
@@ -294,7 +294,7 @@ export default {
     setInterval(()=>{
       this.footerData.bussinessDate = moment().hour() >= nightTrialTime ? moment().format('YYYY-MM-DD') : moment().subtract(1, 'days').format('YYYY-MM-DD')
     }, 30*60*1000)
-    this.validateToken()
+    // this.validateToken()
     this.nightTrialTask()
   },
   data() {
@@ -310,7 +310,7 @@ export default {
       footerData: {
         companyCode:null,
         bussinessDate: null,
-        upmsRealName: null,
+        realName: null,
         currTime: null,
       },
       timer:null,
@@ -383,7 +383,7 @@ export default {
       var self = this;
       setInterval(()=>{ 
         console.log("123")
-        if(window.localStorage.getItem('pms_token')){
+        if(window.localStorage.getItem('token')){
           timerCheckNew().then((data)=>{
             
             if(data.data>0){
@@ -422,7 +422,7 @@ export default {
           localStorage.setItem('select_shift_pk','')
           localStorage.setItem('current_logon_company','');
           localStorage.setItem('pms_userinfo', '')
-          localStorage.setItem('pms_token','');
+          localStorage.setItem('token','');
           sessionStorage.removeItem("orderIsNew")
           sessionStorage.removeItem("isTime")
           this.$router.push("/login");
@@ -540,26 +540,26 @@ export default {
       }
     },
     //刷新TOKEN
-    refreshToken(time){
-      setInterval(()=>{
-        if(window.localStorage.getItem('pms_token')){
-          refreshTokenUpms().then(res=>{
-            let token = res.data.token
-            if(token!=null && token!='' && token!="-1"){
-              window.localStorage.setItem('pms_token', token);
-              console.log('token刷新成功');
-            }
-          });
-        }
-      },time);
-    },
+    // refreshToken(time){
+    //   setInterval(()=>{
+    //     if(window.localStorage.getItem('token')){
+    //       refreshTokenUpms().then(res=>{
+    //         let token = res.data.token
+    //         if(token!=null && token!='' && token!="-1"){
+    //           window.localStorage.setItem('token', token);
+    //           console.log('token刷新成功');
+    //         }
+    //       });
+    //     }
+    //   },time);
+    // },
     //验证TOKEN是否有效
-    validateToken(){
-      validateToken({token:localStorage.getItem('pms_token')}).then().catch(error=>{
-        //token无效，跳转登录页
-        this.$router.push('/login')
-      })
-    },
+    // validateToken(){
+    //   validateToken({token:localStorage.getItem('token')}).then().catch(error=>{
+    //     //token无效，跳转登录页
+    //     this.$router.push('/login')
+    //   })
+    // },
     //预离查询等
     sysParmInit() {
       var tempSysParm = JSON.parse(localStorage.getItem("sysParm"));
@@ -759,9 +759,10 @@ export default {
     //定时检测新订单
     // this.newOrder();
     //定时5分钟刷新一次token
-    this.refreshToken(300000);
+    // this.refreshToken(300000);
 
     //选中第一个显示的目录
+    console.log(this.$refs.dirRef.getElementsByTagName('a')[0])
     let herf= this.$refs.dirRef.getElementsByTagName('a')[0].getAttribute('href')
     this.$router.push(herf.substring(1))
     this.initAlert()

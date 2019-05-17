@@ -22,14 +22,18 @@
     data: function () {
       return {
         //上传请求特殊，需要加上请求头，用于身份验证
-        headers: {'Authorization': 'Bearer '+localStorage.getItem('pms_token') },
+        headers: {'Authorization': 'Bearer '+localStorage.getItem('token') },
         getUploadImageAction: getUploadImageAction
       }
     },
     methods: {
       // 头像上传成功回调
       handleAvatarSuccess (res, file) {
-        this.$emit('update:avatar', res.data)
+        if (res.code != 1) {
+          this.$message({type: 'error', message: res.sub_msg})
+          return
+        }
+        this.$emit('update:avatar', res.data[0].path)
         // this.$emit('update:avatar', res.filePaths[0])
         // this.avatar = res.data
         // this.imageUrl = URL.createObjectURL(file.raw)

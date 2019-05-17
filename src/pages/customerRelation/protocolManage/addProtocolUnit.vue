@@ -474,9 +474,9 @@ export default {
     },
     listMastersType(i) {//查询分类类型
       const self = this;
-      self.form.roomTypePricePos = [];
+      // self.form.roomTypePricePos = [];
       self.agreementOptions = [];
-      self.saleOptions = [];
+      // self.saleOptions = [];
       this.roomTypeList();
       // listType({typeMasters: 'ROOM_TYPE,AGREEMENT,INDUSTRY,SALE'}).then(result => {
         // const listTypeData = result.data.data;
@@ -492,7 +492,13 @@ export default {
         //     self.saleOptions.push(listTypeData[index]);
         //   }
         // }
-        
+        var typeList = JSON.parse(localStorage.getItem("pms_type"))
+        typeList.forEach(item=> {
+          if(item.typeMaster == "AGREEMENT"){
+            self.agreementOptions.push(item);
+          }
+        })
+
         if(i){
           var now = new Date();
           now.setFullYear(now.getFullYear()+1);

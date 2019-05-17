@@ -157,7 +157,7 @@
             lostArticlesPk: row.lostArticlesPk,
             status: 1,
             receiveUserId: this.userInfo.userPk,
-            receiveUserName: this.userInfo.upmsRealName
+            receiveUserName: this.userInfo.realName
           }
 
           updateApi(data).then(res => {

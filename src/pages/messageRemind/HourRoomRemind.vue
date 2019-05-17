@@ -10,7 +10,7 @@
       custom-class="hourRoomDialog"
       :modal-append-to-body="false" 
       :visible.sync="hourRoomVisible" 
-      :append-to-body="false" 
+      :append-to-body="false"
       :close-on-click-modal="false"
       :before-close="handleClose">
       <el-table :data="hourRoomList" height="200px" @row-click="toDialogVisible" >

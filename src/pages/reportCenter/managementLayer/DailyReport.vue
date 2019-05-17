@@ -20,18 +20,18 @@
         </div>
         <div class="tabs-contetn">
           <!-- <p style="margin: 0px">打印日期：<span>自 2018-03-09 至 2018-03-09</span>&nbsp;&nbsp;&nbsp;&nbsp;营业日期：<span>2018-03-09</span> </p> -->
-          <el-table 
-            :header-cell-style="tableStyleObj" 
-            :cell-style="tableStyleObj" 
-            :data="tableData" 
-            border  
+          <el-table
+            :header-cell-style="tableStyleObj"
+            :cell-style="tableStyleObj"
+            :data="tableData"
+            border
             style="width: 100%; margin-top: 5px;">
             <el-table-column prop="name" label="项目"></el-table-column>
             <el-table-column prop="day" label="当日"></el-table-column>
             <el-table-column prop="month" label="本月累计"></el-table-column>
             <el-table-column prop="year" label="本年累计"></el-table-column>
           </el-table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p>
           <p style="height:20px;color:red">注(1)：此报表为夜审报表，数据统计截止到昨天。</p>
           <p style="height:20px;color:red">注(1)：房晚数 = 夜核房晚数 + 日租房晚数 + 钟点房晚数 + 特殊房晚数 + 公寓房晚数</p>
           <p style="height:20px;color:red;padding-left:44px">应收合计 = 房租收入+其他收入</p>

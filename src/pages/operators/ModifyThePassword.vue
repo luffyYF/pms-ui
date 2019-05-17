@@ -6,7 +6,7 @@
       <el-form ref="form" :model="form" :rules="rules" size="mini" label-width="80px">
         <!-- input -->
           <el-form-item label="帐号">
-            <el-input v-model="form.upmsUserName" disabled></el-input>
+            <el-input v-model="form.realName" disabled></el-input>
           </el-form-item>
           <el-form-item label="原密码" prop="oldPwd">
             <el-input type="password" v-model="form.oldPwd"></el-input>
@@ -31,13 +31,13 @@ import {modifyPwd} from '@/api/upmsApi'
   export default {
     // created(){
     //   this.loginObj = JSON.parse(window.localStorage.getItem('LOGIN_INFO'));
-    //   this.form.upmsUserName = this.loginObj.loginName; 
+    //   this.form.realName = this.loginObj.loginName; 
     // },
     data() {
       return {
         loginObj:{},
         form: {
-          upmsUserName:JSON.parse(window.localStorage.getItem('pms_userinfo')).upmsUserName,
+          realName:JSON.parse(window.localStorage.getItem('pms_userinfo')).realName,
           oldPwd:'',
           newPwd:'',
           confirmNewPwd:''

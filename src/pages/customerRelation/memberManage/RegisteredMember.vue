@@ -3,7 +3,7 @@
     <!-- 会员来源信息 -->
     <div class="bg-reserve">
       <h5 class="info-title">会员来源信息（不可修改）</h5>
-      销售员： {{userInfo.upmsUserName}} &nbsp;&nbsp;&nbsp; 领卡部门： 深圳市前海豪斯菲尔信息科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      销售员： {{userInfo.realName}} &nbsp;&nbsp;&nbsp; 领卡部门： 深圳市前海豪斯菲尔信息科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="color:#F56C6C">会员卡号不能大于8位</span>
     </div>
 

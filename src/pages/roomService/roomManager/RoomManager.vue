@@ -210,7 +210,7 @@
                 roomStatePks: pks,
                 status: status,
                 userId: this.userInfo.upmsUserId,
-                userName: this.userInfo.upmsRealName,
+                userName: this.userInfo.realName,
                 companyPk: this.company.companyPk,
               }
               updateStatusBatch(data).then(res=>{

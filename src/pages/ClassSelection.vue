@@ -8,17 +8,17 @@
       <div class="box-list clearfix" v-for="(company,index) in companyShift" :key="index">
           <h3 class="fl">{{company.cityName}}</h3>
           <div class="fl company-list" v-for="(com,index) in company.arr" :key="index">
-            <span @click="selectCompany(com)"  class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
+            <span @click="toHome(com)"  class="companySpan" v-bind:class="{ activeCompany: com.companyPk == activeCompany.companyPk }">{{com.companyName}}</span>
           </div>
       </div>
-      <div class="box-select clearfix">
+      <!-- <div class="box-select clearfix">
           <h3  class="fl">班次选择：</h3>
           <div class="class-list fl">
               <span v-if="activeCompany.companyPk == ''">请先选择店面</span>
               <span v-if="shiftList.length == 0 && activeCompany.companyPk != ''" style="text-decoration: underline;" @click="toHome">暂未设置班次，进入系统</span>
               <span @click="toHome(shift)" v-for="(shift,index) of shiftList" :key="index">{{shift.className}}（{{shift.beginTime}} - {{shift.endTime}}）</span>
           </div>
-      </div>
+      </div> -->
     </div>
   </section>
 </template>
@@ -54,23 +54,23 @@ export default {
     goBack() {
       logout().then(res=>{}).finally(()=>{
         this.clearLocalInfo();
-        localStorage.setItem('pms_token','');
+        localStorage.setItem('token','');
         this.$router.push("/login");
       })
     },
     //设置公司主键和班次到cookies跳转首页
-    toHome(shift) {
-      getUserInfo().then(res => {
-        if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != this.activeCompany.companyPk){
+    toHome(company) {
+      getUserInfo({systemId: '473891058107809792'}).then(res => {
+        if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != company.companyPk){
           localStorage.removeItem("roomList")
           localStorage.removeItem("statisticsData")
           localStorage.removeItem("sysParm")
           sessionStorage.removeItem("orderIsNew")
           sessionStorage.removeItem("isTime")
         }
-        localStorage.setItem('select_company_pk',this.activeCompany.companyPk)
-        localStorage.setItem('select_shift_pk',shift.shiftPk ? shift.shiftPk : '0')
-        localStorage.setItem('current_logon_company',JSON.stringify(this.activeCompany));
+        localStorage.setItem('select_company_pk',company.companyPk)
+        // localStorage.setItem('select_shift_pk',shift.shiftPk ? shift.shiftPk : '0')
+        localStorage.setItem('current_logon_company',JSON.stringify(company));
         localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
         this.$router.push('/')
       })
@@ -137,10 +137,10 @@ export default {
       });
       return arr_obj;
     },
-    selectCompany(company) {
-      this.shiftList = company.shiftPos;
-      this.activeCompany = company;
-    }
+    // selectCompany(company) {
+    //   this.shiftList = company.shiftPos;
+    //   this.activeCompany = company;
+    // }
   }
 };
 </script>

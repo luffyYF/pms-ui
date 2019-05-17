@@ -84,15 +84,25 @@ export function getLodop(oOBJECT, oEMBED) {
             if (!LODOP) {
                 if (isIE) document.write(strCLodopInstall)
                 else
-                    document.body.innerHTML =
-                        strCLodopInstall + document.body.innerHTML
+                    // document.body.innerHTML =
+                    //     strCLodopInstall + document.body.innerHTML
+                    var flag = confirm("CLodop云打印服务(localhost本地)未安装启动!点击确定前往下载页下载云打印C-Lodop扩展版。")
+                    if (flag == true) {
+                        window.open('http://www.lodop.net/download.html')
+                    } else {
+                    }
                 return
             } else {
                 if (CLODOP.CVERSION < '3.0.4.3') {
                     if (isIE) document.write(strCLodopUpdate)
                     else
-                        document.body.innerHTML =
-                            strCLodopUpdate + document.body.innerHTML
+                        // document.body.innerHTML =
+                        //     strCLodopUpdate + document.body.innerHTML
+                    var flag = confirm("CLodop云打印服务需升级!点击确定前往下载页下载云打印C-Lodop扩展版。")
+                    if (flag == true) {
+                        window.open('http://www.lodop.net/download.html')
+                    } else {
+                    }
                 }
                 if (oEMBED && oEMBED.parentNode)
                     oEMBED.parentNode.removeChild(oEMBED)

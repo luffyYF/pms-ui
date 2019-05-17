@@ -143,7 +143,7 @@ export default {
       billPks = billPks.substring(0, (billPks.length - 1))
       
       window.open(process.env.PRINT_ROOT+"/#/depositPrint?shopName="+this.companyObj.companyName
-      +"&billPks="+billPks+"&pks="+this.pks+"&operator="+this.userObj.upmsRealName+"&tel="+this.userObj.upmsUserName+"&orderNo="+this.orderNo+"&checked="+this.checked);
+      +"&billPks="+billPks+"&pks="+this.pks+"&operator="+this.userObj.realName+"&tel="+this.userObj.realName+"&orderNo="+this.orderNo+"&checked="+this.checked);
     }
   }
 }
