@@ -12,7 +12,7 @@
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary" :disabled="true">导出EXCEL</el-button>
+        <el-button type="primary" @click="downloadExcel" >导出EXCEL</el-button>
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
@@ -174,6 +174,7 @@
 <script>
 import { managerReport } from "@/api/reportCenter/pmsReportFormController"
 import { getLodop } from '@/utils/lodop'
+import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
 
 export default {
@@ -232,11 +233,11 @@ export default {
       return sum
     },
 
-    // //导出EXCEL
-    // downloadExcel(){
-    //   let url = '/pms/report/mg/dailyExcel?date='+this.datepicker
-    //   downloadExcel(url, '经理日报表');
-    // },
+    //导出EXCEL
+    downloadExcel(){
+      let url = '/pms/report/mg/managerDailyExcel?begin='+this.queryObj.begin
+      downloadExcel(url, '经理日报表');
+    },
      //打印预览
     // print(){
     //   let bodyhtml = document.getElementById("print-managerdailyreport").innerHTML;
@@ -247,7 +248,7 @@ export default {
     // },
     //打印预览
     print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }

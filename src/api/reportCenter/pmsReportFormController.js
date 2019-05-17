@@ -333,4 +333,14 @@ export const roomStateReport = params =>{
 export const managerReport = params =>{
     return request.get('/pms/report/managerReport',{params:params})
 }
+
+
+/**
+ * 经理日报报表导出Excel
+ */
+// export const managerReportExcel = params =>{
+//   return request.get('/pms/report/managerDailyExcel',{params:params})
+// }
+
+
 /* ********** 常用报表end ********** */
