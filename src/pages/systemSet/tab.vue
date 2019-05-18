@@ -42,6 +42,9 @@
       <el-menu-item index="/systemSet/paramsSetting" v-if="hasPerm('pms:systemSet:paramsSetting')">
         <span slot="title">系统参数设置</span>
       </el-menu-item>
+      <el-menu-item index="/systemSet/hotelSetting" v-if="hasPerm('pms:systemSet:hotelSetting')">
+        <span slot="title">酒店设置</span>
+      </el-menu-item>
       <el-menu-item index="/systemSet/userSetting" v-if="hasPerm('pms:systemSet:userSetting')">
         <span slot="title">会员相关设置</span>
       </el-menu-item>

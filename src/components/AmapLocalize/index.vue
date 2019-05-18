@@ -69,6 +69,7 @@ import bus from "@/utils/bus";
             }
           }
           bus.$emit("returnPosition",{lng:this.lng,lat:this.lat,address:this.address,shortAddress:shortAddress});
+          this.$emit("callback", {lng:this.lng,lat:this.lat,address:this.address,shortAddress:shortAddress})
         })
       },
       getAddressLocal () {

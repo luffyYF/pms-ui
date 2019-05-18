@@ -25,9 +25,9 @@
       <el-tab-pane label="基本参数配置" name="sysBaseParamRef">
         <sys-base-param ref="sysBaseParamRef"/>
       </el-tab-pane>
-      <el-tab-pane label="酒店信息" name="syshotelinformation">
+      <!-- <el-tab-pane label="酒店信息" name="syshotelinformation">
         <sys-hotel-information ref="syshotelinformation"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <!-- <el-tab-pane label="所有" name="all">
         <sys-base-param ref="allRef"/>
       </el-tab-pane> -->
@@ -116,10 +116,12 @@
         }else if(this.activeName == 'sysotherparameters'){
           var child = this.$refs.sysotherparameters
           child.init()
-        }else if(this.activeName == 'syshotelinformation'){
-          var child = this.$refs.syshotelinformation
-          child.init()
-        }else if(this.activeName == 'sysBaseParamRef') {
+        }
+        // else if(this.activeName == 'syshotelinformation'){
+        //   var child = this.$refs.syshotelinformation
+        //   child.init()
+        // }
+        else if(this.activeName == 'sysBaseParamRef') {
           this.$refs.sysBaseParamRef.init(this.activeName);
         }else {
            this.$refs[this.activeName+"Ref"].init(this.activeName);
