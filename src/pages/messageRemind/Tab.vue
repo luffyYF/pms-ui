@@ -50,7 +50,9 @@ export default {
           heartCheck.reset().start();   // 成功建立连接后，重置心跳检测
           //socket.send("这是来自客户端的消息" + location.href + new Date());  
         };
+
         //获得消息事件  
+        let _this = this
         socket.onmessage = function(msg) {
           let data = msg.data
           console.log("发现消息进入")
@@ -62,17 +64,17 @@ export default {
               //new_order_remind_:[{"orderNo":"8023377920","orderPk":"8e30740e-780e-4f94-9d0d-2dcbc09a55ae","createTime":"2019-05-07 10:29:53","userPhone":"15770634606","userName":"安静男孩"},{"orderNo":"8023378366","orderPk":"f0fe0d58-e818-44e4-bbd4-5a62e7759254","createTime":"2019-05-07 10:30:36","userPhone":"15770634606","userName":"安静男孩"}]
               let jsonStr = data.split("new_order_remind_:")[1]
               let array = JSON.parse(jsonStr)
-              this.$refs.newReserveOrderRemindRef.remind(array);
+              _this.$refs.newReserveOrderRemindRef.remind(array);
               console.log("有新的预订单")
             }else if(data.indexOf('hour_room_remind_')!=-1) {
               // hour_room_remind_:[{"roomNumber":"3809","orderPk":"8cadae96-f8fb-451d-a84f-7c939867db0d","guestOrderPk":"33f7e51f-fff3-4f23-809f-b0a8479f2ece","endDate":"2019-05-06 16:50:56","remindTimeNum":1}]
               let jsonStr = data.split("hour_room_remind_:")[1]
               let array = JSON.parse(jsonStr)
-              this.$refs.hourRoomRemindRef.remind(array);
+              _this.$refs.hourRoomRemindRef.remind(array);
             }else if(data.indexOf('cancel_order_remind_')!=-1) {
               let jsonStr = data.split("cancel_order_remind_:")[1]
               let array = JSON.parse(jsonStr)
-              this.$refs.cancelReserveOrderRemindRef.remind(array);
+              _this.$refs.cancelReserveOrderRemindRef.remind(array);
             }
           }
         }
@@ -84,7 +86,7 @@ export default {
         socket.onerror = function() {  
           console.error("Socket发生了错误");  
           //此时可以尝试刷新页面
-        }  
+        }
         //离开页面时，关闭socket
         //jquery1.8中已经被废弃，3.0中已经移除
         // $(window).unload(function(){  
