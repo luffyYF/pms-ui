@@ -141,6 +141,7 @@ import StorageSetting from "@/pages/stock/stockSetUp/StorageSetting.vue"
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
+import HotelSetting from '@/pages/systemSet/HotelSetting/tab'
 import MembershipRelated from '@/pages/systemSet/MembershipRelated/tab'
 import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
 import HourRoomSetting from '@/pages/systemSet/HourRoomSetting/Tab'
@@ -390,6 +391,7 @@ export const constantRouterMap = [
         hidden: false,
         children: [
           {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
+          {path: '/systemSet/hotelSetting', component: HotelSetting , label: '酒店设置'},
           {path: '/systemSet/userSetting',  component: MembershipRelated, label: '会员相关设置'},
           {path: '/systemSet/roomSetting', component: RoomSetting , label: '客房设置'},
           {path: '/systemSet/hourRoomSetting',  component: HourRoomSetting, label: '钟点房设置'},
