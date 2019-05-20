@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick" addable @tab-add="addTabPane" @tab-remove="removeTab">
+    <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick" :addable="hasPerm('pms:hotelSetting:addImagesType') ? true : false" @tab-add="addTabPane" @tab-remove="removeTab">
       <el-tab-pane label="基础信息" name="syshotelinformation" v-if="hasPerm('pms:hotelSetting:hotelInfo')">
         <sys-hotel-information ref="syshotelinformation"/>
       </el-tab-pane>
@@ -12,7 +12,7 @@
         :key="item.imagesTypeId + item.typeName"
         :name="item.imagesTypeId"
         style="height:500px;overflow-y: auto;"
-        closable
+        :closable="hasPerm('pms:hotelSetting:delImagesType') ? true : false"
       >
         <el-tooltip slot="label" effect="dark" content="双击修改标签" placement="top">
           <span class="text-style" @dblclick="dbClick(item)">{{item.typeName}}</span>
@@ -21,7 +21,7 @@
 
         <span class="span-footer">
           <el-button @click="resetData(item.imagesTypeId)" size="mini">重 置</el-button>
-          <el-button type="primary" size="mini" @click="saveData(item.imagesTypeId)" :loading="loading">保 存</el-button>
+          <el-button type="primary" size="mini" @click="saveData(item.imagesTypeId)" :loading="loading" v-if="hasPerm('pms:hotelSetting:addImages')">保 存</el-button>
         </span>
       </el-tab-pane>
     </el-tabs>
