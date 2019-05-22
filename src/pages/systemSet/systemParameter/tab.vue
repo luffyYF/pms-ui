@@ -25,9 +25,9 @@
       <el-tab-pane label="基本参数配置" name="sysBaseParamRef">
         <sys-base-param ref="sysBaseParamRef"/>
       </el-tab-pane>
-      <el-tab-pane label="酒店信息" name="syshotelinformation">
+      <!-- <el-tab-pane label="酒店信息" name="syshotelinformation">
         <sys-hotel-information ref="syshotelinformation"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <!-- <el-tab-pane label="所有" name="all">
         <sys-base-param ref="allRef"/>
       </el-tab-pane> -->
@@ -52,8 +52,8 @@
       <el-tab-pane label="电话" name="tel" v-if="hasPerm('pms:paramsSetting:tel')">
         <sys-base-param ref="telRef"/>
       </el-tab-pane>
-      <el-tab-pane label="小程序预订单" name="reserveOrder" v-if="hasPerm('pms:paramsSetting:reserveOrder')">
-        <sys-base-param ref="reserveOrderRef"/>
+      <el-tab-pane label="小程序预订单" name="sysReserveOrder" v-if="hasPerm('pms:paramsSetting:reserveOrder')">
+        <sys-reserve-order ref="sysReserveOrderRef"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -69,7 +69,7 @@
   import SysOtherParameters from './SysOtherParameters'
   import SysHotelInformation from './SysHotelInformation'
   import SysBaseParam from './SysBaseParam'
-
+  import SysReserveOrder from './SysReserveOrder'
   
   export default {
     components: {
@@ -82,6 +82,7 @@
       SysOtherParameters,
       SysHotelInformation,
       SysBaseParam,
+      SysReserveOrder,
     },
     data () {
       return {
@@ -116,10 +117,12 @@
         }else if(this.activeName == 'sysotherparameters'){
           var child = this.$refs.sysotherparameters
           child.init()
-        }else if(this.activeName == 'syshotelinformation'){
-          var child = this.$refs.syshotelinformation
-          child.init()
-        }else if(this.activeName == 'sysBaseParamRef') {
+        }
+        // else if(this.activeName == 'syshotelinformation'){
+        //   var child = this.$refs.syshotelinformation
+        //   child.init()
+        // }
+        else if(this.activeName == 'sysBaseParamRef') {
           this.$refs.sysBaseParamRef.init(this.activeName);
         }else {
            this.$refs[this.activeName+"Ref"].init(this.activeName);

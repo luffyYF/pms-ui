@@ -6,7 +6,7 @@
 		<el-dialog class="add-permission" :title="title" top="8vh" :visible.sync="dialogVisible" width="700px"
 							:close-on-click-modal="false" :before-close="handleClose">
 			<el-form ref="dataForm" :model="dataForm.typePo" :rules="rules" label-width="106px">
-				<el-tabs type="border-card" v-model="activeName">
+				<el-tabs type="border-card" v-model="activeName"  @tab-click="handleClick" :addable="dataForm.typePo.typePk == '' ? false : true" @tab-add="addTabPane" @tab-remove="removeTab">
 					<el-tab-pane name="one" label="房型设置" style="height:500px;overflow-y: auto;">
 						<el-col :span="24">
 							<el-col :span="12">
@@ -147,7 +147,20 @@
 							</el-form-item>
 						</el-col>
 					</el-tab-pane>
-					<el-tab-pane name="three" label="图片设置" style="height:500px;overflow-y: auto;">
+					<el-tab-pane
+						v-for="item in editableTabs"
+						:key="item.imagesTypeId + item.typeName"
+						:name="item.imagesTypeId"
+						style="height:500px;overflow-y: auto;"
+						closable
+					>
+						<el-tooltip slot="label" effect="dark" content="双击修改标签" placement="top">
+							<span class="text-style" @dblclick="dbClick(item)">{{item.typeName}}</span>
+						</el-tooltip>
+						<images-edit :imagePos.sync="dataForm.imagePos" :id.sync="item.imagesTypeId" ref="imagesEditRefs"></images-edit>
+					</el-tab-pane>
+					<!-- <el-tab-pane name="three" style="height:500px;overflow-y: auto;" closable>
+						<span slot="label" class="text-style" @dblclick="dbClick">图片设置</span>
 						<el-col :span="24">
 							<el-form-item label="轮播图" label-width="70px" size="mini">
 								<el-upload
@@ -164,7 +177,7 @@
 								</el-upload>
 							</el-form-item>
 						</el-col>
-					</el-tab-pane>
+					</el-tab-pane> -->
 				</el-tabs>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -184,17 +197,23 @@
 				<el-button type="primary" @click="returnNum" size="mini">确 定</el-button>
 			</div>
 		</el-dialog>
+
+		<!-- 图片类型编辑 -->
+		<images-type-edit ref="imagesTypeEditRefs" @callback="refreshTabPane"></images-type-edit>
   </section>
 </template>
 
 <script>  
 import {updateRoomType,addRoomType,roomTypeDetail} from '@/api/utils/pmsTypeController'
 import UploadAvatar from "@/components/UploadImage/UploadAvatar2";
-import { getUploadImageAction } from "@/api/upload"
-import {sourceImgUrl} from '@/api/upload'
+import { getUploadImageAction, sourceImgUrl } from "@/api/upload"
+import { listApi, deleteApi } from "@/api/ModuleImagesTypeApi"
+import ImagesTypeEdit from "@/components/ImagesComponent/ImagesTypeEdit"
+import ImagesEdit from "@/components/ImagesComponent/ImagesEdit"
+import { listApi as imagesListApi } from "@/api/ModuleImagesApi"
 
   export default {
-  	components: {UploadAvatar},
+  	components: {UploadAvatar, ImagesTypeEdit, ImagesEdit},
     data () {
       return {
         dialogVisible: false,
@@ -237,7 +256,7 @@ import {sourceImgUrl} from '@/api/upload'
 						'·入住需要押金，金额以前台为准',
 						coverImage: '',
 					},
-          imagePos: []
+					imagePos: [],
         },
         title:"",
         rules: {//表单验证
@@ -253,13 +272,17 @@ import {sourceImgUrl} from '@/api/upload'
 				dialogFormVisible: false,
 				num: 0,
 				url: null,
+				editableTabs: [],
       }
     },
     methods: {
       showDialog (id) {
         if (id) {
 					this.title = '修改房型'
+					this.dataForm.imagePos = []
+					this.dataForm.typePo.typePk = id
 					this.findDetail(id)
+					this.refreshTabPane()
         } else {
           this.title = '添加房型'
           this.resetForm()
@@ -346,7 +369,7 @@ import {sourceImgUrl} from '@/api/upload'
           } else {
             self.loading = false
           }
-        });
+				});
       },
       handleClose () {
         this.dialogVisible = false
@@ -429,22 +452,82 @@ import {sourceImgUrl} from '@/api/upload'
 					} else {
 						this.dataForm.extendPo = res.data.extendPo
 					}
-					res.data.imagePos.forEach(item => {
+				})
+			},
+      handleClick (tab, event) {
+        if (this.activeName != 'one' && this.activeName != 'two') {
+          this.transmitParameters(tab.name)
+        }
+      },
+			transmitParameters (imagesTypeId) {
+				console.log(imagesTypeId)
+				let flag = false
+				this.dataForm.imagePos.forEach(element => {
+					if (element.imagesTypeId == imagesTypeId) {
+						flag = true
+					}
+				});
+				if (flag) {
+					return
+				}
+				imagesListApi({imagesTypeId: imagesTypeId}).then(res => {
+					res.list.forEach(item => {
 						// 图片包含http 或 https
-						if (item.imgUrl.indexOf('http://') > -1 || item.imgUrl.indexOf('https://') > -1) {
-							item.url = item.imgUrl
+						if (item.imageUrl.indexOf('http://') > -1 || item.imageUrl.indexOf('https://') > -1) {
+							item.url = item.imageUrl
 						} else {
 							// 拼接上项目前缀http或https
-							item.url = sourceImgUrl + item.imgUrl
+							item.url = sourceImgUrl + item.imageUrl
+						}
+						this.dataForm.imagePos.push(item)
+					})
+				})
+			},
+			dbClick (item) {
+				this.$refs.imagesTypeEditRefs.showDialog(item.imagesTypeId, this.dataForm.typePo.typePk, "RoomType")
+			},
+			addTabPane () {
+				this.$refs.imagesTypeEditRefs.showDialog(null, this.dataForm.typePo.typePk, "RoomType")
+			},
+			refreshTabPane (isDelete) {
+				listApi({thirdId: this.dataForm.typePo.typePk, groupId: "RoomType"}).then(res => {
+					this.editableTabs = res.list
+					if (isDelete) {
+						this.activeName = "one"
+					}
+				})
+			},
+			removeTab (imagesTypeId) {
+        this.$confirm('是否确定删除该标签?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+					deleteApi({id: imagesTypeId}).then(result => {
+						if(result.code == 1){
+							this.$message({
+								message: '删除成功',
+								type: 'success'
+							})
+							this.refreshTabPane(true)
 						}
 					})
-					this.dataForm.imagePos = res.data.imagePos
-				})
+        })
 			},
     }
   }
 </script>
 
+<style scoped>
+.text-style {
+	display: inline-block;
+	height: 40px;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+</style>
 <style>
 .upload-demo .el-icon-zoom-in:before {
 	content: "\e638";
