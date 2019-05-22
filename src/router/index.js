@@ -189,6 +189,9 @@ import shiftData from '@/pages/shiftData/tab.vue'
 import advanceClass from '@/pages/shiftData/advanceClass.vue'
 import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
 
+import TestVue from '@/pages/systemSet/TestVue'
+
+
 Vue.use(Router)
 /**
  * 项目启动就有权限
@@ -405,6 +408,7 @@ export const constantRouterMap = [
           {path: '/systemSet/pay', component: payConfig, label: '支付配置'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
+          {path: '/systemSet/iframe', component: TestVue, label: '支付配置'},
         ]
       },
       {
@@ -441,6 +445,7 @@ export const constantRouterMap = [
     ]
   }
 ]
+
 
 export default new Router({
   routes: constantRouterMap

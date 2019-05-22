@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import Vuex from 'vuex'
 import ElementUI from 'element-ui'
 import './filter'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -28,7 +29,7 @@ Vue.prototype.hasPerm = hasPermission
 Vue.prototype.refreshType = refreshPmsType
 // Vue.prototype.getRPath = getRPath
 Vue.use(VueAwesomeSwiper, {})
-
+Vue.use(Vuex)
 // 开启debug模式
 // Vue.config.debug = true
 Vue.config.productionTip = false
@@ -50,5 +51,8 @@ new Vue({
   router,
   // store,
   template: '<App/>',
-  components: {App}
+  components: {App},
+  mounted:function(){
+    console.log(this)//控制台
+  }
 })
