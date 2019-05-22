@@ -1,5 +1,5 @@
 // 钟点房设置
-<template>
+<template> 
   <div class="hour-room-setting-class">
       <div class="opr">
         <el-button type="primary" size="mini" @click="add" v-if="hasPerm('pms:hourRoomSetting:add')">添加</el-button>

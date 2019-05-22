@@ -322,7 +322,6 @@ export default {
     }
   },
   filters: {
-
     toMoney: function(num) {
       if(num){
         if(isNaN(num)) {

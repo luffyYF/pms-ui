@@ -1,7 +1,7 @@
 import request from '@/utils/requestJson'
 
 /**
- * 系统参数配置
+ * 系统参数配置 【逐步去除】
  */
 
 //查找参数
