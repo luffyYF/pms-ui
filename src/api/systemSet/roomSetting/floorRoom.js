@@ -29,6 +29,14 @@ export const delStorey = params => {
 export const listRoom = params => {
   return request.get('/back/room/list',{params:params})
 }
+//新-关联房锁数据房间列表
+export const listStoreyRoom = params => {
+  return request.get('/back/room/listStoreyRoom',{params:params})
+}
+export const batchUpdateRoomProp = params => {
+  return request.post('/back/room/batchUpdateRoomProp',params)
+}
+
 // 添加一個房間
 export const addRoom = params => {
   return request.post('/back/room/add', params)

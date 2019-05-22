@@ -39,6 +39,10 @@
             <el-form-item>
               <el-button @click="batchAddRoomDialog = true" type="primary">批量生成房间</el-button>
             </el-form-item>
+            <el-form-item>
+              <el-button @click="batchPropClick" type="primary">批量修改房间</el-button>
+            </el-form-item>
+            
           </el-form>
           <el-table size="mini" 
             border 
@@ -59,19 +63,31 @@
                 <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
               </template>
             </el-table-column>
-            <el-table-column prop="intelligentFlag" label="艾美信智能锁" align="center">
+            <el-table-column prop="intelligentFlag" label="智能锁" align="center">
               <template slot-scope="scope">
-                <span v-if="scope.row.intelligentFlag=='Y'">已安装</span>
-                <span v-else="scope.row.intelligentFlag=='N'">未安装</span>
+                <span v-if="scope.row.paramPk != null && scope.row.paramPk != ''">已安装</span>
+                <span v-else>未安装</span>
               </template>
             </el-table-column>
-            <el-table-column prop="intelligentBanNo" label="艾美信 楼栋编号" align="center">
+            <el-table-column prop="param1" label="艾美信 楼栋编号" align="center">
+              <template slot-scope="scope">
+                  <span>{{scope.row.param1 | lockFilter(scope.row)}}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="intelligentFloorNo" label="艾美信 楼层编号" align="center">
+            <el-table-column prop="param2" label="艾美信 楼层编号" align="center">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.param2 | lockFilter(scope.row)}}</span>
+                  </template>
             </el-table-column>
-            <el-table-column prop="intelligentRoomNo" label="艾美信 房间编号" align="center">
+            <el-table-column prop="param3" label="艾美信 房间编号" align="center">
+                <template slot-scope="scope">
+                    <span>{{scope.row.param3 | lockFilter(scope.row)}}</span>
+                </template>
             </el-table-column>
-            <el-table-column prop="rflLockNo" label="RFL 锁号" align="center">
+            <el-table-column prop="param1" label="RFL 锁号" align="center">
+                <template slot-scope="scope">
+                    <span>{{scope.row.param1 | lockFilter2(scope.row)}}</span>
+                </template>
             </el-table-column>
             <!-- <el-table-column prop="telPhone" label="电话分机" align="center">
             </el-table-column>
@@ -81,8 +97,11 @@
             </el-table-column>
             <el-table-column
               fixed="right"
-              label="操作">
+              label="操作"
+              width="120">
               <template slot-scope="scope">
+                <el-button @click="lockViewClick(scope.row)" type="text" size="mini">智能锁</el-button>
+                <el-button @click="deleteLockParamClick(scope.row.paramPk)" v-if="scope.row.paramPk != null && scope.row.paramPk != ''" type="text" size="mini">删除锁</el-button>
                 <el-button @click="updateClick(scope.row)" type="text" size="mini">编辑</el-button>
                 <el-button @click="delRoom(scope.row)" type="text" size="mini">删除</el-button>
               </template>
@@ -133,7 +152,20 @@
             style="width:300px;">
           </el-input>
         </el-form-item>
-        <el-form-item style="display:block;margin-left:32px;">
+        <br>
+        <!-- <el-form-item label="智能门锁" prop="hardwarePk">
+            <el-select size="mini"  @change="lockChange" style="width:90%;" v-model="addFrom.hardwarePk" placeholder="类型">
+                <el-option v-for="y in lockList" :label="codeObj[y.brand]" :value="y.hardwarePk" :key="y.hardwarePk"></el-option>
+            </el-select>
+        </el-form-item>
+
+        <el-form-item :label="y.label" v-for="(y,i) in paramList" :key="i" required>
+            <el-input v-if="y.type == 'text'" v-model="addFrom[y.key]" :placeholder="'请输入'+y.label" auto-complete="off"></el-input>
+            <upload-avatar v-else-if="y.type == 'image'" :avatar.sync="addFrom[y.key]"></upload-avatar>
+            <span style="color:red">{{y.remark}}</span>
+        </el-form-item> -->
+
+        <!-- <el-form-item style="display:block;margin-left:32px;">
             <el-checkbox label="艾美信" v-model="addFrom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
         <el-form-item label="楼栋编号：" v-if="addFrom.intelligentFlag=='Y'" required>
@@ -152,7 +184,7 @@
         <el-form-item label="RFL锁号：" v-if="addFrom.rflFlag=='Y'">
           <el-input v-model="addFrom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
           <span style="color:red">*注：8位数字</span>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addRoomDialog = false" size="mini">取 消</el-button>
@@ -199,7 +231,19 @@
             style="width:300px;">
           </el-input>
         </el-form-item>
-        <el-form-item style="display:block;margin-left:32px;">
+        <br>
+        <!-- <el-form-item label="智能门锁" prop="hardwarePk">
+            <el-select size="mini"  @change="lockChange" style="width:90%;" v-model="selectRoom.hardwarePk" placeholder="类型">
+                <el-option v-for="y in lockList" :label="HOTEL_HARDWARE[y.brand]" :value="y.hardwarePk" :key="y.hardwarePk"></el-option>
+            </el-select>
+        </el-form-item>
+
+        <el-form-item :label="y.label" v-for="(y,i) in paramList" :key="i" required>
+            <el-input v-if="y.type == 'text'" v-model="selectRoom[y.key]" :placeholder="'请输入'+y.label" auto-complete="off"></el-input>
+            <upload-avatar v-else-if="y.type == 'image'" :avatar.sync="selectRoom[y.key]"></upload-avatar>
+            <span style="color:red">{{y.remark}}</span>
+        </el-form-item> -->
+        <!-- <el-form-item style="display:block;margin-left:32px;">
           <el-checkbox label="艾美信" v-model="selectRoom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
         </el-form-item>
         <el-form-item label="楼栋编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
@@ -225,7 +269,7 @@
         <el-form-item label="RFL锁号：" v-if="selectRoom.rflFlag=='Y'">
           <el-input v-model="selectRoom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
           <span style="color:red">*注：8位数字</span>
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -233,6 +277,8 @@
         <el-button type="primary" @click="updateRoom" size="mini" :loading="commitLoading">确 定</el-button>
       </div>
     </el-dialog>
+
+
     <!-- 批量添加房间 -->
     <el-dialog title="批量添加房间" :visible.sync="batchAddRoomDialog" width="820px">
       <el-form :model="previewData" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" size="mini">
@@ -296,13 +342,61 @@
         <el-button type="primary" @click="addRooms()" size="mini" :loading="commitLoading">确 定</el-button>
       </div>
     </el-dialog>
+
+
+    <el-dialog title="智能锁设置" :visible.sync="roomLockDialog" width="820px">
+      <el-form  :model="roomLockObj" :label-width="formLabelWidth" :inline="true" size="mini">
+        
+        <el-form-item label="智能门锁" prop="hardwarePk">
+            <el-select size="mini"  @change="lockChange" style="width:90%;" v-model="roomLockObj.hardwarePk" placeholder="类型">
+                <el-option v-for="y in lockList" :label="HOTEL_HARDWARE[y.brand]" :value="y.hardwarePk" :key="y.hardwarePk"></el-option>
+            </el-select>
+        </el-form-item>
+
+        <el-form-item :label="y.label" v-for="(y,i) in paramList" :key="i" required>
+            <el-input v-if="y.type == 'text'" v-model="roomLockObj[y.key]" :placeholder="'请输入'+y.label" auto-complete="off"></el-input>
+            <upload-avatar v-else-if="y.type == 'image'" :avatar.sync="roomLockObj[y.key]"></upload-avatar>
+            <span style="color:red">{{y.remark}}</span>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="roomLockDialog = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="saveRoomLock" size="mini" >保存</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="批量编辑房间" :visible.sync="batchPropDialog" width="820px">
+      <el-form  :rules="propRules" :label-width="formLabelWidth" :inline="true" size="mini">
+        <el-form-item label="属性" >
+          <el-checkbox @change="propChange(obj.check,i)" v-for="(obj,i) in propList" :key="i" v-model="obj.check">{{obj.label}}</el-checkbox>
+        </el-form-item>
+        <el-form-item :label="obj.label" v-if="obj.check" v-for="(obj,index) in propList" :key="index" required>
+            <el-select v-if="obj.key == 'roomTypePk'" v-model="obj.value" >
+                <el-option 
+                v-for="item in listTypeData"
+                :key="item.typePk"
+                :label="item.typeName"
+                :value="item.typePk">
+                </el-option>
+            </el-select>
+            <el-input v-else :type="obj.type" v-model="obj.value" :placeholder="'请输入'+obj.label" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="batchPropDialog = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="saveBatchClck" size="mini" >保存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {addStorey, listStorey, delStorey, listRoom, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
+import {addStorey, listStorey, delStorey, listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
 import {listType} from '@/api/utils/pmsTypeController'
 import UploadAvatar from "@/components/UploadImage/UploadAvatar2";
+import {allListApi } from '@/api/systemSet/hotelHardware/hotelHardware'
+
+import {addApi,updateApi,detailApi,deleteApi } from '@/api/systemSet/hotelHardware/DeviceRoomLockParamApi'
 export default {
   components: {UploadAvatar},
   data() {
@@ -365,7 +459,8 @@ export default {
         "intelligentBanNo":null,
         "intelligentFloorNo":null,
         "intelligentRoomNo":null,
-        "rflLockNo":null
+        "rflLockNo":null,
+        "hardwarePk":""
       },
       options: [
         {
@@ -401,18 +496,195 @@ export default {
         }
       ],
       value5: [],
+
+      //智能锁
+      lockList:[],
+      lockObj:{
+
+      },
+      //批量修改属性 begin
+      propRules:{
+        roomTypePk: [{ required: true, message: '请选择房间类型', trigger: 'change' }],
+        roomOrientation: [{ required: true, message: '请填写房间朝向', trigger: 'blur' }],
+        telPhone: [{ required: true, message: '请填写电话分机', trigger: 'blur' }],
+        telPhoneLine: [{ required: true, message: '电话外线', trigger: 'blur' }],
+        roomSurvey: [{ required: true, message: '概况', trigger: 'blur' }],
+      },
+      propList:[
+        {key:"roomTypePk",type:"select",label:"房间类型",check:false,value:""},
+        {key:"roomOrientation",type:"text",label:"房间朝向",check:false,value:""},
+        {key:"telPhone",type:"text",label:"电话分机",check:false,value:""},
+        {key:"telPhoneLine",type:"text",label:"电话外线",check:false,value:""},
+        {key:"roomSurvey",type:"textarea",label:"概况",check:false,value:""},
+      ],
+      batchPropDialog:false,
+
+      // propObj:{
+      //   roomTypePk: "",
+      //   roomOrientation: "",
+      //   telPhone: "",
+      //   telPhoneLine: "",
+      //   roomSurvey: "",
+      //   storeyPk:""
+      // },
+      //批量修改属性 end
+      codeObj:this.HOTEL_HARDWARE,
+      paramList:[
+
+      ],
+      
+      roomLockObj:{
+
+      },
+      roomLockDialog:false
+      //智能锁
     };
   },
   mounted(){
     this.init();
   },
   methods: {
+    //批量修改属性 begin
+    propChange(val,key){
+      if(!val){
+        this.propList[i].value = null
+      }
+    },
+    batchPropClick(){
+      if(this.selectStorey.storeyName == '未选择'){
+        this.$message({
+          message: '请选择楼层',
+          type: 'warning'
+        });
+        return
+      }
+      this.batchPropDialog = true
+    },
+    saveBatchClck(){
+      var pmsRoomPo = {
+        
+      }
+      var props = []
+      for(let i=0;i<this.propList.length;i++){
+        if(this.propList[i].check ){
+          if(this.propList[i].key == 'roomTypePk' && (this.propList[i].value == null || this.propList[i].value == "")){
+            this.$message({ type: 'warning', message: '房间类型不能为空' })
+            return
+          }
+          pmsRoomPo[this.propList[i].key] = this.propList[i].value
+          props.push(this.propList[i].key)
+        }
+      }
+      if(props == null |  props.length <= 0){
+          this.$message({ type: 'warning', message: '请选择勾选要设置的参数' })
+          return
+      }
+      var data = {
+          storeyPk:this.selectStorey.storeyPk,
+          props:props,
+          pmsRoomPo:pmsRoomPo
+      }
+      batchUpdateRoomProp(data).then(res=>{
+          this.batchPropDialog = false
+          this.listStoreyRoom(this.selectStorey.storeyPk)
+          this.$message({ type: res.code == 1?'success':'warning', message: res.sub_msg })
+      })
+    },
+    //批量修改属性 end
+    //智能锁
+    saveRoomLock(){
+        let dataForm = this.roomLockObj
+        let api = null
+        if(dataForm.hardwarePk){
+          dataForm.hardwareCode = this.lockObj[dataForm.hardwarePk].code
+        }
+        if (dataForm.paramPk) {
+          api = updateApi(dataForm)
+        } else {
+          api = addApi(dataForm)
+        }
+        api.then(res => {
+            if(res.code == 1){
+                this.$message({ type: 'success', message: res.sub_msg })
+                this.roomLockDialog = false
+                this.listStoreyRoom(this.selectStorey.storeyPk)
+            }else{
+                this.$message({ type: 'warning', message: res.sub_msg })
+            }
+        }).finally(() => {
+        })
+    },
+    lockViewClick(row){
+      this.roomLockObj = {roomPk:row.roomPk}
+      if(row.paramPk != null && row.paramPk != ''){
+        this.roomLockDetail(row.paramPk)
+      }else{
+        this.listAllLock()
+      }
+      this.roomLockDialog = true
+    },
+    roomLockDetail(id){
+      detailApi({id:id}).then(res=>{
+        this.roomLockObj = res.data
+        this.listAllLock(true)
+      })
+    },
+    deleteLockParamClick(id){
+      this.$confirm('此操作将移除房间智能锁参数?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteApi({id:id}).then(res=>{
+          this.$message({
+            message: res.sub_msg,
+            type: res.code == 1?'success':'warning'
+          });
+          this.listStoreyRoom(this.selectStorey.storeyPk)
+        })
+      });
+    },
+    lockChange(val){
+      let obj = this.lockObj[val]
+      if(val != null){
+        //艾美信
+        if(obj.code.indexOf("AMX") != -1){
+          this.paramList = [
+            {label:"楼栋编号",type:"text",key:"param1",remark:""},
+            {label:"楼层编号",type:"text",key:"param2",remark:""},
+            {label:"房间编号",type:"text",key:"param3",remark:""},
+            {label:"授权图片",type:"image",key:"param4",remark:""},
+            {label:"门锁图片",type:"image",key:"param5",remark:""},
+          ]
+          //宏安兴
+        }else if(obj.code.indexOf("HAX") != -1){
+            this.paramList = [
+              {label:"RFL锁号",type:"text",key:"param1",remark:"*注：8位数字"},
+              {label:"酒店标识编码",type:"text",key:"param2",remark:""},
+            ]
+        }
+      }
+    },
+    //智能锁
     init(){
       this.listStorey()
       this.listType()
     },
     numSort: function (a,b) {
       return a.count-b.count;
+    },
+    listAllLock(isEdit){
+      allListApi({type:0}).then(res=>{
+        let data = res.data
+        this.lockList = data
+        this.lockObj = {}
+        for(let i=0;i<data.length;i++){
+          this.lockObj[data[i].hardwarePk] = data[i]
+        }
+        if(isEdit && this.roomLockObj.hardwarePk != null && this.roomLockObj.hardwarePk != ""){
+          this.lockChange(this.roomLockObj.hardwarePk)
+        }
+      })
     },
     listType(){
       const self = this
@@ -480,7 +752,16 @@ export default {
     storeyRowClick(row, event, column){
       this.selectStorey = row
       this.loading = true
-      this.listRoom(this.selectStorey.storeyPk)
+      this.listStoreyRoom(this.selectStorey.storeyPk)
+    },
+    listStoreyRoom(){
+      const self = this;
+      listStoreyRoom({storeyPk: self.selectStorey.storeyPk}).then(result => {
+        self.roomData = result.data
+        self.loading = false
+      }).catch(() => {
+        self.loading = false
+      })
     },
     listRoom(storeyPk) {
       const self = this;
@@ -498,7 +779,7 @@ export default {
           type: 'warning'
         });
       }else{
-        
+        // this.listAllLock()
         this.addFrom={intelligentFlag:'N',rflFlag:'N'}
         this.addRoomDialog = true
       }
@@ -507,6 +788,9 @@ export default {
       this.commitLoading = true;
       const self = this
       self.addFrom.storeyPk = this.selectStorey.storeyPk
+      // if(self.addFrom.hardwarePk != null && self.addFrom.hardwarePk != "" ){
+      //   self.addFrom.hardwareCode = this.lockObj[self.addFrom.hardwarePk].code
+      // }
       addRoom(self.addFrom).then(result => {
         if(result.code == 1){
           self.addFrom = self.addFroms
@@ -515,7 +799,7 @@ export default {
             type: 'success'
           })
         }
-        this.listRoom(this.selectStorey.storeyPk)
+        this.listStoreyRoom(this.selectStorey.storeyPk)
         self.addRoomDialog = false 
       }).finally(()=>{
         this.commitLoading = false;
@@ -536,7 +820,7 @@ export default {
             type: 'success'
           })
         }
-        this.listRoom(this.selectStorey.storeyPk)
+        this.listStoreyRoom(this.selectStorey.storeyPk)
         self.batchAddRoomDialog = false 
       }).finally(()=>{
         this.commitLoading = false;
@@ -568,9 +852,11 @@ export default {
       });
       
     },
+    
     updateClick(row){
       let str = JSON.stringify(row)
       this.selectRoom = JSON.parse(str)
+      // this.listAllLock(true)
       this.updateRoomDialog = true
     },
     updateRoom(){
@@ -581,6 +867,9 @@ export default {
       if(this.selectRoom.rflFlag=='N'){
         this.selectRoom.rflLockNo = ''
       }
+      // if(self.selectRoom.hardwarePk != null && self.selectRoom.hardwarePk != "" ){
+      //   self.selectRoom.hardwareCode = this.lockObj[self.selectRoom.hardwarePk].code
+      // }
       updateRoom(this.selectRoom).then(result => {
         if(result.code == 1){
           self.$message({
@@ -588,7 +877,7 @@ export default {
             type: 'success'
           });
         }
-        self.listRoom();
+        self.listStoreyRoom();
         self.updateRoomDialog = false
       }).finally(()=>{
         this.commitLoading = false;
@@ -609,7 +898,7 @@ export default {
             });
             this.storeyRowClick(this.selectStorey);
           }
-          self.listRoom()
+          self.listStoreyRoom()
         })
       }).catch(() => {
         this.$message({
@@ -633,6 +922,20 @@ export default {
       // }
       this.previewRoom()
     }
+  },
+  filters:{
+    lockFilter(v,v1){
+      if(v1.paramPk != null && v1.hardwareCode != null &&  v1.hardwareCode.indexOf('AMX') != -1){
+        return v
+      }
+      return ''
+    },
+    lockFilter2(v,v1){
+      if(v1.paramPk != null && v1.hardwareCode != null &&  v1.hardwareCode.indexOf('HAX') != -1){
+        return v
+      }
+      return ''
+    },
   }
 };
 </script>

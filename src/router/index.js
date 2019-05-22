@@ -153,6 +153,8 @@ import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
 import marketingSetting from '@/pages/systemSet/marketing/tab'
 import payConfig from '@/pages/systemSet/pay/tab'
+import hotelHardware from '@/pages/systemSet/hotelHardware/tab'
+import roomLockParam from '@/pages/systemSet/roomLockParam/tab'
 // import zlRoomStatusSetting from '@/pages/systemSet/zlRoomStatusSetting/tab'
 // import zlPriceSetting from '@/pages/systemSet/zlRoomStatusSetting/zlPriceSetting'
 
@@ -406,6 +408,8 @@ export const constantRouterMap = [
           {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},,
           {path: '/systemSet/marketingSetting', component: marketingSetting, label: '营销'},
           {path: '/systemSet/pay', component: payConfig, label: '支付配置'},
+          {path: '/systemSet/hotelHardware', component: hotelHardware, label: '酒店硬件'},
+          {path: '/systemSet/roomLockParam', component: roomLockParam, label: '房锁设置'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
           {path: '/systemSet/iframe', component: TestVue, label: '支付配置'},
