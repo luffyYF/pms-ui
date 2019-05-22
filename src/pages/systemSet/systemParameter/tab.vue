@@ -52,6 +52,9 @@
       <el-tab-pane label="电话" name="tel" v-if="hasPerm('pms:paramsSetting:tel')">
         <sys-base-param ref="telRef"/>
       </el-tab-pane>
+      <el-tab-pane label="小程序预订单" name="reserveOrder" v-if="hasPerm('pms:paramsSetting:reserveOrder')">
+        <sys-base-param ref="reserveOrderRef"/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -66,6 +69,7 @@
   import SysOtherParameters from './SysOtherParameters'
   import SysHotelInformation from './SysHotelInformation'
   import SysBaseParam from './SysBaseParam'
+
   
   export default {
     components: {
@@ -77,7 +81,7 @@
       SysPrint,
       SysOtherParameters,
       SysHotelInformation,
-      SysBaseParam
+      SysBaseParam,
     },
     data () {
       return {

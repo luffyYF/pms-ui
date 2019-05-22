@@ -204,7 +204,7 @@
           if (valid) {
             this.loading = true
             this.dataForm.depositUserId = this.userInfo.userPk
-            this.dataForm.depositUserName = this.userInfo.upmsRealName
+            this.dataForm.depositUserName = this.userInfo.realName
             this.dataForm.companyPk = this.company.companyPk
             addApi(this.dataForm).then(res => {
               this.$message({ type: 'success', message: res.sub_msg })

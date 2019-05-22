@@ -2,7 +2,8 @@
   <div>
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
-        营业日期：<el-date-picker v-model="datepicker"
+        <el-form :inline="true" size="mini">
+        <!-- 营业日期：<el-date-picker v-model="datepicker"
                   type="daterange"
                   value-format="yyyy-MM-dd"
                   range-separator="至"
@@ -10,25 +11,50 @@
                   end-placeholder="结束日期" 
                   :picker-options="startTimeOptions"
                   size="mini" :clearable="false">
-              </el-date-picker>
+              </el-date-picker> -->
+        <el-form-item label="开始日期">
+        <el-date-picker
+          v-model="begin"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          size="mini"
+          :clearable="false">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结束日期">
+        <el-date-picker
+          v-model="end"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          size="mini"
+          :clearable="false">
+        </el-date-picker>
+      </el-form-item>
         房号：<el-input v-model="roomNumber" size="mini" style="width:120px;margin-bottom:5px"></el-input>
-        <div style="margin-top:10px;">
+          
+        <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="historyStoreDate">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
           <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
-        </div>
+        <!-- </div> -->
+        </el-form>
       </div>
     </el-col>
-    <el-col :span="24" id="print-historystore">
+    <el-col :span="24">
       <div class="tabs">
-        <div class="tavs-title">
-          <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
-          <h4 style="text-align:center;">历史离店报表</h4>
+        <div class="tavs-title" id="print-historystore">
+           <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+          <!-- <h3 style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+          <h3 style="text-align:center;">历史离店报表</h3>
         </div>
-        <div class="tabs-contetn">
-          <!-- <el-table 
+        <div class="tabs-contetn" id="print-historystoreTable">
+          <!-- <el-table
             v-loading="loading" 
             :data="tableData" 
             border 
@@ -79,52 +105,65 @@
               </template>
             </el-table-column>
           </el-table> -->
-          <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+          <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: center;" cellpadding="0" cellspacing="0">
+             <thead>
             <tr>
-              <th rowspan="2">组单号</th>
-              <th rowspan="2">房号</th>
-              <th rowspan="2">房间类型</th>
-              <th rowspan="2">房价</th>
-              <th rowspan="2">宾客姓名</th>
-              <th rowspan="2">入住时间</th>
-              <th rowspan="2">离店时间</th>
-              <th colspan="2">消费</th>
-              <th rowspan="2">消费合计</th>
-              <th colspan="5">结算</th>
-              <th rowspan="2">结算合计</th>
-              <th rowspan="2">操作员</th>
+              <td colspan="8" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
+              <td colspan="9" style="text-align: right;font-size: 14px;">营业日期从：{{begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{end}}&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            </tr>
+             <tr>
+              <th rowspan="2" style="width:7%;border: 1px solid #000;">组单号</th>
+              <th rowspan="2" style="width:5%;border: 1px solid #000;">房号</th>
+              <th rowspan="2" style="width:8%;border: 1px solid #000;">房间类型</th>
+              <th rowspan="2" style="width:5%;border: 1px solid #000;">房价</th>
+              <th rowspan="2" style="width:8%;border: 1px solid #000;">宾客姓名</th>
+              <th rowspan="2" style="width:8%;border: 1px solid #000;">入住时间</th>
+              <th rowspan="2" style="width:8%;border: 1px solid #000;">离店时间</th>
+              <th colspan="2" style="width:8%;border: 1px solid #000;">消费</th>
+              <th rowspan="2" style="width:7%;border: 1px solid #000;">消费合计</th>
+              <th colspan="5" style="width:24%;border: 1px solid #000;">结算</th>
+              <th rowspan="2" style="width:7%;border: 1px solid #000;">结算合计</th>
+              <th rowspan="2" style="width:12%;border: 1px solid #000;">操作员</th>
             </tr>
             <tr>
-              <th>房费</th>
-              <th>其他</th>
-              <th>现金</th>
-              <th>银行卡</th>
-              <th>支付宝</th>
-              <th>微信支付</th>
-              <th>其他</th>
+              <th style="border: 1px solid #000;">房费</th>
+              <th style="border: 1px solid #000;">其他</th>
+              <th style="border: 1px solid #000;">现金</th>
+              <th style="border: 1px solid #000;">银行卡</th>
+              <th style="border: 1px solid #000;">支付宝</th>
+              <th style="border: 1px solid #000;">微信支付</th>
+              <th style="border: 1px solid #000;">其他</th>
             </tr>
+          </thead>
+           
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.orderNo}}</td>
-              <td><span>{{item.roomNumber == 'null' ? "" : item.roomNumber}}</span></td>
-              <td>{{item.typeName}}</td>
-              <td><span>{{item.price == 'null' ? "" : item.price}}</span></td>
-              <td>{{item.memName}}</td>
-              <td>{{item.beginDate}}</td>
-              <td>{{item.endDate}}</td>
-              <td>{{item.totalRoomPrice}}</td>
-              <td>{{item.totalOrderPrice}}</td>
+              <td style="border: 1px solid #000;">{{item.orderNo}}</td>
+              <td style="border: 1px solid #000;"><span>{{item.roomNumber == 'null' ? "" : item.roomNumber}}</span></td>
+              <td style="border: 1px solid #000;">{{item.typeName}}</td>
+              <td style="border: 1px solid #000;"><span>{{item.price == 'null' ? "" : item.price}}</span></td>
+              <td style="border: 1px solid #000;">{{item.memName}}</td>
+              <td style="border: 1px solid #000;">{{item.beginDate}}</td>
+              <td style="border: 1px solid #000;">{{item.endDate}}</td>
+              <td style="border: 1px solid #000;">{{item.totalRoomPrice}}</td>
+              <td style="border: 1px solid #000;">{{item.totalOrderPrice}}</td>
 
-              <td>{{item.consumptionAmount}}</td>
-              <td>{{item.cash}}</td>
-              <td>{{item.bankCard}}</td>
-              <td>{{item.aliPay}}</td>
-              <td>{{item.wxPay}}</td>
-              <td>{{item.preLicensing + item.check + item.remittance + item.order}}</td>
-              <td>{{item.settlementAmount}}</td>
-              <td><span>{{item.createUserName == 'null' ? "" : item.createUserName}}</span></td>
+              <td style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
+              <td style="border: 1px solid #000;">{{item.cash}}</td>
+              <td style="border: 1px solid #000;">{{item.bankCard}}</td>
+              <td style="border: 1px solid #000;">{{item.aliPay}}</td>
+              <td style="border: 1px solid #000;">{{item.wxPay}}</td>
+              <td style="border: 1px solid #000;">{{item.preLicensing + item.check + item.remittance + item.order}}</td>
+              <td style="border: 1px solid #000;">{{item.settlementAmount}}</td>
+              <td style="border: 1px solid #000;"><span>{{item.createUserName == 'null' ? "" : item.createUserName}}</span></td>
             </tr>
+             <tfoot>
+            <tr>
+              <td colspan="8" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="9" style="text-align: right;font-size: 14px;">打印日期：<span>{{datepickerTime}}</span></td>
+            </tr>
+          </tfoot>
           </table>
-          <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.upmsUserName}}</span></p>
+          <!-- <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p> -->
         </div>
       </div>
     </el-col>
@@ -136,13 +175,16 @@
 import {historyStore} from '@/api/reportCenter'
 import {formatDate, copyObj} from '@/utils/index'
 import common from "@/api/common"
+import moment from "moment"
 import exportExcel from '@/components/download/exportExcel'
 import { getLodop } from '@/utils/lodop'
 
 export default {
   data() {
     return {
-      datepicker: [formatDate(new Date(), 'yyyy-MM-dd'), formatDate(new Date(), 'yyyy-MM-dd')],
+      // datepicker: [formatDate(new Date(), 'yyyy-MM-dd'), formatDate(new Date(), 'yyyy-MM-dd')],
+      begin:moment().format("YYYY-MM-DD"),
+      end:moment().add(1,'days').format("YYYY-MM-DD"),
       datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
       roomNumber: '',
       tableData: [],
@@ -181,8 +223,13 @@ export default {
   methods: {
     historyStoreDate(){
       this.loading = true
-      const datepicker = this.datepicker;
-      historyStore({begin: datepicker[0], end: datepicker[1], roomNumber: this.roomNumber}).then(res => {
+      // const datepicker = this.datepicker;
+      // historyStore({begin: datepicker[0], end: datepicker[1], roomNumber: this.roomNumber}).then(res => {
+      //   console.log(res.data)
+      //   this.tableData = res.data
+      //   this.loading = false
+      // })
+      historyStore({begin: this.begin, end: this.end, roomNumber: this.roomNumber}).then(res => {
         console.log(res.data)
         this.tableData = res.data
         this.loading = false
@@ -197,7 +244,7 @@ export default {
     //   f.contentWindow.print();
     // },
       print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -208,6 +255,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+       this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -215,10 +263,19 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-historystore").innerHTML);
+      this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-historystoreTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-historystore").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     },
     exportReport() {
-      exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.datepicker[0] + "&end=" + this.datepicker[1] + "&roomNumber=" + this.roomNumber);
+      // exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.datepicker[0] + "&end=" + this.datepicker[1] + "&roomNumber=" + this.roomNumber);
+       exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.begin + "&end=" + this.end + "&roomNumber=" + this.roomNumber);
     },
   }
 }

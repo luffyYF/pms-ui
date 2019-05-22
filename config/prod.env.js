@@ -1,6 +1,6 @@
 'use strict'
 module.exports = {
-  NODE_ENV: '"testing"',
+  NODE_ENV: '"production"',
   API_ROOT: '"https://www.housefeel.cn/pms-back"',
   IMAGE_ROOT: '"https://www.housefeel.cn/"',
   UPLOAD_ROOT: '"https://www.housefeel.cn/wechat-back"',//上传文件的地址，使用微云服务器

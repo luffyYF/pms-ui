@@ -727,7 +727,7 @@
           beginDate: moment().format("YYYY-MM-DD HH:mm:ss"),
           level: 0,
           remindFlag: 'N',
-          createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName
+          createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).realName
         }
         if(moment().hour()<6){
           this.repairForm.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");
@@ -745,7 +745,7 @@
           beginDate: moment().format("YYYY-MM-DD HH:mm:ss"),
           level: 0,
           remindFlag: 'N',
-          createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).upmsUserName
+          createUserName: JSON.parse(localStorage.getItem('pms_userinfo')).realName
         }
         if(moment().hour()<6){
           this.disableForm.beginDate = moment().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss");

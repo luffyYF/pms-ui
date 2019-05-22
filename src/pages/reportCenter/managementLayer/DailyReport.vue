@@ -3,7 +3,7 @@
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
         <!-- 营业日期：<el-date-picker v-model="datepicker" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini"></el-date-picker> -->
-        营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini" @change="dailyReport"></el-date-picker>
+        营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini"></el-date-picker>
         <el-button type="primary" size="mini" @click="dailyReport()">网页预览</el-button>
         <el-button type="primary" size="mini">PDF预览</el-button>
         <!-- <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'date='+datepicker" target="_blank">导出EXCEL</a></el-button> -->
@@ -12,40 +12,59 @@
         <el-button type="primary" size="mini" @click="print">打印预览</el-button>
       </div>
     </el-col>
-    <el-col :span="24" id="print-dailyreport" style="padding:20px">
+    <el-col :span="24" style="padding:20px">
       <div class="tabs">
-        <div class="tavs-title" style="text-align:center">
-          <h3>{{activeCompany.companyName}}</h3>
-          <h4>管理层日报表</h4>
+        <div class="tabs-container"  id="print-dailyreport">
+        <div class="tavs-title">
+          <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+          <!-- <h3>{{activeCompany.companyName}}</h3> -->
+          <h3  style="text-align:center">管理层日报表</h3>
         </div>
-        <div class="tabs-container">
+        <!-- <div class="tabs-container"> -->
           <!-- <p style="margin: 0px">打印日期：<span>自 2018-03-09 至 2018-03-09</span>&nbsp;&nbsp;&nbsp;&nbsp;营业日期：<span>2018-03-09</span> </p> -->
-          <!-- <el-table 
+          <!-- <el-table
             :header-cell-style="tableStyleObj" 
             :cell-style="tableStyleObj" 
             :data="tableData" 
-            border 
+            border
             style="width: 100%; margin-top: -5px;border:1px solid black;">
             <el-table-column prop="name" label="项目"></el-table-column>
             <el-table-column prop="day" label="当日"></el-table-column>
             <el-table-column prop="month" label="本月累计"></el-table-column>
             <el-table-column prop="year" label="本年累计"></el-table-column>
           </el-table> -->
-          <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+          <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+          <thead>
             <tr>
-              <th>项目</th>
-              <th>当日</th>
-              <th>本月累计</th>
-              <th>本年累计</th>
+              <th colspan="2" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</th>
+              <th colspan="2" style="text-align: right;font-size: 14px;">营业日期：{{datepicker}}</th>   
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="width:25%;border: 1px solid #000;">项目</th>
+              <th style="width:25%;border: 1px solid #000;">当日</th>
+              <th style="width:25%;border: 1px solid #000;">本月累计</th>
+              <th style="width:25%;border: 1px solid #000;">本年累计</th>
             </tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.name}}</td>
-              <td>{{item.day}}</td>
-              <td>{{item.month}}</td>
-              <td>{{item.year}}</td>
+              <td style="width:25%;border: 1px solid #000;">{{item.name}}</td>
+              <td style="width:25%;border: 1px solid #000;">{{item.day}}</td>
+              <td style="width:25%;border: 1px solid #000;">{{item.month}}</td>
+              <td style="width:25%;border: 1px solid #000;">{{item.year}}</td>
             </tr>
+            </tbody>
+             <tfoot>
+            <tr>
+              <td colspan="2" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="2" style="text-align: right;font-size: 14px;">打印日期：<span>{{datepickerTime}}</span></td>
+            </tr>
+          </tfoot>
           </table>
-          <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	操作员：	{{userInfo.upmsUserName}}</span></p>
+        </div>
+          <!-- <p style="height:20px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p> -->
           <p style="height:20px;color:red">注(1)：此报表为夜审报表，数据统计截止到昨天。</p>
           <p style="height:20px;color:red">注(1)：房晚数 = 夜核房晚数 + 日租房晚数 + 钟点房晚数 + 特殊房晚数 + 公寓房晚数</p>
           <p style="height:20px;color:red;padding-left:44px">应收合计 = 房租收入+其他收入</p>
@@ -54,7 +73,7 @@
           <p style="height:20px;color:red;padding-left:44px">房均消费 = 应收合计/房晚数</p>
           <p style="height:20px;color:red;padding-left:44px">人均消费 = 应收合计/人晚数</p>
           <p style="height:20px;color:red;padding-left:44px;margin-bottom:50px;">出租率 = 房晚数 / (总房间数) * 100</p>
-        </div>
+        <!-- </div> -->
       </div>
     </el-col>
     <!-- 打印填充 iframe-->
@@ -125,7 +144,7 @@ export default {
     //   f.contentWindow.print();
     // }
      print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -136,6 +155,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -143,7 +163,14 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       //LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-dailyreport").innerHTML);
+      // LODOP.ADD_PRINT_TABLE(128,"5%","90%",314,strStyle+document.getElementById("div2").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);	
+      this.LODOP.ADD_PRINT_HTM(20,20,770,1103,document.getElementById("print-dailyreport").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",4); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
     }
   }
 }

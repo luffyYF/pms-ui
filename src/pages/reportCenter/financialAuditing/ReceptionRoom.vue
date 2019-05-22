@@ -2,6 +2,7 @@
   <div>
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
+        <el-form :inline="true" size="mini">
           营业日期：<el-date-picker
                       v-model="form.beginDate"
                       type="date"
@@ -16,26 +17,32 @@
               placeholder="选择日期"
               :clearable="false" size="mini">
             </el-date-picker>
-        <div style="margin-top:10px;">
+        <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="receptionRoomDate">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
           <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
-        </div>
+        <!-- </div> -->
+        </el-form>
       </div>
     </el-col>
-    <el-col :span="24" id="print-receptionroom">
+    <el-col :span="24">
       <div class="tabs">
+        <div  id="print-receptionroom">
         <div class="tavs-title">
-          <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
-          <h4 style="text-align:center;">接待房报表</h4>
+           <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+          <!-- <h3 style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+          <h3 style="text-align:center;">接待房报表</h3>
         </div>
         <div class="tabs-contetn">
-          <p style="text-align: center;">
+          <!-- <p style="text-align: center;">
             抵店时间：{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}
-          </p>
-          <!-- <el-table 
+          </p> -->
+        </div>
+          <!-- <el-table
             v-loading="loading" 
             :data="tableData" 
             border 
@@ -63,27 +70,34 @@
             </el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
           </el-table> -->
-            <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+          <div id="print-receptionroomTable">
+            <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <thead>
             <tr>
-              <th>房间号</th>
-              <th>房间类型</th>
-              <th>组单号</th>
-              <th>客人</th>
-              <th>来店时间</th>
-              <th>离店时间</th>
-              <th>操作员</th>
-              <th>房间状态</th>
-              <th>备注</th>
+              <td colspan="4" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
+              <td colspan="5" style="text-align: right;font-size: 14px;">抵店时间：{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}</td>
             </tr>
+            <tr>
+              <th style="border: 1px solid #000;">房间号</th>
+              <th style="border: 1px solid #000;">房间类型</th>
+              <th style="border: 1px solid #000;">组单号</th>
+              <th style="border: 1px solid #000;">客人</th>
+              <th style="border: 1px solid #000;">来店时间</th>
+              <th style="border: 1px solid #000;">离店时间</th>
+              <th style="border: 1px solid #000;">操作员</th>
+              <th style="border: 1px solid #000;">房间状态</th>
+              <th style="border: 1px solid #000;">备注</th>
+            </tr>
+          </thead>
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.roomNumber}}</td>
-              <td>{{item.roomTypeName}}</td>
-              <td>{{item.orderNo}}</td>
-              <td>{{item.guestName}}</td>
-              <td>{{item.beginDate}}</td>
-              <td>{{item.endDate}}</td>
-              <td>{{item.createUserName}}</td>
-              <td>
+              <td style="border: 1px solid #000;">{{item.roomNumber}}</td>
+              <td style="border: 1px solid #000;">{{item.roomTypeName}}</td>
+              <td style="border: 1px solid #000;">{{item.orderNo}}</td>
+              <td style="border: 1px solid #000;">{{item.guestName}}</td>
+              <td style="border: 1px solid #000;">{{item.beginDate}}</td>
+              <td style="border: 1px solid #000;">{{item.endDate}}</td>
+              <td style="border: 1px solid #000;">{{item.createUserName}}</td>
+              <td style="border: 1px solid #000;">
                  <span v-if="item.orderStatus == 'RESERVE'">预定</span>
                   <span v-else-if="item.orderStatus == 'OBLIGATION'">待付款</span>
                   <span v-else-if="item.orderStatus == 'CHECKIN'">在住</span>
@@ -93,10 +107,17 @@
                   <span v-else-if="item.orderStatus == 'NOSHOW'">NoShow</span>
                   <span v-else>退房未结</span>
               </td>
-              <td>{{item.remark}}</td>
+              <td style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
+             <tfoot>
+            <tr>
+              <td colspan="4" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="5" style="text-align: right;font-size: 14px;">打印日期：<span>{{datepickerTime}}</span></td>
+            </tr>
+          </tfoot>
           </table>
-          <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.upmsUserName}}</span></p>
+          </div>
+          <!-- <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p> -->
         </div>
       </div>
     </el-col>
@@ -118,7 +139,8 @@ export default {
       loading: false,
       form: {
         beginDate: moment().format("YYYY-MM-DD"),
-        endDate: moment().format("YYYY-MM-DD")
+        //endDate: moment().format("YYYY-MM-DD")
+        endDate:moment().add(1,'days').format("YYYY-MM-DD")
       },
       datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
       tableData: [],
@@ -165,7 +187,7 @@ export default {
     //   f.contentWindow.print();
     // },
      print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -176,6 +198,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -183,7 +206,15 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-receptionroom").innerHTML);
+      this.LODOP.ADD_PRINT_TABLE(90,10,770,903,document.getElementById("print-receptionroomTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-receptionroom").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     },
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.beginDate + "&endDate=" + this.form.endDate);
@@ -198,6 +229,7 @@ export default {
 }
 .tavs-title{
   text-align: center;
+  margin-top: 20px;
 }
 .left{
   float: left;

@@ -54,13 +54,13 @@ export default {
     goBack() {
       logout().then(res=>{}).finally(()=>{
         this.clearLocalInfo();
-        localStorage.setItem('pms_token','');
+        localStorage.setItem('token','');
         this.$router.push("/login");
       })
     },
     //设置公司主键和班次到cookies跳转首页
     toHome(company) {
-      getUserInfo().then(res => {
+      getUserInfo({systemId: '473891058107809792'}).then(res => {
         if(localStorage.getItem("sysParm") && JSON.parse(localStorage.getItem("sysParm")).companyPk != company.companyPk){
           localStorage.removeItem("roomList")
           localStorage.removeItem("statisticsData")

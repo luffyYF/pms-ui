@@ -14,7 +14,7 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-  let token = localStorage.getItem('pms_token')
+  let token = localStorage.getItem('token')
   config.headers['Authorization'] = 'Bearer '+token
   return config;
 }, error => {

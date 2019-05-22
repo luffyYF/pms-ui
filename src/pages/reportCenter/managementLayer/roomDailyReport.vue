@@ -17,12 +17,17 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
-    <div class="table-container" id="print-accountsummaryreport">
-      <h3 style="text-align:center">{{activeCompany.companyName}}</h3>
-      <h4 style="text-align:center">经理日报表</h4>
-      <div class="table-box">
-        <p style="text-align:center">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
-        <!-- <el-table 
+    <div class="table-container">
+      <div  id="print-accountsummaryreport">
+       <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+        </div>
+      <!-- <h3 style="text-align:center">{{activeCompany.companyName}}</h3> -->
+      <h3 style="text-align:center">经理日报表</h3>
+    </div>
+      <div class="table-box" id="print-accountsummaryreportTable">
+        <!-- <p style="text-align:center">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p> -->
+        <!-- <el-table
           :header-cell-style="tableStyleObj" 
           :cell-style="tableStyleObj" 
           :data="listData" 
@@ -42,27 +47,41 @@
           <el-table-column prop="UP_YEAR" align="center" label="上年同期"></el-table-column>
           <el-table-column prop="settlementAmount" align="center"  label="年增长率"></el-table-column>
         </el-table> -->
-         <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+         <table width="100%" border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+              <thead>
             <tr>
-              <th>统计项目</th>
-              <th>今日发生</th>
-              <th>本月累计</th>
-              <th>上月同期</th>
-              <th>本年累计</th>
+              <th colspan="3" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</th>
+              <th colspan="2" style="text-align: right;font-size: 14px;">营业日期：{{queryObj.begin}}</th>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000;">统计项目</th>
+              <th style="border: 1px solid #000;">今日发生</th>
+              <th style="border: 1px solid #000;">本月累计</th>
+              <th style="border: 1px solid #000;">上月同期</th>
+              <th style="border: 1px solid #000;">本年累计</th>
               <!-- <th>年增长率</th> -->
             </tr>
+          </thead>
+          <tbody>
             <tr v-for="(item, index) in listData" :key="index">
-              <td v-if="item.project == true" colspan="6" style="background: oldlace;text-align: center">{{item.project?item.projectName:item.name}}</td>
-              <td v-else>{{item.project?item.projectName:item.name}}</td>
-              <td v-if="item.project == false">{{item.DAY}}</td>
-              <td v-if="item.project == false">{{item.MONTH}}</td>
-              <td v-if="item.project == false">{{item.UP_MONTH}}</td>
-              <td v-if="item.project == false">{{item.YEAR}}</td>
+              <td v-if="item.project == true" colspan="6" style="background: oldlace;text-align: center;border:1px solid #000;">{{item.project?item.projectName:item.name}}</td>
+              <td v-else style="border: 1px solid #000;">{{item.project?item.projectName:item.name}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.DAY}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.MONTH}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.UP_MONTH}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.YEAR}}</td>
               <!-- <td v-if="item.project == false">{{item.settlementAmount}}</td> -->
             </tr>
+            </tbody>
+             <tfoot>
+            <tr>
+              <td colspan="2" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="3" style="text-align: right;font-size: 14px;">打印日期：<span>{{sDate}}</span></td>
+            </tr>
+          </tfoot>
           </table>
       </div>
-    </div>
+  </div>
     <!-- 打印填充 iframe-->
     <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
   </div>
@@ -76,7 +95,7 @@ export default {
    data() {
     return {
       userInfo:{},
-      sDate: moment().format("YYYY-MM-DD"),
+      sDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       sTime: moment().format("HH:mm:ss"),
       queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
       listData: [],
@@ -161,7 +180,7 @@ export default {
     //   f.contentWindow.print();
     // }
     print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -172,6 +191,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -179,7 +199,14 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-accountsummaryreport").innerHTML);
+      this.LODOP.ADD_PRINT_TABLE(90,10,765,853,document.getElementById("print-accountsummaryreportTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);	
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-accountsummaryreport").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
     }
   }
 }

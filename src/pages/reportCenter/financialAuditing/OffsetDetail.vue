@@ -50,22 +50,26 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
-        <el-button type="primary">PDF预览</el-button>
-        <el-button type="primary" @click="exportReport">导出EXCEL</el-button>
-        <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
+        <el-button type="primary" size="mini" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
+        <el-button type="primary" size="mini">PDF预览</el-button>
+        <el-button type="primary" @click="exportReport" size="mini">导出EXCEL</el-button>
+        <el-button type="primary" @click="print" size="mini"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
-    <div class="table-container" id="print-receiptsreport">
-      <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
-      <h4 style="text-align:center;">冲减明细报表</h4>
-      <div>
-        <p style="text-align:center;">
+    <div class="table-container">
+      <div id="print-receiptsreport">
+         <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+      <!-- <h3 style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+      <h3 style="text-align:center;">冲减明细报表</h3>
+        <!-- <p style="text-align:center;">
           营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
-        </p>
-        <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
-        <!-- <el-table :data="tableData" 
+        </p> -->
+      </div>
+        <!-- <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p> -->
+        <!-- <el-table :data="tableData"
         :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj" border style="width: 100%; margin:0 auto;border:1px solid black" size="mini">
           <el-table-column prop="roomNumber" label="房号"></el-table-column>
@@ -78,29 +82,55 @@
           <el-table-column prop="amount3" label="授权人"></el-table-column> -->
            <!--<el-table-column prop="remark" label="备注"></el-table-column>
         </el-table>  -->
-          <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+        <div id="print-receiptsreportTable">
+          <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <thead>
             <tr>
-              <th>房号</th>
-              <th>客人姓名</th>
-              <th>项目名称</th>
-              <th>入账时间</th>
-              <th>消费金额</th>
-              <th>结算金额</th>
-              <th>收银员</th>
-              <th>授权人</th>
-              <th>备注</th>
+              <td colspan="3" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
+              <td colspan="11" style="text-align: right;font-size: 14px;" >
+          营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
+          收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span></td>
             </tr>
+            <tr>
+              <th style="width:6%;border: 1px solid #000;">房号</th>
+              <th style="width:9%;border: 1px solid #000;">客人姓名</th>
+              <th style="width:10%;border: 1px solid #000;">项目名称</th>
+              <th style="width:18%;border: 1px solid #000;">入账时间</th>
+              <th style="width:10%;border: 1px solid #000;">消费金额</th>
+              <th style="width:10%;border: 1px solid #000;">结算金额</th>
+              <th style="width:8%;border: 1px solid #000;">收银员</th>
+              <th style="width:10%;border: 1px solid #000;">授权人</th>
+              <th style="width:10%;border: 1px solid #000;">备注</th>
+            </tr>
+          </thead>
+            <!-- <tr>
+              <th style="width:6%;border: 1px solid #000;">房号</th>
+              <th style="width:9%;border: 1px solid #000;">客人姓名</th>
+              <th style="width:10%;border: 1px solid #000;">项目名称</th>
+              <th style="width:18%;border: 1px solid #000;">入账时间</th>
+              <th style="width:10%;border: 1px solid #000;">消费金额</th>
+              <th style="width:10%;border: 1px solid #000;">结算金额</th>
+              <th style="width:8%;border: 1px solid #000;">收银员</th>
+              <th style="width:10%;border: 1px solid #000;">授权人</th>
+              <th style="width:10%;border: 1px solid #000;">备注</th>
+            </tr> -->
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.roomNumber}}</td>
-              <td>{{item.memName}}</td>
-              <td>{{item.projectName}}</td>
-              <td>{{item.createTime}}</td>
-               <td>{{item.consumptionAmount}}</td>
-              <td>{{item.settlementAmount}}</td>
-              <td>{{item.createUserName}}</td>
-              <td>{{item.amount3}}</td>
-              <td>{{item.remark}}</td>
+              <td style="border: 1px solid #000;">{{item.roomNumber}}</td>
+              <td style="border: 1px solid #000;">{{item.memName}}</td>
+              <td style="border: 1px solid #000;">{{item.projectName}}</td>
+              <td style="border: 1px solid #000;">{{item.createTime}}</td>
+               <td style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
+              <td style="border: 1px solid #000;">{{item.settlementAmount}}</td>
+              <td style="border: 1px solid #000;">{{item.createUserName}}</td>
+              <td style="border: 1px solid #000;">{{item.amount3}}</td>
+              <td style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
+             <tfoot>
+            <tr>
+              <td colspan="4" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="5" style="text-align: right;font-size: 14px;">打印日期：<span>{{sDate}}</span></td>
+            </tr>
+          </tfoot>
           </table>
       </div>
     </div>
@@ -122,7 +152,7 @@ export default {
   data() {
     return {
       userInfo:{},
-      sDate: moment().format("YYYY-MM-DD"),
+      sDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       sTime: moment().format("HH:mm:ss"),
       queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD"),projectPk:''},
       tableData:[],
@@ -232,7 +262,7 @@ export default {
     //   f.contentWindow.print();
     // },
     print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -243,6 +273,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -250,7 +281,15 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-receiptsreport").innerHTML);
+         this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-receiptsreportTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-receiptsreport").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     },
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.queryObj.begin + "&end=" + this.queryObj.end + "&shiftPk=" + this.queryObj.shiftPk + "&projectPk=" + this.queryObj.projectPk + "&userPk=" + this.queryObj.userPk);

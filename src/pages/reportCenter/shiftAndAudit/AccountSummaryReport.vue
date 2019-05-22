@@ -2,7 +2,7 @@
 <template>
   <div class="container">
     <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
-      <el-form-item label="营业日期">
+      <!-- <el-form-item label="营业日期">
         <el-date-picker
           v-model="queryObj.begenAndEnd"
           type="daterange"
@@ -12,6 +12,24 @@
           end-placeholder="结束日期"
           :clearable="false">
       </el-date-picker>
+      </el-form-item> -->
+       <el-form-item label="开始日期">
+        <el-date-picker
+          v-model="queryObj.begin"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          :clearable="false">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结束日期">
+        <el-date-picker
+          v-model="queryObj.end"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          :clearable="false">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="收银员">
         <el-select v-model="queryObj.userPk" placeholder="选择收银员">
@@ -46,15 +64,19 @@
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
     </el-form>
-    <div class="table-container" id="print-accountsummaryreport">
-       <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
-      <h4 style="text-align:center;">收银入账汇总报表</h4>
-      <div class="table-box">
-        <p style="text-align:center;">
+    <div class="table-container">
+      <div  id="print-accountsummaryreport">
+       <!-- <h3 style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+        <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+        </div>
+      <h3 style="text-align:center;">收银入账汇总报表</h3>
+        <!-- <p style="text-align:center;">
           营业日期从：{{reportBeginDate}}&nbsp;&nbsp;到&nbsp;&nbsp;{{reportEndDate}}&nbsp;&nbsp;&nbsp;&nbsp;
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
-        </p>
-        <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
+        </p> -->
+      </div>
+        <!-- <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p> -->
         <!-- <el-table
           :header-cell-style="tableStyleObj"
           :cell-style="tableStyleObj"
@@ -77,33 +99,48 @@
           <el-table-column prop="createTime" align="center" label="发生日期" min-width="100px"></el-table-column>
           <el-table-column prop="remark" align="center" label="备注" min-width="100px"></el-table-column>
         </el-table> -->
-        <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+        <div id="print-accountsummaryreportTable">
+        <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <thead>
             <tr>
-              <th>收银员</th>
-              <th>组单</th>
-              <th>客单</th>
-              <th>房号</th>
-              <th style="width:10%">姓名</th>
-              <th style="width:7%">消费金额</th>
-              <th style="width:7%">结算金额</th>
-              <th>发生日期</th>
-              <th>备注</th>
+              <td colspan="3" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
+              <td colspan="6" style="text-align:right;font-size: 14px;">
+          营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
+          收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}}</span></td>
             </tr>
+             <tr>
+              <th style="border: 1px solid #000;">收银员</th>
+              <th style="width:7%;border: 1px solid #000;">组单</th>
+              <th style="width:7%;border: 1px solid #000;">客单</th>
+              <th style="width:7%;border: 1px solid #000;">房号</th>
+              <th style="width:7%;border: 1px solid #000;">姓名</th>
+              <th style="width:10%;border: 1px solid #000;">消费金额</th>
+              <th style="width:10%;border: 1px solid #000;">结算金额</th>
+              <th style="border: 1px solid #000;">发生日期</th>
+              <th style="border: 1px solid #000;">备注</th>
+            </tr>
+          </thead>
             <tr v-for="(item, index) in listData" :key="index">
-              <td v-if="item.project == true" colspan="9"  style="background: oldlace;text-align: center"><span>{{item.project?item.projectName:item.createUserName}}</span></td>
-              <td v-else>{{item.project?item.projectName:item.createUserName}}</td>
-              <td v-if="item.project == false">{{item.orderGuestNo}}</td>
-              <td v-if="item.project == false">{{item.orderNo}}</td>
-              <td v-if="item.project == false">{{item.roomNumber}}</td>
-              <td v-if="item.project == false">{{item.memName}}</td>
-              <td v-if="item.project == false">{{item.consumptionAmount}}</td>
-              <td v-if="item.project == false">{{item.settlementAmount}}</td>
-              <td v-if="item.project == false">{{item.createTime}}</td>
-              <td v-if="item.project == false">{{item.remark}}</td>
+              <td v-if="item.project == true" colspan="9"  style="background: oldlace;text-align: center;border: 1px solid #000;"><span>{{item.project?item.projectName:item.createUserName}}</span></td>
+              <td v-else style="border: 1px solid #000;">{{item.project?item.projectName:item.createUserName}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.orderGuestNo}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.orderNo}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.roomNumber}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.memName}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.settlementAmount}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.createTime}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
+             <tfoot>
+            <tr>
+              <td colspan="4" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="5" style="text-align: right;font-size: 14px;">打印日期：<span>{{sDate}}</span></td>
+            </tr>
+          </tfoot>
           </table>
+        </div>
       </div>
-    </div>
 
     <!-- 打印填充 iframe-->
     <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
@@ -122,17 +159,19 @@ export default {
    data() {
     return {
       userInfo:{},
-      sDate: moment().format("YYYY-MM-DD"),
+      sDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       sTime: moment().format("HH:mm:ss"),
       queryObj:{ 
         userName:"",
         shift:"",
         userPk:'',
         shiftPk:'',
-        begenAndEnd:[
-          moment().format("YYYY-MM-DD"),
-          moment().add(1,'days').format("YYYY-MM-DD"),
-        ],
+        // begenAndEnd:[
+        //   moment().format("YYYY-MM-DD"),
+        //   moment().add(1,'days').format("YYYY-MM-DD"),
+        // ],
+        begin:moment().format("YYYY-MM-DD"),
+        end:moment().add(1,'days').format("YYYY-MM-DD")
       },
       listData: [],
       selectShiftData:[],
@@ -204,8 +243,10 @@ export default {
         shift: this.queryObj.shift,
         userPk: this.queryObj.userPk,
         shiftPk: this.queryObj.shiftPk,
-        begin: this.queryObj.begenAndEnd[0],
-        end: this.queryObj.begenAndEnd[1]
+        // begin: this.queryObj.begenAndEnd[0],
+        // end: this.queryObj.begenAndEnd[1]
+        begin:this.queryObj.begin,
+        end:this.queryObj.end
       }
 
       reportShouYinYuanHuiZong(params).then((data)=>{
@@ -242,21 +283,33 @@ export default {
       })
       if(this.queryObj.shiftPk) {
         if(beginTime && endTime && beginTime>endTime){
-          if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
-            this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
-            this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+          // if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]){
+          //   this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+          //   this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+          // }
+           if(this.queryObj.begin==this.queryObj.end){
+            this.$set(this.queryObj.begin, 1, moment(this.queryObj.begin).add(1,'days').format("YYYY-MM-DD"))
+            this.$alert("日期已自动变更为"+this.queryObj.begin+" 至 "+this.queryObj.end,"提示",{type:'warning'});
           }
         }
-        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5)
-        this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
+        // this.reportBeginDate = this.queryObj.begenAndEnd[0] + " " + beginTime.substring(0,5)
+        // this.reportEndDate = this.queryObj.begenAndEnd[1] + " " + endTime.substring(0,5)
+           this.reportBeginDate = this.queryObj.begin + " " + beginTime.substring(0,5)
+           this.reportEndDate = this.queryObj.end + " " + endTime.substring(0,5)
       }else {
         //班次选择全部
-        if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]) {
-          this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
-          this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+        // if(this.queryObj.begenAndEnd[0]==this.queryObj.begenAndEnd[1]) {
+        //   this.$set(this.queryObj.begenAndEnd, 1, moment(this.queryObj.begenAndEnd[0]).add(1,'days').format("YYYY-MM-DD"))
+        //   this.$alert("日期已自动变更为"+this.queryObj.begenAndEnd[0]+" 至 "+this.queryObj.begenAndEnd[1],"提示",{type:'warning'});
+        // }
+        // this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 06:00"
+        // this.reportEndDate = this.queryObj.begenAndEnd[1] + " 05:59"
+         if(this.queryObj.begin==this.queryObj.end) {
+          this.$set(this.queryObj.begin, 1, moment(this.queryObj.begin).add(1,'days').format("YYYY-MM-DD"))
+          this.$alert("日期已自动变更为"+this.queryObj.begin+" 至 "+this.queryObj.end,"提示",{type:'warning'});
         }
-        this.reportBeginDate = this.queryObj.begenAndEnd[0] + " 06:00"
-        this.reportEndDate = this.queryObj.begenAndEnd[1] + " 05:59"
+        this.reportBeginDate = this.queryObj.begin + " 06:00"
+        this.reportEndDate = this.queryObj.end+ " 05:59"
       }
 
     },
@@ -273,7 +326,8 @@ export default {
     },
     //导出EXCEL
     downloadExcel(){
-      let url = '/pms/report/shouYinYuanHuiZongExcel?begin='+this.queryObj.begenAndEnd[0]+'&end='+this.queryObj.begenAndEnd[1]+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk
+      // let url = '/pms/report/shouYinYuanHuiZongExcel?begin='+this.queryObj.begenAndEnd[0]+'&end='+this.queryObj.begenAndEnd[1]+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk
+       let url = '/pms/report/shouYinYuanHuiZongExcel?begin='+this.queryObj.begin+'&end='+this.queryObj.end+'&userPk='+this.queryObj.userPk+'&userName='+this.queryObj.userName+'&shift='+this.queryObj.shift+'&shiftPk='+this.queryObj.shiftPk
       downloadExcel(url, '收银入账汇总报表');
     },
     //打印预览
@@ -285,7 +339,7 @@ export default {
     //   f.contentWindow.print();
     // }
      print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -296,6 +350,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -303,7 +358,15 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-accountsummaryreport").innerHTML);
+       this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-accountsummaryreportTable").innerHTML);
+       this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-accountsummaryreport").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     }
   }
 }

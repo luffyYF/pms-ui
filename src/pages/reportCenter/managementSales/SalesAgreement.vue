@@ -4,9 +4,29 @@
       <div class="demo-input-suffix">
         
         <el-form :inline="true" size="mini" class="demo-form-inline">
-          <el-form-item label="营业日期：" prop="begenAndEnd">
+          <!-- <el-form-item label="营业日期：" prop="begenAndEnd">
           <date-picker v-model="begenAndEnd"></date-picker>
-          </el-form-item>
+          </el-form-item> -->
+            <el-form-item label="开始日期">
+        <el-date-picker
+          v-model="queryObj.begin"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          size="mini"
+          :clearable="false">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结束日期">
+        <el-date-picker
+          v-model="queryObj.end"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          size="mini"
+          :clearable="false">
+        </el-date-picker>
+      </el-form-item>
             <el-form-item label="协议类型:">
             <el-select v-model="printDate.agreementTypePk" placeholder="选择协议类型">
               <el-option
@@ -16,25 +36,29 @@
               :value="item.typePk"></el-option>
             </el-select>     
           </el-form-item>
-        </el-form>
         <!-- <el-date-picker v-model="begenAndEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini"></el-date-picker> -->
         <el-button type="primary" size="mini" @click="init">网页预览</el-button>
         <el-button type="primary" size="mini">PDF预览</el-button>
         <el-button type="primary" size="mini">导出EXCEL</el-button>
         <el-button type="primary" size="mini">添加到收藏夹</el-button>
         <el-button type="primary" size="mini" @click="print">打印预览</el-button>
+         </el-form>
       </div>
     </el-col>
-    <el-col :span="24" id="print-salesAgreement">
+    <el-col :span="24">
       <div class="tabs">
+        <div  id="print-salesAgreement">
         <div class="tavs-title">
-          <h3 style="text-align:center">深圳市前海豪斯菲尔信息科技有限公司</h3>
-          <h4 style="text-align:center">销售分析报表 - 协议单位</h4>
+           <div style="margin-left: 7px;text-align: left;margin-top:20px;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+          <!-- <h3 style="text-align:center">深圳市前海豪斯菲尔信息科技有限公司</h3> -->
+          <h3 style="text-align:center">销售分析报表 - 协议单位</h3>
         </div>
-        <div class="tabs-contetn">
-          <p style="margin: 0px;text-align:center">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span></p>
+          <!-- <p style="margin: 0px;text-align:center">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span></p> -->
+        </div>
           <!-- show-summary :summary-method="getSummaries" -->
-          <!-- <el-table :header-cell-style="tableStyleObj" 
+          <!-- <el-table :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"  :data="tableData" v-loading="loading" border height="450"  style="width: 100%; margin-top: 5px;border:1px solid black">
             <el-table-column prop="agreementName" label="协议单位"></el-table-column>
             <el-table-column prop="rentalRoomNum" label="房晚数" width="70"></el-table-column>
@@ -79,41 +103,54 @@
               </template>
             </el-table-column>
           </el-table> -->
-          <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+          <div  id="print-salesAgreementTable">
+          <table width="100%" border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: center;" cellpadding="0" cellspacing="0">
+             <thead>
             <tr>
-              <th>协议单位</th>
-              <th>房晚数</th>
-              <th>房晚数%</th>
-              <th>人晚数</th>
-              <th>人晚数%</th>
-              <th>房租收入</th>
-              <th>房租收入%</th>
-              <th>餐饮收入</th>
-              <th>其他收入</th>
-              <th>消费合计</th>
-              <th>消费合计%</th>
-              <th>平均房价</th>
-              <th>房均消费</th>
-              <th>人均消费</th>
+              <td colspan="7" style="text-align: left;font-size: 14px;">公司:深圳市前海豪斯菲尔信息科技有限公司</td>
+              <td colspan="10" style="text-align: right;font-size: 14px;">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span></td>
             </tr>
+             <tr>
+              <th style="border: 1px solid #000;">协议单位</th>
+              <th style="border: 1px solid #000;">房晚数</th>
+              <th style="border: 1px solid #000;">房晚数%</th>
+              <th style="border: 1px solid #000;">人晚数</th>
+              <th style="border: 1px solid #000;">人晚数%</th>
+              <th style="border: 1px solid #000;">房租收入</th>
+              <th style="border: 1px solid #000;">房租收入%</th>
+              <th style="border: 1px solid #000;">餐饮收入</th>
+              <th style="border: 1px solid #000;">其他收入</th>
+              <th style="border: 1px solid #000;">消费合计</th>
+              <th style="border: 1px solid #000;">消费合计%</th>
+              <th style="border: 1px solid #000;">平均房价</th>
+              <th style="border: 1px solid #000;">房均消费</th>
+              <th style="border: 1px solid #000;">人均消费</th>
+            </tr>
+          </thead>
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.agreementName}}</td>
-              <td>{{item.rentalRoomNum}}</td>
-              <td><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,1)}}</span></td>
-              <td>{{item.peopleNightRoomNum}}</td>
-              <td><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,2)}}</span></td>
-              <td>{{item.houseFeeIncome}}</td>
-              <td><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,3)}}</span></td>
-              <td>{{item.cateringFeeIncome}}</td>
-              <td>{{item.orderFeeIncome}}</td>
-              <td>{{item.consumptionAmount}}</td>
-              <td><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,4)}}</span></td>
-              <td><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,5)}}</span></td>
-              <td><span v-if="tableData.length-1 !=index">{{item | moneyFilter(sumObj,6)}}</span></td>
-              <td><span v-if="tableData.length-1 !=index">{{item | moneyFilter(sumObj,7)}}</span></td>
+              <td style="border: 1px solid #000;">{{item.agreementName}}</td>
+              <td style="border: 1px solid #000;">{{item.rentalRoomNum}}</td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,1)}}</span></td>
+              <td style="border: 1px solid #000;">{{item.peopleNightRoomNum}}</td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,2)}}</span></td>
+              <td style="border: 1px solid #000;">{{item.houseFeeIncome}}</td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,3)}}</span></td>
+              <td style="border: 1px solid #000;">{{item.cateringFeeIncome}}</td>
+              <td style="border: 1px solid #000;">{{item.orderFeeIncome}}</td>
+              <td style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,4)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,5)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 !=index">{{item | moneyFilter(sumObj,6)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 !=index">{{item | moneyFilter(sumObj,7)}}</span></td>
             </tr>
+             <tfoot>
+            <tr>
+              <td colspan="7" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="7" style="text-align: right;font-size: 14px;">打印日期：<span>{{printDate.now}}</span></td>
+            </tr>
+          </tfoot>
           </table>
-          <p style="height:20px;"><span class="left">打印日期：{{printDate.now}}</span><span class="right">	操作员：	{{userInfo.upmsRealName}}</span></p>
+          <!-- <p style="height:20px;"><span class="left">打印日期：{{printDate.now}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p> -->
           <p style="height:20px;color:red">	注：此报表为夜审报表，数据统计截止到昨天。。</p>
         </div>
       </div>
@@ -172,34 +209,34 @@ export default {
     }
   },
   methods: {
-    // getSummaries(param) {
-    //   const { columns, data } = param;
-    //   const sums = [];
-    //   columns.forEach((column, index) => {
-    //     console.log(column)
-    //     if (index === 0) {
-    //       sums[index] = '合计';
-    //       return;
-    //     }
-    //     if(column.property === 'roomNightNumber' || column.property === 'lateNumberOfPeople'  || column.property === 'rentIncome' || column.property === 'restaurantIncome' || column.property === 'otherIncome' || column.property === 'totalConsumption') {
-    //       const values = data.map(item => parseInt(item[column.property]));
-    //       if (!values.every(value => isNaN(value))) {
-    //         sums[index] = values.reduce((prev, curr) => {
-    //           const value = Number(curr);
-    //           if (!isNaN(value)) {
-    //             return prev + curr;
-    //           } else {
-    //             return prev;
-    //           }
-    //         }, 0);
-    //         sums[index] += ' ';
-    //       } else {
-    //         sums[index] = '';
-    //       }
-    //     }
-    //   });
-    //   return sums;
-    // },
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        console.log(column)
+        if (index === 0) {
+          sums[index] = '合计';
+          return;
+        }
+        if(column.property === 'roomNightNumber' || column.property === 'lateNumberOfPeople'  || column.property === 'rentIncome' || column.property === 'restaurantIncome' || column.property === 'otherIncome' || column.property === 'totalConsumption') {
+          const values = data.map(item => parseInt(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] += ' ';
+          } else {
+            sums[index] = '';
+          }
+        }
+      });
+      return sums;
+    },
     init(){
       if(this.queryObj.begin == null || this.queryObj.begin == "" || this.queryObj.end == null || this.queryObj.end == ""){
         this.$message({ type: 'warning', message: "请选择营业时间" })
@@ -240,7 +277,7 @@ export default {
     },
      //打印预览
      print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -251,6 +288,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+       this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -258,7 +296,15 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-salesAgreement").innerHTML);
+      this.LODOP.ADD_PRINT_TABLE(90,10,770,903,document.getElementById("print-salesAgreementTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-salesAgreement").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     }
   },
   filters:{
@@ -312,6 +358,15 @@ export default {
   created() {
     this.init()
     this.getListType();
+     var test = window.localStorage.getItem("current_logon_company");
+    this.activeCompany = JSON.parse(test);
+    if (
+      this.activeCompany.companyName == "" ||
+      this.activeCompany.companyName == null ||
+      this.activeCompany.companyName == undefined
+    ) {
+      this.activeCompany.companyName == "";
+    }
   },
   mounted() {
     

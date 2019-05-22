@@ -2,6 +2,7 @@
   <div>
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
+        <el-form :inline="true" size="mini">
           修改日期自：<el-date-picker
                       v-model="form.beginDate"
                       type="date"
@@ -17,26 +18,31 @@
               :clearable="false" size="mini">
             </el-date-picker>
           房号：<el-input v-model="form.roomNumber" size="mini" style="width:120px;margin-bottom:5px"></el-input>
-        <div style="margin-top:10px;">
+        <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="rentContractDate">网页预览</el-button>
           <el-button type="primary" size="mini">PDF预览</el-button>
           <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
-        </div>
+        <!-- </div> -->
+        </el-form>
       </div>
     </el-col>
-    <el-col :span="24" id="print-historyHousePriceInfo">
+    <el-col :span="24">
       <div class="tabs">
+        <div id="print-historyHousePriceInfo">
         <div class="tavs-title">
-          <h3  style="text-align:center;">{{activeCompany.companyName}}</h3>
-          <h4 style="text-align:center;">历史房价信息报表</h4>
+            <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+          <!-- <h3  style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+          <h3 style="text-align:center;">历史房价信息报表</h3>
         </div>
-        <div class="tabs-contetn">
-          <p style="text-align: center;">
+          <!-- <p style="text-align: center;">
             修改日期：自&nbsp;&nbsp;{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}
-          </p>
-          <!-- <el-table 
+          </p> -->
+        </div>
+          <!-- <el-table
             v-loading="loading" 
             :data="tableData" 
             border 
@@ -70,31 +76,50 @@
             <el-table-column prop="updateTime" label="修改时间"></el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
           </el-table> -->
-           <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+          <div id="print-historyHousePriceInfoTable">
+           <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+              <thead>
             <tr>
-              <th>组单号</th>
-              <th>客源渠道</th>
-              <th>房号</th>
-              <th>房型</th>
-              <th>房价</th>
-              <th>状态</th>
-              <th>会员信息</th>
-              <th>营业日期</th>
-              <th>修改时间</th>
-              <th>备注</th>
+              <td colspan="6" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
+              <td  colspan="8" style="text-align: right;font-size: 14px;">修改日期：自&nbsp;&nbsp;{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}</td>
             </tr>
+            <tr>
+              <th style="width:10%;border: 1px solid #000;">组单号</th>
+              <th style="width:12%;border: 1px solid #000;">客源渠道</th>
+              <th style="width:8%;border: 1px solid #000;">房号</th>
+              <th style="width:10%;border: 1px solid #000;">房型</th>
+              <th style="width:8%;border: 1px solid #000;">房价</th>
+              <th style="width:10%;border: 1px solid #000;">状态</th>
+              <th style="width:10%;border: 1px solid #000;">会员信息</th>
+              <th style="width:12%;border: 1px solid #000;">营业日期</th>
+              <th style="width:12%;border: 1px solid #000;">修改时间</th>
+              <th style="width:8%;border: 1px solid #000;">备注</th>
+            </tr>
+          </thead>
+            <!-- <tr>
+              <th style="width:10%;border: 1px solid #000;">组单号</th>
+              <th style="width:12%;border: 1px solid #000;">客源渠道</th>
+              <th style="width:8%;border: 1px solid #000;">房号</th>
+              <th style="width:10%;border: 1px solid #000;">房型</th>
+              <th style="width:8%;border: 1px solid #000;">房价</th>
+              <th style="width:10%;border: 1px solid #000;">状态</th>
+              <th style="width:10%;border: 1px solid #000;">会员信息</th>
+              <th style="width:12%;border: 1px solid #000;">营业日期</th>
+              <th style="width:12%;border: 1px solid #000;">修改时间</th>
+              <th style="width:8%;border: 1px solid #000;">备注</th>
+            </tr> -->
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.orderNo}}</td>
-              <td>{{item.channelTypeName}}</td>
-              <td>{{item.roomNumber}}</td>
-              <td>{{item.roomTypeName}}</td>
-              <td>{{item.rentPrice}}</td>
+              <td style="border: 1px solid #000;">{{item.orderNo}}</td>
+              <td style="border: 1px solid #000;">{{item.channelTypeName}}</td>
+              <td style="border: 1px solid #000;">{{item.roomNumber}}</td>
+              <td style="border: 1px solid #000;">{{item.roomTypeName}}</td>
+              <td style="border: 1px solid #000;">{{item.rentPrice}}</td>
               <!-- <td>{{item.status}}</td> -->
-              <td><span v-if="item.status == 'RESERVE'">预定</span>
+              <td style="border: 1px solid #000;"><span v-if="item.status == 'RESERVE'">预定</span>
                 <span v-else-if="item.status == 'VALID'">有效</span>
                 <span v-else>取消</span>
               </td>
-              <td><span>
+              <td style="border: 1px solid #000;"><span>
                   {{item.cardNumber != null ? item.cardNumber : ""}}
                   {{(item.cardNumber != null && item.memName != null) ? "," : ""}}
                   {{item.memName != null ? item.memName : ""}}
@@ -102,12 +127,18 @@
                   {{item.certificateNo != null ? item.certificateNo : ""}}
              </span>
               </td>
-               <td>{{item.date}}</td>
-              <td>{{item.updateTime}}</td>
-              <td>{{item.remark}}</td>
+               <td style="border: 1px solid #000;">{{item.date}}</td>
+              <td style="border: 1px solid #000;">{{item.updateTime}}</td>
+              <td style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
+             <tfoot>
+            <tr>
+              <td colspan="7" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="7" style="text-align: right;font-size: 14px;">打印日期：<span>{{datepickerTime}}</span></td>
+            </tr>
+          </tfoot>
           </table>
-          <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.upmsUserName}}</span></p>
+          <!-- <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p> -->
         </div>
       </div>
     </el-col>
@@ -129,7 +160,7 @@ export default {
       loading: false,
       form: {
         beginDate: moment().format("YYYY-MM-DD"),
-        endDate: moment().format("YYYY-MM-DD"),
+        endDate: moment().add(1,'days').format("YYYY-MM-DD"),
         roomNumber: ''
       },
       datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -177,7 +208,7 @@ export default {
     //   f.contentWindow.print();
     // },
      print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -188,6 +219,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+        this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -195,7 +227,15 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-historyHousePriceInfo").innerHTML);
+       this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-historyHousePriceInfoTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-historyHousePriceInfo").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     },
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.beginDate + "&endDate=" + this.form.endDate + "&roomNumber=" + this.form.roomNumber);

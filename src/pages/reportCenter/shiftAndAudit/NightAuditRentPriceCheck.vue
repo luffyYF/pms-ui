@@ -8,11 +8,16 @@
     <!-- <el-button type="primary"><span class="el-icon-star-on p-r-5"></span>添加到收藏夹</el-button> -->
     <el-button type="primary" @click="print" size="mini"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
 
-    <div class="table-container" id="print-admissionaccount">
-      <h3 style="text-align:center;">{{activeCompany.companyName}}</h3>
-      <h4 style="text-align:center;">夜审房费前核对报表</h4>
-      <p style="text-align:center;">营业日期：{{businessDate}}</p>
-      <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.upmsUserName}}</span></p>
+    <div class="table-container">
+      <div id="print-admissionaccount">
+      <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+      </div>
+      <!-- <h3 style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+      <h3 style="text-align:center;">夜审房费前核对报表</h3>
+      <!-- <p style="text-align:center;">营业日期：{{businessDate}}</p> -->
+      </div>
+      <!-- <p style="text-align:center;">打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p> -->
       <!-- <el-table
         :header-cell-style="tableStyleObj"
         :cell-style="tableStyleObj"
@@ -31,34 +36,48 @@
         <el-table-column prop="commissionPrice" align="center" label="佣金" min-width="100px"></el-table-column>
         <el-table-column prop="remark" align="center" label="备注" min-width="100px"></el-table-column>
       </el-table> -->
-      <table width="100%" border="1" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+      <div  id="print-admissionaccountTable">
+      <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+             <thead>
             <tr>
-              <th>房号</th>
-              <th>日期</th>
-              <th>主单号</th>
-              <th>客单号</th>
-              <th>姓名</th>
-              <th>入住类型</th>
-              <th>渠道</th>
-              <th>房租</th>
-              <th>优惠/促销价</th>
-              <th>佣金</th>
-              <th>备注</th>
+              <td colspan="6" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
+              <td colspan="7" style="text-align:right;margin-left:480px">营业日期：{{businessDate}}</td>
+            </tr>
+          </thead>
+            <tr>
+              <th style="border: 1px solid #000;">房号</th>
+              <th style="border: 1px solid #000;">日期</th>
+              <th style="border: 1px solid #000;">主单号</th>
+              <th style="border: 1px solid #000;">客单号</th>
+              <th style="border: 1px solid #000;">姓名</th>
+              <th style="border: 1px solid #000;">入住类型</th>
+              <th style="border: 1px solid #000;">渠道</th>
+              <th style="border: 1px solid #000;">房租</th>
+              <th style="border: 1px solid #000;">优惠/促销价</th>
+              <th style="border: 1px solid #000;">佣金</th>
+              <th style="border: 1px solid #000;">备注</th>
             </tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{item.roomNumber}}</td>
-              <td>{{item.rentDate}}</td>
-              <td>{{item.orderNo}}</td>
-              <td>{{item.orderGuestNo}}</td>
-              <td>{{item.guestName}}</td>
-              <td>{{item.checkInType}}</td>
-              <td>{{item.channelTypeName}}</td>
-              <td>{{item.rentPrice}}</td>
-              <td>{{item.promotionPrice}}</td>
-                <td>{{item.commissionPrice}}</td>
-              <td>{{item.remark}}</td>
+              <td style="border: 1px solid #000;">{{item.roomNumber}}</td>
+              <td style="border: 1px solid #000;">{{item.rentDate}}</td>
+              <td style="border: 1px solid #000;">{{item.orderNo}}</td>
+              <td style="border: 1px solid #000;">{{item.orderGuestNo}}</td>
+              <td style="border: 1px solid #000;">{{item.guestName}}</td>
+              <td style="border: 1px solid #000;">{{item.checkInType}}</td>
+              <td style="border: 1px solid #000;">{{item.channelTypeName}}</td>
+              <td style="border: 1px solid #000;">{{item.rentPrice}}</td>
+              <td style="border: 1px solid #000;">{{item.promotionPrice}}</td>
+              <td style="border: 1px solid #000;">{{item.commissionPrice}}</td>
+              <td style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
+            <tfoot>
+            <tr>
+              <td colspan="5" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="6" style="text-align: right;font-size: 14px;">打印日期：<span>{{sDate}}</span></td>
+            </tr>
+          </tfoot>
           </table>
+      </div>
       <div style="height:50px"></div>
     </div>
     <!-- 打印填充 iframe-->
@@ -80,7 +99,7 @@ export default {
       isIndeterminate:true,
       userInfo:{},
       tableData:[],
-      sDate: moment().format("YYYY-MM-DD"),
+      sDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       sTime: moment().format("HH:mm:ss"),
       tableStyleObj:{
         border: '1px solid black',
@@ -126,7 +145,7 @@ export default {
     //   f.contentWindow.print();
     // }
        print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -137,6 +156,7 @@ export default {
         return
       }
       this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+      this.LODOP.NewPageA(); // 自动分页
       // LODOP.SET_PREVIEW_WINDOW(1,);
       this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
@@ -144,7 +164,15 @@ export default {
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,774,1103,document.getElementById("print-admissionaccount").innerHTML);
+        this.LODOP.ADD_PRINT_TABLE(90,10,770,903,document.getElementById("print-admissionaccountTable").innerHTML);
+       this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-admissionaccount").innerHTML);
+        this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
     }
   }
 };
