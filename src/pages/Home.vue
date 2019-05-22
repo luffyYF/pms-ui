@@ -765,6 +765,7 @@ export default {
     console.log(this.$refs.dirRef.getElementsByTagName('a')[0])
     let herf= this.$refs.dirRef.getElementsByTagName('a')[0].getAttribute('href')
     this.$router.push(herf.substring(1))
+    
     this.initAlert()
   },
   watch: {

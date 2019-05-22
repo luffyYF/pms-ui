@@ -20,12 +20,17 @@ import './directive'
 import {hasPermission} from "@/utils/hasPermission";
 import {refreshPmsType} from "@/utils/refreshPmsType";
 
+import {hotelHardware} from '@/utils/orm'
+
 // import './mock' // simulation data
 
 // import 'babel-polyfill'
 //全局的常量
 Vue.prototype.hasPerm = hasPermission
 Vue.prototype.refreshType = refreshPmsType
+
+Vue.prototype.HOTEL_HARDWARE = hotelHardware
+
 // Vue.prototype.getRPath = getRPath
 Vue.use(VueAwesomeSwiper, {})
 
