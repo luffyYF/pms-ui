@@ -5,7 +5,7 @@
         <!-- 营业日期：<el-date-picker v-model="datepicker" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini"></el-date-picker> -->
         营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini" @change="dailyReport"></el-date-picker>
         <el-button type="primary" size="mini" @click="dailyReport()">网页预览</el-button>
-        <el-button type="primary" size="mini">PDF预览</el-button>
+        <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
         <!-- <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'date='+datepicker" target="_blank">导出EXCEL</a></el-button> -->
         <el-button type="primary" size="mini" @click="downloadExcel">导出EXCEL</el-button>
         <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->

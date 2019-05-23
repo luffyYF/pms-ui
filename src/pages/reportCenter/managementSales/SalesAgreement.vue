@@ -19,7 +19,7 @@
         </el-form>
         <!-- <el-date-picker v-model="begenAndEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="mini"></el-date-picker> -->
         <el-button type="primary" size="mini" @click="init">网页预览</el-button>
-        <el-button type="primary" size="mini">PDF预览</el-button>
+        <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
         <el-button type="primary" size="mini">导出EXCEL</el-button>
         <el-button type="primary" size="mini">添加到收藏夹</el-button>
         <el-button type="primary" size="mini">打印预览</el-button>

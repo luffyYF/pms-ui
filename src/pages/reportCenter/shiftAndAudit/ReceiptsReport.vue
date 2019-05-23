@@ -40,7 +40,7 @@
       
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
-        <el-button type="primary">PDF预览</el-button>
+        <!-- <el-button type="primary">PDF预览</el-button> -->
         <!-- <el-button type="primary"><a :href="baseUrl+ziurl+'begin='+begenAndEnd.begin+'&end='+begenAndEnd.end+'&userPk='+queryObj.userPk+'&userName='+queryObj.userName+'&shift='+queryObj.shift+'&shiftPk='+queryObj.shiftPk" class="exportLink" target="_blank">导出EXCEL</a></el-button> -->
         <el-button type="primary" @click="downloadExcel">导出EXCEL</el-button>
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
