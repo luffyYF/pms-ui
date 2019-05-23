@@ -334,6 +334,23 @@ export const managerReport = params =>{
     return request.get('/pms/report/managerReport',{params:params})
 }
 
+/**
+ *
+ * 营业日报表
+ */
+export const turnoverDailyReport = params =>{
+  return request.get('/pms/report/businessDailyReport',{params:params})
+}
+/**
+ *
+ * 营业月报表
+ */
+export const businessMonthReport = params =>{
+  return request.get('/pms/report/businessMonthReport',{params:params})
+}
+
+
+
 
 /**
  * 经理日报报表导出Excel
