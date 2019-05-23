@@ -27,7 +27,7 @@
           原房号：<el-input v-model="form.srcRoomNumber" size="mini" style="width:120px"></el-input>
         <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="historyRoomExchangeDate">网页预览</el-button>
-          <el-button type="primary" size="mini">PDF预览</el-button>
+          <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
           <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>

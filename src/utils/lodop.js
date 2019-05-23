@@ -73,6 +73,7 @@ export function getLodop(oOBJECT, oEMBED) {
         var isIE =
             navigator.userAgent.indexOf('MSIE') >= 0 ||
             navigator.userAgent.indexOf('Trident') >= 0
+            console.log(needCLodop())
         if (needCLodop()) {
             try {
                 LODOP = getCLodop()
@@ -111,6 +112,7 @@ export function getLodop(oOBJECT, oEMBED) {
             }
         } else {
             var is64IE = isIE && navigator.userAgent.indexOf('x64') >= 0
+            console.log(oOBJECT, oEMBED)
             //=====如果页面有Lodop就直接使用，没有则新建:==========
             if (oOBJECT != undefined || oEMBED != undefined) {
                 if (isIE) LODOP = oOBJECT
@@ -148,7 +150,9 @@ export function getLodop(oOBJECT, oEMBED) {
                 return LODOP
             }
         }
+        console.log(LODOP.VERSION)
         if (LODOP.VERSION < '6.2.2.3') {
+
             if (!needCLodop()) {
                 if (is64IE) document.write(strHtm64_Update)
                 else if (isIE) document.write(strHtmUpdate)

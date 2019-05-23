@@ -36,7 +36,7 @@
 
         <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="historyStoreDate">网页预览</el-button>
-          <el-button type="primary" size="mini">PDF预览</el-button>
+          <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
           <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>

@@ -3,7 +3,7 @@
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
         <el-button size="mini" type="primary">网页预览</el-button>
-        <el-button size="mini" type="primary">PDF预览</el-button>
+        <!-- <el-button size="mini" type="primary">PDF预览</el-button> -->
         <el-button size="mini" type="primary">导出EXCEL</el-button>
         <el-button size="mini" type="primary">添加到收藏夹</el-button>
         <el-button size="mini" type="primary">打印预览</el-button>

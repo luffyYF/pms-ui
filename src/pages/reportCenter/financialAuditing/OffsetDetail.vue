@@ -51,9 +51,10 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
-        <el-button type="primary" size="mini">PDF预览</el-button>
-        <el-button type="primary" @click="exportReport" size="mini">导出EXCEL</el-button>
-        <el-button type="primary" @click="print" size="mini"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
+       <!-- <el-button type="primary">PDF预览</el-button> -->
+              <el-button type="primary" @click="exportReport">导出EXCEL</el-button>
+              <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
+
       </el-form-item>
     </el-form>
     <div class="table-container">

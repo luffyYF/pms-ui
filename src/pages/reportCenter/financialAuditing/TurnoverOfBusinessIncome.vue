@@ -6,7 +6,7 @@
         营业日期：<el-date-picker v-model="datepicker" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" size="mini"></el-date-picker>
         <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="reportBusinessIncome()">网页预览</el-button>
-          <el-button type="primary" size="mini">PDF预览</el-button>
+          <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
           <!-- <el-button type="primary" size="mini"><a class="exportLink" :href="baseUrl+ziurl+'businessDate='+datepicker" target="_blank">导出EXCEL</a></el-button> -->
           <el-button type="primary" size="mini" @click="downloadExcel">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->

@@ -74,7 +74,7 @@ export const commonReport = [{
     label: '历史换房报表',
     path: '/reportCenter/historicalRoomExchange',
     pointer: 'pms:reportCenter:roomExchange'
-  }, 
+  },
   {
     label: '冲减明细报表',
     path: '/reportCenter/offsetDetail',
@@ -84,17 +84,17 @@ export const commonReport = [{
     label: '历史房价信息报表',
     path: '/reportCenter/historyHousePriceInfo',
     pointer: 'pms:reportCenter:housePriceInfo'
-  }, 
+  },
   //  {
   //   label: '房租合约报表',
   //   path: '/reportCenter/rentContract',
   //   pointer: '500407'
-  // }, 
+  // },
   // {
   //   label: '日租钟点取消报表',
   //   path: '/reportCenter/hourRoomCancel',
   //   pointer: '500414'
-  // }, 
+  // },
   {
     label: '历史离店报表',
     path: '/reportCenter/historyStore',
@@ -104,7 +104,7 @@ export const commonReport = [{
   //   label: '自用房免费房报表',
   //   path: '/reportCenter/historicalRoomExchange',
   //   pointer: '500518'
-  // }, 
+  // },
   {
     label: '接待房报表',
     path: '/reportCenter/receptionRoom',
@@ -124,6 +124,8 @@ export const commonReport = [{
     {label:'入住率日报',path:'/reportCenter/leaseRateDaily',pointer:'pms:reportCenter:leaseRateDaily'},
     {label:'入住率月报',path:'/reportCenter/leaseRateMonth',pointer:'pms:reportCenter:leaseRateMonth'},
     {label:'营业数据明细',path:'/reportCenter/businessDetail',pointer:'pms:reportCenter:businessDetail'},
+    {label:'营业日报',path:'/reportCenter/TurnoverDaily',pointer:'pms:reportCenter:TurnoverDaily'},
+    {label:'营业月报',path:'/reportCenter/TurnoverMonth',pointer:'pms:reportCenter:TurnoverMonth'},
   ]
 }
 // , {
