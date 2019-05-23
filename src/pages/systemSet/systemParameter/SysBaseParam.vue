@@ -315,12 +315,7 @@
                     <span style="color:red">房间必须在住</span>
                   </el-form-item>
                 </div>
-                <div class="bg-reserve" v-if="this.type == 'reserveOrder' ">
-                  <h5 class="info-title">预订单</h5>
-                  <el-form-item>
-                    <el-checkbox size="mini" label="自动接单" v-model="form.autoTakeOrder" :true-label="1" :false-label="0"></el-checkbox>
-                  </el-form-item>
-                </div>
+
               </el-col>
             </el-row>
             <el-row>

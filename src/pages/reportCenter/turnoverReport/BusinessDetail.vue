@@ -62,7 +62,7 @@
       </el-form-item>
       <el-form-item label="班次">
         <el-select v-model="queryObj.shiftPk" placeholder="选择班次">
-          <el-option label="全部" value></el-option>
+          <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in selectShiftData"
             :key="item.value"
@@ -137,26 +137,26 @@
         >
           <thead>
             <tr>
-              <td colspan="5" style="text-align: left;font-size: 14px;">
+              <td colspan="3" style="text-align: left;font-size: 14px;">
                 分店：{{activeCompany.companyName}}</td>
-              <td colspan="10" style="text-align: right;font-size: 14px;">
-                  营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
-                  收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;
+              <td colspan="11" style="text-align: right;font-size: 14px;">
+                  营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;
+                  收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;
                   班次:
                   <span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}}</span></td>
             </tr>
             <tr>
-              <th style="width:5%;border: 1px solid #000;">房号</th>
-              <th style="width:7%;border: 1px solid #000;">抵店日期</th>
-              <th style="width:7%;border: 1px solid #000;">离店日期</th>
+              <th style="width:6%;border: 1px solid #000;">房号</th>
+              <th style="width:6%;border: 1px solid #000;">抵店日期</th>
+              <th style="width:6%;border: 1px solid #000;">离店日期</th>
               <th style="width:7%;border: 1px solid #000;">收银员</th>
               <th style="width:5%;border: 1px solid #000;">项目</th>
-              <th style="width:5%;border: 1px solid #000;">组单</th>
-              <th style="width:5%;border: 1px solid #000;">客单</th>
-              <th style="width:5%;border: 1px solid #000;">姓名</th>
+              <th style="width:6%;border: 1px solid #000;">组单</th>
+              <th style="width:6%;border: 1px solid #000;">客单</th>
+              <th style="width:6%;border: 1px solid #000;">姓名</th>
               <th style="width:5%;border: 1px solid #000;">消费</th>
               <th style="width:5%;border: 1px solid #000;">结算</th>
-              <th style="width:7%;border: 1px solid #000;">营业日期</th>
+              <th style="width:6%;border: 1px solid #000;">营业日期</th>
               <th style="width:8%;border: 1px solid #000;">入住类型</th>
               <th style="width:5%;border: 1px solid #000;">渠道</th>
               <th style="width:8%;border: 1px solid #000;">支付方式</th>
@@ -357,41 +357,31 @@ export default {
       if (!this.LODOP) {
         return;
       }
-      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-      this.LODOP.NewPageA(); // 自动分页
-      // LODOP.SET_PREVIEW_WINDOW(1,);
-      this.LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4"); //1指定纵向打印，指定A4纸，
-      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
-      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Full-Width"); // 打印页整宽显示
-      this.LODOP.ADD_PRINT_TABLE(
-        90,
-        10,
-        770,
-        903,
-        document.getElementById("print-admissionaccountTable").innerHTML
-      );
-      this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 2);
-      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
-      // LODOP.SET_PRINT_STYLE("FontSize",20);
-      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(
-        10,
-        10,
-        770,
-        80,
-        document.getElementById("print-admissionaccount").innerHTML
-      );
-      this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
-      this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
-      this.LODOP.ADD_PRINT_HTM(
-        1063,
-        15,
-        300,
-        60,
-        "<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>"
-      );
-      this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
-      this.LODOP.SET_PRINT_STYLEA(0, "Horient", 0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      // this.LODOP.NewPageA(); // 自动分页
+      // this.LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4"); //1指定纵向打印，指定A4纸，
+      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
+      // this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Full-Width"); // 打印页整宽显示
+      // this.LODOP.ADD_PRINT_TABLE(90,10,770,903,document.getElementById("print-admissionaccountTable").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 2);
+      // this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-admissionaccount").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+      // this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
+      // this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0, "Horient", 0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.PRINT_INITA(0 , 0, 794, 1123, "营业数据明细打印");
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      this.LODOP.ADD_PRINT_TABLE(118,"1%","98%",975,document.getElementById("print-admissionaccountTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(16,"1%","98%",109,document.getElementById("print-admissionaccount").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
     }
   }
 };

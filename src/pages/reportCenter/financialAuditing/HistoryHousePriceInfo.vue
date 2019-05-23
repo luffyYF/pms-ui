@@ -80,8 +80,8 @@
            <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
               <thead>
             <tr>
-              <td colspan="6" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
-              <td  colspan="8" style="text-align: right;font-size: 14px;">修改日期：自&nbsp;&nbsp;{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}</td>
+              <td colspan="5" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
+              <td  colspan="9" style="text-align: right;font-size: 14px;">修改日期：自&nbsp;&nbsp;{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}</td>
             </tr>
             <tr>
               <th style="width:10%;border: 1px solid #000;">组单号</th>
@@ -90,7 +90,7 @@
               <th style="width:10%;border: 1px solid #000;">房型</th>
               <th style="width:8%;border: 1px solid #000;">房价</th>
               <th style="width:10%;border: 1px solid #000;">状态</th>
-              <th style="width:10%;border: 1px solid #000;">会员信息</th>
+              <th style="width:11%;border: 1px solid #000;">会员信息</th>
               <th style="width:12%;border: 1px solid #000;">营业日期</th>
               <th style="width:12%;border: 1px solid #000;">修改时间</th>
               <th style="width:8%;border: 1px solid #000;">备注</th>
@@ -218,24 +218,31 @@ export default {
       if (!this.LODOP) {
         return
       }
-      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-        this.LODOP.NewPageA(); // 自动分页
-      // LODOP.SET_PREVIEW_WINDOW(1,);
-      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.NewPageA(); // 自动分页
+      // this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      // this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-historyHousePriceInfoTable").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      // this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-historyHousePriceInfo").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      // this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      // this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.PRINT_INITA(0 , 0, 794, 1123, "历史房价信息报表打印");
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
-      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
-      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
-      // LODOP.SET_PRINT_STYLE("FontSize",20);
-      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-       this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-historyHousePriceInfoTable").innerHTML);
-      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
-      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-historyHousePriceInfo").innerHTML);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      this.LODOP.ADD_PRINT_TABLE(118,"1%","98%",975,document.getElementById("print-historyHousePriceInfoTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(16,"1%","98%",109,document.getElementById("print-historyHousePriceInfo").innerHTML);
       this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
       this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
-      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
-      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
-      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
-   
+      this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
     },
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.beginDate + "&endDate=" + this.form.endDate + "&roomNumber=" + this.form.roomNumber);

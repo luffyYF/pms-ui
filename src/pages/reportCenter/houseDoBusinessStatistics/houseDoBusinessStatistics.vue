@@ -285,25 +285,43 @@ export default {
       if (!this.LODOP) {
         return
       }
-      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-      //this.LODOP.NewPageA(); // 自动分页
-      this.LODOP.SET_PRINT_PAGESIZE(2,0,0,"A5");//2指定横向打印，指定A5纸，
-      this.LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+      // this.LODOP.SET_PRINT_PAGESIZE(2,0,0,"A5");//2指定横向打印，指定A5纸，
+      // this.LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+      // this.LODOP.ADD_PRINT_TABLE(126,10,345,250,document.getElementById("print-receiptsreportTable1").innerHTML);
+      // this.LODOP.ADD_PRINT_TABLE(126,370,360,250,document.getElementById("print-receiptsreportTable2").innerHTML);
+      // this.LODOP.ADD_PRINT_TABLE(220,10,330,250,document.getElementById("print-receiptsreportTable3").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"Offset2Top",-100); //设置次页偏移把区域向上扩 
+      // this.LODOP.ADD_PRINT_TABLE(220,350,340,250,document.getElementById("print-receiptsreportTable4").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"Offset2Top",-100); //设置次页偏移把区域向上扩 
       // this.LODOP.ADD_PRINT_HTM(6,10,790,120,document.getElementById("print-receiptsreport").innerHTML);
-      //this.LODOP.ADD_PRINT_TABLE(156,10,345,300,document.getElementById("print-receiptsreportTable").innerHTML);
-      this.LODOP.ADD_PRINT_TABLE(126,10,345,250,document.getElementById("print-receiptsreportTable1").innerHTML);
-      this.LODOP.ADD_PRINT_TABLE(126,370,360,250,document.getElementById("print-receiptsreportTable2").innerHTML);
-      this.LODOP.ADD_PRINT_TABLE(220,10,330,250,document.getElementById("print-receiptsreportTable3").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      // this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",3);
+      // this.LODOP.ADD_PRINT_HTM(1100,15,500,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      
+      this.LODOP.PRINT_INITA(0, 0,"210mm","148mm", "客房营业统计打印");//第三个是宽度，第四个是高度
+      this.LODOP.SET_PRINT_PAGESIZE(2,0,0,"A5");//2指定横向打印，指定A5纸
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED",1);//横向时的正向显示
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      this.LODOP.ADD_PRINT_TABLE(126,"1%","45%",250,document.getElementById("print-receiptsreportTable1").innerHTML);//第三个是宽度，第四个是高度
+      this.LODOP.ADD_PRINT_TABLE(126,"50%","45%",250,document.getElementById("print-receiptsreportTable2").innerHTML);
+      this.LODOP.ADD_PRINT_TABLE(220,"1%","45%",250,document.getElementById("print-receiptsreportTable3").innerHTML);
       this.LODOP.SET_PRINT_STYLEA(0,"Offset2Top",-100); //设置次页偏移把区域向上扩 
-      this.LODOP.ADD_PRINT_TABLE(220,350,340,250,document.getElementById("print-receiptsreportTable4").innerHTML);
+      this.LODOP.ADD_PRINT_TABLE(220,"50%","45%",250,document.getElementById("print-receiptsreportTable4").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Offset2Top",-100); //设置次页偏移把区域向上扩
+      this.LODOP.ADD_PRINT_HTM(6,"1%","98%",120,document.getElementById("print-receiptsreport").innerHTML);
 
-      this.LODOP.SET_PRINT_STYLEA(0,"Offset2Top",-100); //设置次页偏移把区域向上扩 
-      this.LODOP.ADD_PRINT_HTM(6,10,790,120,document.getElementById("print-receiptsreport").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(6,"1%","98%",120,document.getElementById("print-receiptsreport").innerHTML);
       this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
       this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",3);
-      this.LODOP.ADD_PRINT_HTM(1100,15,500,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
-      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
-      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.ADD_PRINT_HTM(545,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);     
      }
   }
 };

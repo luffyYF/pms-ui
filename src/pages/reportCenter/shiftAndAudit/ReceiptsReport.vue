@@ -70,7 +70,7 @@
             <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
         </div>
       <h3 style="text-align:center">收银员收款报表</h3>
-      
+
       <div style="width: 800px;margin: 0 auto;text-align:center">
         <span style="margin-left:-300px;font-size: 14px;">
           营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -79,8 +79,8 @@
          <span style="margin-left:-750px;font-size: 14px;">店铺：{{activeCompany.companyName}}</span><br>
         <!-- <p>打印日期：<span class="head-item">{{sDate}}</span>打印人：<span class="head-item">{{userInfo.realName}}</span></p> -->
 
-        <div style="float: left;width: 47%;">
-        
+        <div style="float: left;width: 37%;margin-left:30px;">
+
           <!-- <el-table
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
@@ -112,15 +112,15 @@
                 <td style="border: 1px solid #000;">{{settlPrice}}</td>
               </tr>
          </tbody>
-           <tfoot>
+           <!-- <tfoot>
             <tr>
               <td colspan="2" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
             </tr>
-          </tfoot>
+          </tfoot> -->
           </table>
         </div>
 
-        <div style="float: right;width: 48%;">
+        <div style="float: right;width: 37%;margin-right:120px;">
           <!-- <el-table :data="consumer"
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
@@ -146,12 +146,17 @@
               </tr>
             </tr>
             </tbody>
-            <tfoot>
+            <!-- <tfoot>
               <tr>
              <td colspan="2" style="text-align: right;font-size: 14px;">打印日期：<span>{{sDate}}</span></td>
              </tr>
-            </tfoot>
+            </tfoot> -->
           </table>
+        </div>
+        <div style="width: 800;margin: 0 auto;text-align:center;clear:both;">
+            <span style="margin-right:600px;font-size: 14px;">打印人：{{userInfo.realName}}</span><br>
+            <span style="margin-left:350px;font-size: 14px;">打印日期：{{sDate}}</span>
+       
         </div>
       </div>
     </div>
@@ -380,7 +385,7 @@ export default {
     //   f.contentWindow.print();
     // }
       print() {
-      this.createOneFormPage();	
+      this.createOneFormPage();
       if (this.LODOP) {
         this.LODOP.PREVIEW();
       }
@@ -390,22 +395,30 @@ export default {
       if (!this.LODOP) {
         return
       }
-      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-      this.LODOP.NewPageA(); // 自动分页
-      // LODOP.SET_PREVIEW_WINDOW(1,);
-      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.NewPageA(); // 自动分页
+      // this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      // this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // this.LODOP.ADD_PRINT_HTM(10,10,770,1103,document.getElementById("print-receiptsreport").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      // this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      // this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",4); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+   
+      this.LODOP.PRINT_INITA(0 , 0, 794, 1123, "收银员收款报表打印");
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
-      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
-      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
-      // LODOP.SET_PRINT_STYLE("FontSize",20);
-      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_HTM(10,10,770,1103,document.getElementById("print-receiptsreport").innerHTML);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(16,"1%","98%",1103,document.getElementById("print-receiptsreport").innerHTML);
       this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
       this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
-      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
-      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",4); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
-      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
-    }
+      this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
+   }
   }
 };
 </script>

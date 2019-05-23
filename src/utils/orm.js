@@ -184,3 +184,17 @@ export const reserveOrderStatusMap = {
   '5': "已取消",
   '6': "已完成"
 }
+
+export const hotelHardware = {
+  "AMX":"艾美信",
+  "HAXEM-4305":"宏安兴EM-4305",
+
+  "MHURD-R310":"明华KRF-310",
+  "MHURD-R330":"明华KRF-330",
+  "MHKRF-35":"明华KRF-35",
+  "MHSRD-U010":"明华SRD-U010",
+  "MHSRD-U100":"明华SRD-U100",
+  "YTT":"英泰通",
+
+  "HSCVR-110UA":"华视阅读器CVR-110UA",
+}

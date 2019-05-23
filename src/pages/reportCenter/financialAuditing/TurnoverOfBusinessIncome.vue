@@ -101,8 +101,8 @@
           <p class="note_p1">现金：现金、现金支出、收预付金、人民币押金、退预付金、杂费现金押金、公寓押金</p>
           <p class="note_p1">银行卡：银行卡、网上支付、银行卡支付、银行卡押金、杂费银行卡押金</p>
           <p class="note_p2">其他结算：退订退款、积分兑换、汇款、集团招待、优惠券、礼券、储值卡、支付宝支付等</p>
-        
-      
+
+
     </el-col>
     <!-- 打印填充 iframe-->
     <iframe id="printIframe" src="" width="0" height="0" frameborder="0"></iframe>
@@ -185,24 +185,31 @@ export default {
       if (!this.LODOP) {
         return
       }
-      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-     this.LODOP.NewPageA(); // 自动分页
-      // LODOP.SET_PREVIEW_WINDOW(1,);
-      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.NewPageA(); // 自动分页
+      // this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      // this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-turnoverofbusinessincomeTable").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      // this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-turnoverofbusinessincome").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      // this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      // this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.PRINT_INITA(0 , 0, 794, 1123, "营业收入报表打印");
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
-      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
-      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
-      // LODOP.SET_PRINT_STYLE("FontSize",20);
-      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题
-      this.LODOP.ADD_PRINT_TABLE(90,10,770,803,document.getElementById("print-turnoverofbusinessincomeTable").innerHTML);
-      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
-      this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-turnoverofbusinessincome").innerHTML);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      this.LODOP.ADD_PRINT_TABLE(118,"1%","98%",950,document.getElementById("print-turnoverofbusinessincomeTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(16,"1%","98%",109,document.getElementById("print-turnoverofbusinessincome").innerHTML);
       this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
       this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
-      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
-      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
-      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
-   
+      this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
     },
   }
 }
