@@ -142,8 +142,8 @@
               <td style="border: 1px solid #000;">{{item.typeName}}</td>
               <td style="border: 1px solid #000;"><span>{{item.price == 'null' ? "" : item.price}}</span></td>
               <td style="border: 1px solid #000;">{{item.memName}}</td>
-              <td style="border: 1px solid #000;">{{item.beginDate}}</td>
-              <td style="border: 1px solid #000;">{{item.endDate}}</td>
+              <td style="border: 1px solid #000;">{{item.beginDate|formatDate}}</td>
+              <td style="border: 1px solid #000;">{{item.endDate|formatDate}}</td>
               <td style="border: 1px solid #000;">{{item.totalRoomPrice}}</td>
               <td style="border: 1px solid #000;">{{item.totalOrderPrice}}</td>
 
@@ -284,6 +284,14 @@ export default {
       // exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.datepicker[0] + "&end=" + this.datepicker[1] + "&roomNumber=" + this.roomNumber);
        exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.begin + "&end=" + this.end + "&roomNumber=" + this.roomNumber);
     },
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>

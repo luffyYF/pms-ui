@@ -86,13 +86,13 @@
             <tr>
               <th style="width:10%;border: 1px solid #000;">组单号</th>
               <th style="width:12%;border: 1px solid #000;">客源渠道</th>
-              <th style="width:8%;border: 1px solid #000;">房号</th>
+              <th style="width:7%;border: 1px solid #000;">房号</th>
               <th style="width:10%;border: 1px solid #000;">房型</th>
-              <th style="width:8%;border: 1px solid #000;">房价</th>
-              <th style="width:10%;border: 1px solid #000;">状态</th>
-              <th style="width:11%;border: 1px solid #000;">会员信息</th>
-              <th style="width:12%;border: 1px solid #000;">营业日期</th>
-              <th style="width:12%;border: 1px solid #000;">修改时间</th>
+              <th style="width:7%;border: 1px solid #000;">房价</th>
+              <th style="width:7%;border: 1px solid #000;">状态</th>
+              <th style="width:8%;border: 1px solid #000;">会员信息</th>
+              <th style="width:17%;border: 1px solid #000;">营业日期</th>
+              <th style="width:15%;border: 1px solid #000;">修改时间</th>
               <th style="width:8%;border: 1px solid #000;">备注</th>
             </tr>
           </thead>
@@ -127,8 +127,8 @@
                   {{item.certificateNo != null ? item.certificateNo : ""}}
              </span>
               </td>
-               <td style="border: 1px solid #000;">{{item.date}}</td>
-              <td style="border: 1px solid #000;">{{item.updateTime}}</td>
+               <td style="border: 1px solid #000;">{{item.date|formatDate}}</td>
+              <td style="border: 1px solid #000;">{{item.updateTime|formatDate}}</td>
               <td style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
              <tfoot>
@@ -247,6 +247,14 @@ export default {
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.beginDate + "&endDate=" + this.form.endDate + "&roomNumber=" + this.form.roomNumber);
     },
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>

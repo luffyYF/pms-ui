@@ -70,7 +70,7 @@
             <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
              <thead>
             <tr>
-              <td colspan="1" style="text-align: left;font-size: 14px;">公司:深圳市前海豪斯菲尔信息科技有限公司</td>
+              <td colspan="1" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
               <td colspan="4" style="text-align: right;font-size: 14px;">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span> &nbsp;销售员：{{printDate.saleName}}</td>
             </tr>
              <tr>
@@ -123,6 +123,7 @@ export default {
         begin:moment().subtract(2, "days").format("YYYY-MM-DD"),
         end:moment().subtract(1, "days").format("YYYY-MM-DD")
       },
+      activeCompany:{},
       tableData: [],
       typeList:[],
       loading:false,
@@ -388,6 +389,7 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
+    this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
   },
   mounted() {
     

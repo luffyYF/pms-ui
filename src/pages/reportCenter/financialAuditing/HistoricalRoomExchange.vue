@@ -73,7 +73,7 @@
           <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="0" cellspacing="0">
             <thead>
             <tr>
-              <td colspan="7" style="text-align: left;font-size: 14px;">公司:深圳市前海豪斯菲尔信息科技有限公司</td>
+              <td colspan="7" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
               <td colspan="7" style="text-align: right;font-size: 14px;">酒店日期：<span>{{localDate}}</span></td>
             </tr>
             <tr>
@@ -118,8 +118,8 @@
               <td style="border: 1px solid #000;">{{item.targetRoomTypeName}}</td>
               <td style="border: 1px solid #000;">{{item.targetRoomPrice}}</td>
               <td style="border: 1px solid #000;">{{item.changeRoomType}}</td>
-              <td style="border: 1px solid #000;">{{item.checkInDate}}</td>
-              <td style="border: 1px solid #000;">{{item.createTime}}</td>
+              <td style="border: 1px solid #000;">{{item.checkInDate|formatDate}}</td>
+              <td style="border: 1px solid #000;">{{item.createTime|formatDate}}</td>
               <td style="border: 1px solid #000;">{{item.orderNo}}</td>
               <td style="border: 1px solid #000;">{{item.createUserName}}</td>
               <td style="border: 1px solid #000;">{{item.authPerson}}</td>
@@ -157,6 +157,7 @@ export default {
         end:moment().add(1,'days').format("YYYY-MM-DD"),
         srcRoomNumber: ''
       },
+      activeCompany:{},
       datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
       localDate: formatDate(new Date(), 'yyyy-MM-dd'),
       tableData: [],
@@ -189,6 +190,7 @@ export default {
     ) {
       this.activeCompany.companyName == "";
     }
+    this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
   },
   methods: {
     historyRoomExchangeDate(){
@@ -256,6 +258,14 @@ export default {
       // exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.datepicker[0] + "&endDate=" + this.form.datepicker[1] + "&srcRoomNumber=" + this.form.srcRoomNumber);
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.begin + "&endDate=" + this.form.end + "&srcRoomNumber=" + this.form.srcRoomNumber);
     },
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>

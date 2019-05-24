@@ -95,8 +95,8 @@
               <td style="border: 1px solid #000;">{{item.roomTypeName}}</td>
               <td style="border: 1px solid #000;">{{item.orderNo}}</td>
               <td style="border: 1px solid #000;">{{item.guestName}}</td>
-              <td style="border: 1px solid #000;">{{item.beginDate}}</td>
-              <td style="border: 1px solid #000;">{{item.endDate}}</td>
+              <td style="border: 1px solid #000;">{{item.beginDate|formatDate}}</td>
+              <td style="border: 1px solid #000;">{{item.endDate|formatDate}}</td>
               <td style="border: 1px solid #000;">{{item.createUserName}}</td>
               <td style="border: 1px solid #000;">
                  <span v-if="item.orderStatus == 'RESERVE'">预定</span>
@@ -219,6 +219,14 @@ export default {
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.beginDate + "&endDate=" + this.form.endDate);
     },
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>

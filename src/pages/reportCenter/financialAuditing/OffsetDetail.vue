@@ -119,7 +119,7 @@
               <td style="border: 1px solid #000;">{{item.roomNumber}}</td>
               <td style="border: 1px solid #000;">{{item.memName}}</td>
               <td style="border: 1px solid #000;">{{item.projectName}}</td>
-              <td style="border: 1px solid #000;">{{item.createTime}}</td>
+              <td style="border: 1px solid #000;">{{item.createTime|formatDate}}</td>
                <td style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
               <td style="border: 1px solid #000;">{{item.settlementAmount}}</td>
               <td style="border: 1px solid #000;">{{item.createUserName}}</td>
@@ -302,6 +302,14 @@ export default {
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?begin=" + this.queryObj.begin + "&end=" + this.queryObj.end + "&shiftPk=" + this.queryObj.shiftPk + "&projectPk=" + this.queryObj.projectPk + "&userPk=" + this.queryObj.userPk);
     },
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>

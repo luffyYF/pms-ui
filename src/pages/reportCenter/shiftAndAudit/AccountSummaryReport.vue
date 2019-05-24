@@ -103,21 +103,21 @@
         <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
             <thead>
             <tr>
-              <td colspan="2" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
-              <td colspan="7" style="text-align:right;font-size: 14px;">
-          营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
-          收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}}</span></td>
+              <td colspan="4" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
+              <td colspan="5" style="text-align:right;font-size: 14px;">
+          营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;
+          收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}}</span></td>
             </tr>
              <tr>
-              <th style="border: 1px solid #000;">收银员</th>
-              <th style="width:7%;border: 1px solid #000;">组单</th>
-              <th style="width:7%;border: 1px solid #000;">客单</th>
-              <th style="width:7%;border: 1px solid #000;">房号</th>
-              <th style="width:7%;border: 1px solid #000;">姓名</th>
+              <th style="width:10%;border: 1px solid #000;">收银员</th>
+              <th style="width:10%;border: 1px solid #000;">组单</th>
+              <th style="width:8%;border: 1px solid #000;">客单</th>
+              <th style="width:8%;border: 1px solid #000;">房号</th>
+              <th style="width:10%;border: 1px solid #000;">姓名</th>
               <th style="width:10%;border: 1px solid #000;">消费金额</th>
               <th style="width:10%;border: 1px solid #000;">结算金额</th>
-              <th style="border: 1px solid #000;">发生日期</th>
-              <th style="border: 1px solid #000;">备注</th>
+              <th style="width:14%;border: 1px solid #000;">发生日期</th>
+              <th style="width:10%;border: 1px solid #000;">备注</th>
             </tr>
           </thead>
             <tr v-for="(item, index) in listData" :key="index">
@@ -129,7 +129,7 @@
               <td v-if="item.project == false" style="border: 1px solid #000;">{{item.memName}}</td>
               <td v-if="item.project == false" style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
               <td v-if="item.project == false" style="border: 1px solid #000;">{{item.settlementAmount}}</td>
-              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.createTime}}</td>
+              <td v-if="item.project == false" style="border: 1px solid #000;">{{item.createTime|formatDate}}</td>
               <td v-if="item.project == false" style="border: 1px solid #000;">{{item.remark}}</td>
             </tr>
              <tfoot>
@@ -375,6 +375,14 @@ export default {
       this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
       this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
     }
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>

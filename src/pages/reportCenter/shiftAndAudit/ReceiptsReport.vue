@@ -73,7 +73,7 @@
 
       <div style="width: 800px;margin: 0 auto;text-align:center">
         <span style="margin-left:-300px;font-size: 14px;">
-          营业日期从：{{queryObj.begin}}&nbsp;&nbsp;到&nbsp;&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;&nbsp;
+          营业日期从：{{queryObj.begin}}&nbsp;到&nbsp;{{queryObj.end}}&nbsp;&nbsp;&nbsp;
           收银员：{{queryObj.userName==""?"全部":queryObj.userName}}&nbsp;&nbsp;&nbsp;&nbsp;班次:<span class="head-item">{{queryObj.shift==""?"全部":queryObj.shift}} </span>
         </span>
          <span style="margin-left:-750px;font-size: 14px;">店铺：{{activeCompany.companyName}}</span><br>
@@ -153,11 +153,9 @@
             </tfoot> -->
           </table>
         </div>
-        <div style="width: 800;margin: 0 auto;text-align:center;clear:both;">
-            <span style="margin-right:600px;font-size: 14px;">打印人：{{userInfo.realName}}</span><br>
-            <span style="margin-left:350px;font-size: 14px;">打印日期：{{sDate}}</span>
-       
-        </div>
+        <div style="width: 800px;height:20px;margin: 0 auto;text-align:left;clear:both;">
+            <span style="margin-left:50px;font-size: 14px;">打印人：{{userInfo.realName}}<span style="font-size: 14px;margin-left:300px;">打印日期：{{sDate}}</span></span><br>
+       </div>
       </div>
     </div>
     <!-- 打印填充 iframe-->
