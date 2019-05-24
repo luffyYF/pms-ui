@@ -135,18 +135,18 @@
             <tr v-for="(item, index) in tableData" :key="index">
               <td style="border: 1px solid #000;">{{item.channelName}}</td>
               <td style="border: 1px solid #000;">{{item.rentalRoomNum}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,1)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,1)}}</span></td>
               <td style="border: 1px solid #000;">{{item.peopleNightRoomNum}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,2)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,2)}}</span></td>
               <td style="border: 1px solid #000;">{{item.houseFeeIncome}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,3)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,3)}}</span></td>
               <td style="border: 1px solid #000;">{{item.cateringFeeIncome}}</td>
               <td style="border: 1px solid #000;">{{item.orderFeeIncome}}</td>
               <td style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,4)}}</span></td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,5)}}</span></td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,6)}}</span></td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != scope.$index">{{item | moneyFilter(sumObj,7)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,4)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,5)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,6)}}</span></td>
+              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,7)}}</span></td>
             </tr>
             <!-- 合计 -->
             <tr>
@@ -283,13 +283,13 @@ export default {
       channelSaleAnalysis(data).then(res=>{
         if(res.code == 1){
           this.tableData = res.data
-          for(var i=0;i<tableData.length;i++){
-             this.heji.a += tableData[i].rentalRoomNum;
-             this.heji.b += tableData[i].peopleNightRoomNum;
-             this.heji.c += tableData[i].houseFeeIncome;
-             this.heji.d += tableData[i].cateringFeeIncome;
-             this.heji.e += tableData[i].orderFeeIncome;
-             this.heji.f += tableData[i].consumptionAmount;
+          for(var i=0;i<this.tableData.length;i++){
+             this.heji.a += this.tableData[i].rentalRoomNum;
+             this.heji.b += this.tableData[i].peopleNightRoomNum;
+             this.heji.c += this.tableData[i].houseFeeIncome;
+             this.heji.d += this.tableData[i].cateringFeeIncome;
+             this.heji.e += this.tableData[i].orderFeeIncome;
+             this.heji.f += this.tableData[i].consumptionAmount;
           }
           this.sumObj = res.data[res.data.length-1]
           this.printDate = data
