@@ -2,6 +2,7 @@
   <div>
     <el-col :span="24" class="title">
       <div class="demo-input-suffix">
+        <el-form :inline="true" size="mini">
           营业日期：<el-date-picker
                       v-model="form.beginDate"
                       type="date"
@@ -16,32 +17,39 @@
               placeholder="选择日期"
               :clearable="false" size="mini">
             </el-date-picker>
-        <div style="margin-top:10px;">
+        <!-- <div style="margin-top:10px;"> -->
           <el-button type="primary" size="mini" @click="receptionRoomDate">网页预览</el-button>
-          <el-button type="primary" size="mini">PDF预览</el-button>
+          <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
           <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
           <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
           <el-button type="primary" size="mini" @click="print">打印预览</el-button>
-        </div>
+        <!-- </div> -->
+        </el-form>
       </div>
     </el-col>
-    <el-col :span="24" id="print-receptionroom">
+    <el-col :span="24">
       <div class="tabs">
+        <div  id="print-receptionroom">
         <div class="tavs-title">
-          <h3>{{activeCompany.companyName}}</h3>
-          <h3>接待房报表</h3>
+           <div style="margin-left: 7px;text-align: left;">
+            <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+          </div>
+          <!-- <h3 style="text-align:center;">{{activeCompany.companyName}}</h3> -->
+          <h3 style="text-align:center;">接待房报表</h3>
+        </div>
         </div>
         <div class="tabs-contetn">
-          <p style="text-align: center;">
+          <!-- <p style="text-align: center;">
             抵店时间：{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}
-          </p>
-          <el-table 
+          </p> -->
+        </div>
+          <!-- <el-table
             v-loading="loading" 
             :data="tableData" 
             border 
             :header-cell-style="tableStyleObj"
             :cell-style="tableStyleObj"
-            style="width: 100%; margin-top: 5px">
+            style="width: 100%; margin-top: 5px;border:1px solid black">
             <el-table-column prop="roomNumber" label="房间号"></el-table-column>
             <el-table-column prop="roomTypeName" label="房间类型"></el-table-column>
             <el-table-column prop="orderNo" label="组单号"></el-table-column>
@@ -62,9 +70,56 @@
                 </template>
             </el-table-column>
             <el-table-column prop="remark" label="备注"></el-table-column>
-          </el-table>
-          <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p>
-        </div>
+          </el-table> -->
+          <div id="print-receptionroomTable">
+            <table width="100%" border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;" cellpadding="6" cellspacing="0">
+            <thead>
+            <tr>
+              <td colspan="4" style="text-align: left;font-size: 14px;">店铺:{{activeCompany.companyName}}</td>
+              <td colspan="5" style="text-align: right;font-size: 14px;">抵店时间：{{form.beginDate}}&nbsp;&nbsp;至&nbsp;&nbsp;{{form.endDate}}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000;">房间号</th>
+              <th style="border: 1px solid #000;">房间类型</th>
+              <th style="border: 1px solid #000;">组单号</th>
+              <th style="border: 1px solid #000;">客人</th>
+              <th style="border: 1px solid #000;">来店时间</th>
+              <th style="border: 1px solid #000;">离店时间</th>
+              <th style="border: 1px solid #000;">操作员</th>
+              <th style="border: 1px solid #000;">房间状态</th>
+              <th style="border: 1px solid #000;">备注</th>
+            </tr>
+          </thead>
+            <tr v-for="(item, index) in tableData" :key="index">
+              <td style="border: 1px solid #000;">{{item.roomNumber}}</td>
+              <td style="border: 1px solid #000;">{{item.roomTypeName}}</td>
+              <td style="border: 1px solid #000;">{{item.orderNo}}</td>
+              <td style="border: 1px solid #000;">{{item.guestName}}</td>
+              <td style="border: 1px solid #000;">{{item.beginDate|formatDate}}</td>
+              <td style="border: 1px solid #000;">{{item.endDate|formatDate}}</td>
+              <td style="border: 1px solid #000;">{{item.createUserName}}</td>
+              <td style="border: 1px solid #000;">
+                 <span v-if="item.orderStatus == 'RESERVE'">预定</span>
+                  <span v-else-if="item.orderStatus == 'OBLIGATION'">待付款</span>
+                  <span v-else-if="item.orderStatus == 'CHECKIN'">在住</span>
+                  <span v-else-if="item.orderStatus == 'PAYMENT'">已支付</span>
+                  <span v-else-if="item.orderStatus == 'LEAVE'">结账离店</span>
+                  <span v-else-if="item.orderStatus == 'CANCEL'">取消</span>
+                  <span v-else-if="item.orderStatus == 'NOSHOW'">NoShow</span>
+                  <span v-else>退房未结</span>
+              </td>
+              <td style="border: 1px solid #000;">{{item.remark}}</td>
+            </tr>
+             <tfoot>
+            <tr>
+              <td colspan="4" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+              <td colspan="5" style="text-align: right;font-size: 14px;">打印日期：<span>{{datepickerTime}}</span></td>
+            </tr>
+          </tfoot>
+          </table>
+          </div>
+          <!-- <p style="height:60px;"><span class="left">打印日期：{{datepickerTime}}</span><span class="right">	打印人：	{{userInfo.realName}}</span></p> -->
+        
       </div>
     </el-col>
     <!-- 打印填充 iframe-->
@@ -77,6 +132,7 @@ import {formatDate, copyObj} from '@/utils/index'
 import moment from "moment"
 import common from "@/api/common"
 import exportExcel from '@/components/download/exportExcel'
+import { getLodop } from '@/utils/lodop'
 
 export default {
   data() {
@@ -84,17 +140,22 @@ export default {
       loading: false,
       form: {
         beginDate: moment().format("YYYY-MM-DD"),
-        endDate: moment().format("YYYY-MM-DD")
+        //endDate: moment().format("YYYY-MM-DD")
+        endDate:moment().add(1,'days').format("YYYY-MM-DD")
       },
       datepickerTime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
       tableData: [],
       tableStyleObj:{
-        border: '1px solid #ebeef5',
+        border: '1px solid black',
         padding: '8px',
-        'text-align':'center'
+        'text-align':'center',
+        'font-family': '宋体',
+        'font-size': '14px',
+        'color':'black',
       },
       baseUrl:common.baseUrl,
-      ziurl:"/report/receptionRoomExcel"
+      ziurl:"/report/receptionRoomExcel",
+       LODOP: null
     }
   },
   created(){
@@ -118,17 +179,54 @@ export default {
         this.loading = false
       })
     },
-    //打印预览
-    print(){
-      let bodyhtml = document.getElementById("print-receptionroom").innerHTML;
-      var f = document.getElementById("printIframe");
-      f.contentDocument.write(bodyhtml);
-      f.contentDocument.close();
-      f.contentWindow.print();
+     print() {
+      this.createOneFormPage();
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+     createOneFormPage() {
+      this.LODOP=getLodop();
+      if (!this.LODOP) {
+        return
+      }
+      // this.LODOP.NewPageA(); // 自动分页
+      // this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      // this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // this.LODOP.ADD_PRINT_TABLE(90,10,770,903,document.getElementById("print-receptionroomTable").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);
+      // this.LODOP.ADD_PRINT_HTM(10,10,770,80,document.getElementById("print-receptionroom").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      // this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      // this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      // this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.PRINT_INITA(0 , 0, 794, 1123, "接待房报表打印");
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      this.LODOP.ADD_PRINT_TABLE(118,"1%","98%",975,document.getElementById("print-receptionroomTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(16,"1%","98%",109,document.getElementById("print-receptionroom").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+      this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
     },
     exportReport() {
       exportExcel(this.baseUrl + this.ziurl + "?beginDate=" + this.form.beginDate + "&endDate=" + this.form.endDate);
     },
+  },filters: {
+      /* 格式化时间戳 */
+      formatDate (val) {
+          if(!val){
+            return ""
+          }
+          return moment(new Date(val)).format("YY/MM/DD HH:mm:ss")
+      },
   }
 }
 </script>
@@ -139,6 +237,7 @@ export default {
 }
 .tavs-title{
   text-align: center;
+  margin-top: 20px;
 }
 .left{
   float: left;

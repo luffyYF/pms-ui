@@ -70,7 +70,7 @@
   import SysHotelInformation from './SysHotelInformation'
   import SysBaseParam from './SysBaseParam'
   import SysReserveOrder from './SysReserveOrder'
-  
+
   export default {
     components: {
       SysBill,

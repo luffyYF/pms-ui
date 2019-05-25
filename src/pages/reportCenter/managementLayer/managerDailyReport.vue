@@ -11,7 +11,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
-        <el-button type="primary">PDF预览</el-button>
+        <!-- <el-button type="primary">PDF预览</el-button> -->
         <el-button type="primary" @click="downloadExcel" >导出EXCEL</el-button>
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
       </el-form-item>
@@ -27,7 +27,8 @@
         <table width="100%" border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
           <thead>
             <tr>
-              <th colspan="8" style="text-align: left;font-size: 12px;">店铺：{{activeCompany.companyName}}</th>
+              <th colspan="4" style="text-align: left;font-size: 12px;">店铺：{{activeCompany.companyName}}</th>
+                   <th colspan="4" style="text-align: right;font-size: 14px;">营业日期：{{queryObj.begin}}</th>
             </tr>
           </thead>
           <tbody>
@@ -193,7 +194,7 @@ export default {
    data() {
     return {
       userInfo:{},
-      sDate: moment().format("YYYY-MM-DD"),
+      sDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM-DD"),end:moment().add(1,"days").format("YYYY-MM-DD")},
       activeCompany:{},
       tableData: {},
@@ -270,24 +271,39 @@ export default {
       if (!this.LODOP) {
         return
       }
-      this.LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
-      this.LODOP.NewPageA(); // 自动分页
+      // var sdf = this.LODOP.PRINT_INIT("经理日报打印");
+      this.LODOP.PRINT_INITA(0 , 0, 794, 1123, "经理日报打印");
+      // this.LODOP.NewPageA(); // 自动分页0
       // LODOP.SET_PREVIEW_WINDOW(1,);
-      this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4");//1指定纵向打印，指定A4纸，
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1);// 显示背景
-      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", 'Full-Width');// 打印页整宽显示
+      // this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Full-Page");// 打印页整宽显示
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+      // this.LODOP.SET_PREVIEW_WINDOW(1, 1, 0, 0, 0, "")
       // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
       // LODOP.SET_PRINT_STYLE("FontSize",20);
       // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题 1123 1023 963
-      this.LODOP.ADD_PRINT_TABLE(90,10,774,903,document.getElementById("print-managerdailyreportTable").innerHTML);
+      // this.LODOP.ADD_PRINT_TABLE(90, 10, 774, 900, document.getElementById("print-managerdailyreportTable").innerHTML);
       // LODOP.ADD_PRINT_TABLE(128,"5%","90%",314,strStyle+document.getElementById("div2").innerHTML);
-      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",2);	
-      this.LODOP.ADD_PRINT_HTM(10,10,774,80,document.getElementById("print-managerdailyreportTitle").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 3);
+      // this.LODOP.ADD_PRINT_HTM(10, 10, 774, 80, document.getElementById("print-managerdailyreportTitle").innerHTML);
+      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+      // this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
+      // this.LODOP.ADD_PRINT_HTM(1123, 15, 764, 30, "<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
+      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      // this.LODOP.SET_PRINT_STYLEA(0, "Horient", 0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 0);
+
+      this.LODOP.ADD_PRINT_TABLE(118,"1%","98%",975,document.getElementById("print-managerdailyreportTable").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+      this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+      this.LODOP.ADD_PRINT_HTM(16,"1%","98%",109,document.getElementById("print-managerdailyreportTitle").innerHTML);
       this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
       this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
-      this.LODOP.ADD_PRINT_HTM(1063,15,300,60,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>")
-      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
-      this.LODOP.SET_PRINT_STYLEA(0,"Horient",0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.ADD_PRINT_HTM(1093,"1%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
+      this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+      this.LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
     }
   },
   filters: {

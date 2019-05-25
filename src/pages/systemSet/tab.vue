@@ -83,7 +83,9 @@
           <span slot="title">cms管理</span>
         </a>
       </el-menu-item>
-
+	<!-- <el-menu-item index="/systemSet/iframe">
+        <span slot="title">嵌入页面测试</span>
+      </el-menu-item> -->
       <el-menu-item index="/systemSet/hotelHardware" v-if="hasPerm('pms:systemSet:hotelHardware')">
         <span slot="title">酒店硬件</span>
       </el-menu-item>

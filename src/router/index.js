@@ -118,11 +118,13 @@ import BoardroomList from '@/pages/reportCenter/boardroomReport/BoardroomList.vu
 import LinenLossReport from '@/pages/reportCenter/linenReport/LinenLossReport.vue'
 import WxPaymentBalance from '@/pages/reportCenter/wxPaymentReport/WxPaymentBalance.vue'
 import TurnoverDailyDetail from '@/pages/reportCenter/turnoverReport/TurnoverDailyDetail.vue'
+import TurnoverDaily from '@/pages/reportCenter/turnoverReport/TurnoverDaily.vue'
 import TurnoverMonthDetail from '@/pages/reportCenter/turnoverReport/TurnoverMonthDetail.vue'
 import LeaseRateDaily from '@/pages/reportCenter/turnoverReport/LeaseRateDaily.vue'
 import LeaseRateMonth from '@/pages/reportCenter/turnoverReport/LeaseRateMonth.vue'
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
 import BusinessDetail from '@/pages/reportCenter/turnoverReport/BusinessDetail.vue'
+import TurnoverMonth from '@/pages/reportCenter/turnoverReport/turnoverMonth.vue'
 
 //库存
 import StockTab from '@/pages/stock/tab';
@@ -192,6 +194,9 @@ import advanceClass from '@/pages/shiftData/advanceClass.vue'
 import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
 import advanceClassView from '@/pages/shiftData/advanceClassView.vue'
 
+import TestVue from '@/pages/systemSet/TestVue'
+
+
 Vue.use(Router)
 /**
  * 项目启动就有权限
@@ -241,20 +246,20 @@ export const constantRouterMap = [
           {path: '/reserveManage/miniappOrder', component: MiniappOrderList, label: '小程序订单'}
         ]
       },
-      { 
-        path: '/checkInManage', 
-        component: CheckInManageTab, 
-        name: '入住管理', 
+      {
+        path: '/checkInManage',
+        component: CheckInManageTab,
+        name: '入住管理',
         hidden: false,
         children:[
           {path: '/checkInManage/checkInSearch',  component: CheckInSearch, label: '入住查询'},
           {path: '/checkInManage/teamSearch',  component: TeamSearch, label: '团队查询'},
         ]
       },
-      { 
-        path: '/shiftData', 
-        component: shiftData, 
-        name: '交班', 
+      {
+        path: '/shiftData',
+        component: shiftData,
+        name: '交班',
         hidden: false,
         children:[
           {path: '/shiftData/advanceClass',  component: advanceClass, label: '交班预览'},
@@ -273,7 +278,7 @@ export const constantRouterMap = [
           {path: '/customerRelation/guestManage', component: GuestManage, label: '客人管理'},
           {path: '/customerRelation/protocolManage',component: ProtocolManage, label: '协议管理'},
           {path: '/customerRelation/intermediary',component: intermediaryTab, label: '协议管理'},
-          
+
           {path: '/customerRelation/virtualOrder', component: VirtualOrder, label: '虚拟账单'},
           {path: '/customerRelation/invoice', component: Invoice, label: '发票'},
           {path: '/customerRelation/passengerInformationUploading', component: PassengerInformationUploading, label: '旅客信息上传'}
@@ -326,6 +331,8 @@ export const constantRouterMap = [
           {path: '/reportCenter/leaseRateDaily', component: LeaseRateDaily, label: '入住率日报'},
           {path: '/reportCenter/leaseRateMonth', component: LeaseRateMonth, label: '入住率月报'},
           {path: '/reportCenter/businessDetail', component: BusinessDetail, label: '入住率月报'},
+          {path: '/reportCenter/TurnoverDaily', component: TurnoverDaily, label: '营业日报'},
+          {path: '/reportCenter/TurnoverMonth', component: TurnoverMonth, label: '营业月报'},
         ]
       },
       {
@@ -350,9 +357,9 @@ export const constantRouterMap = [
       },
 
       {
-        path: '/financialAudit', 
-        component: FinancialAuditTag, 
-        name: '财务稽核', 
+        path: '/financialAudit',
+        component: FinancialAuditTag,
+        name: '财务稽核',
         hidden: false,
         children: [
           {path: '/financialAudit/billChecking', component: BillChecking, label: '订单对账'},
@@ -390,8 +397,8 @@ export const constantRouterMap = [
       {
         path: '/systemSet',
         perm:'pms:dir:systemSet',
-        component: SystemSetTag, 
-        name: '系统设置', 
+        component: SystemSetTag,
+        name: '系统设置',
         hidden: false,
         children: [
           {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
@@ -411,13 +418,14 @@ export const constantRouterMap = [
           {path: '/systemSet/roomLockParam', component: roomLockParam, label: '房锁设置'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
+          {path: '/systemSet/iframe', component: TestVue, label: '支付配置'},
         ]
       },
       {
         path: '/zl',
         perm:'',
-        component: zl, 
-        name: '直连', 
+        component: zl,
+        name: '直连',
         hidden: false,
         children: [
           {path: '/zl/zlOpenConfig', component: zlOpenConfig, label: '直连配置'},
@@ -430,8 +438,8 @@ export const constantRouterMap = [
       },
       {
         path: '/roomService',
-        component: roomServiceTab, 
-        name: '房务管理', 
+        component: roomServiceTab,
+        name: '房务管理',
         hidden: false,
         children: [
           {path: '/roomService/RoomPattern', component:RoomPatternPage , label: '房态'},
@@ -447,6 +455,7 @@ export const constantRouterMap = [
     ]
   }
 ]
+
 
 export default new Router({
   routes: constantRouterMap
