@@ -169,33 +169,6 @@
               <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'houseFeeIncome', 0)|toMoney}}</td>
               <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(calculation(tableData.roomType, 'houseFeeIncome', 0)/calculation(tableData.roomType, 'rentalRoomNum', 0))|toMoney}}</td>
             </tr>
-            <tr>
-              <th colspan="8" style="text-align: left;width: 100%;font-family: 黑体;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房型售房统计</th>
-            </tr>
-            <tr>
-              <td style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房型</td>
-              <td style="text-align: center;background-color: #dcdcdc;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">总房数</td>
-              <td style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">入住数</td>
-              <td style="text-align: center;background-color: #dcdcdc;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">出租率</td>
-              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">房费总收入</td>
-              <td colspan="2" style="text-align: center;background-color: #dcdcdc;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">平均房价</td>
-            </tr>
-            <tr v-for="ele in tableData.roomType" :key="ele.reportPk">
-              <td style="text-align: left;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.roomTypeName}}</td>
-              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.onlineRoomNum == null ? 0 : ele.onlineRoomNum}}</td>
-              <td style="text-align: right;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.rentalRoomNum}}</td>
-              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{(Number(ele.leaseRate == null ? 0 : ele.leaseRate)*100).toFixed(2)}}%</td>
-              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.houseFeeIncome|toMoney}}</td>
-              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">{{ele.averageRoomRate|toMoney}}</td>
-            </tr>
-            <tr>
-              <td style="text-align: left;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">合计</td>
-              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'onlineRoomNum', 0)}}</td>
-              <td style="text-align: right;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'rentalRoomNum', 0)}}</td>
-              <td style="text-align: right;width: 9%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(isNaN(calculation(tableData.roomType, 'rentalRoomNum', 0)/calculation(tableData.roomType, 'onlineRoomNum', 0)) ? 0 : (calculation(tableData.roomType, 'rentalRoomNum', 0)/calculation(tableData.roomType, 'onlineRoomNum', 0))*100).toFixed(2)}}%</td>
-              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{calculation(tableData.roomType, 'houseFeeIncome', 0)|toMoney}}</td>
-              <td colspan="2" style="text-align: right;width: 25%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-weight: bolder;font-size: 12px;">{{(calculation(tableData.roomType, 'houseFeeIncome', 0)/calculation(tableData.roomType, 'rentalRoomNum', 0))|toMoney}}</td>
-            </tr>
           </tbody>
           <tfoot>
             <tr>
