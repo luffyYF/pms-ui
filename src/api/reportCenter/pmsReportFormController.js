@@ -349,6 +349,14 @@ export const businessMonthReport = params =>{
   return request.get('/pms/report/businessMonthReport',{params:params})
 }
 
+/**
+ *
+ * 现金流明细报表
+ */
+export const cashFlowDetailsReport = params =>{
+    return request.get('/pms/report/cashFlowDetailsReport',{params:params})
+  }
+
 
 
 

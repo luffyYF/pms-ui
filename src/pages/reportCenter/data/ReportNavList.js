@@ -126,6 +126,7 @@ export const commonReport = [{
     {label:'营业数据明细',path:'/reportCenter/businessDetail',pointer:'pms:reportCenter:businessDetail'},
     {label:'营业日报',path:'/reportCenter/TurnoverDaily',pointer:'pms:reportCenter:TurnoverDaily'},
     {label:'营业月报',path:'/reportCenter/TurnoverMonth',pointer:'pms:reportCenter:TurnoverMonth'},
+    {label:'现金流明细报表',path:'/reportCenter/CashFlowDetails',pointer:'pms:reportCenter:CashFlowDetails'},
   ]
 }
 // , {

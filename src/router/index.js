@@ -125,6 +125,7 @@ import LeaseRateMonth from '@/pages/reportCenter/turnoverReport/LeaseRateMonth.v
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
 import BusinessDetail from '@/pages/reportCenter/turnoverReport/BusinessDetail.vue'
 import TurnoverMonth from '@/pages/reportCenter/turnoverReport/turnoverMonth.vue'
+import CashFlowDetails from '@/pages/reportCenter/turnoverReport/CashFlowDetails.vue'
 
 //库存
 import StockTab from '@/pages/stock/tab';
@@ -331,6 +332,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/businessDetail', component: BusinessDetail, label: '入住率月报'},
           {path: '/reportCenter/TurnoverDaily', component: TurnoverDaily, label: '营业日报'},
           {path: '/reportCenter/TurnoverMonth', component: TurnoverMonth, label: '营业月报'},
+          {path: '/reportCenter/CashFlowDetails', component: CashFlowDetails, label: '现金流明细报表'},
         ]
       },
       {
