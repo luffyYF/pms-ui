@@ -193,6 +193,7 @@ import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepin
 import shiftData from '@/pages/shiftData/tab.vue'
 import advanceClass from '@/pages/shiftData/advanceClass.vue'
 import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
+import advanceClassView from '@/pages/shiftData/advanceClassView.vue'
 
 import TestVue from '@/pages/systemSet/TestVue'
 
@@ -259,11 +260,12 @@ export const constantRouterMap = [
       {
         path: '/shiftData',
         component: shiftData,
-        name: '入住管理',
+        name: '交班',
         hidden: false,
         children:[
           {path: '/shiftData/advanceClass',  component: advanceClass, label: '交班预览'},
           {path: '/shiftData/advanceClassInf',  component: advanceClassInf, label: '交班信息查询'},
+          {path: '/shiftData/advanceClassView',  component: advanceClassView, label: '交班账务查询'},
         ]
       },
       {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},

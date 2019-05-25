@@ -63,7 +63,7 @@
       <el-menu-item index="/systemSet/settleSetting" v-if="hasPerm('pms:systemSet:consItemSetting')">
         <span slot="title">消费项目设置</span>
       </el-menu-item>
-      <el-menu-item index="/systemSet/channelManage" v-if="hasPerm('pms:systemSet:channelManage')">
+      <!-- <el-menu-item index="/systemSet/channelManage" v-if="hasPerm('pms:systemSet:channelManage')">
         <span slot="title">渠道管理</span>
       </el-menu-item>
       <el-menu-item index="/systemSet/projectSetting" v-if="hasPerm('pms:systemSet:projectSetting')">
@@ -74,7 +74,7 @@
       </el-menu-item>
       <el-menu-item index="/systemSet/marketingSetting" v-if="hasPerm('pms:systemSet:marketing')">
         <span slot="title">营销</span>
-      </el-menu-item>
+      </el-menu-item> -->
       <el-menu-item index="/systemSet/pay" v-if="hasPerm('pms:pay:paramsSetting')">
         <span slot="title">支付参数配置</span>
       </el-menu-item>
