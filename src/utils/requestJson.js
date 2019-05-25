@@ -7,7 +7,7 @@ import router from '@/router'
 // 创建axios实例
 const service = axios.create({
   // api的base_url
-  baseURL: process.env.API_ROOT,
+  baseURL: "http://192.168.5.6/pms-back",
   // 请求超时时间
   timeout: 10000
 })

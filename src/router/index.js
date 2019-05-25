@@ -87,6 +87,7 @@ import AccountSummaryReportPage from '@/pages/reportCenter/shiftAndAudit/Account
 import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAuditRentPriceCheck.vue'
 
 //报表中心
+import RoomTypeCheckInAnalysis from '@/pages/reportCenter/commonStatements/roomTypeCheckInAnalysis.vue'
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
@@ -331,6 +332,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/businessDetail', component: BusinessDetail, label: '入住率月报'},
           {path: '/reportCenter/TurnoverDaily', component: TurnoverDaily, label: '营业日报'},
           {path: '/reportCenter/TurnoverMonth', component: TurnoverMonth, label: '营业月报'},
+          {path: '/reportCenter/roomTypeCheckInAnalysis', component: RoomTypeCheckInAnalysis, label: '入住分析表（按房型）'}
         ]
       },
       {
