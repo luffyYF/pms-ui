@@ -28,7 +28,7 @@
         border
         @cell-click="cellClick"
         class="tables-list noChange"
-        max-height="600"
+        max-height="600px"
        :show-header="false"
        :cell-class-name="tableCellClassName"
         v-loading="loading">
