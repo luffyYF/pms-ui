@@ -87,6 +87,7 @@ import AccountSummaryReportPage from '@/pages/reportCenter/shiftAndAudit/Account
 import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAuditRentPriceCheck.vue'
 
 //报表中心
+import RoomTypeCheckInAnalysis from '@/pages/reportCenter/commonStatements/roomTypeCheckInAnalysis.vue'
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
@@ -192,6 +193,7 @@ import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepin
 import shiftData from '@/pages/shiftData/tab.vue'
 import advanceClass from '@/pages/shiftData/advanceClass.vue'
 import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
+import advanceClassView from '@/pages/shiftData/advanceClassView.vue'
 
 import TestVue from '@/pages/systemSet/TestVue'
 
@@ -258,11 +260,12 @@ export const constantRouterMap = [
       {
         path: '/shiftData',
         component: shiftData,
-        name: '入住管理',
+        name: '交班',
         hidden: false,
         children:[
           {path: '/shiftData/advanceClass',  component: advanceClass, label: '交班预览'},
           {path: '/shiftData/advanceClassInf',  component: advanceClassInf, label: '交班信息查询'},
+          {path: '/shiftData/advanceClassView',  component: advanceClassView, label: '交班账务查询'},
         ]
       },
       {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
@@ -331,6 +334,7 @@ export const constantRouterMap = [
           {path: '/reportCenter/businessDetail', component: BusinessDetail, label: '入住率月报'},
           {path: '/reportCenter/TurnoverDaily', component: TurnoverDaily, label: '营业日报'},
           {path: '/reportCenter/TurnoverMonth', component: TurnoverMonth, label: '营业月报'},
+          {path: '/reportCenter/roomTypeCheckInAnalysis', component: RoomTypeCheckInAnalysis, label: '入住分析表（按房型）'}
         ]
       },
       {
