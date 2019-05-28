@@ -10,11 +10,10 @@
             <el-button @click="clickRoomManager" v-if="hasPerm('pms:roomManager:list')">房间管理</el-button>
           </el-form-item>
         </el-form>
-
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item title="房间筛选" name="1" class="cllapse-list">
             <div class="check-list-group">
-              <el-checkbox-group v-model="checkList">
+              <el-checkbox-group v-model="checkList"> 
                 <div class="checkbox-li">
                   <div class="half50">
                     <el-checkbox label="empty"><span class="bg-icon empty"></span>空房</el-checkbox>
@@ -98,7 +97,6 @@
               </el-form>
             </div>
           </el-collapse-item>
-
           <!-- <el-collapse-item title="房态统计" name="2" class="cllapse-list">
             <div class="real-state-li">
               <div class="half50">在住间数<span>6</span></div>
@@ -125,7 +123,6 @@
               </el-table>
             </div>
           </el-collapse-item> -->
-
           <el-collapse-item title="图标说明" name="3" class="cllapse-list">
             <div class="icon-explain">
               <div class="real-state-li">
@@ -163,13 +160,12 @@
               </full-calendar>
             </div>
           </el-collapse-item>
-
         </el-collapse>
       </el-aside>
       <el-main>
         <el-row>
           <!-- 房间item begin -->
-          <div class="pattern-li"  :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
+          <div class="pattern-li" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
             <!-- 房间号 渠道 -->
             <div class="pattern-li-item">
               <label class="rm">{{item.roomNumber}}</label>
@@ -189,17 +185,14 @@
                 <label class="channelinfo">{{item.arrivalChannelName}}</label>
               </div>
             </div>
-
             <!-- 抵店离店日期 -->
             <div class="pattern-li-item checkin-date" v-if="item.guestOrderPk">
               <!--  class="userinfo" -->
               <label v-if="item.guestBeginDate">入住：{{moment(item.guestBeginDate).format('MM-DD')}}</label><br>
               <label v-if="item.guestEndDate">离开：{{moment(item.guestEndDate).format('MM-DD')}}</label>
             </div>
-
             <!-- 状态图标 -->
             <div class="pattern-li-item button-status-icon">
-
               <!-- 入住关联类型 -->
               <el-popover
                 ref="popover2"
@@ -227,7 +220,6 @@
                     </div>
                   </div>
                 </div>
-                
                 <el-button slot="reference" size="mini" :class="{'displayNone':item.roomRelationType !=1 }" v-popover:item.guestOrderPk class="detailsinfo reserve_single" type="text"></el-button>
                 <el-button slot="reference" size="mini" :class="{'displayNone':item.roomRelationType !=2 }" v-popover:item.guestOrderPk class="detailsinfo relation" type="text"></el-button>
                 <el-button slot="reference" size="mini" :class="{'displayNone':item.roomRelationType !=3}" v-popover:item.guestOrderPk class="detailsinfo room_team" type="text"></el-button>
@@ -252,7 +244,6 @@
                 :content="'今天是'+item.guestName+'的生日'">
                 <label slot="reference" v-if="item.birthdayFlag==1" class="detailsinfo today_birthday"></label>
               </el-popover>
-
               <!-- 当天预抵 -->
               <el-popover
                 placement="bottom"
@@ -1000,7 +991,7 @@
     }
   }
 </script>
-<style>
+<style l>
 .displayNone{
   display: none;
 }
@@ -1412,6 +1403,7 @@
   /* display: inline-block; */
   float: left;
     position: relative;
+    
 }
 .pattern-li-item{
   font-family: "Arial Black",Times,serif;
@@ -1432,6 +1424,7 @@
   font-weight: bold;
   color: white;
   margin-right: 1px;
+  user-select: none;
 }
 .ht{
   font-family: 微软雅黑,"Times New Roman",Helvetica,sans-serif;
@@ -1441,6 +1434,7 @@
   text-transform: uppercase;
   color: black;
   overflow: hidden;
+  user-select: none;
 }
 .userinfo, .channelinfo{
   color:#fff;

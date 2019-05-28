@@ -21,7 +21,6 @@ import {hasPermission} from "@/utils/hasPermission";
 import {refreshPmsType} from "@/utils/refreshPmsType";
 
 // import './mock' // simulation data
-
 // import 'babel-polyfill'
 //全局的常量
 Vue.prototype.hasPerm = hasPermission

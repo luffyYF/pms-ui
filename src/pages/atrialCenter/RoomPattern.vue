@@ -166,10 +166,47 @@
           
         </el-collapse>
       </el-aside>
-      <el-main>
-        <el-row>
+      <el-main id="rowRoom">
           <!-- 房间item begin -->
-          <div class="pattern-li"  :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
+          <div class="pattern-li" @contextmenu.prevent="rightClick(item,index)" @dblclick="toCheckin(item)" @keyup.ctrl="ctrlClick(item,index)" :class="classRoomStatusObject(item)" v-for="(item, index) in checkedFilter(numberFilter(roomList))" @click="roomClick(item)" :key="index">
+            <!-- 下拉菜单 -->
+            <el-dropdown :ref='index' trigger="click" @click="calendarRoomForwardStatus(item)" class="pattern-dropdown" placement="bottom">
+              <div></div>
+              <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li">
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED'
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'
+                                                                      || item.roomStatus=='DIRTY' )
+                                                                      && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item)">办理入住</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:saveContinue')">办理续住</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'settle')" :disabled="!hasPerm('pms:roomPattern:settleLeave')">结账退房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_NOCHECK'
+                                                                      || item.roomStatus=='CLEAN_CHECKED'
+                                                                      || item.guestOrderPk
+                                                                      || item.roomStatus=='SELF_USE'
+                                                                      || item.roomStatus=='FREE_ROOM') && item.roomStatus!='DIRTY'"><el-button :disabled="!hasPerm('pms:roomPattern:toDirty')" type="text" @click="changeRoomStatus(item, 'DIRTY', index)">转为脏房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DIRTY'
+                                                                      || item.roomStatus=='CLEAN_CHECKED'
+                                                                      || item.roomStatus=='OCCUPY'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:cleanNocheck')" @click="changeRoomStatus(item, 'CLEAN_NOCHECK', index)">清洁未检查</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DIRTY'
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:cleanCheck')" @click="changeRoomStatus(item, 'CLEAN_CHECKED', index)">清洁检查房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='DIRTY'
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'
+                                                                      || item.roomStatus=='CLEAN_CHECKED'
+                                                                      || item.roomStatus=='SELF_USE'
+                                                                      || item.roomStatus=='FREE_ROOM') && !item.guestOrderPk"><el-button type="text" :disabled="!hasPerm('pms:roomPattern:toRepair')" @click="showRepair(item)">转维修房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='DIRTY'
+                                                                      || item.roomStatus=='CLEAN_NOCHECK'
+                                                                      || item.roomStatus=='CLEAN_CHECKED'
+                                                                      || item.roomStatus=='SELF_USE'
+                                                                      || item.roomStatus=='FREE_ROOM' ) && !item.guestOrderPk"><el-button :disabled="!hasPerm('pms:roomPattern:toDisable')" type="text" @click="showDisable(item)">转停用房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='REPAIR_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:showRepair')" @click="seeRoomReason(item, 'REPAIR')">查看维修房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DISABLE_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:showDisable')" @click="seeRoomReason(item, 'DISABLE')">查看停用房</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='REPAIR_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:endRepair')" @click="finshRoomReason(item,'REPAIR')">结束维修</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DISABLE_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:endDisable')" @click="finshRoomReason(item,'DISABLE')">结束停用</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.orderPk"><el-button type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:showOrderInfo')">查看订单信息</el-button></el-dropdown-item>
+                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.orderPk || item.arrivalOrderPk"><el-button type="text" @click="joinRoom(item)">联房</el-button></el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <!-- 房间号 渠道 -->
             <div class="pattern-li-item">
               <label class="rm">{{item.roomNumber}}</label>
@@ -309,47 +346,9 @@
               </el-popover>
             </div>
 
-            <!-- 下拉菜单 -->
-            <el-dropdown trigger="click" @click="calendarRoomForwardStatus(item)"  class="pattern-dropdown" placement="bottom">
-              <div style="width:100%; height:100%"></div>
-              <el-dropdown-menu slot="dropdown" class="pattern-dropdown-li">
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_CHECKED'
-                                                                      || item.roomStatus=='CLEAN_NOCHECK'
-                                                                      || item.roomStatus=='DIRTY' )
-                                                                      && !item.guestOrderPk" ><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:saveCheckin')" @click="toCheckin(item)">办理入住</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:saveContinue')">办理续住</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.guestOrderPk"><el-button  type="text" @click="toDialogVisible(item, 'settle')" :disabled="!hasPerm('pms:roomPattern:settleLeave')">结账退房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='CLEAN_NOCHECK'
-                                                                      || item.roomStatus=='CLEAN_CHECKED'
-                                                                      || item.guestOrderPk
-                                                                      || item.roomStatus=='SELF_USE'
-                                                                      || item.roomStatus=='FREE_ROOM') && item.roomStatus!='DIRTY'"><el-button :disabled="!hasPerm('pms:roomPattern:toDirty')" type="text" @click="changeRoomStatus(item, 'DIRTY', index)">转为脏房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DIRTY'
-                                                                      || item.roomStatus=='CLEAN_CHECKED'
-                                                                      || item.roomStatus=='OCCUPY'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:cleanNocheck')" @click="changeRoomStatus(item, 'CLEAN_NOCHECK', index)">清洁未检查</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DIRTY'
-                                                                      || item.roomStatus=='CLEAN_NOCHECK'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:cleanCheck')" @click="changeRoomStatus(item, 'CLEAN_CHECKED', index)">清洁检查房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='DIRTY'
-                                                                      || item.roomStatus=='CLEAN_NOCHECK'
-                                                                      || item.roomStatus=='CLEAN_CHECKED'
-                                                                      || item.roomStatus=='SELF_USE'
-                                                                      || item.roomStatus=='FREE_ROOM') && !item.guestOrderPk"><el-button type="text" :disabled="!hasPerm('pms:roomPattern:toRepair')" @click="showRepair(item)">转维修房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="(item.roomStatus=='DIRTY'
-                                                                      || item.roomStatus=='CLEAN_NOCHECK'
-                                                                      || item.roomStatus=='CLEAN_CHECKED'
-                                                                      || item.roomStatus=='SELF_USE'
-                                                                      || item.roomStatus=='FREE_ROOM' ) && !item.guestOrderPk"><el-button :disabled="!hasPerm('pms:roomPattern:toDisable')" type="text" @click="showDisable(item)">转停用房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='REPAIR_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:showRepair')" @click="seeRoomReason(item, 'REPAIR')">查看维修房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DISABLE_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:showDisable')" @click="seeRoomReason(item, 'DISABLE')">查看停用房</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='REPAIR_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:endRepair')" @click="finshRoomReason(item,'REPAIR')">结束维修</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.roomStatus=='DISABLE_ROOM'"><el-button  type="text" :disabled="!hasPerm('pms:roomPattern:endDisable')" @click="finshRoomReason(item,'DISABLE')">结束停用</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.orderPk"><el-button type="text" @click="toDialogVisible(item, 'info')" :disabled="!hasPerm('pms:roomPattern:showOrderInfo')">查看订单信息</el-button></el-dropdown-item>
-                <el-dropdown-item class="el-dropdown-menu__item" v-if="item.orderPk || item.arrivalOrderPk"><el-button type="text" @click="joinRoom(item)">联房</el-button></el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            
           </div>
           <!-- 房间item end -->
-        </el-row>
       </el-main>
 
       <el-dialog class="pattern-dialog2" title="转维修房" :visible.sync="dialogRepairRoom" width="500px" :before-close="handleClose">
@@ -588,6 +587,13 @@
       };
     },
     methods: {
+      rightClick(item,index) {
+		const name = index;
+		this.$refs[name][0].show();     // 这步最关键，让下拉菜单显示
+  },
+  ctrlClick(item,index) {
+		console.log(index,item);
+	},
       /**
        * 初始化调用，查找房间数据
        * @augments */
@@ -1057,6 +1063,19 @@
       })
       this.init();
       bus.$on('closeOrder', () => {this.closeOrderDialog() })
+
+
+      onmouseup
+      document.getElementById("rowRoom").onmouseup = function (e) {
+          var txt = "";
+          if (document.selection) {
+              txt = document.selection.createRange().text;	// IE
+          } else {
+              txt = document.getSelection();
+          }
+          txt = txt.toString();
+          console.log(document.getSelection())
+      }
       // this.initAlert()
     },
     beforeDestroy(){
@@ -1451,12 +1470,12 @@
 }
 
 .el-main{
-  position: absolute;
-  left: 290px;
+  /* position: absolute; */
+  /* left: 290px; */
   padding: 0px 20px !important;
   overflow: auto;
   width: calc(100% - 290px);
-  height: calc(100% - 162px);
+  /* height: calc(100% - 162px); */
 }
 
 .el-row {
@@ -1478,6 +1497,7 @@
   /* display: inline-block; */
   float: left;
     position: relative;
+    user-select: none;
 }
 .pattern-li-item{
   font-family: "Arial Black",Times,serif;
@@ -1498,6 +1518,7 @@
   font-weight: bold;
   color: white;
   margin-right: 1px;
+  user-select: none;
 }
 .ht{
   font-family: 微软雅黑,"Times New Roman",Helvetica,sans-serif;
@@ -1507,6 +1528,7 @@
   text-transform: uppercase;
   color: black;
   overflow: hidden;
+  user-select: none;
 }
 .userinfo, .channelinfo{
   color:#fff;
