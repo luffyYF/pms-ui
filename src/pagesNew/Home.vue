@@ -199,8 +199,10 @@ export default {
   },
   methods: {
     routerActive(path){
-      console.log(this.$route.query);
-      
+      let matched = this.$route.matched
+      console.log(matched);
+      console.log(matched[matched.length-1]);
+      let parent = matched[matched.length-1]
       return 'active'
     },
     nightTrialTask() {
