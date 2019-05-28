@@ -283,7 +283,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style>
 .el-table .success-row {
   background: #f6faff
 }

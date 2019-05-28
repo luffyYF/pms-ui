@@ -143,7 +143,7 @@ import { getUploadImageAction, sourceImgUrl } from "@/api/upload"
 </style>
 <style>
 .upload-demo .el-icon-zoom-in:before {
-	content: "\e638";
+	content: "\e6ca";
 }
 .images-contain .el-tabs__content {
   padding: 20px 20px !important;
