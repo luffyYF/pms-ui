@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import Vuex from 'vuex'
 import ElementUI from 'element-ui'
 import './filter'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -8,7 +9,7 @@ import 'font-awesome/css/font-awesome.min.css'
 import '@/utils/zhcn_moment.js'
 import App from './App'
 import AMap from 'vue-amap'
-import router from './router/index'
+import router from './router/indexNew'
 // import store from './store/index'
 import './permission'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -20,14 +21,19 @@ import './directive'
 import {hasPermission} from "@/utils/hasPermission";
 import {refreshPmsType} from "@/utils/refreshPmsType";
 
+import {hotelHardware} from '@/utils/orm'
+
 // import './mock' // simulation data
 // import 'babel-polyfill'
 //全局的常量
 Vue.prototype.hasPerm = hasPermission
 Vue.prototype.refreshType = refreshPmsType
+
+Vue.prototype.HOTEL_HARDWARE = hotelHardware
+
 // Vue.prototype.getRPath = getRPath
 Vue.use(VueAwesomeSwiper, {})
-
+Vue.use(Vuex)
 // 开启debug模式
 // Vue.config.debug = true
 Vue.config.productionTip = false
@@ -49,5 +55,8 @@ new Vue({
   router,
   // store,
   template: '<App/>',
-  components: {App}
+  components: {App},
+  mounted:function(){
+    console.log(this)//控制台
+  }
 })

@@ -3,7 +3,6 @@ import {asyncRouterMap} from './router/index'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {Message} from 'element-ui'
-// import store from './store/index'
 // import {getToken} from './utils/auth'
 // Progress 进度条
 // Progress 进度条样式

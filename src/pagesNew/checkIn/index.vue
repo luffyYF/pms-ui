@@ -1,5 +1,5 @@
 <template>
-  <layout :router='router'></layout>
+  <layout :router='rouetr'></layout>
 </template>
 
 <script>

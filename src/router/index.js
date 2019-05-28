@@ -87,6 +87,7 @@ import AccountSummaryReportPage from '@/pages/reportCenter/shiftAndAudit/Account
 import NightAuditRentPriceCheck from '@/pages/reportCenter/shiftAndAudit/NightAuditRentPriceCheck.vue'
 
 //报表中心
+import RoomTypeCheckInAnalysis from '@/pages/reportCenter/commonStatements/roomTypeCheckInAnalysis.vue'
 import ReportDefaultPage from '@/pages/reportCenter/DefaultPage.vue'
 import ManagDailyReport from '@/pages/reportCenter/managementLayer/DailyReport.vue'
 import ManagRoomDailyReport from '@/pages/reportCenter/managementLayer/roomDailyReport.vue'
@@ -118,11 +119,14 @@ import BoardroomList from '@/pages/reportCenter/boardroomReport/BoardroomList.vu
 import LinenLossReport from '@/pages/reportCenter/linenReport/LinenLossReport.vue'
 import WxPaymentBalance from '@/pages/reportCenter/wxPaymentReport/WxPaymentBalance.vue'
 import TurnoverDailyDetail from '@/pages/reportCenter/turnoverReport/TurnoverDailyDetail.vue'
+import TurnoverDaily from '@/pages/reportCenter/turnoverReport/TurnoverDaily.vue'
 import TurnoverMonthDetail from '@/pages/reportCenter/turnoverReport/TurnoverMonthDetail.vue'
 import LeaseRateDaily from '@/pages/reportCenter/turnoverReport/LeaseRateDaily.vue'
 import LeaseRateMonth from '@/pages/reportCenter/turnoverReport/LeaseRateMonth.vue'
 import EmergencyReport from '@/pages/reportCenter/emergencyReport/tab.vue'
 import BusinessDetail from '@/pages/reportCenter/turnoverReport/BusinessDetail.vue'
+import TurnoverMonth from '@/pages/reportCenter/turnoverReport/turnoverMonth.vue'
+import CashFlowDetails from '@/pages/reportCenter/turnoverReport/CashFlowDetails.vue'
 
 //库存
 import StockTab from '@/pages/stock/tab';
@@ -141,6 +145,7 @@ import StorageSetting from "@/pages/stock/stockSetUp/StorageSetting.vue"
 
 //系统设置
 import SystemParameter from '@/pages/systemSet/SystemParameter/tab'
+import HotelSetting from '@/pages/systemSet/HotelSetting/tab'
 import MembershipRelated from '@/pages/systemSet/MembershipRelated/tab'
 import RoomSetting from '@/pages/systemSet/RoomSetting/tab'
 import HourRoomSetting from '@/pages/systemSet/HourRoomSetting/Tab'
@@ -152,6 +157,8 @@ import ProjectSetting from '@/pages/systemSet/projectSetting/tab'
 import PriceSetting from '@/pages/systemSet/PriceSetting/tab'
 import marketingSetting from '@/pages/systemSet/marketing/tab'
 import payConfig from '@/pages/systemSet/pay/tab'
+import hotelHardware from '@/pages/systemSet/hotelHardware/tab'
+import roomLockParam from '@/pages/systemSet/roomLockParam/tab'
 // import zlRoomStatusSetting from '@/pages/systemSet/zlRoomStatusSetting/tab'
 // import zlPriceSetting from '@/pages/systemSet/zlRoomStatusSetting/zlPriceSetting'
 
@@ -187,6 +194,10 @@ import RoomSweepingLogList from '@/pages/roomService/RoomSweepingLog/RoomSweepin
 import shiftData from '@/pages/shiftData/tab.vue'
 import advanceClass from '@/pages/shiftData/advanceClass.vue'
 import advanceClassInf from '@/pages/shiftData/advanceClass.vue'
+import advanceClassView from '@/pages/shiftData/advanceClassView.vue'
+
+import TestVue from '@/pages/systemSet/TestVue'
+
 
 Vue.use(Router)
 /**
@@ -237,24 +248,25 @@ export const constantRouterMap = [
           {path: '/reserveManage/miniappOrder', component: MiniappOrderList, label: '小程序订单'}
         ]
       },
-      { 
-        path: '/checkInManage', 
-        component: CheckInManageTab, 
-        name: '入住管理', 
+      {
+        path: '/checkInManage',
+        component: CheckInManageTab,
+        name: '入住管理',
         hidden: false,
         children:[
           {path: '/checkInManage/checkInSearch',  component: CheckInSearch, label: '入住查询'},
           {path: '/checkInManage/teamSearch',  component: TeamSearch, label: '团队查询'},
         ]
       },
-      { 
-        path: '/shiftData', 
-        component: shiftData, 
-        name: '入住管理', 
+      {
+        path: '/shiftData',
+        component: shiftData,
+        name: '交班',
         hidden: false,
         children:[
           {path: '/shiftData/advanceClass',  component: advanceClass, label: '交班预览'},
           {path: '/shiftData/advanceClassInf',  component: advanceClassInf, label: '交班信息查询'},
+          {path: '/shiftData/advanceClassView',  component: advanceClassView, label: '交班账务查询'},
         ]
       },
       {path: '/wxOpen', component: WxOpenTab, name: '微信开门', hidden: false},
@@ -268,7 +280,7 @@ export const constantRouterMap = [
           {path: '/customerRelation/guestManage', component: GuestManage, label: '客人管理'},
           {path: '/customerRelation/protocolManage',component: ProtocolManage, label: '协议管理'},
           {path: '/customerRelation/intermediary',component: intermediaryTab, label: '协议管理'},
-          
+
           {path: '/customerRelation/virtualOrder', component: VirtualOrder, label: '虚拟账单'},
           {path: '/customerRelation/invoice', component: Invoice, label: '发票'},
           {path: '/customerRelation/passengerInformationUploading', component: PassengerInformationUploading, label: '旅客信息上传'}
@@ -321,6 +333,10 @@ export const constantRouterMap = [
           {path: '/reportCenter/leaseRateDaily', component: LeaseRateDaily, label: '入住率日报'},
           {path: '/reportCenter/leaseRateMonth', component: LeaseRateMonth, label: '入住率月报'},
           {path: '/reportCenter/businessDetail', component: BusinessDetail, label: '入住率月报'},
+          {path: '/reportCenter/TurnoverDaily', component: TurnoverDaily, label: '营业日报'},
+          {path: '/reportCenter/TurnoverMonth', component: TurnoverMonth, label: '营业月报'},
+          {path: '/reportCenter/roomTypeCheckInAnalysis', component: RoomTypeCheckInAnalysis, label: '入住分析表（按房型）'},
+          {path: '/reportCenter/CashFlowDetails', component: CashFlowDetails, label: '现金流明细报表'},
         ]
       },
       {
@@ -345,9 +361,9 @@ export const constantRouterMap = [
       },
 
       {
-        path: '/financialAudit', 
-        component: FinancialAuditTag, 
-        name: '财务稽核', 
+        path: '/financialAudit',
+        component: FinancialAuditTag,
+        name: '财务稽核',
         hidden: false,
         children: [
           {path: '/financialAudit/billChecking', component: BillChecking, label: '订单对账'},
@@ -385,11 +401,12 @@ export const constantRouterMap = [
       {
         path: '/systemSet',
         perm:'pms:dir:systemSet',
-        component: SystemSetTag, 
-        name: '系统设置', 
+        component: SystemSetTag,
+        name: '系统设置',
         hidden: false,
         children: [
           {path: '/systemSet/paramsSetting', component:SystemParameter , label: '系统参数设置'},
+          {path: '/systemSet/hotelSetting', component: HotelSetting , label: '酒店设置'},
           {path: '/systemSet/userSetting',  component: MembershipRelated, label: '会员相关设置'},
           {path: '/systemSet/roomSetting', component: RoomSetting , label: '客房设置'},
           {path: '/systemSet/hourRoomSetting',  component: HourRoomSetting, label: '钟点房设置'},
@@ -401,15 +418,18 @@ export const constantRouterMap = [
           {path: '/systemSet/priceSetting', component: PriceSetting, label: '价格设置'},,
           {path: '/systemSet/marketingSetting', component: marketingSetting, label: '营销'},
           {path: '/systemSet/pay', component: payConfig, label: '支付配置'},
+          {path: '/systemSet/hotelHardware', component: hotelHardware, label: '酒店硬件'},
+          {path: '/systemSet/roomLockParam', component: roomLockParam, label: '房锁设置'},
           // {path: '/systemSet/zlRoomStatusSetting', component: zlRoomStatusSetting, label: '直连房态设置'},
           // {path: '/systemSet/zlPriceSetting', component: zlPriceSetting, label: '直连价格设置'},
+          {path: '/systemSet/iframe', component: TestVue, label: '支付配置'},
         ]
       },
       {
         path: '/zl',
         perm:'',
-        component: zl, 
-        name: '直连', 
+        component: zl,
+        name: '直连',
         hidden: false,
         children: [
           {path: '/zl/zlOpenConfig', component: zlOpenConfig, label: '直连配置'},
@@ -422,8 +442,8 @@ export const constantRouterMap = [
       },
       {
         path: '/roomService',
-        component: roomServiceTab, 
-        name: '房务管理', 
+        component: roomServiceTab,
+        name: '房务管理',
         hidden: false,
         children: [
           {path: '/roomService/RoomPattern', component:RoomPatternPage , label: '房态'},
@@ -439,6 +459,7 @@ export const constantRouterMap = [
     ]
   }
 ]
+
 
 export default new Router({
   routes: constantRouterMap

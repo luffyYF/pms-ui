@@ -15,3 +15,8 @@ export const listShiftData = params => {
     return request.get('/back/shiftData/listShiftData', {params:params})
 } 
 
+// 查找
+export const shiftDataView = params => {
+    return request.get('/back/shiftData/shiftDataView', {params:params})
+} 
+

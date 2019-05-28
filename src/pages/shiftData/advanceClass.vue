@@ -10,10 +10,10 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search"  style="margin-left:30px" @click="listShiftData(1)">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="listShiftData(1)">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="shiftData" v-if="hasPerm('pms:handoverDuty:view')" style="margin-left:30px">交班</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="shiftData" v-if="hasPerm('pms:handoverDuty:view')" >交班</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -31,7 +31,7 @@
             </el-table-column>
             <el-table-column prop="endDate" label="结束时间" align="center" width="180">
             </el-table-column>
-            <el-table-column prop="userName" label="当班人" align="center" width="80">
+            <el-table-column prop="shiftPeopleName" label="当班人" align="center" width="100" show-overflow-tooltip>
             </el-table-column>
         </el-table-column>
         <el-table-column align="center" label="本班权责汇总">
@@ -45,7 +45,7 @@
             </el-table-column>
             <el-table-column prop="qzFreeSheet" label="免单" align="center" width="80">
             </el-table-column>
-            <el-table-column fixed="qzCheck" label="支票" align="center" width="80">
+            <el-table-column prop="qzCheck" label="支票" align="center" width="80">
             </el-table-column>
             <el-table-column prop="qzCashCoupon" label="代金券" align="center" width="80">
             </el-table-column>
@@ -69,7 +69,7 @@
             </el-table-column>
             <el-table-column prop="rpFreeSheet" label="免单" align="center" width="80">
             </el-table-column>
-            <el-table-column fixed="rpCheck" label="支票" align="center" width="80">
+            <el-table-column prop="rpCheck" label="支票" align="center" width="80">
             </el-table-column>
             <el-table-column prop="rpCashCoupon" label="代金券" align="center" width="80">
             </el-table-column>
@@ -97,6 +97,21 @@
                     </el-form-item>
                     <el-form-item label="交班操作员" prop="ruleName">
                         {{preShiftData.userName}}
+                    </el-form-item>
+                    <el-form-item label="交班人员" prop="ruleName">
+                        <el-select v-model="shiftPeople" multiple placeholder="请选择">
+                            <el-option-group
+                            v-for="group in shiftList"
+                            :key="group.classId"
+                            :label="group.className">
+                            <el-option
+                                v-for="item in group.userList"
+                                :key="item.upmsUserId"
+                                :label="item.userName"
+                                :value="item.upmsUserId">
+                            </el-option>
+                            </el-option-group>
+                        </el-select>
                     </el-form-item>
                 </div>
             </div>
@@ -177,7 +192,8 @@
 </template>
 
 <script>
-import {getPreShiftInf,addShiftData,listShiftData} from "@/api/shiftData/shiftData";
+import {getPreShiftInf,addShiftData,listShiftData,shiftDataView} from "@/api/shiftData/shiftData";
+import {getAttendanceClasses} from "@/api/oaApi"
 export default {
   components: {   },
   data() {
@@ -229,10 +245,15 @@ export default {
         datePicker2:[],
         rules: {
         },
+        shiftList:[],
+        shiftPeople:[],
+        shiftPeopleObj:{
+
+        }
     };
   },
   mounted() {
-      this.init()
+    //   this.init()
   },
   methods: {
     listShiftData(val){
@@ -251,9 +272,26 @@ export default {
             this.tableData = res.data.data
             this.form.total = res.data.total
         })
+        // shiftDataView({shiftType:1,billType:0}).then(res=>{
+        //     console.log(res.data)
+        // })
     },
     init() {
       this.listShiftData()
+    },
+    getAttendanceClasses(){
+        getAttendanceClasses({companyPk:localStorage.getItem("select_company_pk")}).then(res=>{
+            this.shiftList = res.data;
+            this.shiftPeopleObj = {}
+            for(var i=0;i<this.shiftList.length;i++){
+                if(this.shiftList[i].userList == null){
+                    continue
+                }
+                for(var j=0;j<this.shiftList[i].userList.length;j++){
+                    this.shiftPeopleObj[this.shiftList[i].userList[j].upmsUserId] = this.shiftList[i].userList[j]
+                }
+            }
+        })
     },
     shiftData(){
         var that = this
@@ -261,6 +299,7 @@ export default {
         //     that.preShiftDataObj.beginDate = that.datePicker[0]
         //     that.preShiftDataObj.endDate = that.datePicker[1]
         // }
+        this.getAttendanceClasses()
         getPreShiftInf(that.preShiftDataObj).then(res=>{
             that.datePicker = [
                 res.data.beginDate,
@@ -270,9 +309,10 @@ export default {
             that.dialogMemberVisible = true
         })
     },
-    addShiftData(){
+    saveShiftData(){
         var that = this
         var data = {
+            shiftPeople:(this.shiftPeople == null || this.shiftPeople.length == 0)?"":this.shiftPeople.join(","),
             beginDate:that.preShiftData.beginDate,
             endDate:that.preShiftData.endDate,
             agreementSettlement:that.preShiftData.agreementSettlement,
@@ -280,10 +320,31 @@ export default {
             intermediarySettlement:that.preShiftData.intermediarySettlement,
             intermediaryAdvanceCollection:that.preShiftData.intermediaryAdvanceCollection,
         }
+        let shiftPeopleName = ""
+        if(this.shiftPeople != null && this.shiftPeople.length != 0){
+            for(let i=0;i<this.shiftPeople.length;i++){
+                shiftPeopleName += this.shiftPeopleObj[this.shiftPeople[i]].userName+","
+            }
+            data.shiftPeopleName = shiftPeopleName.substring(0,shiftPeopleName.length-1)
+        }
         addShiftData(data).then(res=>{
-            this.$message({ type: 'success', message: res.sub_msg })
+            that.$message({ type: 'success', message: res.sub_msg })
+            that.listShiftData()
             that.dialogMemberVisible = false
         })
+    },
+    addShiftData(){
+        if(this.shiftPeople == null || this.shiftPeople.length == 0){
+            this.$confirm('当前未选择交班人员?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.saveShiftData()
+            })
+        }else{
+            this.saveShiftData()
+        }
     },
     // 分页相关
       handleSizeChange (val) {

@@ -7,9 +7,10 @@
       </div>
       <!--<el-col class="right">-->
       <div class="right" ref="dirRef">
-        <div v-for="(v,i) in router" :key="i" >
+        <div v-for="(v,i) in router" :key="i" class="menuDiv">
           <router-link :class="routerActive(v.path)" :to="v.path" v-if="i>0 && hasPerm(v.prem)">
             <div class="nav-li">
+              <img :src="v.icon" class="nav-img"/>
               <div class="nav-txt">{{v.name}}</div>
             </div>
           </router-link>

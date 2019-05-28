@@ -2,7 +2,7 @@
   <div style="height:100%;">
         <div class="primary-tool">
             <el-button type="primary" size="mini" @click="init()">网页预览</el-button>
-            <el-button type="primary" size="mini">PDF预览</el-button>
+            <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
             <el-button type="primary" size="mini" @click="exportReport">导出EXCEL</el-button>
             <!-- <el-button type="primary" size="mini">添加到收藏夹</el-button> -->
             <el-button type="primary" size="mini" @click="print">打印预览</el-button>

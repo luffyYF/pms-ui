@@ -9,7 +9,7 @@
         截止日期：<el-date-picker v-model="value" type="date" placeholder="选择日期" size="mini"></el-date-picker>
         <div style="margin-top:10px;">
           <el-button size="mini">网页预览</el-button>
-          <el-button size="mini">PDF预览</el-button>
+          <!-- <el-button size="mini">PDF预览</el-button> -->
           <el-button size="mini">导出EXCEL</el-button>
           <el-button size="mini">添加到收藏夹</el-button>
           <el-button size="mini">打印预览</el-button>
