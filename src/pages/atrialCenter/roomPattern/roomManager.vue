@@ -9,7 +9,6 @@
       :close-on-click-modal="false"
       :before-close="handleClose">
       <RoomManager ref="roomManageRef"></RoomManager>
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose"  size="mini">关闭</el-button>
       </span>
