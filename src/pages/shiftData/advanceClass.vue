@@ -13,7 +13,7 @@
           <el-button type="primary" icon="el-icon-search" @click="listShiftData(1)">搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="shiftData" v-if="hasPerm('pms:handoverDuty:view')" >交班</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="perShiftData" v-if="hasPerm('pms:handoverDuty:view')" >交班</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -81,6 +81,12 @@
             </el-table-column>
             <el-table-column prop="rpMemberReCharge" label="会员充值" align="center" width="80">
             </el-table-column>
+        </el-table-column>
+        <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+                <el-button @click="downloadExcel(scope.row)" size="mini">导出</el-button>
+            </template>
+            
         </el-table-column>
       </el-table>
       <el-pagination class="positions" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.total"></el-pagination>
@@ -192,8 +198,9 @@
 </template>
 
 <script>
-import {getPreShiftInf,addShiftData,listShiftData,shiftDataView} from "@/api/shiftData/shiftData";
+import {getPreShiftInf,addShiftData,listShiftData,shiftDataView,shiftDataViewExcel,shiftDataViewByPk} from "@/api/shiftData/shiftData";
 import {getAttendanceClasses} from "@/api/oaApi"
+import downloadExcel from '@/components/download/downloadExcel'
 export default {
   components: {   },
   data() {
@@ -253,9 +260,14 @@ export default {
     };
   },
   mounted() {
-    //   this.init()
+      this.init()
   },
   methods: {
+      //导出EXCEL
+    downloadExcel(row){
+      let url = '/back/shiftData/shiftDataViewExcel?shiftDataPk='+row.shiftDataPk
+      downloadExcel(url, '交班报表');
+    },
     listShiftData(val){
         if(val){
             this.form.pageNum = 1
@@ -293,13 +305,24 @@ export default {
             }
         })
     },
+    perShiftData(){
+        var that = this
+        that.shiftData()
+        that.getAttendanceClasses()
+    },
     shiftData(){
         var that = this
         // if(that.datePicker != null && that.datePicker.length == 2){
         //     that.preShiftDataObj.beginDate = that.datePicker[0]
         //     that.preShiftDataObj.endDate = that.datePicker[1]
         // }
-        this.getAttendanceClasses()
+        if(that.datePicker != null && that.datePicker.length == 2){
+            that.preShiftDataObj.beginDate = that.datePicker[0]
+            that.preShiftDataObj.endDate = that.datePicker[1]
+        }else{
+            that.preShiftDataObj.beginDate = ""
+            that.preShiftDataObj.endDate = ""
+        }
         getPreShiftInf(that.preShiftDataObj).then(res=>{
             that.datePicker = [
                 res.data.beginDate,
