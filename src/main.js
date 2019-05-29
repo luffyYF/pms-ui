@@ -7,16 +7,15 @@ import './filter'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 import '@/utils/zhcn_moment.js'
+
 import App from './App'
 import AMap from 'vue-amap'
-// import router from './router/indexNew'
-import router from './router/index'
+import router from './router/indexNew'
 // import store from './store/index'
 import './permission'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import './components/common/index'
 import 'swiper/dist/css/swiper.css'
-// import './utils/timer'
 import fullCalendar from 'vue-fullcalendar'
 import './directive'
 import {hasPermission} from "@/utils/hasPermission";
@@ -24,8 +23,6 @@ import {refreshPmsType} from "@/utils/refreshPmsType";
 
 import {hotelHardware} from '@/utils/orm'
 
-// import './mock' // simulation data
-// import 'babel-polyfill'
 //全局的常量
 Vue.prototype.hasPerm = hasPermission
 Vue.prototype.refreshType = refreshPmsType

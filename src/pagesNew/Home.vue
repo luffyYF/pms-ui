@@ -200,10 +200,14 @@ export default {
   methods: {
     routerActive(path){
       let matched = this.$route.matched
-      console.log(matched);
-      console.log(matched[matched.length-1]);
+      
       let parent = matched[matched.length-1]
-      return 'active'
+      
+      if(parent.path == path){
+        console.log(parent.path,path);
+          return 'active'
+      }
+      return ''
     },
     nightTrialTask() {
       this.nightTrialTimer2 = setInterval(() => {
@@ -693,140 +697,10 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$color-primary: #21324E; //#18c79c #20a0ff
-$background-color: #1F3D6B;
-.ylDialog {
-  bottom: 0;
-  width: 300px;
-  border: 1px solid $color-primary;
-  .el-dialog__header {
-    color: white;
-    background-color: $background-color;
-    padding: 10px;
-  }
-  .el-dialog__body {
-    padding: 0 0px;
-  }
-  .el-dialog__title {
-    color: white;
-    font-size: 15px;
-    line-height: 15px;
-  }
-  .el-dialog__headerbtn {
-    top: 10px;
-    right: 10px;
-    .el-dialog__close {
-      color: white;
-    }
-  }
-  .el-table {
-    .cell {
-      font-size: 12px;
-      padding: 0;
-    }
-  }
-}
-</style>
-
-
 <style lang="scss" scoped rel="stylesheet/scss" type="text/css">
 @import "../assets/scss/main.scss";
 </style>
 <style lang="scss">
-@import "../assets/scss/scroll.scss";
-.router_nav_popover {
-  background: rgba(0, 0, 0, 0.8);
-  border: none;
-  &.el-popper[x-placement^="bottom"] {
-    .popper__arrow {
-      border-bottom-color: rgba(0, 0, 0, 0.8);
-      &::after {
-        border-bottom-color: rgba(0, 0, 0, 0.8);
-      }
-    }
-  }
-}
-.el-table {
-  td {
-    padding: 6px 0;
-  }
-}
-.el-button:focus, .el-button:hover{
-  color: #fff;
-  border-color: #21324E;
-  background-color: #1F3D6B;
-}
-.el-tabs__nav-scroll {
-  padding: 0 10px;
-}
-.el-tabs__item {
-  &:hover {
-    color: #21324E;
-  }
-  &.is-active {
-    color: #21324E;
-  }
-}
-.el-tabs__active-bar {
-  background-color: #21324E;
-}
-.el-tabs--border-card > .el-tabs__header .el-tabs__item:hover,
-.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
-  color: #21324E;
-}
-
-
-
-.height-programme-one,
-.height-programme-one .el-tabs,
-.height-programme-one .el-tabs .el-tabs__content {
-  height: 100%;
-}
-.height-programme-one{
-  .aLayerOfPage {
-    height: calc(100% - 80px);
-    overflow: auto;
-  }
-  .twoLayerOfPage {
-    height: 100%;
-    .height-programme-one{
-      .el-tabs{
-        .el-tabs__content {
-          height: calc(100% - 120px);
-          overflow: auto;
-        }
-      }
-    }
-  }
-}
-.el-input__prefix {
-  left: -2px;
-  .el-input__inner {
-    padding: 0 5px;
-    padding-left: 19px;
-  }
-}
-.el-input--suffix {
-  .el-input__inner {
-    padding-right: 13px;
-  }
-}
-.el-menu--horizontal {
-  .el-menu-item {
-    height: 40px;
-    line-height: 40px;
-  }
-}
-.menu-content {
-  overflow-y: scroll;
-  height: calc(100% - 42px);
-  padding: 10px;
-}
-.primary-tool {
-  padding: 10px 0;
-  background-color: #ffffff;
-  border-bottom: 1px solid #eceaea;
-}
+@import "../assets/scss/public.scss";
 </style>
 

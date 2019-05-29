@@ -7,6 +7,7 @@
       <div class="right">
         <!-- [分销渠道] [系统消息] [互联网房价牌] [微订房] [中央管理系统] 深圳前海豪斯菲尔  -->
         <!-- <span style="cursor:pointer;" @click="getAllTypeList()">[刷新类型]</span>&nbsp;&nbsp;&nbsp;&nbsp; -->
+        <span><a @click="manualNight" style="color:#fff;text-decoration:none;">[手动夜审]</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span><a href="https://www.housefeel.cn/file/HFPlugin.rar" style="color:#fff;text-decoration:none;">[插件下载]</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span @click="logout">[退出系统]</span>
         <!-- <span @click="dialogVisible = true;ydDialogVisible = true">[预离显示]</span> -->
@@ -265,6 +266,7 @@ import "../../static/img/user.png";
 import "@/utils/sockjs.min.js";
 import "@/utils/stomp.min.js";
 import moment from "moment";
+import {manualNight} from '@/api/atrialCenter/roomStatusController'
 import { nightTrialTime } from "@/utils/orm";
 import { timerCheckNew } from "@/api/hfApi/hfApiOrderController";
 import { logout, refreshTokenUpms, validateToken } from "@/api/upmsApi";
@@ -352,6 +354,18 @@ export default {
     };
   },
   methods: {
+    manualNight() {
+      this.$confirm('是否执行夜审，已夜审过的数据不会重复执行?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        manualNight({companyPk:this.activeCompany.companyPk}).then(res=>{
+          this.$message.success("夜审执行完毕")
+        })
+      });
+      
+    },
     nightTrialTask() {
       this.nightTrialTimer2 = setInterval(() => {
         var date2 = new Date();
