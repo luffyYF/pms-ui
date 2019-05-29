@@ -36,3 +36,8 @@ export const roomStatusList = params => {
 export const roomStatusUpdate = params => {
     return request.post('/back/room/status/update',params);
 }
+
+//手动夜审
+export const manualNight = params => {
+  return request.get('/api/night/manualNight',{params:params});
+}
