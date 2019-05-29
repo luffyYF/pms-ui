@@ -8,7 +8,7 @@ const router = {
     component: conferenceRoom,
     name: '会议室',
     prem: 'pms',
-    icon: './static/img/menu/',
+    icon: './static/img/menu/mean_icon17.png',
     children: []
 }
 

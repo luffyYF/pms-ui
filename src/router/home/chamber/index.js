@@ -8,7 +8,7 @@ const router = {
     component: chamber,
     name: '房间',
     prem: 'pms',
-    icon: './static/img/menu/mean_icon10.png',
+    icon: './static/img/menu/mean_icon9.png',
     children: []
 }
 

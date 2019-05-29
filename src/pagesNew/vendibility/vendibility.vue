@@ -1,15 +1,11 @@
 <template>
-  <div class="about_spacing">
-    <el-row>
-      <el-col :span="24">
-        <div class="bg-purple-dark line_height_z margin_bottom_z">
-          <p>*注：占用房 / 可售房</p>
-          <p>占用房 = 今天预计不离店房 + 预订当天到</p>
-          <p>可售房 = 总房 - 维修房 - 停用房 - 今天预计不离店房 - 预订当天到 - 可用预留房数</p>
-          <p>占用房 + 可售房 = 总房数 - 维修房 - 停用房 - 可用预留房数</p>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="container-nev vendibility">
+    <div class="block margin_bottom_z">
+      <p>*注：占用房 / 可售房</p>
+      <p>占用房 = 今天预计不离店房 + 预订当天到</p>
+      <p>可售房 = 总房 - 维修房 - 停用房 - 今天预计不离店房 - 预订当天到 - 可用预留房数</p>
+      <p>占用房 + 可售房 = 总房数 - 维修房 - 停用房 - 可用预留房数</p>
+    </div>
     <!--条件查询-->
     <div class="block">
       <el-form :inline="true" size="mini" class="demo-form-inline">
@@ -19,42 +15,41 @@
         </el-form-item>
       </el-form>
     </div>
-    <br/>
     <!--表格-->
-    <div>
-    <el-table
-      size="mini"
-      border
-      show-summary
-      v-loading="loading"
-      ref="multipleTable"
-      :data="houseList.table"
-      :style="tableStyle"
-      max-height="400"
-      :summary-method="getSummaries"
-      @cell-click="columnClick">
-      <el-table-column
-        fixed
-        label="房源类型"
-        prop="roomTypeName"
-        width="150">
-      </el-table-column>
-      <el-table-column
-        v-for="title in houseList.title" :key="title.id"
-        :prop="title.id"
-        :column-key="title.date"
-        :label="title.date"
-        align="center"
-        class-name="pointer1"
-        label-class-name="mylabel"
-        width="90">
-        <template slot-scope="props">
-          <span v-if="props.row[title.id] !=null && props.row.totalRoomNum != null"> {{props.row[title.id]}} / {{props.row.totalRoomNum - props.row[title.id]}}</span>
-          <span v-if="props.row.totalRoomNum == null"> 0 / 0</span>
-          <span v-if="props.row[title.id] ==null && props.row.totalRoomNum != null"> 0 / {{props.row.totalRoomNum}}</span>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="block">
+      <el-table
+        size="mini"
+        border
+        show-summary
+        v-loading="loading"
+        ref="multipleTable"
+        :data="houseList.table"
+        :style="tableStyle"
+        :height="300"
+        :summary-method="getSummaries"
+        @cell-click="columnClick">
+        <el-table-column
+          fixed
+          label="房源类型"
+          prop="roomTypeName"
+          width="150">
+        </el-table-column>
+        <el-table-column
+          v-for="title in houseList.title" :key="title.id"
+          :prop="title.id"
+          :column-key="title.date"
+          :label="title.date"
+          align="center"
+          class-name="pointer1"
+          label-class-name="mylabel"
+          width="90">
+          <template slot-scope="props">
+            <span v-if="props.row[title.id] !=null && props.row.totalRoomNum != null"> {{props.row[title.id]}} / {{props.row.totalRoomNum - props.row[title.id]}}</span>
+            <span v-if="props.row.totalRoomNum == null"> 0 / 0</span>
+            <span v-if="props.row[title.id] ==null && props.row.totalRoomNum != null"> 0 / {{props.row.totalRoomNum}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -146,25 +141,24 @@ export default {
   watch: {
     screenWidth(val) {
       this.screenWidth = val;
-      this.tableStyle = "width:" + (this.screenWidth - 20) + "px";
+      this.tableStyle = "width:" + (this.screenWidth - 30) + "px";
     },
   }
 };
 </script>
 
-<style scoped>
-.margin_bottom_z{
-    margin-bottom: 10px;
-    /* background:  #fdf7f7; */
-    padding: 10px;
+<style lang='scss' scoped>
+.vendibility{
+  .margin_bottom_z{
     color:red;
-}
-.margin_bottom_z p{
-  padding-left: 32px;
-  margin:5px;
-}
-.margin_bottom_z p:first-child{
-  padding-left: 0px;
+    p{
+      padding-left: 32px;
+      margin:5px;
+      &:first-child{
+        padding-left: 0px;
+      }
+    }
+  }
 }
 </style>
 <style>
