@@ -40,9 +40,9 @@
     <!-- table -->
     <div class="bg-reserve">
       <h5 class="info-title">会员列表</h5>
-      <el-table v-loading="loading" 
-      size="mini" 
-      border 
+      <el-table v-loading="loading"
+      size="mini"
+      border
 
 :data="tableData"      style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
@@ -88,6 +88,37 @@
             {{scope.row.availableBalance|toMoney}}
           </template>
         </el-table-column>
+
+        <el-table-column prop="rechargeGiftAmount" label="充值赠送合计" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.rechargeGiftAmount|toMoney}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="frozenBalance" label="冻结金额" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.frozenBalance|toMoney}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalConsume" label="消费合计" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.totalConsume|toMoney}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalIntegral" label="累计积分" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.totalIntegral|toMoney}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="availableIntegral" label="可用积分" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.availableIntegral|toMoney}}
+          </template>
+        </el-table-column>
+         <el-table-column prop="housingDays" label="住房天数" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.housingDays|toMoney}}
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <template slot-scope="scope">
             <el-button @click="memberMangerClick(scope.row)" type="text" size="mini">会员管理</el-button>
@@ -117,7 +148,7 @@
             <el-col :span="8">会员级别：{{membeInfo.gradeName}}</el-col>
           </el-col>
           <el-col :span="24">
-            
+
             <el-col :span="6">性别：
               <span v-if="membeInfo.memSex == 'M'">男</span>
               <span v-if="membeInfo.memSex == 'W'">女</span>
@@ -159,7 +190,7 @@
         <member-operation-management v-bind:message="membeInfo" v-on:asfcascas="delMemberList()"/>
       </div>
     </el-dialog>
-    
+
     <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
     <member-recharge-detail-dialog ref="memberRechargeDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-recharge-detail-dialog>
     <member-integral-detail-dialog ref="memberIntegralDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-integral-detail-dialog>
@@ -175,7 +206,8 @@ import MemberOperationManagement from "./MemberOperationManagement";
 import {
   listMember,
   recoverMember,
-  updateMember
+  updateMember,
+  listMemberById
 } from "@/api/customerRelation/pmsMemberController";
 import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
 import MemberRecharge from "./MemberRecharge.vue"
@@ -216,9 +248,9 @@ export default {
       }
       this.loading = true;
       this.form.pageNum = val;
-      listMember(this.form).then(res => {
+      listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data.data;
+        this.tableData = res.data;
         this.total = res.data.pageSize;
         console.log(this.tableData);
       });
@@ -226,9 +258,9 @@ export default {
     getSizeChange(val) {
       this.loading = true;
       this.form.pageSize = val;
-      listMember(this.form).then(res => {
+      listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data.data;
+        this.tableData = res.data;
         this.total = res.data.pageSize;
         this.form.pageNum = 1;
         console.log(this.tableData);

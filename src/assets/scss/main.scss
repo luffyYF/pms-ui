@@ -1,6 +1,6 @@
-$color-primary: #F60; //#18c79c #20a0ff
 
-
+$color-primary: #21324E; //#18c79c #20a0ff
+$background-color: #1F3D6B;
 .container {
   position: absolute;
   top: 0;
@@ -24,108 +24,92 @@ $color-primary: #F60; //#18c79c #20a0ff
   }
 
   .header2 {
-    height: 80px;
-    line-height: 80px;
+    width: 100%;
+    height: 70px;
+    line-height: 60px;
     background: $color-primary;
+    background: url(../assets/image/head-background.jpg);
+    background-size: cover;
     color: #fff;
+    display: flex;
     .left {
-      // width:230 px;
-      height: 60px;
-      //font-size: 22px;
+      width: 180px;
+      height: 100%;
       padding-left: 20px;
       padding-right: 20px;
-      float: left;
-      padding-top: 10px;
-      a {
-        float: left;
-        margin: 0 5px;
-        text-decoration:none;
-        div {
-          color: #fff;
-        }
+      display: flex;
+      vertical-align: middle;
+      justify-content: center;
+      align-items: center; 
+      img{
+        width: 140px;
+        height: 24px;
       }
     }
     .right {
-      // width:230 px;
-      height: 80px;
-      //font-size: 22px;
+      display: flex;
+      vertical-align: middle;
       padding-left: 20px;
-      // padding-right: 20px;
-      float: right;
-      a {
-        float: left;
-        height: 80px;
-        text-decoration:none;
-        .nav-li {
-          color: #fff;
-        }
-        .nav-icon{
-          background: url(../assets/image/pms-nav.png);
-          width: 70px;
-          height: 40px;
-          margin: 7px 0 0 0;
-        }
-        .nav-txt{
-          width: 70px;
-          height: 20px;
-          line-height: 20px;
-          text-align: center;
-        }
-        .home-icon{
-          background-position: 0px -10px;
-        }
-        .atrial-center-icon{
-          background-position: 0px -10px;
-        } 
-        .wx-open-icon {
-          background-position: -55px -10px;
-        }
-        .reserve-manage-icon {
-          background-position: -115px -10px;
-        }
-        .check-manage-icon {
-          background-position: -170px -10px;
-        } 
-        .customer-relation-icon {
-          background-position: -238px -10px;
-        } 
-        .sms-marketing-icon {
-          background-position: -853px -10px;
-        } 
-        .report-center-icon{
-          background-position: -307px -10px;
-        }  
-        .financial-audit-icon {
-          background-position: -366px -10px;
-        } 
-        .dumb-house-icon{
-          background-position: -427px -10px;
-        }
-        .commodity-dept-icon {
-          background-position: -488px -10px;
-        } 
-        .stock-icon{
-          background-position: -546px -10px;
-        }  
-        .conference-room-icon{
-          background-position: -606px -10px;
-        }  
-        .operators-icon{
-          background-position: -665px -10px;
-        }  
-        .system-set-icon{
-          background-position: -722px -10px;
-        }  
-        .linen-icon{
-          background-position: -785px -10px;
-        }
-        .more-icon {
-          background-position: -905px -10px;
+      width: 100%;
+      text-align: center;
+      align-items: center;  
+      flex-flow: row;
+      .menuDiv{
+        text-align: center;
+        margin-right: 20px;
+        height: 50px;
+        a {
+          text-decoration:none;
+          // flex: 1.8;
+          // &:last-child{
+          //   flex: 2;
+          // }
+          
+          &.active{
+            .nav-li{
+              .nav-txt{
+                border-bottom: 2px solid #fff; 
+              }
+            }
+          }
+          .nav-li {
+            display: inline-block;
+            color: #fff;
+            margin-right: 0px;
+            .nav-icon{
+              background: url(../assets/image/pms-nav.png);
+              width: 70px;
+              height: 40px;
+              margin: 7px 0 0 0;
+            }
+            .nav-img{
+              width: 30px;
+              height: 30px;
+              display: block;
+              margin: auto;
+            }
+            .nav-txt{
+              font-size: 14px;
+              width: auto;
+              line-height: 20px;
+              text-align: center;
+              padding: 3px 0;
+              margin-right: 0px;
+              &:hover{
+                border-bottom: 2px solid #fff;
+              }
+            }
+            
+          }
+          
         }
       }
+      
     }
   }
-
+  .house-content {
+    height: calc(100% - 98px);
+  }
   .main {
     display: flex;
     // background:#324057;
@@ -174,13 +158,7 @@ $color-primary: #F60; //#18c79c #20a0ff
     }
 
     .content-container {
-      /*background: #f1f2f7;*/
       flex: 1;
-      // position:absolute;
-      // right:0 px;
-      // top:0 px;
-      // bottom:0 px;
-      // left:230 px;
       overflow-y: scroll;
       padding: 20px;
 
@@ -206,17 +184,28 @@ $color-primary: #F60; //#18c79c #20a0ff
 
     }
   }
-
+  .line-footer{
+    width: 100%;
+    height: 28px;
+    font-size: 12px;
+    line-height: 28px;
+    background-color: $color-primary;
+    color: #fff;
+    padding: 0 5px;
+    span{
+      margin-left: 10px;
+    }
+  }
 }
 
 .el-tabs__nav-scroll{
   padding: 0 10px;
   .el-tabs__nav{
     .el-tabs__item:hover{
-      color: #f60;
+      color: $color-primary;
     }
     .el-tabs__item.is-active{
-      color: #f60;
+      color: $color-primary;
     }
     .el-tabs__active-bar{
       background-color: #f60;

@@ -27,7 +27,7 @@ Vue.component('pagination', {
 
 // 渠道下拉选择组件
 Vue.component('channelSelect', {
-  template: `<el-select v-model="selectValue" @change="handleChange" :disabled="disabled" clearable placeholder="请选择渠道">
+  template: `<el-select v-model="selectValue" @change="handleChange" :disabled="disabled" clearable :placeholder="placeholder">
               <el-option
                 v-for="(value,index) in channelTyps"
                 :key="index"
@@ -36,7 +36,7 @@ Vue.component('channelSelect', {
               </el-option>
             </el-select>`,
   name: 'ChannelSelect',
-  props: ['value','disabled'],
+  props: ['value','disabled','placeholder'],
   data: function () {
     return {
       selectValue: null,
