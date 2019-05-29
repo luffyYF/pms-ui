@@ -25,6 +25,7 @@
 
 <script>
 import { getCompanyShift, getUserInfo } from "@/api/login";
+import { find } from "@/api/systemSet/pmsParamConfigController";
 import { logout } from '@/api/upmsApi'
 // import store from "@/store";
 import Moment from "moment";
@@ -58,6 +59,11 @@ export default {
         this.$router.push("/login");
       })
     },
+    findParam(){
+      find().then(res=>{
+          localStorage.setItem("pms_company_param",JSON.stringify(res.data))
+      })
+    },
     //设置公司主键和班次到cookies跳转首页
     toHome(company) {
       getUserInfo({systemId: '473891058107809792'}).then(res => {
@@ -72,6 +78,7 @@ export default {
         // localStorage.setItem('select_shift_pk',shift.shiftPk ? shift.shiftPk : '0')
         localStorage.setItem('current_logon_company',JSON.stringify(company));
         localStorage.setItem('pms_userinfo', JSON.stringify(res.data))
+        this.findParam()
         this.$router.push('/')
       })
 

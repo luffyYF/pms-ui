@@ -3,7 +3,7 @@
         size="mini" 
         border 
         :data="tableData" 
-        max-height="550"
+        max-height="500"
         style="width: 98.5%; margin:10px;">
             <el-table-column prop="createTime" label="消费时间" align="center" width="190">
             </el-table-column>
@@ -38,7 +38,7 @@
     data () {
       return {
         tableData: [],
-        loading:false
+        loading:false,
       }
     },
     methods: {

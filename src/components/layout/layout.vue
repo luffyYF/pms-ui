@@ -1,16 +1,15 @@
 <template>
   <el-container>
-    <el-aside width="200px">
-      <el-menu
-          class="el-menu-vertical-demo"
-          background-color="#2b3c58"
-          text-color="#fff"
-          :router='true'
-          active-text-color="#fff">
-          <el-menu-item :index="v.path" v-for="(v,i) in router" v-show="true" :key='i'>
-            <i class="el-icon-menu"></i>
-            <span slot="title">{{v.name}}</span>
-          </el-menu-item>
+    <el-aside width="140px">
+        <el-menu
+            class="el-menu-vertical-demo"
+            background-color="#2b3c58"
+            text-color="#fff"
+            :router='true'
+            active-text-color="#fff">
+            <el-menu-item :index="v.path" v-for="(v,i) in router" v-show="i>0" :key='i'>
+                <span slot="title">{{v.name}}</span>
+            </el-menu-item>
         </el-menu>
     </el-aside> 
     <el-main>

@@ -482,7 +482,7 @@
       </table>
       <div style="text-align:right;padding:10px;font-size:12px">
         <el-button type="primary" icon="el-icon-printer" @click="listShiftData(1)">打印发票</el-button>
-        <el-button type="primary" icon="el-icon-download" @click="listShiftData(1)">导出excel</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="listShiftData(1)">导出excel</el-button>
       </div>
     </el-dialog>
   </div>
