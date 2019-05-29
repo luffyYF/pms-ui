@@ -15,10 +15,10 @@
 					<el-button type="primary" icon="el-icon-search" @click="listSearch" size="mini">查询</el-button>
 				</el-col>
 				<el-col :span="14">
-					<el-button type="primary" icon="el-icon-delete" @click="delBatchClick" v-if="hasPerm('pms:virtualRoomType:add')"
+					<el-button type="primary" icon="el-icon-delete" @click="delBatchClick" v-if="hasPerm('pms:virtualRoomType:delBatch')"
 										style="margin-left:5px; float: right;" size="mini">批量删除
 					</el-button>
-					<el-button type="primary" icon="el-icon-plus" @click="addClick" v-if="hasPerm('pms:virtualRoomType:delBatch')"
+					<el-button type="primary" icon="el-icon-plus" @click="addClick" v-if="hasPerm('pms:virtualRoomType:add')"
 										style="margin-left:0; float: right;" size="mini">添加
 					</el-button>
 				</el-col>

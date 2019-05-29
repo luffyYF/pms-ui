@@ -117,7 +117,7 @@
           if (valid) {
             this.loading = true
             let api
-            if (this.dataForm.id) {
+            if (this.dataForm.virtualPk) {
               api = updateApi(this.dataForm)
             } else {
               api = addApi(this.dataForm)
