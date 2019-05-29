@@ -20,24 +20,26 @@
             <el-radio-button label="3">本周</el-radio-button>
             <el-radio-button label="4">自定义</el-radio-button>
           </el-radio-group>
-          <el-date-picker
-            v-show="preArrivalDate == 4"
-            v-model="formInline.beginDate"
-            align="right"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm"
-            :default-time='defaultTime'
-            placeholder="请选择入住时间" style="width: 150px;">
-          </el-date-picker>
-          <el-date-picker
-            v-show="preArrivalDate == 4"
-            v-model="formInline.beginDate"
-            align="right"
-            type="date"
-            value-format="yyyy-MM-dd HH:mm"
-            :default-time='defaultTime'
-            placeholder="请选择入住时间" style="width: 150px;">
-          </el-date-picker>
+          <span v-show="preArrivalDate == 4">
+            <el-date-picker
+              v-model="formInline.beginDate"
+              align="right"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time='defaultTime'
+              placeholder="请选择入住时间" style="width: 150px;">
+            </el-date-picker>
+            至
+            <el-date-picker
+              v-show="preArrivalDate == 4"
+              v-model="formInline.beginDate"
+              align="right"
+              type="date"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time='defaultTime'
+              placeholder="请选择入住时间" style="width: 150px;">
+            </el-date-picker>
+          </span>
         </el-form-item>
       </el-col>
       <el-col :span="24">
@@ -54,7 +56,7 @@
             v-model="formInline.beginDate"
             align="right"
             type="datetime"
-            value-format="yyyy-MM-dd HH:mm"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :default-time='defaultTime'
             placeholder="请选择入住时间" style="width: 150px;">
           </el-date-picker>
@@ -62,8 +64,8 @@
             v-show="scheduledDate == 4"
             v-model="formInline.beginDate"
             align="right"
-            type="date"
-            value-format="yyyy-MM-dd HH:mm"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :default-time='defaultTime'
             placeholder="请选择入住时间" style="width: 150px;">
           </el-date-picker>
@@ -111,7 +113,7 @@
         <el-input v-model="formInline.roomNumber" placeholder="请输入房间号" clearable style="width: 150px;"></el-input>
       </el-form-item>
       <el-col :span="24">
-        <el-form-item label="">
+        <el-form-item label="" style="float:right;">
           <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
           <el-button type="primary" @click="createExcel" size="mini" >下载预订模板</el-button>
           <el-button size="mini" type="primary" @click="reserveClick">上传预订信息</el-button>
@@ -125,30 +127,38 @@
             <orderGuestList  :ref="scope.row.orderNo"/>
           </template>
         </el-table-column>
-        <el-table-column label="预订单" prop="orderNo" width="100">
+        <!-- <el-table-column label="预订单" prop="orderNo" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.orderNo}}</span><br>
             <span v-if="scope.row.auditStatus==0">(审批中...)</span>
             <span v-if="scope.row.auditStatus==1">(审批通过)</span>
             <span v-if="scope.row.auditStatus==2">(审批拒绝)</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="预订人" prop="userName"  width="110">
           <template slot-scope="scope">
             <p class="guest-item">{{scope.row.userName}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="手机号码" prop="userName"  width="110">
+          <template slot-scope="scope">
             <p class="guest-item">{{scope.row.userPhone}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="渠道" width="80">
+        <el-table-column label="预订方式" width="80">
           <template slot-scope="scope">
             {{scope.row.guestDtos[0].channelTypeName}}
           </template>
         </el-table-column>
+        <el-table-column label="预定时间" width="160" prop="endDate">
+        </el-table-column>
         <el-table-column label="抵店日期" width="160" prop="beginDate">
+          <template slot-scope="scope">
+            <span>抵 {{scope.row.beginDate}}</span><br>
+            <span>离 {{scope.row.endDate}}</span>
+          </template>
         </el-table-column>
-        <el-table-column label="离店时间" width="160" prop="endDate">
-        </el-table-column>
-        <el-table-column label="房间数" width="70" align="center">
+        <el-table-column label="房型(房号)" width="70" align="center">
           <template slot-scope="scope">
             <span>{{roomCount(scope.row.guestDtos)}}</span>
           </template>
@@ -202,7 +212,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination class="positions" @size-change="getSizeChange" @current-change="getList" :current-page="formInline.pageNum" :page-size="formInline.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    <el-pagination class="positions" @size-change="getSizeChange" @current-change="getList" :current-page="formInline.pageNum" :page-size="formInline.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formInline.total"></el-pagination>
 
     <!-- DIALOG -->
     <!-- 订单页面 -->
@@ -230,40 +240,30 @@
     components: {DialogCheckinVisible,invoiceEdit,reserveEdit,orderGuestList},
     data () {
       return {
-        defaultTime: moment().format('HH:mm'),
+        defaultTime: moment().format('HH:mm')+":00",
         preArrivalDate: 2,
         scheduledDate: 0,
         orderStatusMap:orderStatusMap,
         checkInTypeMap:checkInTypeMap,
         // orderNo:'',
         channelArr: [],
-        total: 0,
-        filterDate: [],
+        
         filterText: '',
-        pagination: {size: 10, current: 1, total: 0},
+        
         loading: false,
-        filters: {systemName: '', realName: ''},
-        filterTable: [],
-        filterDatea:'',
-        filterDate:'',
         tableData: [],
+
         //房型
         roomTypeOptions: [],
-
-        channelOptions: [],
-        agreementOptions: [],
-        industryOptions: [],
-        saleOptions: [],
         
         formInline: {
           roomTypePk: '',
           orderStatus: 'RESERVE',
           roomNumber:'',
           pageSize: 10,
-          pageNum: 1
+          pageNum: 1,
+          total: 0
         },
-        typeMaster: 'CHANNEL',
-        total: 0,
         companyPk: JSON.parse(localStorage.getItem("current_logon_company")).companyPk,
         orderExpands:[]
       }
@@ -281,12 +281,15 @@
       dateChange(){
         var dataObj = {start:'',end:''}
         if(this.preArrivalDate == 1){
+          //上周
           dataObj.start = moment().week(moment().week() - 1).startOf('week').valueOf();
           dataObj.end = moment().week(moment().week() - 1).endOf('week').valueOf();
         }else if(this.preArrivalDate == 2){
+          // 今日
           dataObj.start =moment().startOf(scope).valueOf();//.valueOf()获取到的是Long，不然就是一个Moment对象
           dataObj.end = moment().valueOf();//获取的是当前系统时间
         }else if(this.preArrivalDate == 3){
+          // 本周
           dataObj.start = moment().week().startOf('week').valueOf();
           dataObj.end = moment().week().endOf('week').valueOf();
         }else if(this.preArrivalDate == 4){}
@@ -294,7 +297,7 @@
       },
       //预定时间
       scheduledDateChange(){
-        this.formInline.beginDate = this.dateChange().start
+        this.formInline.beginDate = this.dateChange().start0
       },
       //预抵日期
       preArrivalDateChange(){
@@ -341,25 +344,12 @@
       listMastersType() {//查询分类类型
         const self = this;
         self.roomTypeOptions = [];
-        self.channelOptions = [];
-        self.agreementOptions = [];
-        self.industryOptions = [];
-        self.saleOptions = [];
-        // self.roomTypeOptions.push({typeName: '全部房型', typePk: ''});
-        listType({typeMasters: 'ROOM_TYPE,CHANNEL,AGREEMENT,INDUSTRY,SALE'}).then(result => {
+        listType({typeMasters: 'ROOM_TYPE'}).then(result => {
           const listTypeData = result.data.data;
           for (let index = 0; index < listTypeData.length; index++) {
             const element = listTypeData[index].typeMaster;
             if(element == 'ROOM_TYPE'){
               self.roomTypeOptions.push(listTypeData[index])
-            }else if(element == 'CHANNEL'){
-              self.channelOptions.push(listTypeData[index])
-            }else if(element == 'AGREEMENT'){
-              self.agreementOptions.push(listTypeData[index]);
-            }else if(element == 'INDUSTRY'){
-              self.industryOptions.push(listTypeData[index]);
-            }else{
-              self.saleOptions.push(listTypeData[index]);
             }
           }
         })
@@ -372,7 +362,7 @@
         },1)
       },
       handlerFilterChange (value) {
-        this.total = value.length
+        this.formInline.total = value.length
       },
       setRowKey(row){
         return row.orderNo
@@ -407,7 +397,7 @@
         this.formInline.pageNum = 1;
         listReserve(this.formInline).then(result => {
           this.tableData = result.data.data;
-          this.total = result.data.pageSize;
+          this.formInline.total = result.data.pageSize;
           this.formInline.pageNum = 1;
           this.loading = false
         }).catch(() => {
@@ -423,7 +413,7 @@
         this.formInline.pageNum = 1;
         listReserve(this.formInline).then(result => {
           this.tableData = result.data.data;
-          this.total = result.data.pageSize;
+          this.formInline.total = result.data.pageSize;
           this.loading = false
         }).catch(() => {
           this.loading = false
@@ -546,9 +536,6 @@
       reserveClick () {
         this.$refs.reserveEditRef.showDialog()
       },
-    },
-    filters: {
-
     },
     mounted () {
       this.init()

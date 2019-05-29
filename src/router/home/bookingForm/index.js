@@ -6,6 +6,7 @@ import AllBooking from '$pages/bookingForm/allBooking.vue'
 import WalkinBooking from '$pages/bookingForm/walkinBooking.vue'
 import TeamBooking from '$pages/bookingForm/teamBooking.vue'
 import HourBooking from '$pages/bookingForm/hourBooking.vue'
+import AddBookingForm from '$pages/bookingForm/addBookingForm/index.vue'
 // import AddReserve from '$pages/bookingForm/addReserve.vue'
 // import MiniappOrderList from '$pages/reserveManage/miniapp/MiniappOrderList.vue'
 
@@ -21,6 +22,7 @@ const router = {
         {path: '/bookingForm/walkinBooking', component: WalkinBooking, prem: 'pms', name: '散客预定单',icon: ''},
         {path: '/bookingForm/teamBooking',  component: TeamBooking, prem: 'pms', name: '团队预订单',icon: ''},
         {path: '/bookingForm/hourBooking',  component: HourBooking, prem: 'pms', name: '钟点房预订单',icon: ''},
+        {path: '/bookingForm/addBookingForm',  component: AddBookingForm, prem: 'pms', name: '新增预订',icon: ''},
     ]
 }
 
