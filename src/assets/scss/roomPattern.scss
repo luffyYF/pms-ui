@@ -1,0 +1,512 @@
+.displayNone {
+  display: none;
+}
+.room-pattern-class {
+  height: 100%;
+
+  .room-pattern-header {
+    border-bottom: 1px solid #F5F8FC;
+    line-height  : 50px;
+
+    .el-form {
+      .selectWidth {
+        width: 122px;
+      }
+      .el-form-item--mini {
+        margin-bottom : 0px;
+        vertical-align: middle;
+        .el-form-item__label{
+          font-size: 12px;
+        }
+        .el-form-item__content {
+          vertical-align: middle;
+          line-height   : 0px;
+        }
+      }
+    }
+  }
+
+  .room-pattern-container {
+    .el-main {
+      padding : 10px 5px;
+      overflow: auto;
+      width   : calc(100% - 290px);
+      background-color: #ECF4F7;
+      .detailsinfo {
+        background-image : url("../../assets/image/room-status/room_status.png");
+        background-repeat: no-repeat;
+        cursor           : pointer;
+        float            : left;
+        width            : 16px;
+        height           : 16px;
+        margin-right     : 2px;
+      }
+      .rowRoom {
+        overflow: auto;
+        width   : 100%;
+        height  : calc(100%);
+        .floorstorey{
+          width: 100%;
+          .title{
+            width: 100%;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+            span{
+              font-size: 12px;
+              color: #b2b2b2;
+              font-weight: initial;
+            }
+          }
+        }
+      }
+
+      //房间
+      .pattern-li {
+        width        : 170px;
+        height       : 97px;
+        border-radius: 5px;
+        overflow     : hidden;
+        font-family   : 微软雅黑, "Times New Roman", Helvetica, sans-serif;
+        font-size    : 12px;
+        // padding      : 2px;
+        cursor       : pointer;
+        color        : black;
+        text-align   : left;
+        font-weight  : normal;
+        border       : 2px solid #ECF4F7;
+        /* display   : inline-block; */
+        float        : left;
+        position     : relative;
+
+        .pattern-li-item {
+          height     : 19px;
+          overflow   : hidden;
+          margin     : auto;
+          margin-top: 3px;
+          padding: 0 5px;
+          .rm {
+            font-size   : 15px;
+            font-weight : bold;
+            color       : white;
+            margin-right: 1px;
+          }
+
+          .ht {
+            
+            font-size     : 12px;
+            font-variant  : small-caps;
+            font-weight   : bold;
+            text-transform: uppercase;
+            color         : black;
+            overflow      : hidden;
+            float: right;
+          }
+
+        }
+        .button-status-icon {
+          bottom  : 3px;
+        }
+        .username-channel {
+          font-size  : 14px;
+
+          .userinfo,
+          .channelinfo {
+            color       : #fff;
+            height      : 19px;
+            width       : 100%;
+            overflow    : hidden;
+            font-variant: inherit;
+            text-align  : left;
+          }
+        }
+
+        .checkin-date {
+          color       : #fff;
+          text-align  : left;
+          background-color: rgba(0, 0, 0, 0.5);
+          padding: 5px;
+          label{
+            &:last-child{
+              float: right;
+            }
+          }
+        }
+
+        //菜单
+        .pattern-dropdown {
+          width   : 100%;
+          height  : 55px;
+          top     : 5px;
+          position: absolute;
+
+          /* padding: 0 5px; */
+          .pattern-dropdown-li {
+            .el-button {
+              display   : block;
+              text-align: left;
+              width     : 100%;
+              margin    : 0;
+              padding   : 8px 10px;
+            }
+          }
+        }
+      }
+    }
+    .el-aside {
+      border-left: 1px solid #F5F8FC;
+      overflow-x: hidden;
+      .buttonOr{
+        padding: 10px 5px;
+        .el-button{
+          min-width: 92px;
+          margin-bottom: 5px;
+        }
+      }
+      .roomMesTitle{
+        font-size: 15px;
+        font-weight: 600;
+        padding: 10px 10px;
+      }
+      .roomMes{
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        flex-flow: row;
+        vertical-align: middle;
+        justify-content:space-between;
+        span{
+          display: inline-block;
+          vertical-align: middle;
+          align-items:center;
+        }
+      }
+      .el-tabs{
+        .el-tabs__header{
+          border-bottom: 0px solid transparent;
+          margin: 0 0 8px;
+          .el-tabs__nav{
+            border: 0px solid transparent;
+            border-bottom: 1px solid #E4E7ED;
+            border-radius: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            height: 25px;
+          }
+        }
+        .el-tabs__item{
+          border: 1px solid #E4E7ED;
+          padding: 0 13px;
+          height: 25px;
+          line-height: 26px;
+          font-size: 12px;
+          margin-right: 4px;
+          border-radius: 8px 8px 0 0;
+          float: left;
+          &.el-tabs__item:last-child{
+            margin-right: 0;
+          }
+          &.is-active{
+            border-bottom-color: #FFF;
+            margin-bottom: 1px;
+          }
+        }
+        .el-tabs__content{
+          min-height: 200px;
+          //消息
+          .row-mes{
+            padding: 2px 10px;
+            font-size: 12px;
+            span{
+              display: inline-block;
+              min-width: 60px;
+              letter-spacing: 1.5px;
+              span{
+                min-width: auto;
+                margin-left: 5px;
+                text-decoration: line-through;
+              }
+            }
+            
+            &.beizhu{
+              border-radius: 5px; 
+              background-color: #F1F6F9;
+              color: #696969;
+              margin: 5px 10px;
+              padding: 7px 10px;
+              min-height: 100px;
+            }
+          }
+          //远期房态
+          .room-status-calendar-box {
+            font-size: 12px;
+
+            .full-calendar-header {
+              display: block !important;
+            }
+
+            .full-calendar-body {
+              margin-top   : 10px;
+              margin-bottom: 10px;
+
+              .weeks {
+                width           : 247px;
+                margin          : 0 auto;
+                background-color: #f60;
+                color           : #fff;
+
+                .week {
+                  flex        : 1;
+                  text-align  : center;
+                  border-right: 1px solid #fff;
+                  font-weight : normal;
+                }
+
+                strong {
+                  &:first-child {
+                    border-left: 1px solid #ebeef5;
+                  }
+
+                  &:last-child {
+                    border-right: 1px solid #ebeef5;
+                  }
+                }
+              }
+
+              .dates {
+                .week-row {
+                  border-left: 1px solid #ebeef5;
+                  width      : 248px;
+                  margin     : 0 auto;
+
+                  .day-cell {
+                    border-right : 1px solid #ebeef5;
+                    border-bottom: 1px solid #ebeef5;
+                    position     : relative;
+                    min-height   : 30px;
+                    overflow     : hidden;
+
+                    &.today {
+                      background-color: #f60;
+
+                      .day-number {
+                        color     : #fff;
+                        text-align: center !important;
+                        margin-top: 0px;
+                        opacity   : 1;
+                      }
+                    }
+                  }
+                }
+
+                .dates-events {
+                  .events-week {
+                    width : 248px;
+                    margin: 0 auto;
+
+                    .events-day {
+                      position  : relative;
+                      min-height: 39px;
+
+                      .day-number {
+                        text-align : center !important;
+                        padding    : 0px;
+                        padding-top: 2px;
+                        margin-top : 0px;
+                        opacity    : 1;
+                      }
+
+                      &.today {
+                        .day-number {
+                          color: #fff;
+                        }
+                      }
+                    }
+                  }
+
+                  .event-item {
+                    padding   : 0 !important;
+                    background: transparent;
+
+                    &.currentDate {
+                      color: white !important;
+                    }
+
+                    &.null {
+                      color: black !important;
+                    }
+
+                    &.notNull {
+                      color: #f60 !important;
+                    }
+
+                    &.is-start {
+                      text-align      : center !important;
+                      margin-left     : 0px !important;
+                      background-color: transparent !important;
+                      height          : auto !important;
+                      line-height     : initial !important;
+                    }
+                  }
+                }
+
+                .dates-bg {
+                  .week-row {
+                    .day-number {
+                      opacity: 0;
+                    }
+
+                    .today {
+                      .day-number {
+                        opacity: 0;
+                      }
+                    }
+                  }
+
+                }
+              }
+            }
+
+            .comp-full-calendar {
+              padding: 0 !important;
+
+              p {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+        
+
+      }
+      
+    }
+  }
+
+  .room-pattern-footer {
+    line-height: 50px;
+    border-top : 1px solid #F5F8FC;
+    .el-radio-group{
+      .el-radio-button{
+        span{
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  //房态框
+  .Ident{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid red;
+    vertical-align: middle;
+    align-items:center;
+    margin-right: 4px;
+  }
+
+  //房态颜色
+  .empty {
+    /* 空房 */
+    background: #669CFF;
+  }
+
+  .occupy {
+    /* 占用 */
+    background: #ffb303;
+  }
+
+  .dirty {
+    /* 脏房 */
+    background: #b2b2b2;
+  }
+
+  .clean_nocheck {
+    /* 清洁未检查 */
+    background: #6699ff;
+  }
+
+  .clean_checked {
+    /* 清洁已检查 */
+    background: #669CFF;
+  }
+
+  .repair_room {
+    /* 维修房 */
+    background: #009900;
+  }
+
+  .disable_room {
+    /* 停用房 */
+    background: #ff0000;
+  }
+
+  //房态图标
+  .reserve_leave {
+    /* 预离房 */
+    background-position: -913px -18px;
+  }
+
+  .arrears {
+    /* 欠费 */
+    background-repeat  : no-repeat;
+    background-position: -335px -18px;
+  }
+
+  .clockroom {
+    background-repeat  : no-repeat;
+    background-position: -10px -18px;
+  }
+
+  .special {
+    /* 特殊房 */
+    background-repeat  : no-repeat;
+    background-position: -468px -18px;
+  }
+
+  .selfuse {
+    /* 自用房 */
+    background-repeat  : no-repeat;
+    background-position: -978px -18px;
+  }
+
+  .freeroom {
+    /* 免费房 */
+    background-repeat  : no-repeat;
+    background-position: -1018px -18px;
+  }
+
+  .reserve_today {
+    /* 今日预抵 */
+    background-repeat  : no-repeat;
+    background-position: -788px -18px;
+  }
+
+  .reserve_single {
+    /* 单人预定 */
+    background-repeat  : no-repeat;
+    background-position: -880px -18px;
+  }
+
+  .today_birthday {
+    /* 生日 */
+    background-repeat  : no-repeat;
+    background-position: -68px -18px;
+  }
+
+  .room_team {
+    /* 团队 */
+    background-repeat  : no-repeat;
+    background-position: -119px -18px;
+  }
+
+  .relation {
+    /* 连房 */
+    background-repeat  : no-repeat;
+    background-position: -649px -18px;
+  }
+  .el-button+.el-button {
+    margin-left: 0px;
+  }
+}

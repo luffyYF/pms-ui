@@ -24,7 +24,6 @@ import {refreshPmsType} from "@/utils/refreshPmsType";
 import {hotelHardware} from '@/utils/orm'
 
 // import './mock' // simulation data
-
 // import 'babel-polyfill'
 //全局的常量
 Vue.prototype.hasPerm = hasPermission
