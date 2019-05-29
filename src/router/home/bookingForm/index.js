@@ -16,6 +16,7 @@ const router = {
     prem: 'pms',
     icon: './static/img/menu/mean_icon3.png',
     children: [
+        {path: '/', component: AllBooking, prem: 'pms', name: '全部',icon: ''},
         {path: '/bookingForm/AllBooking', component: AllBooking, prem: 'pms', name: '全部',icon: ''},
         {path: '/bookingForm/walkinBooking', component: WalkinBooking, prem: 'pms', name: '散客预定单',icon: ''},
         {path: '/bookingForm/teamBooking',  component: TeamBooking, prem: 'pms', name: '团队预订单',icon: ''},
