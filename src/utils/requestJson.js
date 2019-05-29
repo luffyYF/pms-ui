@@ -7,7 +7,7 @@ import router from '@/router'
 // 创建axios实例
 const service = axios.create({
   // api的base_url
-  baseURL: "http://192.168.5.6/pms-back",
+  baseURL: process.env.API_ROOT,
   // 请求超时时间
   timeout: 10000
 })
@@ -21,7 +21,7 @@ service.interceptors.request.use(config => {
   //   router.push({ path: '/login' })
   // }
   //身份验证携带请求头
-  let token = localStorage.getItem('token')
+  let token = localStorage.getItem('token') 
   config.headers['Authorization'] = 'Bearer '+token
 
   //当前选择的公司主键和班次主键
