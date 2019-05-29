@@ -1,9 +1,21 @@
 // 常用报表----------------------------------
 export const commonReport = [{
-  label: '管理层',
-  pointer: 'pms:reportCenter:managerFloor',
-  hidden: true,
-  children: [{
+    label: '常用报表',
+    pointer: 'pms:reportCenter:managerFloor',
+    hidden: true,
+    children: [
+      {
+        label: '入住分析表（按房型）',
+        path: '/reportCenter/roomTypeCheckInAnalysis',
+        pointer: 'pms:reportCenter:RoomTypeCheckInAnalysis'
+      }
+    ]
+  },
+  {
+    label: '管理层',
+    pointer: 'pms:reportCenter:managerFloor',
+    hidden: true,
+    children: [{
       label: '每日日报',
       path: '/reportCenter/dailyReport',
       pointer: 'pms:reportCenter:dailyReptor'
@@ -136,6 +148,7 @@ export const commonReport = [{
     {label:'营业年报',path:'/reportCenter/TurnoverYear',pointer:'pms:reportCenter:TurnoverYear'},
 
     {label:'营业时间段报表',path:'/reportCenter/TurnoverTimeQuantum',pointer:'pms:reportCenter:TurnoverTimeQuantum'},
+    {label:'现金流明细报表',path:'/reportCenter/CashFlowDetails',pointer:'pms:reportCenter:CashFlowDetails'},
   ]
 }
 // , {

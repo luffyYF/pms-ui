@@ -11,7 +11,7 @@
         证件号：<el-input v-model="value" size="mini" style="width:120px"></el-input>
         <div style="margin-top:10px;">
           <el-button type="primary" size="mini">网页预览</el-button>
-          <el-button type="primary" size="mini">PDF预览</el-button>
+          <!-- <el-button type="primary" size="mini">PDF预览</el-button> -->
           <el-button type="primary" size="mini">导出EXCEL</el-button>
           <el-button type="primary" size="mini">添加到收藏夹</el-button>
           <el-button type="primary" size="mini">打印预览</el-button>

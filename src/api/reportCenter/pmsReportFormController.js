@@ -327,6 +327,21 @@ export const roomStateReport = params =>{
 /* ********** 房态报表end ********** */
 
 /* ********** 常用报表begin ********** */
+
+/**
+ * 客人入住分析（按房型）报表
+ * url: /pms/report/roomTypeCheckInAnalysis
+ * method: GET
+ *
+ * @param parameter 参数
+ *           begin 开始时间
+ * @return PmsResult
+ */
+export const roomTypeCheckInAnalysis=params=>{
+    return request.get('/pms/report/roomTypeCheckInAnalysis',{params:params})
+}
+
+
 /**
  * 经理日报报表
  */
@@ -377,6 +392,14 @@ export const businessTimesReport = params =>{
 }
 
 
+
+/**
+ *
+ * 现金流明细报表
+ */
+export const cashFlowDetailsReport = params =>{
+    return request.get('/pms/report/cashFlowDetailsReport',{params:params})
+  }
 
 
 

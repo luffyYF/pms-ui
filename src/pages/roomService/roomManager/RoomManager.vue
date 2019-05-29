@@ -119,7 +119,6 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-
     <DisableAndRepairDialog ref="disableAndRepairDialogRef" @callback="getList"></DisableAndRepairDialog>
   </div>
 </template>
@@ -236,7 +235,6 @@
           this.$message.warning("请至少选择一条数据")
           return;
         }
-
         this.$refs.disableAndRepairDialogRef.showDialog(type,this.multipleSelection);
       },
       delReasonBatch(){
