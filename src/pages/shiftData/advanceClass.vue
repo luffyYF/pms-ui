@@ -352,6 +352,7 @@ export default {
         }
         addShiftData(data).then(res=>{
             that.$message({ type: 'success', message: res.sub_msg })
+            // shiftDataViewByPk({shiftDataPk:res.sub_code})
             that.listShiftData()
             that.dialogMemberVisible = false
         })

@@ -10,6 +10,12 @@
     <div class="block">
       <el-form :inline="true" size="mini" class="demo-form-inline">
         <date-picker v-model="beginAndEnd"></date-picker>
+        <el-form-item label="查看方式：">
+          <el-select v-model="type" placeholder="请选择房间类型" >
+            <el-option label="按房型" :value="1"  key="1"></el-option>
+            <el-option label="按房间" :value="0"  key="0"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="房间类型：">
           <el-select v-model="roomTypePk" placeholder="请选择房间类型" >
             <el-option :label="r.typeName" :value="r.typePk" v-for="r in roomTypeArr" :key="r.typePk"></el-option>
@@ -31,7 +37,7 @@
       :style="tableStyle"
       class="testTable"
       height="500"
-      :cell-class-name="tableCellClassName"
+      :cell-style="tableCellClassName"
       :row-class-name="tableRowClassName"
       :summary-method="getSummaries"
       :span-method="objectSpanMethod">
@@ -43,11 +49,22 @@
         width="150">
       </el-table-column>
       <el-table-column
+        v-if="currentType == 1"
         fixed
         label="类型"
+        align="center"
         prop="desc"
         width="150">
       </el-table-column>
+      <el-table-column
+        v-else
+        fixed
+        label="房号"
+        align="center"
+        prop="roomNumber"
+        width="150">
+      </el-table-column>
+      
       <el-table-column
         v-for="title in houseList.title" :key="title.id"
         :prop="title.id"
@@ -62,23 +79,25 @@
           <span v-if="props.row.totalRoomNum == null"> 0 / 0</span>
           <span v-if="props.row[title.id] ==null && props.row.totalRoomNum != null"> 0 / {{props.row.totalRoomNum}}</span> -->
           <!-- //类型 == 1 为可售房间数量 0位已预订数量 -->
-          <div v-if="props.$index > fixedRow">
+          <div v-if="props.$index > fixedRow &&currentType == 1">
+            
             <span v-if="props.row.type == 1 && props.row[title.id] !=null">{{props.row.totalRoomNum - props.row[title.id]}}</span>
             <span v-else-if="props.row.type == 1 && props.row.totalRoomNum != null">{{props.row.totalRoomNum}}</span>
             <span v-else-if="props.row.type == 1">0</span>
             <span v-else-if="props.row.type == 0 && props.row[title.id] !=null">{{props.row[title.id]}}</span>
             <span v-else-if="props.row.type == 0">0</span>
           </div>
-          <div v-else>
-            <span v-if="props.$index == 0">{{houseList.weenMap[title.id]}}</span>
-              <span v-else-if="props.$index == 1">{{houseList.totalRoomNum}}</span>
-              <span v-else-if="props.$index == 3 && houseList.roomNumMap[title.id]">{{houseList.roomNumMap[title.id]}}</span>
-              <span v-else-if="props.$index == 3">0</span>
-              <span v-else-if="props.$index == 2 && houseList.roomNumMap[title.id]">{{houseList.totalRoomNum - houseList.roomNumMap[title.id]}}</span>
-              <span v-else-if="props.$index == 2">{{houseList.totalRoomNum}}</span>
-              <!--   -->
+          <div v-else-if="props.$index > fixedRow && currentType == 0">
+              <span v-if="houseList.roomStatusMap[props.row.roomPk+title.id]">{{houseList.roomStatusMap[props.row.roomPk+title.id]}}</span>
           </div>
-            
+          <div v-else>
+            <span v-if="props.$index == 0">{{houseList.weekMap[title.id]}}</span>
+            <span v-else-if="props.$index == 1">{{houseList.totalRoomNum}}</span>
+            <span v-else-if="props.$index == 3 && houseList.roomNumMap[title.id]">{{houseList.roomNumMap[title.id]}}</span>
+            <span v-else-if="props.$index == 3">0</span>
+            <span v-else-if="props.$index == 2 && houseList.roomNumMap[title.id]">{{houseList.totalRoomNum - houseList.roomNumMap[title.id]}}</span>
+            <span v-else-if="props.$index == 2">{{houseList.totalRoomNum}}</span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -107,7 +126,9 @@ export default {
       },
       roomTypePk:"",
       roomTypeArr:[],
-      fixedRow:3
+      fixedRow:3,
+      currentType:0,
+      type:0
     };
   },
   created(){
@@ -155,9 +176,10 @@ export default {
     search(){
       // 点击查询按钮
       this.loading = true;
-      frowardRoomList({begin:this.beginAndEnd.begin,end:this.beginAndEnd.end,roomTypePk:this.roomTypePk}).then(res =>{
+      frowardRoomList({begin:this.beginAndEnd.begin,end:this.beginAndEnd.end,roomTypePk:this.roomTypePk,type:this.type}).then(res =>{
         this.loading = false;
         if(res.code == 1) {
+          this.currentType = this.type
           this.houseList = res.data;
         }
       }).catch(()=>{
@@ -177,7 +199,7 @@ export default {
                 colspan: 0
               };
             }
-          }else if (rowIndex > this.fixedRow) {
+          }else if (rowIndex > this.fixedRow && this.currentType == 1) {
             if(columnIndex == 0 && rowIndex % 2 == 0 ){
               return {
                 rowspan: 2,
@@ -193,7 +215,7 @@ export default {
         }
       },
       tableRowClassName({row, rowIndex}) {
-        if (rowIndex > this.fixedRow) {
+        if (rowIndex > this.fixedRow && this.currentType == 1) {
           if(rowIndex % 2 == 0){
             return 'warningRow';
           }
@@ -201,8 +223,20 @@ export default {
         return '';
       },
       tableCellClassName({row, column, rowIndex, columnIndex}){
-          if(columnIndex <=1){
-            return 'defaultCell';
+          // {{houseList.roomStatusMap[props.row.roomPk+title.id]}}
+          if(this.currentType == 1){
+            if(columnIndex <=1){
+              return {
+                "background":"#fff"
+              };
+            } 
+          }else{
+              if(this.houseList.roomStatusMap[row.roomPk+column.property]){
+                 return {
+                    "background":"#ccc"
+                  }
+                 ;
+              }
           }
       }
   },
