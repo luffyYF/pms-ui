@@ -127,8 +127,8 @@ export default {
       roomTypePk:"",
       roomTypeArr:[],
       fixedRow:3,
-      currentType:0,
-      type:0
+      currentType:1,
+      type:1
     };
   },
   created(){
