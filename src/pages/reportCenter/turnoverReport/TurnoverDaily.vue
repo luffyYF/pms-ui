@@ -24,8 +24,7 @@
         <h3 style="text-align: center">营业报表</h3>
       </div>
       <div class="table-box" id="print-managerdailyreportTable">
-        <table wid
-        th="100%" border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
+        <table width="100%" border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: left;" cellpadding="6" cellspacing="0">
         <thead>
            <tr>
               <th colspan="4" style="text-align: left;font-size: 12px;">店铺：{{activeCompany.companyName}}</th>

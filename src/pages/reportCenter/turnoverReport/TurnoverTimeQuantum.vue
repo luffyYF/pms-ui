@@ -1,16 +1,24 @@
 <template>
   <div class="container">
     <el-form :inline="true" size="mini" style="margin-top:10px;" :model="queryObj" class="demo-form-inline">
-      <el-form-item label="日期">
-        <el-date-picker
-          v-model="queryObj.begin"
-          type="month"
-          value-format="yyyy-MM"
-          placeholder="选择日期">
-        </el-date-picker>
-      </el-form-item>
+
+          营业日期：<el-date-picker
+                      v-model="queryObj.begin"
+                      type="date"
+                      value-format="yyyy-MM-dd"
+                      placeholder="选择日期"
+                      :clearable="false" size="mini">
+                    </el-date-picker>
+          至：<el-date-picker
+              v-model="queryObj.end"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期"
+              :clearable="false" size="mini">
+            </el-date-picker>
+
       <el-form-item>
-        <el-button type="primary" @click="businessMonthReport()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
+        <el-button type="primary" @click="businessTimesReport()"><span class="el-icon-tickets p-r-5"></span>网页预览</el-button>
         <el-button type="primary">PDF预览</el-button>
         <el-button type="primary" @click="downloadExcel" >导出EXCEL</el-button>
         <el-button type="primary" @click="print"><span class="el-icon-printer p-r-5"></span>打印预览</el-button>
@@ -33,7 +41,7 @@
             <tr>
               <th style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">编号</th>
               <th style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">项目</th>
-              <th style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">当月发生</th>
+              <th style="text-align: center;background-color: #dcdcdc;width: 16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">当前时间段发生</th>
               <th  style="text-align: center;background-color: #dcdcdc;width:16%;padding: 6px 2px 6px 1px;border: 1px solid #000;font-size: 12px;">去年同期</th>
           </tr>
         </thead>
@@ -367,7 +375,7 @@
 </template>
 
 <script>
-import {businessMonthReport } from "@/api/reportCenter/pmsReportFormController"
+import {businessTimesReport } from "@/api/reportCenter/pmsReportFormController"
 import { getLodop } from '@/utils/lodop'
 import downloadExcel from '@/components/download/downloadExcel'
 import moment from "moment"
@@ -378,7 +386,7 @@ export default {
     return {
       userInfo:{},
       sDate: moment().format("YYYY-MM-DD"),
-      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:moment().format("YYYY-MM"),end:moment().add(1,"days").format("YYYY-MM-DD")},
+      queryObj:{ userName:"",shift:"",userPk:'',shiftPk:'',begin:'',end:''},
       activeCompany:{},
       tableData: {},
       tableMonth:{},
@@ -399,17 +407,20 @@ export default {
     this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
     this.init()
   },
+
   methods: {
     init(){
       let self = this
-      this.businessMonthReport();
+      this.businessTimesReport();
+      this.queryObj.begin = moment().format("YYYY-MM-DD");
+      this.queryObj.end = moment().format("YYYY-MM-DD");
     },
 
-    //查询所有营业月报表数据
-    businessMonthReport(){
+    //查询所有营业时间段报表数据
+    businessTimesReport(){
        let self = this
-      businessMonthReport({beginDate:this.queryObj.begin}).then(res =>{
-          self.tableMonth = res.data.monReportPo;
+      businessTimesReport(this.queryObj).then(res =>{
+          self.tableMonth = res.data.curReportPo;
           self.tableYear = res.data.subReportPo;
 
       })
@@ -435,8 +446,9 @@ export default {
 
     //导出EXCEL
     downloadExcel(){
-      let url = '/pms/report/businessMonthReportExcel?beginDate='+this.queryObj.begin
-      downloadExcel(url, '营业月报表');
+      console.log(this.queryObj.end)
+       let url = '/pms/report/businessTimesReportExcel?begin='+this.queryObj.begin+'&end='+this.queryObj.end
+      downloadExcel(url, '营业时间段报表');
     },
     //  打印预览
     // print(){

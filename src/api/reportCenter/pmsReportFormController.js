@@ -333,6 +333,15 @@ export const roomStateReport = params =>{
 export const managerReport = params =>{
     return request.get('/pms/report/managerReport',{params:params})
 }
+/**
+ *
+ * @param {时间段查询经理报表} params
+ */
+export const managerDailyTimesReport = params =>{
+  return request.get('/pms/report/managerDailyTimesReport',{params:params})
+}
+
+
 
 /**
  *
@@ -348,6 +357,26 @@ export const turnoverDailyReport = params =>{
 export const businessMonthReport = params =>{
   return request.get('/pms/report/businessMonthReport',{params:params})
 }
+
+/**
+ *
+ * 营业年报表
+ */
+export const businessYearReport = params =>{
+  return request.get('/pms/report/businessYearReport',{params:params})
+}
+
+
+
+/**
+ *
+ * 营业时间段报表
+ */
+export const businessTimesReport = params =>{
+  return request.get('/pms/report/businessTimesReport',{params:params})
+}
+
+
 
 
 
