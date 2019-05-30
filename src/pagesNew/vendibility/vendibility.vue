@@ -10,11 +10,16 @@
     <div class="block">
       <el-form :inline="true" size="mini" class="demo-form-inline">
         <date-picker v-model="beginAndEnd"></date-picker>
+         
         <el-form-item label="查看方式：">
-          <el-select v-model="type" placeholder="请选择房间类型" >
+          <el-radio-group v-model="radio1">
+            <el-radio-button :label="1">按房型</el-radio-button>
+            <el-radio-button :label="0">按房间</el-radio-button>
+          </el-radio-group>
+          <!-- <el-select v-model="type" placeholder="请选择房间类型" >
             <el-option label="按房型" :value="1"  key="1"></el-option>
             <el-option label="按房间" :value="0"  key="0"></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="房间类型：">
           <el-select v-model="roomTypePk" placeholder="请选择房间类型" >

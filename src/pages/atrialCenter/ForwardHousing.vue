@@ -11,10 +11,14 @@
       <el-form :inline="true" size="mini" class="demo-form-inline">
         <date-picker v-model="beginAndEnd"></date-picker>
         <el-form-item label="查看方式：">
-          <el-select v-model="type" placeholder="请选择房间类型" >
+          <el-radio-group v-model="type" @change="search">
+            <el-radio-button :label="1">按房型</el-radio-button>
+            <el-radio-button :label="0">按房间</el-radio-button>
+          </el-radio-group>
+          <!-- <el-select v-model="type" placeholder="请选择房间类型" >
             <el-option label="按房型" :value="1"  key="1"></el-option>
             <el-option label="按房间" :value="0"  key="0"></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="房间类型：">
           <el-select v-model="roomTypePk" placeholder="请选择房间类型" >
@@ -29,6 +33,7 @@
     <!--表格-->
     <div class="block">
       <el-table
+      @cell-dblclick="cellDblclick"
       size="mini"
       border
       v-loading="loading"
@@ -65,6 +70,7 @@
         width="150">
       </el-table-column>
       
+      
       <el-table-column
         v-for="title in houseList.title" :key="title.id"
         :prop="title.id"
@@ -73,6 +79,7 @@
         align="center"
         class-name="pointer1"
         label-class-name="mylabel"
+        
         width="90">
         <template slot-scope="props">
           <!-- <span v-if="props.row[title.id] !=null && props.row.totalRoomNum != null"> {{props.row[title.id]}} / {{props.row.totalRoomNum - props.row[title.id]}}</span>
@@ -102,15 +109,26 @@
       </el-table-column>
     </el-table>
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="1200px"
+      :before-close="handleClose">
+      <AddReserve ref="addReserveRef"/>
+      <span slot="footer" class="dialog-footer">
+      </span>
+    </el-dialog>
   </div>
+  
 </template>
 
 <script>
 import DatePicker from '@/components/DateComponent/DatePicker';
 import { frowardRoomList, frowardRoomDetail } from "@/api/atrialCenter/roomForwardStatus";
+import AddReserve from "@/pages/reserveManage/addReserve.vue";
 import Moment from 'moment'
 export default {
-  components: { DatePicker },
+  components: { DatePicker,AddReserve },
   data() {
     return {
       houseList:[],
@@ -128,7 +146,8 @@ export default {
       roomTypeArr:[],
       fixedRow:3,
       currentType:1,
-      type:1
+      type:1,
+      dialogVisible:false,
     };
   },
   created(){
@@ -136,6 +155,25 @@ export default {
     this.getRoomType()
   },
   methods: {
+    handleClose(){
+      this.dialogVisible = false
+    },
+    cellDblclick(row, column, cell, event){      
+      if("roomNumber,desc,roomTypeName,".indexOf(column.property) != -1){
+          return
+      }
+      if(row.type == null && this.currentType == 1){
+        return
+      }
+      if(row.roomNumber == null && this.currentType == 0){
+        return
+      }
+      this.dialogVisible = true
+      this.$nextTick(()=>{
+        this.$refs.addReserveRef.init(row.roomTypePk,column.property,row.roomNumber)
+      })
+      
+    },
     getRoomType(){
       this.roomTypeArr = [{
         typePk:"",
