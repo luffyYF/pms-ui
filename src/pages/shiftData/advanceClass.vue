@@ -78,6 +78,12 @@
           <el-table-column prop="rpGoods" label="商品销售" align="center" width="80"></el-table-column>
           <el-table-column prop="rpMemberReCharge" label="会员充值" align="center" width="80"></el-table-column>
         </el-table-column>
+        <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+                <el-button @click="downloadExcel(scope.row)" size="mini">导出</el-button>
+            </template>
+            
+        </el-table-column>
       </el-table>
       <el-pagination
         class="positions"
@@ -497,6 +503,7 @@ import {
   shiftDataView
 } from "@/api/shiftData/shiftData";
 import { getAttendanceClasses } from "@/api/oaApi";
+import downloadExcel from '@/components/download/downloadExcel'
 export default {
   components: {},
   data() {
@@ -551,9 +558,14 @@ export default {
     };
   },
   mounted() {
-    //   this.init()
+      this.init()
   },
   methods: {
+    //导出EXCEL
+    downloadExcel(row){
+      let url = '/back/shiftData/shiftDataViewExcel?shiftDataPk='+row.shiftDataPk
+      downloadExcel(url, '交班报表');
+    },
     listShiftData(val) {
       if (val) {
         this.form.pageNum = 1;
