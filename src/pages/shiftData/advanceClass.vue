@@ -78,6 +78,11 @@
           <el-table-column prop="rpGoods" label="商品销售" align="center" width="80"></el-table-column>
           <el-table-column prop="rpMemberReCharge" label="会员充值" align="center" width="80"></el-table-column>
         </el-table-column>
+        <el-table-column align="center" label="操作">
+          <template slot-scope="scope">
+            <el-button @click="downloadExcel(scope.row)" size="mini">导出</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         class="positions"
@@ -254,235 +259,245 @@
       width="1200px"
       top="60px"
     >
-      <table
-        cellpadding="5"
-        style="padding:20px; border-collapse:collapse;text-align:center;width:100%;table-layout: fixed;"
-      >
-        <caption style="font-size:18px;font-weight: bold;">交班报表</caption>
+      <div id="print-LogStatements">
+        <table
+          cellpadding="5"
+          style="padding:20px; border-collapse:collapse;text-align:center;width:100%;table-layout: fixed;"
+        >
+          <caption style="font-size:18px;font-weight: bold;">交班报表</caption>
 
-        <tr style="text-align:left">
-          <td colspan="3">班次:BC8044637395</td>
-          <td colspan="4">交班人:超级管理员</td>
-          <td colspan="5">交班日期:2019-03-12 10:33:50至2019-05-28 17:42:09</td>
-        </tr>
-        <tr>
-          <th colspan="12" style="border:1px solid black;">本班权责</th>
-        </tr>
-        <tr>
-          <td rowspan="2" style="border:1px solid black;">结算</td>
-          <td colspan="2" style="border:1px solid black;">现金</td>
-          <td rowspan="2" style="border:1px solid black;">银行卡</td>
-          <td rowspan="2" style="border:1px solid black;">支付宝</td>
-          <td rowspan="2" style="border:1px solid black;">微信</td>
-          <td rowspan="2" style="border:1px solid black;">会员卡</td>
-          <td colspan="2" style="border:1px solid black;">挂账</td>
-          <td rowspan="2" style="border:1px solid black;">免单</td>
-          <td rowspan="2" style="border:1px solid black;">代金卷</td>
-          <td rowspan="2" style="border:1px solid black;">其他</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">收</td>
-          <td style="border:1px solid black;">退</td>
-          <td style="border:1px solid black;">单位</td>
-          <td style="border:1px solid black;">中介</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">小计</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td rowspan="2" style="border:1px solid black;">收入</td>
-          <td colspan="3" style="border:1px solid black;">房费</td>
-          <td colspan="4" style="border:1px solid black;">商品销售</td>
-          <td colspan="4" style="border:1px solid black;">其他</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">全日租</td>
-          <td style="border:1px solid black;">半日租</td>
-          <td style="border:1px solid black;">钟点房</td>
-          <td style="border:1px solid black;">赔偿</td>
-          <td style="border:1px solid black;">会议</td>
-          <td style="border:1px solid black;">电话</td>
-          <td style="border:1px solid black;">餐饮</td>
-          <td colspan="4" style="border:1px solid black;">其他</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;">-28</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td colspan="4" style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">小计</td>
-          <td colspan="3" style="border:1px solid black;">-28</td>
-          <td colspan="4" style="border:1px solid black;">0</td>
-          <td colspan="4" style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">总计</td>
-          <td colspan="11" style="border:1px solid black;">
-            <span style="margin:0 10px">结算：0.0</span>
-            <span style="margin:0 10px">收入：-28.0</span>
-          </td>
-        </tr>
-        <tr>
-          <th colspan="12" style="border:1px solid black;">本班收付</th>
-        </tr>
-        <tr>
-          <td rowspan="2" style="border:1px solid black;">结算</td>
-          <td colspan="2" style="border:1px solid black;">现金</td>
-          <td rowspan="2" style="border:1px solid black;">银行卡</td>
-          <td rowspan="2" style="border:1px solid black;">支付宝</td>
-          <td rowspan="2" style="border:1px solid black;">微信</td>
-          <td rowspan="2" style="border:1px solid black;">会员卡</td>
-          <td colspan="2" style="border:1px solid black;">挂账</td>
-          <td rowspan="2" style="border:1px solid black;">免单</td>
-          <td rowspan="2" style="border:1px solid black;">代金卷</td>
-          <td rowspan="2" style="border:1px solid black;">其他</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">收</td>
-          <td style="border:1px solid black;">退</td>
-          <td style="border:1px solid black;">单位</td>
-          <td style="border:1px solid black;">中介</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">小计</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td rowspan="2" style="border:1px solid black;">收入</td>
-          <td colspan="3" style="border:1px solid black;">房费</td>
-          <td colspan="4" style="border:1px solid black;">商品销售</td>
-          <td colspan="4" style="border:1px solid black;">其他</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">全日租</td>
-          <td style="border:1px solid black;">半日租</td>
-          <td style="border:1px solid black;">钟点房</td>
-          <td style="border:1px solid black;">赔偿</td>
-          <td style="border:1px solid black;">会议</td>
-          <td style="border:1px solid black;">电话</td>
-          <td style="border:1px solid black;">餐饮</td>
-          <td colspan="4" style="border:1px solid black;">其他</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;">-28</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;">0</td>
-          <td colspan="4" style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">小计</td>
-          <td colspan="3" style="border:1px solid black;">-28</td>
-          <td colspan="4" style="border:1px solid black;">0</td>
-          <td colspan="4" style="border:1px solid black;">0</td>
-        </tr>
-        <tr>
-          <td style="border:1px solid black;">总计</td>
-          <td colspan="11" style="border:1px solid black;">
-            <span style="margin:0 10px">结算：0.0</span>
-            <span style="margin:0 10px">收入：-28.0</span>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="10" style="border:1px solid black;">会员充值</td>
-          <td colspan="2" style="border:1px solid black;"></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="border:1px solid black;">现金充值</td>
-          <td colspan="2" style="border:1px solid black;">银行卡</td>
-          <td colspan="2" style="border:1px solid black;">支付宝</td>
-          <td colspan="2" style="border:1px solid black;">微信</td>
-          <td colspan="2" style="border:1px solid black;">充值赠送</td>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;"></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;"></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="border:1px solid black;">前台操作员</td>
-          <td colspan="2" style="border:1px solid black;">现金充值</td>
-          <td colspan="2" style="border:1px solid black;">银行卡</td>
-          <td colspan="2" style="border:1px solid black;">支付宝</td>
-          <td colspan="2" style="border:1px solid black;">微信</td>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;"></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="border:1px solid black;"></td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td colspan="2" style="border:1px solid black;">0</td>
-          <td style="border:1px solid black;"></td>
-          <td style="border:1px solid black;"></td>
-        </tr>
-      </table>
+          <tr style="text-align:left">
+            <td colspan="3">班次:{{shiftDataPo.shiftNo}}</td>
+            <td colspan="4">交班人:{{shiftDataPo.userName}}</td>
+            <td
+              colspan="5"
+              style="font-size:12px;text-align:right"
+            >交班日期:{{shiftDataPo.beginDate}}至{{shiftDataPo.endDate}}</td>
+          </tr>
+          <tr>
+            <th colspan="12" style="border:1px solid black;">本班权责</th>
+          </tr>
+          <tr>
+            <td rowspan="2" style="border:1px solid black;">结算</td>
+            <td colspan="2" style="border:1px solid black;">现金</td>
+            <td rowspan="2" style="border:1px solid black;">银行卡</td>
+            <td rowspan="2" style="border:1px solid black;">支付宝</td>
+            <td rowspan="2" style="border:1px solid black;">微信</td>
+            <td rowspan="2" style="border:1px solid black;">会员卡</td>
+            <td colspan="2" style="border:1px solid black;">挂账</td>
+            <td rowspan="2" style="border:1px solid black;">免单</td>
+            <td rowspan="2" style="border:1px solid black;">代金卷</td>
+            <td rowspan="2" style="border:1px solid black;">其他</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">收</td>
+            <td style="border:1px solid black;">退</td>
+            <td style="border:1px solid black;">单位</td>
+            <td style="border:1px solid black;">中介</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzCashCollect}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzCashRefund}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzBankCard}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzZFB}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzWX}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzMemberCard}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzHangBillAgreement}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzHangBillIntermediary}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzFreeSheet}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzCashCoupon}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzOther}}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">小计</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.qzCash}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzBankCard}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzZFB}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzWX}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzMemberCard}}</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.qzHangBill}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzFreeSheet}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzCashCoupon}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzSettlOther}}</td>
+          </tr>
+          <tr>
+            <td rowspan="2" style="border:1px solid black;">收入</td>
+            <td colspan="3" style="border:1px solid black;">房费</td>
+            <td colspan="4" style="border:1px solid black;">商品销售</td>
+            <td colspan="4" style="border:1px solid black;">其他</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">全日租</td>
+            <td style="border:1px solid black;">半日租</td>
+            <td style="border:1px solid black;">钟点房</td>
+            <td style="border:1px solid black;">赔偿</td>
+            <td style="border:1px solid black;">会议</td>
+            <td style="border:1px solid black;">电话</td>
+            <td style="border:1px solid black;">餐饮</td>
+            <td colspan="4" style="border:1px solid black;">其他</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzFullTime}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzHalfDay}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzHourRoom}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzPC}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzMeeting}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzPhoneRate}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.qzMeals}}</td>
+            <td colspan="4" style="border:1px solid black;">{{shiftDataPo.qzOther}}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">小计</td>
+            <td colspan="3" style="border:1px solid black;">{{shiftDataPo.qzRoomCharge}}</td>
+            <td colspan="4" style="border:1px solid black;">{{shiftDataPo.qzGoods}}</td>
+            <td colspan="4" style="border:1px solid black;">{{shiftDataPo.qzSettlOther}}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">总计</td>
+            <td colspan="11" style="border:1px solid black;text-align:left">
+              <span style="margin:0 10px">结算：{{shiftDataPo.qzSettlementAmount}}</span>
+              <span style="margin:0 10px">收入：{{shiftDataPo.qzConsumptionAmount}}</span>
+            </td>
+          </tr>
+          <tr>
+            <th colspan="12" style="border:1px solid black;">本班收付</th>
+          </tr>
+          <tr>
+            <td rowspan="2" style="border:1px solid black;">结算</td>
+            <td colspan="2" style="border:1px solid black;">现金</td>
+            <td rowspan="2" style="border:1px solid black;">银行卡</td>
+            <td rowspan="2" style="border:1px solid black;">支付宝</td>
+            <td rowspan="2" style="border:1px solid black;">微信</td>
+            <td rowspan="2" style="border:1px solid black;">会员卡</td>
+            <td colspan="2" style="border:1px solid black;">挂账</td>
+            <td rowspan="2" style="border:1px solid black;">免单</td>
+            <td rowspan="2" style="border:1px solid black;">代金卷</td>
+            <td rowspan="2" style="border:1px solid black;">其他</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">收</td>
+            <td style="border:1px solid black;">退</td>
+            <td style="border:1px solid black;">单位</td>
+            <td style="border:1px solid black;">中介</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpCashCollect}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpCashRefund}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpBankCard}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpZFB}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpWX}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpMemberCard}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpHangBillAgreement}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpHangBillIntermediary}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpFreeSheet}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpCashCoupon}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpOther}}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">小计</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpCash}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpBankCard}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpZFB}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpWX}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpMemberCard}}</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpHangBill}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpFreeSheet}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpCashCoupon}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpSettlOther}}</td>
+          </tr>
+          <tr>
+            <td rowspan="2" style="border:1px solid black;">收入</td>
+            <td colspan="3" style="border:1px solid black;">房费</td>
+            <td colspan="4" style="border:1px solid black;">商品销售</td>
+            <td colspan="4" style="border:1px solid black;">其他</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">全日租</td>
+            <td style="border:1px solid black;">半日租</td>
+            <td style="border:1px solid black;">钟点房</td>
+            <td style="border:1px solid black;">赔偿</td>
+            <td style="border:1px solid black;">会议</td>
+            <td style="border:1px solid black;">电话</td>
+            <td style="border:1px solid black;">餐饮</td>
+            <td colspan="4" style="border:1px solid black;">其他</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpFullTime}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpHalfDay}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpHourRoom}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpPC}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpMeeting}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpPhoneRate}}</td>
+            <td style="border:1px solid black;">{{shiftDataPo.rpMeals}}</td>
+            <td colspan="4" style="border:1px solid black;">{{shiftDataPo.rpOther}}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">小计</td>
+            <td colspan="3" style="border:1px solid black;">{{shiftDataPo.rpRoomCharge}}</td>
+            <td colspan="4" style="border:1px solid black;">{{shiftDataPo.rpGoods}}</td>
+            <td colspan="4" style="border:1px solid black;">{{shiftDataPo.rpSettlOther}}</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid black;">总计</td>
+            <td colspan="11" style="border:1px solid black;text-align:left">
+              <span style="margin:0 10px">结算：{{shiftDataPo.rpConsumptionAmount}}</span>
+              <span style="margin:0 10px">收入：{{shiftDataPo.rpSettlementAmount}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="10" style="border:1px solid black;">会员充值</td>
+            <td colspan="2" style="border:1px solid black;"></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="border:1px solid black;">现金充值</td>
+            <td colspan="2" style="border:1px solid black;">银行卡</td>
+            <td colspan="2" style="border:1px solid black;">支付宝</td>
+            <td colspan="2" style="border:1px solid black;">微信</td>
+            <td colspan="2" style="border:1px solid black;">充值赠送</td>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;"></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpMemberCashRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpMemberBankCardRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpMemberZFBRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpMemberWXRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{shiftDataPo.rpMemberReChargeGive}}</td>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;"></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="border:1px solid black;">前台操作员</td>
+            <td colspan="2" style="border:1px solid black;">现金充值</td>
+            <td colspan="2" style="border:1px solid black;">银行卡</td>
+            <td colspan="2" style="border:1px solid black;">支付宝</td>
+            <td colspan="2" style="border:1px solid black;">微信</td>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;"></td>
+          </tr>
+          <tr v-for="(item,index) in billList" :key="index">
+            <td colspan="2" style="border:1px solid black;">{{item.userName}}</td>
+            <td colspan="2" style="border:1px solid black;">{{item.memberCashRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{item.memberBankCardRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{item.memberZFBRecharge}}</td>
+            <td colspan="2" style="border:1px solid black;">{{item.memberWXRecharge}}</td>
+            <td style="border:1px solid black;"></td>
+            <td style="border:1px solid black;"></td>
+          </tr>
+        </table>
+      </div>
+
       <div style="text-align:right;padding:10px;font-size:12px">
-        <el-button type="primary" icon="el-icon-printer" @click="listShiftData(1)">打印发票</el-button>
-        <el-button type="primary" icon="el-icon-search" @click="listShiftData(1)">导出excel</el-button>
+        <el-button type="primary" icon="el-icon-printer" @click="print">打印发票</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-paperclip"
+          @click="downloadExcel(shiftDataPo)"
+        >导出excel</el-button>
       </div>
     </el-dialog>
   </div>
@@ -497,6 +512,8 @@ import {
   shiftDataView
 } from "@/api/shiftData/shiftData";
 import { getAttendanceClasses } from "@/api/oaApi";
+import { getLodop } from "@/utils/lodop";
+import downloadExcel from "@/components/download/downloadExcel";
 export default {
   components: {},
   data() {
@@ -547,13 +564,22 @@ export default {
       rules: {},
       shiftList: [],
       shiftPeople: [],
-      shiftPeopleObj: {}
+      shiftPeopleObj: {},
+      shiftDataPo: {},
+      billList: [],
+      LODOP: null
     };
   },
   mounted() {
-    //   this.init()
+    this.init();
   },
   methods: {
+    //导出EXCEL
+    downloadExcel(row) {
+      let url =
+        "/back/shiftData/shiftDataViewExcel?shiftDataPk=" + row.shiftDataPk;
+      downloadExcel(url, "交班报表");
+    },
     listShiftData(val) {
       if (val) {
         this.form.pageNum = 1;
@@ -641,6 +667,8 @@ export default {
           shiftDataViewByPk({ shiftDataPk: res.sub_code }).then(res => {
             console.log("res :", res);
             that.dialogLogStatementsVisible = true;
+            that.shiftDataPo = res.data.shiftDataPo;
+            that.billList = res.data.billList;
           });
         }
         that.listShiftData();
@@ -670,6 +698,60 @@ export default {
     handleCurrentChange(val) {
       this.form.pageNum = val;
       this.listRule();
+    },
+    //打印发票
+    print() {
+      this.createOneFormPage();
+      if (this.LODOP) {
+        this.LODOP.PREVIEW();
+      }
+    },
+    createOneFormPage() {
+      let that = this;
+      this.LODOP = getLodop();
+      if (!this.LODOP) {
+        return;
+      }
+      // this.LODOP.PRINT_INIT("经理日报表打印");
+      var sdf = this.LODOP.PRINT_INITA(0, 0, "794px", "1123px", "交班报表");
+      console.log(sdf);
+      this.LODOP.NewPageA(); // 自动分页
+      // LODOP.SET_PREVIEW_WINDOW(1,);
+      // this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+      this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
+      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Full-Page"); // 打印页整宽显示
+      this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
+      // LODOP.SET_PRINT_STYLE("FontSize",20);
+      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题 1123 1023 963
+      this.LODOP.ADD_PRINT_TABLE(
+        0,
+        10,
+        780,
+        "100%",
+        document.getElementById("print-LogStatements").innerHTML
+      );
+      // this.LODOP.SET_PRINT_STYLEA(0,"Vorient",0);
+      // LODOP.ADD_PRINT_TABLE(128,"5%","90%",314,strStyle+document.getElementById("div2").innerHTML);
+      // this.LODOP.ADD_PRINT_HTM(
+      //   10,
+      //   10,
+      //   772,
+      //   80,
+      //   document.getElementById("print-LogStatements").innerHTML
+      // );
+      this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+      this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
+      this.LODOP.ADD_PRINT_HTM(
+        "1083px",
+        15,
+        "794px",
+        "30px",
+        "<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>"
+      );
+      this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
+      this.LODOP.SET_PRINT_STYLEA(0, "Horient", 0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
+      this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 0);
     }
   }
 };

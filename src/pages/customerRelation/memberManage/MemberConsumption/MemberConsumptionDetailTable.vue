@@ -1,9 +1,6 @@
-// 会员消费明细编辑
-// Created by Administrator on 2019-02-21T16:46:19.175.
+
 <template>
-  <section class="member-dialog">
-		<el-dialog class="add-permission" title="会员消费明细" :visible.sync="dialogVisible" width="800px"
-							:close-on-click-modal="false" :before-close="handleClose">
+  <div>
       <el-table
         :data="rows"
         border
@@ -26,12 +23,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
-
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-			</span>
-		</el-dialog>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -40,8 +32,7 @@ import { findMemberConsumptionBills } from '@/api/bill'
   export default {
     data () {
       return {
-        dialogVisible: false,
-				loading: false,
+        loading: false,
         queryParams: {
           pageNum: 1,
           pageSize: 10,
@@ -52,9 +43,8 @@ import { findMemberConsumptionBills } from '@/api/bill'
       }
     },
     methods: {
-      showDialog (id) {
+      init(id) {
         this.queryParams.memPk = id
-        this.dialogVisible = true
         this.listSearch()
       },
       listSearch () {
@@ -66,10 +56,6 @@ import { findMemberConsumptionBills } from '@/api/bill'
           this.loading = false
         })
       },
-      handleClose () {
-        this.dialogVisible = false
-        this.$emit('callback')
-			},
       // 分页相关
       handleSizeChange (val) {
         this.queryParams.pageSize = val
