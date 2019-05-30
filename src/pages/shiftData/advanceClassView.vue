@@ -151,12 +151,14 @@ export default {
     ChildHandleSizeChange (val) {
         var that = this
         that.childQuery.pageNum = 1
+        that.orderExpands = []
         that.childQuery.pageSize = val
         that.projectShiftDataView()
     },
     // 分页相关
     ChildHandleCurrentChange (val) {
         var that = this
+        that.orderExpands = []
         that.childQuery.pageNum = val
         that.projectShiftDataView()
     },

@@ -140,7 +140,7 @@
       }
     },
     methods: {
-      init() {
+      init(roomTypePk,date,roomNumber) {
         this.form = {
           orderPk: null,
           name: '散客预定',
@@ -156,8 +156,9 @@
           userName: '',
           userPhone: '',
         }
+
         this.reserveTime = new Date()
-        this.$refs.visitorRef.initEmpty()
+        this.$refs.visitorRef.initEmpty(roomTypePk,date,roomNumber)
         this.submitLock=false;
       },
       onSubmit() {//保存预定
