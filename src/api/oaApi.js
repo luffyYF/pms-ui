@@ -115,3 +115,9 @@ export const getSettingAndAddress = params => {
 export const addSettingAndAddress = params => {
   return requestOa.post('/backend/attendanceGroup/addSettingAndAddress', params)
 }
+
+// 获取公司下的排版信息-班次下的人员信息
+export const getAttendanceClasses = params => {
+  return requestOa.get('/backend/attendanceClass/getAttendanceClasses', { params: params })
+}
+

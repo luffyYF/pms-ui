@@ -8,10 +8,17 @@ import request from '@/utils/requestJson'
 export const listMember = params => {
    return request.get('/back/member/list', {params: params})
 }
+
+//查询会员列表信息
+export const listMemberById = params => {
+  return request.get('/back/member/memberList', {params: params})
+}
+
+
 export const listMemberCondition = params => {
     return request.get('/back/member/listCondition', {params: params})
 }
- 
+
 export const addMember = params => {
    return request.post('/back/member/add', params)
 }
@@ -31,11 +38,11 @@ export const recoverMember = params => {
 export const memberCertificateType = params => {
     return request.get('/back/member/certificate/type')
  }
- 
+
  export const giveRule = params => {
     return request.get('/back/member/giveRule', {params: params})
  }
- 
+
  export const recharge = params => {
     return request.post('/back/member/recharge', params)
  }
