@@ -10,6 +10,9 @@
       <el-tab-pane label="房间类型管理" name="typeOfRoom" v-if="hasPerm('pms:roomSetting:roomType')">
         <sys-type-of-room ref="typeOfRoom"/>
       </el-tab-pane>
+      <el-tab-pane label="虚拟房型管理" name="typeOfVirtualRoom" v-if="hasPerm('pms:roomSetting:virtualRoomType')">
+        <sys-type-of-virtual-room ref="typeOfVirtualRoom"/>
+      </el-tab-pane>
       <el-tab-pane label="租赁物品管理" name="leasehold" v-if="hasPerm('pms:roomSetting:leasehold')">
         <sys-leasehold ref="leasehold"/>
       </el-tab-pane>
@@ -34,6 +37,7 @@
   import SysRoomCompensation from './SysRoomCompensation'
   import SysBan from './SysBan'
   import SysRepairReason from './SysRepairReason'
+  import SysTypeOfVirtualRoom from './SysTypeOfVirtualRoom'
   // import {powerJudge} from '@/utils/permissionsOperation.js'
   
   export default {
@@ -44,7 +48,8 @@
       SysLeasehold,
       SysRoomCompensation,
       SysBan,
-      SysRepairReason
+      SysRepairReason,
+      SysTypeOfVirtualRoom
     },
     data () {
       return {
@@ -79,6 +84,9 @@
         }else if(this.activeName == 'sysRoomCompensation'){
           var child = this.$refs.sysRoomCompensation
           child.init()
+        } else if(this.activeName == 'typeOfVirtualRoom') {
+          var child = this.$refs.typeOfVirtualRoom
+          child.listSearch()
         }
       },
       // powerJudge(id){
