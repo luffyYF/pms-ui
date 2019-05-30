@@ -43,8 +43,8 @@
       <el-table v-loading="loading"
       size="mini"
       border
-
-:data="tableData"      style="width: 98.5%; margin:10px;">
+      :data="tableData"
+      style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
@@ -85,9 +85,10 @@
         </el-table-column>
         <el-table-column prop="availableBalance" label="可用余额" align="center" width="120">
           <template slot-scope="scope">
-            {{scope.row.availableBalance|toMoney}}
+            {{scope.row.availableBalance}}
           </template>
         </el-table-column>
+
 
         <el-table-column prop="rechargeGiftAmount" label="充值赠送合计" align="center" width="120">
           <template slot-scope="scope">
@@ -111,12 +112,12 @@
         </el-table-column>
         <el-table-column prop="availableIntegral" label="可用积分" align="center" width="120">
           <template slot-scope="scope">
-            {{scope.row.availableIntegral|toMoney}}
+            {{scope.row.availableIntegral}}
           </template>
         </el-table-column>
          <el-table-column prop="housingDays" label="住房天数" align="center" width="120">
           <template slot-scope="scope">
-            {{scope.row.housingDays|toMoney}}
+            {{scope.row.housingDays}}
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
