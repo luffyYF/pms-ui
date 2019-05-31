@@ -15,11 +15,12 @@ const router = {
     name: '入住',
     prem: 'pms',
     icon: './static/img/menu/mean_icon4.png',
+    hidden: true,
     children: [
-        {path: '/checkIn/allCheckIn', component: All, prem: 'pms', name: '全部',icon: ''},
-        {path: '/checkIn/walkinCheckIn', component: Walkin, prem: 'pms', name: '散客入住单',icon: ''},
-        {path: '/checkIn/teamCheckIn',  component: Team, prem: 'pms', name: '团队入住单',icon: ''},
-        {path: '/checkIn/hourCheckIn',  component: Hour, prem: 'pms', name: '钟点房入住单',icon: ''},
+        {path: '/checkIn/allCheckIn', component: All, prem: 'pms', name: '全部',icon: '',hidden: true,},
+        {path: '/checkIn/walkinCheckIn', component: Walkin, prem: 'pms', name: '散客入住单',icon: '',hidden: true,},
+        {path: '/checkIn/teamCheckIn',  component: Team, prem: 'pms', name: '团队入住单',icon: '',hidden: true,},
+        {path: '/checkIn/hourCheckIn',  component: Hour, prem: 'pms', name: '钟点房入住单',icon: '',hidden: true,},
         // {path: '/bookingForm/listReserve', component: ListReserve, name: 'OTA预订单'},
         // {path: '/bookingForm/miniappOrder', component: MiniappOrderList, name: '小程序订单'}
     ]

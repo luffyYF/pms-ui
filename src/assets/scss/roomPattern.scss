@@ -32,6 +32,7 @@
       overflow: auto;
       width   : calc(100% - 290px);
       background-color: #ECF4F7;
+      height: 100%;
       .detailsinfo {
         background-image : url("../../assets/image/room-status/room_status.png");
         background-repeat: no-repeat;
@@ -63,8 +64,8 @@
 
       //房间
       .pattern-li {
-        width        : 170px;
-        height       : 97px;
+        width        : 174px;
+        height       : 100px;
         border-radius: 5px;
         overflow     : hidden;
         font-family   : 微软雅黑, "Times New Roman", Helvetica, sans-serif;
@@ -156,6 +157,7 @@
     .el-aside {
       border-left: 1px solid #F5F8FC;
       overflow-x: hidden;
+      height: 100%;
       .buttonOr{
         padding: 10px 5px;
         .el-button{

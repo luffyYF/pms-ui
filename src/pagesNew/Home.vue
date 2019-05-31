@@ -8,7 +8,7 @@
       <!--<el-col class="right">-->
       <div class="right" ref="dirRef">
         <div v-for="(v,i) in router" :key="i" class="menuDiv">
-          <router-link :class="routerActive(v.path)" :to="v.path" v-if="i>0 && hasPerm(v.prem)">
+          <router-link :class="routerActive(v.path)" :to="v.path" v-if="i>0&& v.hidden && hasPerm(v.prem)">
             <div class="nav-li">
               <img :src="v.icon" class="nav-img"/>
               <div class="nav-txt">{{v.name}}</div>
@@ -200,9 +200,7 @@ export default {
   methods: {
     routerActive(path){
       let matched = this.$route.matched
-      
       let parent = matched[matched.length-1]
-      
       if(parent.path == path){
         console.log(parent.path,path);
           return 'active'
