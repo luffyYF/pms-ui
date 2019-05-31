@@ -44,9 +44,9 @@
         <el-table v-loading="loading"
           size="mini"
           height="450"
-          border 
-          :data="tableData" 
-          style="width: 98.5%; margin:10px;"> 
+          border
+          :data="tableData"
+          style="width: 98.5%; margin:10px;">
           <el-table-column prop="cardNumber" label="会员号" align="center">
           </el-table-column>
           <el-table-column prop="gradeName" label="会员类型" align="center" width="90">
@@ -88,7 +88,7 @@
           <el-table-column prop="memPhone" label="手机号码" align="center" width="200">
           </el-table-column>
           <el-table-column prop="roomNumber" label="房号" align="center" width="90">
-          </el-table-column>    
+          </el-table-column>
           <el-table-column prop="beginAndEnd" label="起止时间" align="center" width="250">
           </el-table-column>
           <!-- <el-table-column fixed="right" label="操作" align="center" min-width="160">
@@ -119,9 +119,9 @@ export default {
       form: {
         memName:'',
         gradePk:'',
-        certificateNo:'', 
-        memPhone:'', 
-        cardNumber:'', 
+        certificateNo:'',
+        memPhone:'',
+        cardNumber:'',
         carNumber:'',
         pageNum:1,
         pageSize:10
@@ -152,7 +152,7 @@ export default {
         console.log(res.data.data)
         this.loading = false
         this.tableData = res.data.data;
-        this.total = res.data.total;
+        this.total = Number(res.data.total);
         console.log(this.tableData)
       });
     },

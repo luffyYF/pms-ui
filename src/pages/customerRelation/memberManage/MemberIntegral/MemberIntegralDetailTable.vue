@@ -13,7 +13,13 @@
         <el-table-column prop="integral" label="积分"></el-table-column>
         <el-table-column prop="type" label="积分类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.type == 5">充值赠送</span>
+            <span v-if="scope.row.type == 0">现金充值</span>
+            <span v-else-if="scope.row.type == 1">银行卡充值</span>
+            <span v-else-if="scope.row.type == 2">支付宝充值</span>
+            <span v-else-if="scope.row.type == 3">微信充值</span>
+            <span v-else-if="scope.row.type == 4">充值赠送金额</span>
+            <span v-else-if="scope.row.type == 5">充值赠送</span>
+            <span v-else-if="scope.row.type == 6">积分调整</span>
           </template>
         </el-table-column>
         <el-table-column prop="createUserName" label="操作员"></el-table-column>
@@ -52,7 +58,6 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
     },
     methods: {
       init(id, type) {
-        console.log(1223)
         this.queryParams.memPk = id
         this.queryParams.type = type
         this.listSearch()
@@ -61,7 +66,7 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
         this.loading = false
         listMemberLog(this.queryParams).then(res => {
           this.rows = res.data.list
-          this.total = res.data.total
+          this.total = parseInt(res.data.total)
         }).finally(() => {
           this.loading = false
         })
