@@ -123,10 +123,10 @@
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <template slot-scope="scope">
             <el-button @click="memberMangerClick(scope.row)" type="text" size="mini">会员管理</el-button>
-            <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini" :disabled="scope.row.rechargeFlag == 'N'">充值</el-button>
+            <!-- <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini" :disabled="scope.row.rechargeFlag == 'N'">充值</el-button>
             <el-button @click="rechargeDetailClick(scope.row)" type="text" size="mini">充值明细</el-button>
             <el-button @click="integralDetailClick(scope.row)" type="text" size="mini">积分明细</el-button>
-            <el-button @click="consumptionDetailClick(scope.row)" type="text" size="mini">消费明细</el-button>
+            <el-button @click="consumptionDetailClick(scope.row)" type="text" size="mini">消费明细</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -193,7 +193,7 @@ export default {
         this.loading = false;
         this.tableData = res.data;
         this.total = res.data.pageSize;
-        console.log(this.tableData);
+        // console.log(this.tableData);
       });
     },
     getSizeChange(val) {
@@ -204,7 +204,7 @@ export default {
         this.tableData = res.data;
         this.total = res.data.pageSize;
         this.form.pageNum = 1;
-        console.log(this.tableData);
+        // console.log(this.tableData);
       });
     },
     seaechFromList() {

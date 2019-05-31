@@ -68,7 +68,7 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
         this.loading = false
         listMemberLog(this.queryParams).then(res => {
           this.rows = res.data.list
-          this.total = res.data.total
+          this.total = parseInt(res.data.total)
         }).finally(() => {
           this.loading = false
         })
