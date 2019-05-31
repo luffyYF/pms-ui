@@ -122,13 +122,13 @@ export default {
     },
     //选中协议单位
     chooseAgreement(row, event) {
-      if (!row.priceSchemePk) {
-        this.$message({
-          type: "info",
-          message: "此协议单位未绑定价格方案，请绑定后重试！"
-        });
-        return;
-      }
+      // if (!row.priceSchemePk) {
+      //   this.$message({
+      //     type: "info",
+      //     message: "此协议单位未绑定价格方案，请绑定后重试！"
+      //   });
+      //   return;
+      // }
       this.$emit("sendData", row);
       this.dialogAgreement = false;
       this.radio = "";

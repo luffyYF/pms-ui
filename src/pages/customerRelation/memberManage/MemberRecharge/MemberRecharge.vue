@@ -89,11 +89,13 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
           remark: '',
           couponPos: [],
           giftPos: [],
+          isCallback:true
         },
       }
     },
     methods: {
-      showDialog (data) {
+      showDialog (data,isCallback) {
+        this.isCallback = isCallback
         console.log(data)
         this.dataForm = {
           memPk: data.memPk,
@@ -124,14 +126,18 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
             });
           }
           this.dialogVisible = false
-          this.$emit('callback')
+          if(this.isCallback){
+            this.$emit('callback')
+          } 
         }).finally(() => {
           this.loading = false
         })
       },
       handleClose () {
         this.dialogVisible = false
-        this.$emit('callback')
+        if(this.isCallback){
+            this.$emit('callback')
+        }
 			},
 			handleChange (val) {
         giveRule({gradePk: this.dataForm.gradePk, price: val}).then(res => {
