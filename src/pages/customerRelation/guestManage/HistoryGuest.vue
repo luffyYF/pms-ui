@@ -6,7 +6,7 @@
       <div class="bg-reserve">
         <h5 class="info-title">历史客人账户查询</h5>
         <el-form-item label="姓名">
-          <el-input v-model="form.memName"></el-input> 
+          <el-input v-model="form.memName"></el-input>
         </el-form-item>
         <el-form-item label="证件号">
           <el-input v-model="form.certificateNo"></el-input>
@@ -66,10 +66,10 @@
     <!-- table -->
     <div class="bg-reserve pd">
       <h5 class="info-title">账户列表</h5>
-      <el-table v-loading="loading" 
-      size="mini" 
-      border 
-      :data="tableData" 
+      <el-table v-loading="loading"
+      size="mini"
+      border
+      :data="tableData"
       style="width: 98.5%; margin:10px;" height="450">
         <el-table-column prop="cardNumber" label="会员号" align="center">
         </el-table-column>
@@ -169,12 +169,12 @@ export default {
   data() {
     return {
       form: {
-        memName: '', 
-        certificateNo: '', 
-        memPhone: '', 
-        cardNumber: '', 
-        carNumber: '', 
-        roomNumber: '', 
+        memName: '',
+        certificateNo: '',
+        memPhone: '',
+        cardNumber: '',
+        carNumber: '',
+        roomNumber: '',
         invoiceTitle: '',
         pageNum:1,
         pageSize:10,
@@ -208,7 +208,7 @@ export default {
       historyLiveInProject(parameters).then(res => {
         this.loading = false
         this.tableData = res.data.data;
-        this.total = res.data.total;
+        this.total = Number(res.data.total);
       });
     },
     getHistoetGuestPageNum(val){
@@ -223,8 +223,6 @@ export default {
       this.liveInListData();
     }
   }
-
-
 
 };
 </script>

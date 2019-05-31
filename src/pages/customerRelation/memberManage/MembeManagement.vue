@@ -251,8 +251,9 @@ export default {
       this.form.pageNum = val;
       listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
+        console.log(res.data.size)
         console.log(this.tableData);
       });
     },
@@ -261,8 +262,9 @@ export default {
       this.form.pageSize = val;
       listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
+
         this.form.pageNum = 1;
         console.log(this.tableData);
       });

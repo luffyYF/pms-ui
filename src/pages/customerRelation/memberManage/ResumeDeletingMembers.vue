@@ -141,8 +141,8 @@ export default {
       this.form.pageNum = val;
       listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
       });
     },
     getSizeChange(val) {
@@ -150,8 +150,8 @@ export default {
       this.form.pageSize = val;
       listMemberById(this.form).then(res => {
         this.loading = false
-        this.tableData = res.data.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
       });
     },
     recoverMangerClick(row) {
