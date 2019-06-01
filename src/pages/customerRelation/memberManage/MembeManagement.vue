@@ -213,8 +213,8 @@ import {
 import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
 import MemberRecharge from "./MemberRecharge.vue"
 import MemberRechargeDetailDialog from "./MemberRechargeDetailDialog.vue"
-import MemberIntegralDetailDialog from "./MemberIntegralDetailDialog.vue"
-import MemberConsumptionDetailDialog from "./MemberConsumptionDetailDialog.vue"
+// import MemberIntegralDetailDialog from "./MemberIntegralDetailDialog.vue"
+// import MemberConsumptionDetailDialog from "./MemberConsumptionDetailDialog.vue"
 
 export default {
   components: { MemberGrade, MemberOperationManagement, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog },
