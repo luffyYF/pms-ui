@@ -13,6 +13,10 @@ export const listRule = params => {
 export const listGrade = params => {
     return request.get('/back/integralRoomChangeRule/getGradeList',{params:params})
 }
+//查看会员可用的换房规则
+export const listByMemberGrade = params => {
+   return request.get('/back/integralRoomChangeRule/listByMemberGrade',{params:params})
+}
 
 export const addRule = params => {
    return request.post('/back/integralRoomChangeRule/save', params)

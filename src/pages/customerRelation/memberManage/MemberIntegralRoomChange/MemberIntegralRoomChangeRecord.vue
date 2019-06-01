@@ -1,4 +1,5 @@
-
+// 会员积分明细编辑
+// Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
   <div>
       <el-table
@@ -7,11 +8,14 @@
         v-loading="loading"
         style="width: 100%"
         max-height="410px">
-        <el-table-column prop="memName" label="姓名"></el-table-column>
-        <el-table-column prop="roomNumber" label="房号"></el-table-column>
-        <el-table-column prop="createTime" label="消费时间" width="184"></el-table-column>
-        <el-table-column prop="consumptionAmount" label="总消费"></el-table-column>
-        <el-table-column prop="createUserName" label="操作员"></el-table-column>
+        <el-table-column prop="createTime" label="兑换时间" width="180"></el-table-column>
+        <el-table-column prop="ruleName" label="参与活动" show-overflow-tooltip=""></el-table-column>
+        <el-table-column prop="integral" label="积分" width="60"></el-table-column>
+        <el-table-column prop="roomTypeName" label="兑换房型" show-overflow-tooltip=""></el-table-column>
+        <el-table-column prop="price" label="兑换房价" width="80"></el-table-column>
+        <el-table-column prop="num" label="兑换间数" width="80"></el-table-column>
+        <el-table-column prop="days" label="兑换天数" width="80"></el-table-column>
+        <el-table-column prop="createUserName" label="操作员" ></el-table-column>=
       </el-table>
       <el-pagination
         style="margin: 10px 20px;"
@@ -27,7 +31,7 @@
 </template>
 
 <script>
-import { findMemberConsumptionBills } from '@/api/bill'
+import { memberIntegralRoomChangeRecord } from '@/api/customerRelation/pmsMemberIntrgralRoomChangeRecord'
 
   export default {
     data () {
@@ -36,7 +40,7 @@ import { findMemberConsumptionBills } from '@/api/bill'
         queryParams: {
           pageNum: 1,
           pageSize: 10,
-          memPk: null,
+          memPk: null
         },
         rows: [],
         total: 0,
@@ -49,9 +53,11 @@ import { findMemberConsumptionBills } from '@/api/bill'
       },
       listSearch () {
         this.loading = true
-        findMemberConsumptionBills(this.queryParams).then(res => {
-          this.rows = res.data.list
-          this.total = parseInt(res.data.total)
+        memberIntegralRoomChangeRecord(this.queryParams).then(res => {
+            if(res.code == 1){
+                this.rows = res.list
+                this.total = parseInt(res.total)
+            }
         }).finally(() => {
           this.loading = false
         })
