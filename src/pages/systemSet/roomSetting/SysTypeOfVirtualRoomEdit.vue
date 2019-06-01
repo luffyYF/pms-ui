@@ -12,7 +12,7 @@
           <el-option v-for="item in roomTypes" :key="item.typePk" :label="item.typeName" :value="item.typePk"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="渠道:">
+      <el-form-item label="渠道:" prop="channelCode">
         <el-select v-model="dataForm.channelCode" placeholder="请选择渠道" size="small" class="width-60">
           <el-option label="微信订单" value="WXDD"></el-option>
           <el-option label="携程" value="XC"></el-option>
@@ -34,7 +34,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" size="small" :loading="loading" @click="saveData" :disabled="judgeDisabled()" v-if="hasPerm('pms:virtualRoomType:add') && dataForm.virtualPk == null">保存</el-button>
-      <el-button type="primary" size="small" :loading="loading" @click="saveData" :disabled="judgeDisabled()" v-if="hasPerm('pms:virtualRoomType:edit') && dataForm.virtualPk != null">修改</el-button>
+      <el-button type="primary" size="small" :loading="loading" @click="saveData" :disabled="judgeDisabled()" v-if="hasPerm('pms:virtualRoomType:update') && dataForm.virtualPk != null">修改</el-button>
       <el-button @click="dialogVisible = false" size="small">取 消</el-button>
     </span>
   </el-dialog>
@@ -85,6 +85,7 @@
           ],
           name: [{ required: true, message: '请填写虚拟房型名称', trigger: 'blur' }],
           typePk: [{ required: true, message: '请选择实体房型', trigger: 'change' }],
+          channelCode: [{ required: true, message: '请选择渠道', trigger: 'change' }]
         },
         title: null,
         roomTypes: [],
@@ -138,7 +139,8 @@
         })
       },
       judgeDisabled () {
-        if (this.dataForm.name != null && this.dataForm.name != '' && this.dataForm.typePk != null && this.dataForm.typePk != '') {
+        if (this.dataForm.name != null && this.dataForm.name != '' && this.dataForm.typePk != null && this.dataForm.typePk != '' 
+        && this.dataForm.channelCode != null && this.dataForm.channelCode != '') {
           return false
         } else {
           return true
