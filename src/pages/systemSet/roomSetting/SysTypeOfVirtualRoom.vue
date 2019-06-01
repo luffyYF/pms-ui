@@ -66,7 +66,7 @@
                        size="mini" class="el-icon-edit">修改
             </el-button>
             <el-button type="text" @click="deleteClick(scope.row.virtualPk)"
-                       v-if="hasPerm('pms:virtualRoomType:del')" size="mini" class="el-icon-delete">删除
+                       v-if="hasPerm('pms:virtualRoomType:delete')" size="mini" class="el-icon-delete">删除
             </el-button>
           </template>
         </el-table-column>

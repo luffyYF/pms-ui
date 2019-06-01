@@ -118,6 +118,7 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
       },
       saveData(){
         this.loading = true
+        this.dataForm.totalMoney = this.dataForm.rechargeMoney + this.dataForm.donationMoney
         recharge(this.dataForm).then(result => {
           if(result.code == 1){
             this.$message({

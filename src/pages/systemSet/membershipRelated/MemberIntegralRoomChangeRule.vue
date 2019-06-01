@@ -167,14 +167,14 @@
         }
         self.loading = true
         listRule(this.pageObj).then(result => {
-            var data = result.data.data;
+            var data = result.data.list;
             for(var i=0;i<data.length;i++){
               if(data[i].effectiveWeek){
                 data[i].week = data[i].effectiveWeek.split(",")
               }
             }
             this.tableData = data
-            this.pageObj.total = result.data.total
+            this.pageObj.total = parseInt(result.data.total)
             console.log(this.pageObj)
             self.loading = false
         }).catch(() => {
