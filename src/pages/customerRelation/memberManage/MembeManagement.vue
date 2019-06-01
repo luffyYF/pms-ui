@@ -211,8 +211,9 @@ import {
   listMemberById
 } from "@/api/customerRelation/pmsMemberController";
 import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
-import MemberRecharge from "./MemberRecharge.vue"
-import MemberRechargeDetailDialog from "./MemberRechargeDetailDialog.vue"
+// import MemberRecharge from "./MemberRecharge.vue"
+// import MemberRechargeDetailDialog from "./MemberRechargeDetailDialog.vue"
+
 // import MemberIntegralDetailDialog from "./MemberIntegralDetailDialog.vue"
 // import MemberConsumptionDetailDialog from "./MemberConsumptionDetailDialog.vue"
 
