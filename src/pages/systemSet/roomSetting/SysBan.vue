@@ -183,18 +183,18 @@ export default {
     listBuildingRoom(){
       const self = this
       self.banLoading = true
-      listBuildingRoom({buildingPk:this.selectBan.buildingPk}).then(result => {
+      listBuildingRoom({buildingPk:self.selectBan.buildingPk}).then(result => {
         if(result.code == 1){
           console.log(result.data)
           self.listUnassignedBan = result.data.noBuildResult
           self.listBan = result.data.buildResult
         }
         self.banLoading = false
+        console.log(self.banLoading)
       })
     },
     storeyRowClick(row, event, column){
       this.selectBan = row
-      this.banLoading = true
       this.listBuildingRoom()
     },
     updateBuildingRoom(){

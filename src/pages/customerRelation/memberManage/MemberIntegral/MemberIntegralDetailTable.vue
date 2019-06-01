@@ -63,7 +63,7 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
         this.listSearch()
       },
       listSearch () {
-        this.loading = false
+        this.loading = true
         listMemberLog(this.queryParams).then(res => {
           this.rows = res.data.list
           this.total = parseInt(res.data.total)
