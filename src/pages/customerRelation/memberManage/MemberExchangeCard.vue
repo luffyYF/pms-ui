@@ -2,7 +2,7 @@
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
   <section class="member-dialog">
-		<el-dialog class="add-permission" title="会员充值" :visible.sync="dialogVisible" width="600px"
+		<el-dialog class="add-permission" title="会员换卡" :visible.sync="dialogVisible" width="600px"
 							:close-on-click-modal="false" :before-close="handleClose">
 			<el-form ref="dataForm" :model="dataForm" label-width="120px">
         <el-col :span="24">
@@ -118,7 +118,6 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
       },
       saveData(){
         this.loading = true
-        this.dataForm.totalMoney = this.dataForm.rechargeMoney + this.dataForm.donationMoney
         recharge(this.dataForm).then(result => {
           if(result.code == 1){
             this.$message({

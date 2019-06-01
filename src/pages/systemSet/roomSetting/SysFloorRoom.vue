@@ -6,10 +6,11 @@
         <div class="bg-reserve book-info init_floor">
         <h5 class="info-title">楼层</h5>
         <el-form label-width="px" size="mini" :inline="true"  style="padding-left:10px">
-          <el-form-item label="楼层号">
+          <!-- <el-form-item label="楼层号">
             <el-input-number v-model="storeyName" placeholder="请输入楼层号" class="block_input" :controls="false"></el-input-number>
-          </el-form-item>
-          <el-button @click="addStorey" type="primary" size="mini" style="margin-bottom: 16px;">添加</el-button>
+          </el-form-item> -->
+          <el-button @click="addStoreyDialog=true" type="primary" size="mini" style="margin-bottom: 16px;">添加</el-button>
+          <el-button @click="addStoreysDialog=true" type="primary" size="mini" style="margin-bottom: 16px;">批量生成楼层</el-button>
         </el-form>
         <el-table size="mini" 
           border 
@@ -110,6 +111,73 @@
         </div>
       </el-col>
     </el-row>
+    
+     <!-- 添加楼层并选择楼栋 -->
+    <el-dialog title="添加楼层" :visible.sync="addStoreyDialog" width="820px">
+      <el-form :label-width="formLabelWidth" :inline="true" size="mini">
+        <el-form-item label="楼栋：" required>
+          <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋">
+            <el-option 
+              v-for="item in buildingData"
+              :key="item.buildingPk"
+              :label="item.buildingName"
+              :value="item.buildingPk"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="楼层号：" required>
+          <el-input-number v-model="storeyName" placeholder="请输入楼层号" class="block_input" :controls="false"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addStoreyDialog = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="addStorey()" size="mini" :loading="commitLoading">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 批量添加楼层并选择楼栋 -->
+    <el-dialog title="批量添加楼层" :visible.sync="addStoreysDialog" width="820px">
+      <el-form :label-width="formLabelWidth" :inline="true" size="mini">
+        <el-form-item label="楼栋：" required>
+          <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋">
+            <el-option 
+              v-for="item in buildingData"
+              :key="item.buildingPk"
+              :label="item.buildingName"
+              :value="item.buildingPk"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="楼层号：" required>
+          <el-input-number v-model="storeyNameBegin" placeholder="请输入楼层号" class="block_input" :controls="false" :min="1"></el-input-number>
+          <span>至</span>
+          <el-input-number v-model="storeyNameEnd" placeholder="请输入楼层号" class="block_input" :controls="false" @change="handlestoreyNameEndChange"></el-input-number>
+        </el-form-item>
+        <el-form-item label="过滤楼层：">
+          <el-tag :key="tag"
+           v-for="tag in dynamicTags"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag)">
+            {{tag}}
+          </el-tag>
+          <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="mini"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+         <el-button v-else class="button-new-tag" size="mini" @click="showInput">楼层</el-button>
+        </el-form-item>
+      
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addStoreysDialog = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="addStoreys()" size="mini" :loading="commitLoading">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <!-- 添加房间 -->
     <el-dialog title="添加房间" :visible.sync="addRoomDialog" width="820px">
@@ -278,7 +346,6 @@
       </div>
     </el-dialog>
 
-
     <!-- 批量添加房间 -->
     <el-dialog title="批量添加房间" :visible.sync="batchAddRoomDialog" width="820px">
       <el-form :model="previewData" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" size="mini">
@@ -391,10 +458,11 @@
 </template>
 
 <script>
-import {addStorey, listStorey, delStorey, listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
+import {addStorey,addStoreys, listStorey, delStorey, listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
 import {listType} from '@/api/utils/pmsTypeController'
 import UploadAvatar from "@/components/UploadImage/UploadAvatar2";
 import {allListApi } from '@/api/systemSet/hotelHardware/hotelHardware'
+import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
 
 import {addApi,updateApi,detailApi,deleteApi } from '@/api/systemSet/hotelHardware/DeviceRoomLockParamApi'
 export default {
@@ -403,19 +471,25 @@ export default {
     return {
       commitLoading:false,
       formLabelWidth: '120px',
+      addStoreyDialog:false,
+      addStoreysDialog:false,
       addRoomDialog: false,
       updateRoomDialog: false,
       batchAddRoomDialog: false,
       loading:false,
       storeyName: undefined,
+      storeyNameBegin:undefined,
+      storeyNameEnd:undefined,
       storeyData: [],
       selectStorey:{storeyName:'未选择'},
+      buildingData:[],
       selectRoom: {},
       roomData: [],
       previewData:{},
       previewRoomes:[],
       listTypeData: [],
       listTypeDataView: {},
+      buildingPk:'未选择',
       rules: {
         storeyPk: [{ required: true, message: ''}],
         roomTypePk: [{ required: true, message: ''}],
@@ -532,18 +606,50 @@ export default {
       paramList:[
 
       ],
+      // textArray:[],
       
       roomLockObj:{
 
       },
-      roomLockDialog:false
-      //智能锁
+      roomLockDialog:false,
+        //智能锁
+        dynamicTags: [],
+        inputVisible: false,
+        inputValue: ''
     };
   },
   mounted(){
     this.init();
   },
   methods: {
+    handlestoreyNameEndChange(value){
+      if(this.storeyNameEnd<this.storeyNameBegin){
+        this.storeyNameEnd=this.storeyNameBegin
+      }
+      if(this.storeyNameBegin>this.storeyNameEnd){
+        this.storeyNameBegin=this.storeyNameEnd
+      }
+      console.log("开始楼层"+this.storeyNameBegin);
+      console.log("结束楼层"+this.storeyNameEnd);
+    },
+    handleClose(tag) {
+        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.dynamicTags.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+      },
     //批量修改属性 begin
     propChange(val,key){
       if(!val){
@@ -669,6 +775,7 @@ export default {
     init(){
       this.listStorey()
       this.listType()
+      this.listBuilding()
     },
     numSort: function (a,b) {
       return a.count-b.count;
@@ -716,20 +823,63 @@ export default {
         self.loading = false
       })
     },
+    listBuilding(){
+      const self = this
+      self.loading = true
+      listBuilding().then(result => {
+        self.buildingData = result.data
+        self.loading = false
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+    addStoreys(){
+       if(this.storeyNameEnd==undefined||this.storeyNameBegin==undefined){
+        this.$message.warning("楼层号不能为空")
+        return;
+      }
+      this.commitLoading = true;
+      const self = this
+      // let textArray=[];
+      // for(var i=0;i<this.dynamicTags.length;i++){
+      //    console.log(this.dynamicTags[i]);
+      //    textArray.push(this.dynamicTags[i]);
+      // }
+      // console.log(this.textArray);
+      // console.log(this.dynamicTags);
+      addStoreys({buildingPk:this.buildingPk,storeyNameBegin:this.storeyNameBegin,storeyNameEnd:this.storeyNameEnd,dynamicTags:this.dynamicTags}).then(result => {
+        if(result.code==1){
+          self.$message({message:'批量添加成功！',type:'success'});
+          self.addStoreysDialog=false;
+          self.listStorey();
+        }else{
+          self.$message.sub_msg;
+          self.addStoreysDialog=true;
+        } 
+      }).finally(()=>{
+        this.commitLoading = false;
+      })
+    },
     addStorey(){
+      this.commitLoading = true;
       if(!this.storeyName){
         this.$message.warning("楼层号不能为空")
         return;
       }
-      let data = {storeyName: this.storeyName}
+      let data = {storeyName: this.storeyName,buildingPk:this.buildingPk}
       const self = this
-      addStorey(data).then(function(result){
-        self.storeyName = undefined;
-        self.$message({
-          message: '添加成功',
-          type: 'success'
-        });
-        self.listStorey();
+      addStorey(data).then(result=>{
+        if(result.code==1){
+          //self.$message.sub_msg;
+          self.$message({message:'添加成功！',type:'success'});
+          self.addStoreyDialog=false;
+          self.listStorey();
+        }else{
+          self.$message.sub_msg;
+          self.addStoreyDialog=true;
+        }
+      }).finally(()=>{
+         this.commitLoading = false;
       })
     },
     delStorey(obj){
@@ -740,14 +890,14 @@ export default {
         type: 'warning'
       }).then(() => {
         delStorey({storeyPk: obj.storeyPk}).then(result => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          });
-          self.listStorey()
+          if (result.code == 1) {
+            self.$message.sub_msg;
+            self.listStorey();
+          } else {
+            self.$message.sub_msg;
+          }
         })
       });
-      
     },
     storeyRowClick(row, event, column){
       this.selectStorey = row
@@ -1018,6 +1168,21 @@ export default {
 } */
 </style>
 <style>
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
 .init_floor .el-input-number .el-input__inner {
   text-align: left;
 }

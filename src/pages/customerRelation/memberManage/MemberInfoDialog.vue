@@ -4,13 +4,13 @@
         <!-- 会员管理 dialog -->
         <el-dialog title="会员管理" :visible.sync="dialogMemberVisible" width="930px" :before-close="handleClose" class="dialogMemberManage">
             <el-row>
-                <el-button size="mini" type="primary">换卡</el-button>
+                <el-button size="mini" type="primary" @click="memberExchangeCard(memberInfo)" :disabled="memberInfo.rechargeFlag == 'N'">换卡</el-button>
                 <el-button size="mini" type="primary">补卡</el-button>
-                <el-button size="mini" type="primary">改密码</el-button>
-                <el-button size="mini" type="primary"  @click="memberRechargeClick(membeInfo)"  :disabled="membeInfo.rechargeFlag == 'N'">充值</el-button>
-                <el-button size="mini" type="primary">积分增减</el-button>
+                <el-button size="mini" type="primary" @click="memberUpdatePasswordClick(memberInfo)" :disabled="memberInfo.rechargeFlag == 'N'">改密码</el-button>
+                <el-button size="mini" type="primary"  @click="memberRechargeClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">充值</el-button>
+                <el-button size="mini" type="primary" @click="memberIntegralExchangeClick(memberInfo)" :disabled="memberInfo.rechargeFlag == 'N'">积分增减</el-button>
                 <el-button size="mini" type="primary">积分兑换</el-button>
-                <el-button size="mini" type="primary">积分换房</el-button>
+                <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
                 <el-button size="mini" type="primary">注销</el-button>
                 <el-button size="mini" type="primary">挂失</el-button>
@@ -32,8 +32,8 @@
                 <el-tab-pane label="积分明细" name="MemberIntegralDetailTable">
                     <MemberIntegralDetailTable ref="MemberIntegralDetailTable" />
                 </el-tab-pane>
-                <el-tab-pane label="换卡明细" name="1">
-
+                <el-tab-pane label="换卡明细" name="MemberExchangeCardDetail">
+                    <MemberExchangeCardDetail ref="MemberExchangeCardDetail"/>
                 </el-tab-pane>
                 <el-tab-pane label="积分兑换明细" name="2">
 
@@ -41,14 +41,19 @@
                 <el-tab-pane label="卡升级明细" name="3">
 
                 </el-tab-pane>
-                <el-tab-pane label="积分换房明细" name="4">
-                    
+                <el-tab-pane label="积分换房明细" name="MemberIntegralRoomChangeRecord">
+                    <MemberIntegralRoomChangeRecord ref="MemberIntegralRoomChangeRecord"/>
                 </el-tab-pane>
             </el-tabs>
             
                 
         </el-dialog>
         <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
+        <MemberIntegralRoomChange ref="MemberIntegralRoomChange" />
+        <member-integral-exchange ref="memberIntegralExchangeRefs" @callback="memberListData(form.pageNum)"></member-integral-exchange>
+        <member-update-password ref="memberUpdatePasswordRefs" @callback="memberListData(form.pageNum)"></member-update-password>
+        <member-exchange-card ref="memberExchangeCardRefs" @callback="memberListData(form.pageNum)"></member-exchange-card>
+
     </div>
 </template>
 
@@ -56,20 +61,27 @@
 
 import MemberInfo from "./MemberInfo";
 import MemberRecharge from "./MemberRecharge/MemberRecharge.vue"
+import MemberIntegralExchange from "./MemberIntegral/MemberIntegralExchange.vue"
 import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDialog.vue"
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
+import MemberExchangeCardDetailDialog from "./MemberExchangeCardDetailDialog.vue"
+import MemberUpdatePassword from "./MemberUpdatePassword.vue";
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
+import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
+import MemberExchangeCard from "./MemberExchangeCard.vue"
+import MemberExchangeCardDetail from "./MemberExchangeCardDetail.vue"
 
 import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
+import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
 
 export default {
-    components: { MemberInfo, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable },
+    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
   data() {
     return {
       dialogMemberVisible: false,
-      membeInfo: {}, //会员资料
+      memberInfo: {}, //会员资料
       total: 0,
       activeName:"MemberInfo"
     };
@@ -86,15 +98,19 @@ export default {
     handleClick (tab, event) {
         if(this.activeName == "MemberRechargeTable"){
             this.$nextTick(()=>{
-                this.$refs.MemberRechargeTable.init(this.membeInfo.memPk,0)
+                this.$refs.MemberRechargeTable.init(this.memberInfo.memPk,0)
             })
-        }else if(this.activeName == "MemberConsumptionDetailTable"){
+        }else if(this.activeName == "MemberConsumptionDetailTable" || this.activeName == "MemberIntegralRoomChangeRecord"){
             this.$nextTick(()=>{
-                this.$refs.MemberConsumptionDetailTable.init(this.membeInfo.memPk)
+                this.$refs[this.activeName].init(this.memberInfo.memPk)
             })
         }else if(this.activeName == "MemberIntegralDetailTable"){
             this.$nextTick(()=>{
-                this.$refs.MemberIntegralDetailTable.init(this.membeInfo.memPk,1)
+                this.$refs.MemberIntegralDetailTable.init(this.memberInfo.memPk,1)
+            })
+        }else if(this.activeName == "MemberExchangeCardDetail"){
+            this.$nextTick(()=>{
+                this.$refs.MemberExchangeCardDetail.init(this.memberInfo.memPk,1)
             })
         }
         else if(this.activeName){
@@ -103,7 +119,8 @@ export default {
     },
     showDialog(row){
         this.dialogMemberVisible = true
-        this.membeInfo = row
+        this.memberInfo = row
+        this.activeName = "MemberInfo"
         this.$nextTick(()=>{
             this.$refs[this.activeName].init(row)
         })
@@ -119,6 +136,18 @@ export default {
     },
     memberRechargeClick (row) {
         this.$refs.memberRechargeRefs.showDialog(row,false)
+    },
+    memberRoomChangeClick(memberInfo){
+        this.$refs.MemberIntegralRoomChange.showDialog(memberInfo)
+    },
+     memberIntegralExchangeClick (row) {
+        this.$refs.memberIntegralExchangeRefs.showDialog(row,false)
+    },
+    memberUpdatePasswordClick(row){
+        this.$refs.memberUpdatePasswordRefs.showDialog(row,false)
+    },
+    memberExchangeCard(row){
+        this.$refs.memberExchangeCardRefs.showDialog(row,false);
     },
 
   }
