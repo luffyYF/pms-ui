@@ -651,10 +651,20 @@
         /**
          * 初始化空表单（外部调用）
          */
-        initEmpty() {
+        initEmpty(roomTypePk,date,roomNumber) {
           this.loadRoomType(_=>{
             this.formReset()
             this.form.currTitle = '添加预定'
+            if(roomTypePk){
+              this.form.roomTypePk = roomTypePk
+            }
+            if(date){
+             this.form.beginDate = date+" "+moment().format("HH:mm:ss")
+             this.form.endDate = moment(new Date(date)).add("days",1).format("YYYY-MM-DD")+" "+moment().format("HH:mm:ss")
+            }
+            if(roomNumber != null){
+              this.form.roomNumber = roomNumber
+            }
             this.currFormType='add-reserve'
             this.roomTable=[]
             this.currGuestList = []

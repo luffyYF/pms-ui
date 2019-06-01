@@ -1,9 +1,7 @@
 // 会员积分明细编辑
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
-  <section class="member-dialog">
-		<el-dialog class="add-permission" title="会员积分明细" :visible.sync="dialogVisible" width="800px"
-							:close-on-click-modal="false" :before-close="handleClose">
+  <div>
       <el-table
         :data="rows"
         border
@@ -15,7 +13,13 @@
         <el-table-column prop="integral" label="积分"></el-table-column>
         <el-table-column prop="type" label="积分类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.type == 5">充值赠送</span>
+            <span v-if="scope.row.type == 0">现金充值</span>
+            <span v-else-if="scope.row.type == 1">银行卡充值</span>
+            <span v-else-if="scope.row.type == 2">支付宝充值</span>
+            <span v-else-if="scope.row.type == 3">微信充值</span>
+            <span v-else-if="scope.row.type == 4">充值赠送金额</span>
+            <span v-else-if="scope.row.type == 5">充值赠送</span>
+            <span v-else-if="scope.row.type == 6">积分调整</span>
           </template>
         </el-table-column>
         <el-table-column prop="createUserName" label="操作员"></el-table-column>
@@ -32,12 +36,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
-
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-			</span>
-		</el-dialog>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -46,8 +45,7 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
   export default {
     data () {
       return {
-        dialogVisible: false,
-				loading: false,
+        loading: false,
         queryParams: {
           pageNum: 1,
           pageSize: 10,
@@ -59,25 +57,20 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
       }
     },
     methods: {
-      showDialog (id, type) {
+      init(id, type) {
         this.queryParams.memPk = id
         this.queryParams.type = type
-        this.dialogVisible = true
         this.listSearch()
       },
       listSearch () {
         this.loading = false
         listMemberLog(this.queryParams).then(res => {
           this.rows = res.data.list
-          this.total = res.data.total
+          this.total = parseInt(res.data.total)
         }).finally(() => {
           this.loading = false
         })
       },
-      handleClose () {
-        this.dialogVisible = false
-        this.$emit('callback')
-			},
       // 分页相关
       handleSizeChange (val) {
         this.queryParams.pageSize = val

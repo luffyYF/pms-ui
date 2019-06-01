@@ -1,32 +1,30 @@
-// 会员充值明细编辑
+// 会员充值明细列表
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
   <section class="member-dialog">
-		<el-dialog class="add-permission" title="会员充值明细" :visible.sync="dialogVisible" width="800px"
-							:close-on-click-modal="false" :before-close="handleClose">
-			<el-table
-        :data="rows"
-        border
-        v-loading="loading"
-        style="width: 100%"
-        max-height="410px">
-        <el-table-column prop="createTime" label="充值时间" width="184"></el-table-column>
-        <el-table-column prop="moneyAmount" label="充值金额">
-          <template slot-scope="scope">
-            {{scope.row.moneyAmount|toMoney}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="type" label="充值类型">
-          <template slot-scope="scope">
-            <span v-if="scope.row.type == 0">现金充值</span>
-            <span v-else-if="scope.row.type == 1">银行卡充值</span>
-            <span v-else-if="scope.row.type == 2">支付宝充值</span>
-            <span v-else-if="scope.row.type == 3">微信充值</span>
-            <span v-else>充值赠送</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createUserName" label="操作员"></el-table-column>
-        <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table
+            :data="rows"
+            border
+            v-loading="loading"
+            style="width: 100%"
+            max-height="410px">
+            <el-table-column prop="createTime" label="充值时间" width="184"></el-table-column>
+            <el-table-column prop="moneyAmount" label="充值金额">
+            <template slot-scope="scope">
+                {{scope.row.moneyAmount|toMoney}}
+            </template>
+            </el-table-column>
+            <el-table-column prop="type" label="充值类型">
+            <template slot-scope="scope">
+                <span v-if="scope.row.type == 0">现金充值</span>
+                <span v-else-if="scope.row.type == 1">银行卡充值</span>
+                <span v-else-if="scope.row.type == 2">支付宝充值</span>
+                <span v-else-if="scope.row.type == 3">微信充值</span>
+                <span v-else>充值赠送</span>
+            </template>
+            </el-table-column>
+            <el-table-column prop="createUserName" label="操作员"></el-table-column>
+            <el-table-column prop="remark" label="备注"></el-table-column>
       </el-table>
       <el-pagination
         style="margin: 10px 20px;"
@@ -38,11 +36,6 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
-
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false" size="mini">关 闭</el-button>
-			</span>
-		</el-dialog>
   </section>
 </template>
 
@@ -65,7 +58,7 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
       }
     },
     methods: {
-      showDialog (id, type) {
+      init (id, type) {
         this.queryParams.memPk = id
         this.queryParams.type = type
         this.dialogVisible = true
@@ -75,15 +68,11 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
         this.loading = false
         listMemberLog(this.queryParams).then(res => {
           this.rows = res.data.list
-          this.total = res.data.total
+          this.total = parseInt(res.data.total)
         }).finally(() => {
           this.loading = false
         })
       },
-      handleClose () {
-        this.dialogVisible = false
-        this.$emit('callback')
-			},
       // 分页相关
       handleSizeChange (val) {
         this.queryParams.pageSize = val
