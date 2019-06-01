@@ -47,15 +47,15 @@
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
         </el-table-column>
-        <el-table-column prop="memberGrade" label="级别" align="center" width="90">
-          <template slot-scope="scope">
+        <el-table-column prop="gradeName" label="级别" align="center" width="90">
+          <!-- <template slot-scope="scope">
             <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
             <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
             <span v-if="scope.row.memberGrade == 'SENIOR'">高级会员</span>
             <span v-if="scope.row.memberGrade == 'VIP'">VIP会员</span>
             <span v-if="scope.row.memberGrade == 'PLATINUM'">铂金会员</span>
             <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="nativePlace" label="籍贯" align="center" width="90">
         </el-table-column>
