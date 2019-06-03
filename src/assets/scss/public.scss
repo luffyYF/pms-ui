@@ -72,6 +72,47 @@ $background-color: #1F3D6B;
     }
 }
 
+.el-step.is-vertical {
+    .el-step__head{
+        width: 16px;
+        &.is-finish{
+            color: #21324E;
+            border-color: #21324E;
+        }
+    }
+    .el-step__line{
+        width: 2px;
+        top: 20px;
+        bottom: -96px;
+        left: 7px;
+    }
+    .el-step__icon{
+        width: 15px;
+        height: 15px;
+    }
+    .el-step__description {
+        &.is-finish{
+            color: #21324E;
+        }
+    }
+}
+
+.el-radio{
+    .is-checked{
+        .el-radio__input{
+            &.is-checked{
+                .el-radio__inner{
+                    border-color: #21324E;
+                    background: #21324E;
+                }
+            }
+        } 
+        .el-radio__label{
+            color: #21324E;
+        }
+    }
+}
+
 .el-input__prefix {
     left: -2px;
 

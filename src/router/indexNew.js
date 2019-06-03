@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-
-
-
 //一级菜单
 import ClassSelection from '@/pages/ClassSelection.vue'
 import Login from '@/pages/Login.vue'
@@ -11,7 +8,6 @@ import NotFound from '@/pages/404.vue'
 
 import home from '@/router/home/index'
 import room from '@/router/room/index'
-
 
 Vue.use(Router)
 
