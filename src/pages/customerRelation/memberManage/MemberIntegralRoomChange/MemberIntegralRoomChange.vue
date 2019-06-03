@@ -11,10 +11,10 @@
                             <div class="bg-reserve">
                                 <h5 class="info-title">活动信息</h5>
                                 <el-form-item label="预抵">
-                                    <el-date-picker v-model="dataForm.now" value-format="yyyy-MM-dd HH:mm:ss" style="width:90%;" type="datetime" placeholder="选择日期时间" ></el-date-picker>
+                                    <el-date-picker @change="dateChange" v-model="listQuery.now" :clearable="false" value-format="yyyy-MM-dd HH:mm:ss" style="width:90%;" type="datetime" placeholder="选择日期时间" ></el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="活动名称" prop="ruleName">
-                                    <el-select @change="ruleChange" size="mini" style="width:90%;" v-model="dataForm.rulePk"  placeholder="状态" clearable >
+                                    <el-select @change="ruleChange" size="mini" style="width:90%;" :clearable="false" v-model="dataForm.rulePk"  placeholder="活动名称" clearable >
                                         <el-option v-for="y in list" :label="y.ruleName" :value="y.rulePk" :key="y.rulePk"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -45,10 +45,10 @@
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="memberInfo.availableIntegral" type="text"/>
                                 </el-form-item>
                                 <el-form-item label="入住天数" prop="ruleName">
-                                    <el-input size="mini" style="width:90%;" v-model="dataForm.days" type="text"/>
+                                    <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.days" type="text"/>
                                 </el-form-item>
                                 <el-form-item label="入住间数" prop="ruleName">
-                                    <el-input size="mini" style="width:90%;" v-model="dataForm.num" type="text"/>
+                                    <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.num" type="text"/>
                                 </el-form-item>
                             </div>
                         </el-col>
@@ -56,6 +56,7 @@
                 </el-col>
             </el-form>
 			<span slot="footer" class="dialog-footer">
+                <el-button type="primary" size="mini">确定</el-button>
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
 			</span>
 		</el-dialog>
@@ -98,6 +99,15 @@ import Moment from 'moment'
       }
     },
     methods: {
+        dateChange(){
+            this.dataForm.rulePk = ""
+            this.dataForm.ruleName = ""
+            this.dataForm.roomTypePk = ""
+            this.dataForm.roomTypeName = ""
+            this.dataForm.integral = 0
+            this.dataForm.total = 0
+            this.listByMemberGrade()
+        },
         ruleChange(val){
             if(val){
                 let obj = this.ruleObj[val]
@@ -142,6 +152,14 @@ import Moment from 'moment'
                 this.dataForm.total = res.data
             })
         },
+        saveClick(){
+            
+            if(!this.dataForm.rulePk){
+                this.$message({ type: 'warning', message: "请选择需要兑换的活动" })
+                return
+            }
+
+        }
     }
   }
 </script>
