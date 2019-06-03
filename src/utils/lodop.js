@@ -73,11 +73,11 @@ export function getLodop(oOBJECT, oEMBED) {
         var isIE =
             navigator.userAgent.indexOf('MSIE') >= 0 ||
             navigator.userAgent.indexOf('Trident') >= 0
-            console.log(needCLodop())
+        console.log(needCLodop())
         if (needCLodop()) {
             try {
                 LODOP = getCLodop()
-            } catch (err) {}
+            } catch (err) { }
             if (!LODOP && document.readyState !== 'complete') {
                 alert('C-Lodop没准备好，请稍后再试！')
                 return
@@ -88,10 +88,10 @@ export function getLodop(oOBJECT, oEMBED) {
                     // document.body.innerHTML =
                     //     strCLodopInstall + document.body.innerHTML
                     var flag = confirm("CLodop云打印服务(localhost本地)未安装启动!点击确定前往下载页下载云打印C-Lodop扩展版。")
-                    if (flag == true) {
-                        window.open('http://www.lodop.net/download.html')
-                    } else {
-                    }
+                if (flag == true) {
+                    window.open('http://www.lodop.net/download.html')
+                } else {
+                }
                 return
             } else {
                 if (CLODOP.CVERSION < '3.0.4.3') {
@@ -99,7 +99,7 @@ export function getLodop(oOBJECT, oEMBED) {
                     else
                         // document.body.innerHTML =
                         //     strCLodopUpdate + document.body.innerHTML
-                    var flag = confirm("CLodop云打印服务需升级!点击确定前往下载页下载云打印C-Lodop扩展版。")
+                        var flag = confirm("CLodop云打印服务需升级!点击确定前往下载页下载云打印C-Lodop扩展版。")
                     if (flag == true) {
                         window.open('http://www.lodop.net/download.html')
                     } else {
