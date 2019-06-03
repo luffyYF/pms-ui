@@ -4,16 +4,17 @@
 
 <script>
   import layout from "@/components/layout/layout"
-  import bookingForm from "@/router/home/bookingForm/index"
+  import orderForm from "@/router/home/orderForm/index"
   export default {
     components:{layout},
     data () {
       return {
-        router: bookingForm.children,
+        router: orderForm.children,
         activeName: 'first',
       }
     },
     created() {
+      console.log(this.router)
     },
     methods: {
       handleClick (tab, event) {

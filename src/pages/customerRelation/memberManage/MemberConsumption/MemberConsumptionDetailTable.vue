@@ -48,7 +48,7 @@ import { findMemberConsumptionBills } from '@/api/bill'
         this.listSearch()
       },
       listSearch () {
-        this.loading = false
+        this.loading = true
         findMemberConsumptionBills(this.queryParams).then(res => {
           this.rows = res.data.list
           this.total = parseInt(res.data.total)
