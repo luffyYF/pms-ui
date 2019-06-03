@@ -1,4 +1,4 @@
-// 会员充值编辑
+// 会员换卡
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
   <section class="member-dialog">
@@ -19,10 +19,10 @@
           </el-col>
         </el-col>
 				<el-form-item label="新卡号" size="mini">
-          <el-input v-model="dataForm.cardNumber" class="input-width"></el-input>
+          <el-input v-model="newCardNumber" class="input-width"></el-input>
         </el-form-item>
 				<el-form-item label="备注" size="mini">
-          <el-input v-model="dataForm.remark" class="input-width" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+          <el-input v-model="remark" class="input-width" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
         </el-form-item> 
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -46,9 +46,10 @@ import {updateMemberCard } from '@/api/customerRelation/pmsMemberController'
           memName: '',
           balance: 0,
           cardNumber: '', 
-          remark: '',
           isCallback:true
         },
+        remark:'',
+        newCardNumber:''
       }
     },
     methods: {
@@ -60,13 +61,12 @@ import {updateMemberCard } from '@/api/customerRelation/pmsMemberController'
           memName: data.memName,
           balance: data.availableBalance.toFixed(2),
           cardNumber: data.cardNumber, 
-          remark: '',
         }
         this.dialogVisible = true
       },
       saveData(){
         this.loading = true
-        updateMemberCard(this.dataForm).then(result => {
+        updateMemberCard({cardNumber:this.newCardNumber,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
           if(result.code==1){
           this.$message({message:'换卡成功！',type:'success'});
           this.dialogVisible=false;

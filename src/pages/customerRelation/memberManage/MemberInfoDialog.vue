@@ -64,12 +64,12 @@ import MemberRecharge from "./MemberRecharge/MemberRecharge.vue"
 import MemberIntegralExchange from "./MemberIntegral/MemberIntegralExchange.vue"
 import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDialog.vue"
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
-import MemberExchangeCardDetailDialog from "./MemberExchangeCardDetailDialog.vue"
+import MemberExchangeCardDetailDialog from "./MemberCardExchange/MemberExchangeCardDetailDialog.vue"
 import MemberUpdatePassword from "./MemberUpdatePassword.vue";
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
 import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
-import MemberExchangeCard from "./MemberExchangeCard.vue"
-import MemberExchangeCardDetail from "./MemberExchangeCardDetail.vue"
+import MemberExchangeCard from "./MemberCardExchange/MemberExchangeCard.vue"
+import MemberExchangeCardDetail from "./MemberCardExchange/MemberExchangeCardDetail.vue"
 
 import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
