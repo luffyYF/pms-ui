@@ -8,12 +8,12 @@
         v-loading="loading"
         style="width: 100%"
         max-height="410px">
-        <el-table-column prop="createTime" label="换卡时间"></el-table-column>
-        <el-table-column prop="originalCardNumber" label="原卡号"></el-table-column>
-        <el-table-column prop="newCardNumber" label="新卡号"></el-table-column>
+        <el-table-column prop="createTime" label="换卡时间" min-width="200px"></el-table-column>
+        <el-table-column prop="originalCardNumber" label="原卡号" min-width="150px"></el-table-column>
+        <el-table-column prop="newCardNumber" label="新卡号" min-width="150px"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column prop="createUserName" label="操作员" width="184"></el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" min-width="160">
+        <el-table-column prop="createUserName" label="操作员"  min-width="150px"></el-table-column>
+        <el-table-column fixed="right" label="操作" align="center"  min-width="150px">
           <template slot-scope="scope">
              <el-button type="danger" @click="deleteClick(scope.row)"
                     size="mini">删除
