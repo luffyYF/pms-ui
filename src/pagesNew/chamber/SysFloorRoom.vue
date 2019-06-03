@@ -1,16 +1,14 @@
 <template>
   <div class="content-body" v-loading="loading">
-    <!-- table -->
     <el-row>
       <el-col :span="5">
         <div class="bg-reserve book-info init_floor">
         <h5 class="info-title">楼层</h5>
         <el-form label-width="px" size="mini" :inline="true"  style="padding-left:10px">
-          <!-- <el-form-item label="楼层号">
+          <el-form-item label="楼层号">
             <el-input-number v-model="storeyName" placeholder="请输入楼层号" class="block_input" :controls="false"></el-input-number>
-          </el-form-item> -->
-          <el-button @click="addStoreyDialog=true" type="primary" size="mini" style="margin-bottom: 16px;">添加</el-button>
-          <el-button @click="addStoreysDialog=true" type="primary" size="mini" style="margin-bottom: 16px;">批量生成楼层</el-button>
+          </el-form-item>
+          <el-button @click="addStorey" type="primary" size="mini" style="margin-bottom: 16px;">添加</el-button>
         </el-form>
         <el-table size="mini" 
           border 
@@ -53,13 +51,6 @@
             </el-table-column>
             <el-table-column prop="roomTypePk" label="房型" align="center">
               <template slot-scope="scope">
-                <!-- <el-select v-model="scope.row.roomTypePk" disabled size="mini" class="colic" placeholder="请选择状态">
-                  <el-option 
-                    v-for="item in listTypeData"
-                    :key="item.typePk"
-                    :label="item.typeName"
-                    :value="item.typePk"></el-option>
-                </el-select> -->
                 <span>{{listTypeDataView[scope.row.roomTypePk].typeName}}</span>
                 <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
               </template>
@@ -90,10 +81,6 @@
                     <span>{{scope.row.param1 | lockFilter2(scope.row)}}</span>
                 </template>
             </el-table-column>
-            <!-- <el-table-column prop="telPhone" label="电话分机" align="center">
-            </el-table-column>
-            <el-table-column prop="telPhoneLine" label="电话外线" align="center">
-            </el-table-column> -->
             <el-table-column prop="remark" label="备注" align="center">
             </el-table-column>
             <el-table-column
@@ -111,73 +98,6 @@
         </div>
       </el-col>
     </el-row>
-    
-     <!-- 添加楼层并选择楼栋 -->
-    <el-dialog title="添加楼层" :visible.sync="addStoreyDialog" width="820px">
-      <el-form :label-width="formLabelWidth" :inline="true" size="mini">
-        <el-form-item label="楼栋：" required>
-          <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋">
-            <el-option 
-              v-for="item in buildingData"
-              :key="item.buildingPk"
-              :label="item.buildingName"
-              :value="item.buildingPk"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="楼层号：" required>
-          <el-input-number v-model="storeyName" placeholder="请输入楼层号" class="block_input" :controls="false"></el-input-number>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addStoreyDialog = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="addStorey()" size="mini" :loading="commitLoading">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 批量添加楼层并选择楼栋 -->
-    <el-dialog title="批量添加楼层" :visible.sync="addStoreysDialog" width="820px">
-      <el-form :label-width="formLabelWidth" :inline="true" size="mini">
-        <el-form-item label="楼栋：" required>
-          <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋">
-            <el-option 
-              v-for="item in buildingData"
-              :key="item.buildingPk"
-              :label="item.buildingName"
-              :value="item.buildingPk"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="楼层号：" required>
-          <el-input-number v-model="storeyNameBegin" placeholder="请输入楼层号" class="block_input" :controls="false" :min="1"></el-input-number>
-          <span>至</span>
-          <el-input-number v-model="storeyNameEnd" placeholder="请输入楼层号" class="block_input" :controls="false" @change="handlestoreyNameEndChange"></el-input-number>
-        </el-form-item>
-        <el-form-item label="过滤楼层：">
-          <el-tag :key="tag"
-           v-for="tag in dynamicTags"
-            closable
-            :disable-transitions="false"
-            @close="handleClose(tag)">
-            {{tag}}
-          </el-tag>
-          <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="mini"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
-        </el-input>
-         <el-button v-else class="button-new-tag" size="mini" @click="showInput">楼层</el-button>
-        </el-form-item>
-      
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addStoreysDialog = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="addStoreys()" size="mini" :loading="commitLoading">确 定</el-button>
-      </div>
-    </el-dialog>
 
     <!-- 添加房间 -->
     <el-dialog title="添加房间" :visible.sync="addRoomDialog" width="820px">
@@ -186,7 +106,6 @@
           <span class="text-cs">{{selectStorey.storeyName}}</span>
         </el-form-item>
         <el-form-item label="房号：" required>
-          <!-- <el-input v-model="addFrom.roomNumber" placeholder="请输入房号" auto-complete="off"></el-input> -->
           <el-input-number v-model="addFrom.roomNumber" placeholder="请输入房号" :controls="false" class="text_position"></el-input-number>
         </el-form-item>
         <el-form-item label="房间类型：" required>
@@ -207,10 +126,6 @@
         <el-form-item label="电话外线：">
           <el-input v-model="addFrom.telPhoneLine" placeholder="请输入电话外线" auto-complete="off"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="房间锁号：">
-          <el-input v-model="addFrom.roomLockNumber" auto-complete="off" placeholder="请输入房间锁号" style="width:300px;"></el-input>
-          <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
-        </el-form-item> -->
         <el-form-item label="概况：">
           <el-input
             type="textarea"
@@ -221,38 +136,6 @@
           </el-input>
         </el-form-item>
         <br>
-        <!-- <el-form-item label="智能门锁" prop="hardwarePk">
-            <el-select size="mini"  @change="lockChange" style="width:90%;" v-model="addFrom.hardwarePk" placeholder="类型">
-                <el-option v-for="y in lockList" :label="codeObj[y.brand]" :value="y.hardwarePk" :key="y.hardwarePk"></el-option>
-            </el-select>
-        </el-form-item>
-
-        <el-form-item :label="y.label" v-for="(y,i) in paramList" :key="i" required>
-            <el-input v-if="y.type == 'text'" v-model="addFrom[y.key]" :placeholder="'请输入'+y.label" auto-complete="off"></el-input>
-            <upload-avatar v-else-if="y.type == 'image'" :avatar.sync="addFrom[y.key]"></upload-avatar>
-            <span style="color:red">{{y.remark}}</span>
-        </el-form-item> -->
-
-        <!-- <el-form-item style="display:block;margin-left:32px;">
-            <el-checkbox label="艾美信" v-model="addFrom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
-        </el-form-item>
-        <el-form-item label="楼栋编号：" v-if="addFrom.intelligentFlag=='Y'" required>
-          <el-input v-model="addFrom.intelligentBanNo" placeholder="请输入楼栋编号：" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="楼层编号：" v-if="addFrom.intelligentFlag=='Y'" required>
-          <el-input v-model="addFrom.intelligentFloorNo" placeholder="请输入楼层编号" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="房间编号：" v-if="addFrom.intelligentFlag=='Y'" required>
-          <el-input v-model="addFrom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item style="display:block;margin-left:32px;">
-          <el-checkbox label="RFL门卡" v-model="addFrom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
-        </el-form-item>
-        <el-form-item label="RFL锁号：" v-if="addFrom.rflFlag=='Y'">
-          <el-input v-model="addFrom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
-          <span style="color:red">*注：8位数字</span>
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addRoomDialog = false" size="mini">取 消</el-button>
@@ -286,10 +169,6 @@
         <el-form-item label="电话外线：">
           <el-input v-model="selectRoom.telPhoneLine" placeholder="请输入电话外线" auto-complete="off"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="房间锁号：">
-          <el-input v-model="selectRoom.roomLockNumber" auto-complete="off" placeholder="请选择房间锁号" style="width:300px;"></el-input>
-          <span style="color:red">*注：房间锁号 请根据门锁软件中的对应房号进行配置</span>
-        </el-form-item> -->
         <el-form-item label="概况：">
           <el-input
             type="textarea"
@@ -300,51 +179,13 @@
           </el-input>
         </el-form-item>
         <br>
-        <!-- <el-form-item label="智能门锁" prop="hardwarePk">
-            <el-select size="mini"  @change="lockChange" style="width:90%;" v-model="selectRoom.hardwarePk" placeholder="类型">
-                <el-option v-for="y in lockList" :label="HOTEL_HARDWARE[y.brand]" :value="y.hardwarePk" :key="y.hardwarePk"></el-option>
-            </el-select>
-        </el-form-item>
-
-        <el-form-item :label="y.label" v-for="(y,i) in paramList" :key="i" required>
-            <el-input v-if="y.type == 'text'" v-model="selectRoom[y.key]" :placeholder="'请输入'+y.label" auto-complete="off"></el-input>
-            <upload-avatar v-else-if="y.type == 'image'" :avatar.sync="selectRoom[y.key]"></upload-avatar>
-            <span style="color:red">{{y.remark}}</span>
-        </el-form-item> -->
-        <!-- <el-form-item style="display:block;margin-left:32px;">
-          <el-checkbox label="艾美信" v-model="selectRoom.intelligentFlag" true-label="Y" false-label="N" border></el-checkbox>
-        </el-form-item>
-        <el-form-item label="楼栋编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
-          <el-input v-model="selectRoom.intelligentBanNo" placeholder="请输入楼栋编号：" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="楼层编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
-          <el-input v-model="selectRoom.intelligentFloorNo" placeholder="请输入楼层编号" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="房间编号：" v-if="selectRoom.intelligentFlag=='Y'" required>
-          <el-input v-model="selectRoom.intelligentRoomNo" placeholder="请输入房间编号" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item style="width:100%;" label="授权图片：" v-if="selectRoom.intelligentFlag=='Y'" required>
-          <upload-avatar :avatar.sync="selectRoom.authorizedPicture"></upload-avatar>
-        </el-form-item>
-        <el-form-item label="门锁图片：" v-if="selectRoom.intelligentFlag=='Y'" required>
-          <upload-avatar :avatar.sync="selectRoom.lockPictures"></upload-avatar>
-        </el-form-item>
-
-        <el-form-item style="display:block;margin-left:32px;">
-          <el-checkbox label="RFL门卡" v-model="selectRoom.rflFlag" true-label="Y" false-label="N" border></el-checkbox>
-        </el-form-item>
-        <el-form-item label="RFL锁号：" v-if="selectRoom.rflFlag=='Y'">
-          <el-input v-model="selectRoom.rflLockNo"  auto-complete="off" placeholder="请输入RFL锁号" style="width:300px;"></el-input>
-          <span style="color:red">*注：8位数字</span>
-        </el-form-item> -->
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateRoomDialog = false" size="mini">取 消</el-button>
         <el-button type="primary" @click="updateRoom" size="mini" :loading="commitLoading">确 定</el-button>
       </div>
     </el-dialog>
+
 
     <!-- 批量添加房间 -->
     <el-dialog title="批量添加房间" :visible.sync="batchAddRoomDialog" width="820px">
@@ -371,13 +212,10 @@
           <el-input v-model="previewData.prefix" class="el-select" prop="prefix" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房号前缀"></el-input>
         </el-form-item>
         <el-form-item label="房间数量：" required>
-          <!-- <el-input class="text-cs" v-model="previewData.roomNum" prop="roomNum" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房间数量"></el-input> -->
           <el-input-number class="text-cs" v-model="previewData.roomNum" controls-position="right" @keyup.enter.native="enters" @blur="enters" placeholder="请输入房间数量" :min="1" :max="20"></el-input-number>
           <span class="red">单次添加房间数量不能大于20</span>
         </el-form-item>
         <el-form-item label="过滤尾数：">
-          <!-- <el-checkbox v-model="previewData.checked4" @change="enters">4</el-checkbox>
-          <el-checkbox v-model="previewData.checked7" @change="enters">7</el-checkbox> -->
           <el-select v-model="value5" multiple placeholder="请选择" @change="enters">
             <el-option
               v-for="item in options"
@@ -458,11 +296,10 @@
 </template>
 
 <script>
-import {addStorey,addStoreys, listStorey, delStorey, listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
+import {addStorey, listStorey, delStorey, listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
 import {listType} from '@/api/utils/pmsTypeController'
 import UploadAvatar from "@/components/UploadImage/UploadAvatar2";
 import {allListApi } from '@/api/systemSet/hotelHardware/hotelHardware'
-import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
 
 import {addApi,updateApi,detailApi,deleteApi } from '@/api/systemSet/hotelHardware/DeviceRoomLockParamApi'
 export default {
@@ -471,25 +308,19 @@ export default {
     return {
       commitLoading:false,
       formLabelWidth: '120px',
-      addStoreyDialog:false,
-      addStoreysDialog:false,
       addRoomDialog: false,
       updateRoomDialog: false,
       batchAddRoomDialog: false,
       loading:false,
       storeyName: undefined,
-      storeyNameBegin:undefined,
-      storeyNameEnd:undefined,
       storeyData: [],
       selectStorey:{storeyName:'未选择'},
-      buildingData:[],
       selectRoom: {},
       roomData: [],
       previewData:{},
       previewRoomes:[],
       listTypeData: [],
       listTypeDataView: {},
-      buildingPk:'未选择',
       rules: {
         storeyPk: [{ required: true, message: ''}],
         roomTypePk: [{ required: true, message: ''}],
@@ -500,7 +331,6 @@ export default {
         "remark": "",
         "roomCharacteristic": "",
         "roomImg": "",
-        // "roomLockNumber": "",
         "roomName": "",
         "roomNumber": "",
         "roomOrientation": "",
@@ -517,7 +347,6 @@ export default {
         "remark": "",
         "roomCharacteristic": "",
         "roomImg": "",
-        // "roomLockNumber": "",
         "roomName": "",
         "roomNumber": "",
         "roomOrientation": "",
@@ -574,7 +403,6 @@ export default {
       //智能锁
       lockList:[],
       lockObj:{
-
       },
       //批量修改属性 begin
       propRules:{
@@ -593,63 +421,20 @@ export default {
       ],
       batchPropDialog:false,
 
-      // propObj:{
-      //   roomTypePk: "",
-      //   roomOrientation: "",
-      //   telPhone: "",
-      //   telPhoneLine: "",
-      //   roomSurvey: "",
-      //   storeyPk:""
-      // },
       //批量修改属性 end
       codeObj:this.HOTEL_HARDWARE,
-      paramList:[
-
-      ],
-      // textArray:[],
+      paramList:[],
       
       roomLockObj:{
-
       },
-      roomLockDialog:false,
-        //智能锁
-        dynamicTags: [],
-        inputVisible: false,
-        inputValue: ''
+      roomLockDialog:false
+      //智能锁
     };
   },
   mounted(){
     this.init();
   },
   methods: {
-    handlestoreyNameEndChange(value){
-      if(this.storeyNameEnd<this.storeyNameBegin){
-        this.storeyNameEnd=this.storeyNameBegin
-      }
-      if(this.storeyNameBegin>this.storeyNameEnd){
-        this.storeyNameBegin=this.storeyNameEnd
-      }
-      console.log("开始楼层"+this.storeyNameBegin);
-      console.log("结束楼层"+this.storeyNameEnd);
-    },
-    handleClose(tag) {
-        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-      },
-      showInput() {
-        this.inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
-
-      handleInputConfirm() {
-        let inputValue = this.inputValue;
-        if (inputValue) {
-          this.dynamicTags.push(inputValue);
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
-      },
     //批量修改属性 begin
     propChange(val,key){
       if(!val){
@@ -775,7 +560,6 @@ export default {
     init(){
       this.listStorey()
       this.listType()
-      this.listBuilding()
     },
     numSort: function (a,b) {
       return a.count-b.count;
@@ -796,12 +580,6 @@ export default {
     listType(){
       const self = this
       self.listTypeDataView = {}
-      // listType({typeMaster: 'ROOM_TYPE'}).then(result => {
-      //   self.listTypeData = result.data.data
-      //   self.listTypeData.forEach((value,key)=>{
-      //     self.listTypeDataView[value.typePk] = value;
-      //   })
-      // })
       var typeList = JSON.parse(localStorage.getItem("pms_type"))
       self.listTypeData = []
       typeList.forEach(item=> {
@@ -823,63 +601,20 @@ export default {
         self.loading = false
       })
     },
-    listBuilding(){
-      const self = this
-      self.loading = true
-      listBuilding().then(result => {
-        self.buildingData = result.data
-        self.loading = false
-      }).catch(() => {
-        self.loading = false
-      })
-    },
-    addStoreys(){
-       if(this.storeyNameEnd==undefined||this.storeyNameBegin==undefined){
-        this.$message.warning("楼层号不能为空")
-        return;
-      }
-      this.commitLoading = true;
-      const self = this
-      // let textArray=[];
-      // for(var i=0;i<this.dynamicTags.length;i++){
-      //    console.log(this.dynamicTags[i]);
-      //    textArray.push(this.dynamicTags[i]);
-      // }
-      // console.log(this.textArray);
-      // console.log(this.dynamicTags);
-      addStoreys({buildingPk:this.buildingPk,storeyNameBegin:this.storeyNameBegin,storeyNameEnd:this.storeyNameEnd,dynamicTags:this.dynamicTags}).then(result => {
-        if(result.code==1){
-          self.$message({message:'批量添加成功！',type:'success'});
-          self.addStoreysDialog=false;
-          self.listStorey();
-        }else{
-          self.$message.sub_msg;
-          self.addStoreysDialog=true;
-        } 
-      }).finally(()=>{
-        this.commitLoading = false;
-      })
-    },
     addStorey(){
-      this.commitLoading = true;
       if(!this.storeyName){
         this.$message.warning("楼层号不能为空")
         return;
       }
-      let data = {storeyName: this.storeyName,buildingPk:this.buildingPk}
+      let data = {storeyName: this.storeyName}
       const self = this
-      addStorey(data).then(result=>{
-        if(result.code==1){
-          //self.$message.sub_msg;
-          self.$message({message:'添加成功！',type:'success'});
-          self.addStoreyDialog=false;
-          self.listStorey();
-        }else{
-          self.$message.sub_msg;
-          self.addStoreyDialog=true;
-        }
-      }).finally(()=>{
-         this.commitLoading = false;
+      addStorey(data).then(function(result){
+        self.storeyName = undefined;
+        self.$message({
+          message: '添加成功',
+          type: 'success'
+        });
+        self.listStorey();
       })
     },
     delStorey(obj){
@@ -890,14 +625,14 @@ export default {
         type: 'warning'
       }).then(() => {
         delStorey({storeyPk: obj.storeyPk}).then(result => {
-          if (result.code == 1) {
-            self.$message.sub_msg;
-            self.listStorey();
-          } else {
-            self.$message.sub_msg;
-          }
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          self.listStorey()
         })
       });
+      
     },
     storeyRowClick(row, event, column){
       this.selectStorey = row
@@ -929,7 +664,6 @@ export default {
           type: 'warning'
         });
       }else{
-        // this.listAllLock()
         this.addFrom={intelligentFlag:'N',rflFlag:'N'}
         this.addRoomDialog = true
       }
@@ -938,9 +672,6 @@ export default {
       this.commitLoading = true;
       const self = this
       self.addFrom.storeyPk = this.selectStorey.storeyPk
-      // if(self.addFrom.hardwarePk != null && self.addFrom.hardwarePk != "" ){
-      //   self.addFrom.hardwareCode = this.lockObj[self.addFrom.hardwarePk].code
-      // }
       addRoom(self.addFrom).then(result => {
         if(result.code == 1){
           self.addFrom = self.addFroms
@@ -1006,7 +737,6 @@ export default {
     updateClick(row){
       let str = JSON.stringify(row)
       this.selectRoom = JSON.parse(str)
-      // this.listAllLock(true)
       this.updateRoomDialog = true
     },
     updateRoom(){
@@ -1017,9 +747,6 @@ export default {
       if(this.selectRoom.rflFlag=='N'){
         this.selectRoom.rflLockNo = ''
       }
-      // if(self.selectRoom.hardwarePk != null && self.selectRoom.hardwarePk != "" ){
-      //   self.selectRoom.hardwareCode = this.lockObj[self.selectRoom.hardwarePk].code
-      // }
       updateRoom(this.selectRoom).then(result => {
         if(result.code == 1){
           self.$message({
@@ -1063,13 +790,6 @@ export default {
       this.value5.forEach(item => {
         this.previewData.filterTail.push(item)
       });
-      // if(this.previewData.checked4){
-      //   this.previewData.filterTail.push("4")
-      // }
-
-      // if(this.previewData.checked7){
-      //   this.previewData.filterTail.push("7")
-      // }
       this.previewRoom()
     }
   },
@@ -1101,7 +821,6 @@ export default {
   margin-top: 10px;
   border: 1px solid #ccc;
 }
-
 .info-title {
   position: absolute;
   z-index: 1;
@@ -1111,13 +830,6 @@ export default {
   margin-left: 14px;
   background: #f7f7f7;
 }
-.buttomst{
-  text-align: center;
-  margin-bottom: 20px;
-}
-.buttomst button{
-  width: 80px;
-}
 .book-info{
   height: 520px;
   padding-top: 18px;
@@ -1125,27 +837,11 @@ export default {
 .book-info .el-col{
   padding-top: 18px; 
 }
-.book-info .sysbage{
-  height: 100%;
-  background: #f7f7f7;
-  padding-top: 100px;
-}
 .el-select {
   width: 178px;
 }
-.end-col {
-  margin-left: 15px;
-}
-.info-li {
-  margin-bottom: 0 !important;
-  padding-top: 18px;
-}
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
   width: 178px;
-}
-.text-cs{
-  width: 178px;
-  display: block;
 }
 .text-cs{
   width: 178px;
@@ -1160,29 +856,8 @@ export default {
   overflow: auto;
   border: 1px solid #EBEEF5;
 }
-.colic{
-  width: 120px;
-}
-/* .block_input{
-  width:70%;
-} */
 </style>
 <style>
-  .el-tag + .el-tag {
-    margin-left: 10px;
-  }
-  .button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  .input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
-  }
 .init_floor .el-input-number .el-input__inner {
   text-align: left;
 }
