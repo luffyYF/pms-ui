@@ -16,6 +16,7 @@ const router = {
     name: '房间',
     prem: 'pms',
     icon: './static/img/menu/mean_icon9.png',
+hidden: true,
     children: [
         {path: '/', component: SysFloorRoom, prem: 'pms', name: '楼层房间管理',icon: ''},
         {path: '/chamber/sysFloorRoom', component: SysFloorRoom, prem: 'pms', name: '楼层房间管理',icon: ''},

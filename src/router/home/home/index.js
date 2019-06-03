@@ -10,6 +10,7 @@ const router = {
     name: '房态',
     prem: 'pms',
     icon: './static/img/menu/mean_icon1.png',
+    hidden: true,
     children: []
 }
 
