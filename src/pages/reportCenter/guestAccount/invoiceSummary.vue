@@ -10,14 +10,12 @@
       <el-form-item label="日期">
         <el-date-picker
           v-model="DateRange"
-          type="daterange"
-          align="right"
-          unlink-panels
+          type="datetimerange"
+          :picker-options="pickerOptions2"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions"
-          value-format="yyyy-MM-DD HH:mm:ss"
+          align="right"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -40,36 +38,68 @@
       </div>
       <div class="table-box" id="print-managerdailyreportTable">
         <table
-          width="100%"
-           cellpadding="5"
-          style="border-collapse:collapse;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;"
+          collpadding="4"
+          style="border-collapse:collapse;
+          text-align:center;
+          width:100%;
+          height:100%;
+          font-family: 宋体;
+          font-size: 14px;
+          color:black;"
         >
-          <tr>
-            <th colspan="2" style="background-color:rgb(220, 220, 220);border:1px solid black">项目</th>
-            <th style="background-color:rgb(220, 220, 220);border:1px solid black">房间号</th>
-            <th style="background-color:rgb(220, 220, 220);border:1px solid black">姓名</th>
-            <th style="background-color:rgb(220, 220, 220);border:1px solid black">金额</th>
-            <th colspan="2" style="background-color:rgb(220, 220, 220);border:1px solid black">营业详情</th>
-            <th colspan="2" style="background-color:rgb(220, 220, 220);border:1px solid black">营业时间</th>
-            <th colspan="4" style="background-color:rgb(220, 220, 220);border:1px solid black">订单号</th>
-          </tr>
-          <tr>
-            <td rowspan="2" colspan="2" style="border:1px solid black">微信</td>
-            <td style="border:1px solid black">203</td>
-            <td style="border:1px solid black">zhengyuhuong</td>
-            <td style="border:1px solid black">50.00</td>
-            <td colspan="2" style="border:1px solid black">微信收款</td>
-            <td colspan="2" style="border:1px solid black">5/30 17：10</td>
-            <td colspan="4" style="border:1px solid black">YDFJ14354543543543543434</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid black">合计</td>
-            <td style="border:1px solid black"></td>
-            <td style="border:1px solid black">50.00</td>
-            <td colspan="2" style="border:1px solid black"></td>
-            <td colspan="2" style="border:1px solid black"></td>
-            <td colspan="4" style="border:1px solid black"></td>
-          </tr>
+          <thead>
+            <tr>
+              <th colspan="2" style="background-color:rgb(220, 220, 220);border:1px solid black;">项目</th>
+              <th
+                colspan="2"
+                style="background-color:rgb(220, 220, 220);border:1px solid black;"
+              >房间号</th>
+              <th colspan="2" style="background-color:rgb(220, 220, 220);border:1px solid black;">姓名</th>
+              <th colspan="2" style="background-color:rgb(220, 220, 220);border:1px solid black;">金额</th>
+              <th
+                colspan="2"
+                style="background-color:rgb(220, 220, 220);border:1px solid black"
+              >营业详情</th>
+              <th
+                colspan="2"
+                style="background-color:rgb(220, 220, 220);border:1px solid black;"
+              >营业时间</th>
+              <th
+                colspan="2"
+                style="background-color:rgb(220, 220, 220);border:1px solid black;"
+              >订单号</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="obj in tableData">
+              <tr :key="obj.item.projectPk" style="page-break-before:always">
+                <td
+                  :rowspan="(obj.item.length+2)"
+                  colspan="2"
+                  style="border:1px solid black"
+                >{{obj.projectName}}</td>
+              </tr>
+
+              <tr v-for="(item,index) in obj.item" :key="item.projectPk+index">
+                <td colspan="2" style="border:1px solid black;">{{item.roomNumber}}</td>
+                <td colspan="2" style="border:1px solid black;">{{item.memName}}</td>
+                <td colspan="2" style="border:1px solid black;">{{item.settlementAmount.toFixed(2)}}</td>
+                <td colspan="2" style="border:1px solid black;">{{item.remark}}</td>
+                <td colspan="2" style="border:1px solid black;">{{item.createTime}}</td>
+                <td colspan="2" style="border:1px solid black;">{{item.orderGuestNo}}</td>
+              </tr>
+
+              <tr :key="obj.item.projectPk" style="page-break-after:always">
+                <td colspan="2" style="border:1px solid black;">合计</td>
+                <td colspan="2" style="border:1px solid black;"></td>
+                <td colspan="2" style="border:1px solid black;">{{amountTotal(obj.item).toFixed(2)}}</td>
+                <td colspan="2" style="border:1px solid black;"></td>
+                <td colspan="2" style="border:1px solid black;"></td>
+                <td colspan="2" style="border:1px solid black;"></td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot></tfoot>
         </table>
       </div>
     </div>
@@ -87,7 +117,7 @@ import moment from "moment";
 export default {
   data() {
     return {
-      pickerOptions: {
+      pickerOptions2: {
         shortcuts: [
           {
             text: "最近一周",
@@ -118,7 +148,8 @@ export default {
           }
         ]
       },
-      DateRange: "",
+      DateRange: [],
+      tableData: [],
       userInfo: {},
       sDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       queryObj: {
@@ -154,62 +185,80 @@ export default {
   methods: {
     init() {
       let self = this;
+      self.DateRange.push(self.queryObj.begin);
+      self.DateRange.push(self.queryObj.begin);
+
       this.getList();
     },
-    getList() {
-      let self = this;
-      // console.log(" DateRange :", self.DateRange);
-      // console.log("sDate :", self.sDate);
-      // console.log("sDate :", self.queryObj);
-      customClassDetailsReport({
-        beginDate: self.DateRange[0],
-        endDate: self.DateRange[1]
-      }).then(res => {
-        if (res.code == 1) {
-          console.log(res.data);
-          // var total = {
-          //   monthRoomCount: 0,
-          //   monthCheckIn: 0,
-          //   monthInCome: 0,
-          //   todayRoomCount: 0,
-          //   todayCheckIn: 0,
-          //   todayInCome: 0
-          // };
-          // self.tableData = [];
-          // for (var i = 0; i < res.data.monReport.length; i++) {
-          //   var obj = {};
-          //   if (res.data.reportPos.length > 0) {
-          //     total.monthRoomCount += res.data.monReport[i].onlineRoomNum;
-          //     total.monthCheckIn += res.data.monReport[i].rentalRoomNum;
-          //     total.monthInCome += res.data.monReport[i].houseFeeIncome;
-          //     total.todayRoomCount += res.data.reportPos[i].onlineRoomNum;
-          //     total.todayCheckIn += res.data.reportPos[i].rentalRoomNum;
-          //     total.todayInCome += res.data.reportPos[i].houseFeeIncome;
-          //   } else {
-          //     total.monthRoomCount += res.data.monReport[i].onlineRoomNum;
-          //     total.monthCheckIn += res.data.monReport[i].rentalRoomNum;
-          //     total.monthInCome += res.data.monReport[i].houseFeeIncome;
-          //     total.todayRoomCount += 0;
-          //     total.todayCheckIn += 0;
-          //     total.todayInCome += 0;
-          //   }
+    //转换格林尼治时间为
 
-          //   self.total.monthRoomCount = total.monthRoomCount;
-          //   self.total.monthCheckIn = total.monthCheckIn;
-          //   self.total.monthInCome = total.monthInCome;
-          //   self.total.todayRoomCount = total.todayRoomCount;
-          //   self.total.todayCheckIn = total.todayCheckIn;
-          //   self.total.todayInCome = total.todayInCome;
-
-          //   obj.monReport = res.data.monReport[i];
-          //   obj.reportPos = res.data.reportPos[i];
-          //   self.tableData.push(obj);
-          // }
-          // console.log(self.tableData);
+    format(time, format) {
+      var t = new Date(time);
+      var tf = function(i) {
+        return (i < 10 ? "0" : "") + i;
+      };
+      return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a) {
+        switch (a) {
+          case "yyyy":
+            return tf(t.getFullYear());
+            break;
+          case "MM":
+            return tf(t.getMonth() + 1);
+            break;
+          case "mm":
+            return tf(t.getMinutes());
+            break;
+          case "dd":
+            return tf(t.getDate());
+            break;
+          case "HH":
+            return tf(t.getHours());
+            break;
+          case "ss":
+            return tf(t.getSeconds());
+            break;
         }
       });
     },
+    getList() {
+      let self = this;
 
+      customClassDetailsReport({
+        beginDate: self.format(self.DateRange[0], "yyyy-MM-dd HH:mm:ss"),
+        endDate: self.format(self.DateRange[1], "yyyy-MM-dd HH:mm:ss")
+      }).then(res => {
+        var map = {}; //键值对
+        var dest = []; //存装好后的对象
+        if (res.code == 1) {
+          res.data.forEach(element => {
+            if (!map[element.projectPk]) {
+              dest.push({
+                projectName: element.projectName,
+                projectPk: element.projectPk,
+                item: [element]
+              });
+              map[element.projectPk] = element;
+            } else {
+              dest.forEach(obj => {
+                if (obj.projectPk == element.projectPk) {
+                  obj.item.push(element);
+                }
+              });
+            }
+          });
+          self.tableData = dest;
+          console.log("self.tableData :", self.tableData);
+        }
+      });
+    },
+    //合计金额
+    amountTotal(items) {
+      var total = 0;
+      for (var i = 0; i < items.length; i++) {
+        total += items[i].settlementAmount;
+      }
+      return total;
+    },
     //导出EXCEL
     downloadExcel() {
       let url = "/pms/report/mg/managerDailyExcel?begin=" + this.queryObj.begin;
@@ -237,43 +286,43 @@ export default {
       if (!this.LODOP) {
         return;
       }
-      // this.LODOP.PRINT_INIT("经理日报表打印");
-      var sdf = this.LODOP.PRINT_INITA(0, 0, "794px", "1123px", that.tableName);
-      console.log(sdf);
-      this.LODOP.NewPageA(); // 自动分页
-      // LODOP.SET_PREVIEW_WINDOW(1,);
-      // this.LODOP.SET_PRINT_PAGESIZE(1,0,0, "A4");//1指定纵向打印，指定A4纸，
+
+      this.LODOP.PRINT_INITA(0, 0, "794px", "1123px", that.tableName);
+
       this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
-      this.LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Full-Page"); // 打印页整宽显示
       this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
-      // LODOP.SET_PRINT_STYLE("Bold",1);//粗体
-      // LODOP.SET_PRINT_STYLE("FontSize",20);
-      // LODOP.ADD_PRINT_TEXT(50,231,260,39,"【豪斯菲尔公寓（格力香樟）】");//标题 1123 1023 963
-      this.LODOP.ADD_PRINT_TABLE(
-        90,
-        10,
-        772,
+      this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+
+      this.LODOP.ADD_PRINT_HTM(
+        "90px",
+        0,
         "100%",
+        "970px",
         document.getElementById("print-managerdailyreportTable").innerHTML
       );
-      // this.LODOP.SET_PRINT_STYLEA(0,"Vorient",0);
-      // LODOP.ADD_PRINT_TABLE(128,"5%","90%",314,strStyle+document.getElementById("div2").innerHTML);
+      this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 3);
+      this.LODOP.SET_PRINT_STYLEA(0, "TableHeightScope", 1); //高度包含头部和尾部
+
       this.LODOP.ADD_PRINT_HTM(
-        10,
-        10,
-        772,
-        80,
+        "10px",
+        0,
+        "100%",
+        "80px",
         document.getElementById("print-managerdailyreportTitle").innerHTML
       );
+
       this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
       this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
       this.LODOP.ADD_PRINT_HTM(
-        "1083px",
-        15,
-        "794px",
-        "30px",
+        "1070px",
+        0,
+        "100%",
+        "33px",
         "<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>"
       );
+      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 3);
+      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 1);
+
       this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1); // 设定打印项的基本属性 0--普通项 1--页眉页脚 2--页号项 3--页数项 4--多页项
       this.LODOP.SET_PRINT_STYLEA(0, "Horient", 0); // 设定打印项在纸张内的水平位置锁定方式 0--左边距锁定 1--右边距锁定 2--水平方向居中 3--左边距和右边距同时锁定（中间拉伸），缺省值是0。
       this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 0);
