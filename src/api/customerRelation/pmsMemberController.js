@@ -46,4 +46,8 @@ export const memberCertificateType = params => {
  export const recharge = params => {
     return request.post('/back/member/recharge', params)
  }
+ //修改会员卡号
+ export const updateMemberCard = params => {
+   return request.post('/back/member/updateMemberCard', params)
+}
 
