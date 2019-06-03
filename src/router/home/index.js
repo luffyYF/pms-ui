@@ -15,6 +15,8 @@ import bookingForm from '@/router/home/bookingForm/index'
 import checkIn from '@/router/home/checkIn/index'
 //订单
 import orderForm from '@/router/home/orderForm/index'
+//订单详情
+import orderDetails from '@/router/home/orderDetails/index'
 //会员
 import member from '@/router/home/member/index'
 //单位
@@ -47,6 +49,7 @@ const router = {
     name: '首页',
     alias: 'Home',
     meta: { icon: 'fa-bank', noCache: true },
+    hidden: false,
     children: []
 }
 
@@ -69,6 +72,7 @@ children.push(conferenceRoom)
 children.push(system)
 children.push(cashPayment)
 children.push(moreFunctions)
+children.push(orderDetails)
 
 
 router.children = children

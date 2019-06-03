@@ -42,9 +42,9 @@ export const reportHistoryRoomExchange = params => {
  * roomPk 房间主键
  * roomTypePk 房间类型主键
  */
-export const reportHistoryStore = params => {
-    return request.get('/pms/report/historyStore', { params: params })
-}
+export default params => {
+    return request.get('/pms/report/historyStore', { params: params });
+};
 
 /**
  * 日租钟点取消报表

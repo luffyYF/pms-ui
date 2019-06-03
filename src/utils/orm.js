@@ -167,13 +167,59 @@ export const attendanceTypeMap = {
 }
 //房态状态
 export const roomStatusMap = {
-  'OCCUPY': "占用房",
-  'DIRTY': "脏房",
-  'CLEAN_NOCHECK': "清洁未检查",
-  'CLEAN_CHECKED': "清洁已检查",
-  'DISABLE_ROOM': "停用房",
-  'REPAIR_ROOM': "维修房"
+  1: "空净",
+  2: "空脏",
+  3: "住净",
+  4: "住脏",
+  5: "维修",
 }
+//实时房态
+export const realTimeRoomStatusMap = {
+  'KJ': "空净",
+  'KZ': "空脏",
+  'ZJ': "住净",
+  'ZZ': "住脏",
+  'WX': "维修",
+  'YD': "预抵",
+  'YL': "预离",
+  'SR': "生日",
+  'TD': "团队",
+  'ZDF': "钟点房",
+  'TSF': "特殊房",
+  'MFF': "免费房"
+}
+
+// 停用：#f75e5e  #dd4b4b；
+export const realTimeRoomStatusColor = {
+  'KJ': {
+    color1: "#669bff",
+    color2: "#587fff"
+  },
+  'KZ': {
+    color1: "#677399",
+    color2: "#8291c1"
+  },
+  'ZJ': {
+    color1: "#ffc24b",
+    color2: "#fc953a"
+  },
+  'ZZ': {
+    color1: "#ff9b5f",
+    color2: "#fc773d"
+  },
+  'WX': {
+    color1: "#5ed07b",
+    color2: "#38a855"
+  },
+  'YD': "预抵",
+  'YL': "预离",
+  'SR': "生日",
+  'TD': "团队",
+  'ZDF': "钟点房",
+  'TSF': "特殊房",
+  'MFF': "免费房"
+}
+
 //预订单状态
 export const reserveOrderStatusMap = {
   '0': "待付款",
