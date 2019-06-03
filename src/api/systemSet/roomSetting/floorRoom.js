@@ -12,6 +12,10 @@ export const listStorey = params => {
 export const addStorey = params => {
   return request.post('/back/storey/add', params)
 }
+// 批量添加楼层
+export const addStoreys = params => {
+  return request.post('/back/storey/adds', params)
+}
 
 export const updateStorey = params => {
   return request.post('/back/storey/update', params)

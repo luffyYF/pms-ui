@@ -12,7 +12,7 @@
       .selectWidth {
         width: 122px;
       }
-      
+
       .el-form-item--mini {
         margin-bottom : 0px;
         vertical-align: middle;
@@ -49,6 +49,7 @@
         overflow: auto;
         width   : 100%;
         height  : calc(100%);
+        overflow-x: hidden;
         .floorstorey{
           width: 100%;
           .title{
@@ -56,6 +57,7 @@
             padding: 10px 0;
             font-size: 14px;
             font-weight: 600;
+            display: inline-block;
             span{
               font-size: 12px;
               color: #b2b2b2;
@@ -67,9 +69,6 @@
 
       //房间
       .pattern-li {
-        width        : 174px;
-        height       : 100px;
-        border-radius: 5px;
         overflow     : hidden;
         font-family   : 微软雅黑, "Times New Roman", Helvetica, sans-serif;
         font-size    : 12px;
@@ -82,13 +81,16 @@
         /* display   : inline-block; */
         float        : left;
         position     : relative;
-
+        &:hover{
+          border       : 2px solid #c0c0c0;
+        }
         .pattern-li-item {
           height     : 19px;
           overflow   : hidden;
           margin     : auto;
           margin-top: 3px;
           padding: 0 5px;
+          
           .rm {
             font-size   : 15px;
             font-weight : bold;
@@ -130,6 +132,9 @@
           text-align  : left;
           background-color: rgba(0, 0, 0, 0.5);
           padding: 5px;
+          position: absolute;
+          bottom: 0;
+          width: 94%;
           label{
             &:last-child{
               float: right;

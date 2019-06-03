@@ -30,7 +30,10 @@ export default {
     },
     created() {
         let matched = this.$route.matched
-        let parent = matched[matched.length-1]
+        let parent = this.router[0]
+        if(matched.length > 1){
+            parent = matched[matched.length-1]
+        }        
         this.setActiveName(parent.path)
     },
     methods: {

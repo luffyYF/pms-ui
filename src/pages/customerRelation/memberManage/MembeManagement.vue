@@ -43,8 +43,8 @@
       <el-table v-loading="loading"
       size="mini"
       border
-
-:data="tableData"      style="width: 98.5%; margin:10px;">
+      :data="tableData"
+      style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
@@ -85,9 +85,10 @@
         </el-table-column>
         <el-table-column prop="availableBalance" label="可用余额" align="center" width="120">
           <template slot-scope="scope">
-            {{scope.row.availableBalance|toMoney}}
+            {{scope.row.availableBalance}}
           </template>
         </el-table-column>
+
 
         <el-table-column prop="rechargeGiftAmount" label="充值赠送合计" align="center" width="120">
           <template slot-scope="scope">
@@ -111,86 +112,27 @@
         </el-table-column>
         <el-table-column prop="availableIntegral" label="可用积分" align="center" width="120">
           <template slot-scope="scope">
-            {{scope.row.availableIntegral|toMoney}}
+            {{scope.row.availableIntegral}}
           </template>
         </el-table-column>
          <el-table-column prop="housingDays" label="住房天数" align="center" width="120">
           <template slot-scope="scope">
-            {{scope.row.housingDays|toMoney}}
+            {{scope.row.housingDays}}
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" min-width="160">
           <template slot-scope="scope">
             <el-button @click="memberMangerClick(scope.row)" type="text" size="mini">会员管理</el-button>
-            <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini" :disabled="scope.row.rechargeFlag == 'N'">充值</el-button>
+            <!-- <el-button @click="memberRechargeClick(scope.row)" type="text" size="mini" :disabled="scope.row.rechargeFlag == 'N'">充值</el-button>
             <el-button @click="rechargeDetailClick(scope.row)" type="text" size="mini">充值明细</el-button>
             <el-button @click="integralDetailClick(scope.row)" type="text" size="mini">积分明细</el-button>
-            <el-button @click="consumptionDetailClick(scope.row)" type="text" size="mini">消费明细</el-button>
+            <el-button @click="consumptionDetailClick(scope.row)" type="text" size="mini">消费明细</el-button> -->
           </template>
         </el-table-column>
       </el-table>
       <el-pagination class="positions" @size-change="getSizeChange" @current-change="memberListData" :current-page="form.pageNum" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
-
-    <!-- 会员管理 dialog -->
-    <el-dialog title="会员管理" :visible.sync="dialogMemberVisible" width="68%" class="dialogMemberManage">
-      <div class="body-conten">
-        <div class="bg-reserve height38">
-          <h5 class="info-title">会员来源信息</h5>
-          <el-col :span="8">销售员：{{membeInfo.referee}}</el-col>
-          <el-col :span="16">领卡部门：珠海豪斯菲尔信息科技有限公司<!-- {{membeInfo.companyPk}} --></el-col>
-        </div>
-        <div class="bg-reserve height110">
-          <h5 class="info-title">会员基本信息</h5>
-          <el-col :span="24">
-            <el-col :span="6">卡号：{{membeInfo.cardNumber}}	</el-col>
-            <el-col :span="8">姓名：{{membeInfo.memName}}</el-col>
-            <el-col :span="8">会员级别：{{membeInfo.gradeName}}</el-col>
-          </el-col>
-          <el-col :span="24">
-
-            <el-col :span="6">性别：
-              <span v-if="membeInfo.memSex == 'M'">男</span>
-              <span v-if="membeInfo.memSex == 'W'">女</span>
-              <span v-if="membeInfo.memSex == 'N'">未知</span>
-            </el-col>
-            <el-col :span="8">籍贯：{{membeInfo.nativePlace}}</el-col>
-            <el-col :span="8">出生：{{membeInfo.birthday}}</el-col>
-          </el-col>
-          <el-col :span="24">
-            <el-col :span="6">手机：{{membeInfo.memPhone}}</el-col>
-            <el-col :span="8">证件：
-              <span v-if="membeInfo.certificateType == 'TWO_IDENTITY'">二代身份证</span>
-              <span v-if="membeInfo.certificateType == 'ONE_IDENTITY'">一代身份证</span>
-              <span v-if="membeInfo.certificateType == 'ORDER'">其他</span>
-              <span v-if="membeInfo.certificateType == 'DRIVER'">驾驶证</span>
-              <span v-if="membeInfo.certificateType == 'PASSPORT'">护照</span>
-              <span v-if="membeInfo.certificateType == 'OFFICERS'">军官证</span>
-              <span v-if="membeInfo.certificateType == 'SOLDIER'">士兵证</span>
-              <span v-if="membeInfo.certificateType == 'HK_MACAO_PASS'">港澳通行证</span>
-              <span v-if="membeInfo.certificateType == 'RETURN_HOME'">回乡证</span>
-              <span v-if="membeInfo.certificateType == 'TEMP_IDENTITY'">临时身份证</span>
-              <span v-if="membeInfo.certificateType == 'BOOKLET'">户口簿</span>
-              <span v-if="membeInfo.certificateType == 'POLICE_OFFICER'">警官证</span>
-            </el-col>
-            <el-col :span="8">证件号：{{membeInfo.certificateNo}}</el-col>
-          </el-col>
-          <el-col :span="24">
-            <el-col :span="6">国家：{{membeInfo.country}}</el-col>
-            <el-col :span="8">邮箱：{{membeInfo.email}}</el-col>
-            <el-col :span="10">地址：{{membeInfo.address}}</el-col>
-          </el-col>
-        </div>
-        <div class="bg-reserve height38">
-          <h5 class="info-title">开通信息</h5>
-          <el-col :span="16">开通时间：{{membeInfo.createTime}}</el-col>
-        </div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <member-operation-management v-bind:message="membeInfo" v-on:asfcascas="delMemberList()"/>
-      </div>
-    </el-dialog>
-
+    <MemberInfoDialog ref="MemberInfoDialogRef" @callback="memberListData(1)" />
     <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
     <member-recharge-detail-dialog ref="memberRechargeDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-recharge-detail-dialog>
     <member-integral-detail-dialog ref="memberIntegralDetailDialogRefs" @callback="memberListData(form.pageNum)"></member-integral-detail-dialog>
@@ -201,8 +143,7 @@
 <script>
 import bus from "@/utils/bus";
 import MemberGrade from "@/components/MemberGrade/MemberGrade";
-import MemberOperationManagement from "./MemberOperationManagement";
-// import {listGrade} from '@/api/systemSet/member/pmsMemberGradeController'
+import MemberInfoDialog from "./MemberInfoDialog";
 import {
   listMember,
   recoverMember,
@@ -210,13 +151,13 @@ import {
   listMemberById
 } from "@/api/customerRelation/pmsMemberController";
 import { findGrade } from "@/api/customerRelation/pmsMemberGradeController";
-import MemberRecharge from "./MemberRecharge.vue"
-import MemberRechargeDetailDialog from "./MemberRechargeDetailDialog.vue"
-import MemberIntegralDetailDialog from "./MemberIntegralDetailDialog.vue"
-import MemberConsumptionDetailDialog from "./MemberConsumptionDetailDialog.vue"
+import MemberRecharge from "./MemberRecharge/MemberRecharge.vue"
+import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDialog.vue"
+import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
+import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
 
 export default {
-  components: { MemberGrade, MemberOperationManagement, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog },
+  components: { MemberGrade, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberInfoDialog },
   data() {
     return {
       memberLevel: [],
@@ -250,8 +191,9 @@ export default {
       this.form.pageNum = val;
       listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
+        console.log(res.data.size)
         console.log(this.tableData);
       });
     },
@@ -260,8 +202,9 @@ export default {
       this.form.pageSize = val;
       listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
+
         this.form.pageNum = 1;
         console.log(this.tableData);
       });
@@ -270,8 +213,9 @@ export default {
       this.memberListData(this.form.pageNum);
     },
     memberMangerClick(row) {
-      this.membeInfo = row;
-      this.dialogMemberVisible = true;
+      // this.membeInfo = row;
+      // this.dialogMemberVisible = true;
+      this.$refs.MemberInfoDialogRef.showDialog(row);
     },
     delMemberList() {
       this.memberListData(1);
@@ -283,16 +227,25 @@ export default {
       // this.form.invalidDateCard=res.form.invalidDateCard;
     },
     memberRechargeClick (row) {
-      this.$refs.memberRechargeRefs.showDialog(row)
+      this.$nextTick(()=>{
+        this.$refs.memberRechargeRefs.showDialog(row,true)
+      })
     },
     rechargeDetailClick (row) {
-      this.$refs.memberRechargeDetailDialogRefs.showDialog(row.memPk, 0)
+      this.$nextTick(()=>{
+         this.$refs.memberRechargeDetailDialogRefs.showDialog(row.memPk, 0)
+      })
     },
     integralDetailClick (row) {
-      this.$refs.memberIntegralDetailDialogRefs.showDialog(row.memPk, 1)
+      this.$nextTick(()=>{
+        this.$refs.memberIntegralDetailDialogRefs.showDialog(row.memPk, 1)
+      })
     },
     consumptionDetailClick (row) {
-      this.$refs.memberConsumptionDetailDialogRefs.showDialog(row.memPk)
+      this.$nextTick(()=>{
+        this.$refs.memberConsumptionDetailDialogRefs.showDialog(row.memPk)
+      })
+
     }
   },
   filters: {

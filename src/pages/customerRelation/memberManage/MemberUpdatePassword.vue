@@ -2,7 +2,7 @@
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
   <section class="member-dialog">
-		<el-dialog class="add-permission" title="会员充值" :visible.sync="dialogVisible" width="600px"
+		<el-dialog class="add-permission" title="修改密码" :visible.sync="dialogVisible" width="600px"
 							:close-on-click-modal="false" :before-close="handleClose">
 			<el-form ref="dataForm" :model="dataForm" label-width="120px">
         <el-col :span="24">
@@ -89,11 +89,13 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
           remark: '',
           couponPos: [],
           giftPos: [],
+          isCallback:true
         },
       }
     },
     methods: {
-      showDialog (data) {
+      showDialog (data,isCallback) {
+        this.isCallback = isCallback
         console.log(data)
         this.dataForm = {
           memPk: data.memPk,
@@ -124,14 +126,18 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
             });
           }
           this.dialogVisible = false
-          this.$emit('callback')
+          if(this.isCallback){
+            this.$emit('callback')
+          } 
         }).finally(() => {
           this.loading = false
         })
       },
       handleClose () {
         this.dialogVisible = false
-        this.$emit('callback')
+        if(this.isCallback){
+            this.$emit('callback')
+        }
 			},
 			handleChange (val) {
         giveRule({gradePk: this.dataForm.gradePk, price: val}).then(res => {

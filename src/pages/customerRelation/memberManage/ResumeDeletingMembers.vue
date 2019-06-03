@@ -6,8 +6,8 @@
       <div class="bg-reserve">
         <h5 class="info-title">删除会员查询</h5>
         <el-form-item label="卡号">
-          <el-input v-model="form.cardNumber" clearable></el-input> 
-        </el-form-item> 
+          <el-input v-model="form.cardNumber" clearable></el-input>
+        </el-form-item>
         <el-form-item label="姓名">
           <el-input v-model="form.memName" clearable></el-input>
         </el-form-item>
@@ -37,25 +37,25 @@
     <!-- table -->
     <div class="bg-reserve">
       <h5 class="info-title">删除会员列表</h5>
-      <el-table v-loading="loading" 
-      size="mini" 
-      border 
-      :data="tableData" 
-      height="450" 
+      <el-table v-loading="loading"
+      size="mini"
+      border
+      :data="tableData"
+      height="450"
       style="width: 98.5%; margin:10px;">
         <el-table-column prop="cardNumber" label="卡号" align="center" width="100">
         </el-table-column>
         <el-table-column prop="memName" label="姓名" align="center" width="90">
         </el-table-column>
-        <el-table-column prop="memberGrade" label="级别" align="center" width="90">
-          <template slot-scope="scope">
+        <el-table-column prop="gradeName" label="级别" align="center" width="90">
+          <!-- <template slot-scope="scope">
             <span v-if="scope.row.memberGrade == 'FIT'">散客</span>
             <span v-if="scope.row.memberGrade == 'ORDINARY'">普通会员</span>
             <span v-if="scope.row.memberGrade == 'SENIOR'">高级会员</span>
             <span v-if="scope.row.memberGrade == 'VIP'">VIP会员</span>
             <span v-if="scope.row.memberGrade == 'PLATINUM'">铂金会员</span>
             <span v-if="scope.row.memberGrade == 'HONORABLE'">尊贵会员</span>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="nativePlace" label="籍贯" align="center" width="90">
         </el-table-column>
@@ -109,7 +109,7 @@
 import bus from '@/utils/bus'
 import MemberGrade from '@/components/MemberGrade/MemberGrade'
 // import {listGrade} from '@/api/systemSet/member/pmsMemberGradeController'
-import {listMember,recoverMember,updateMember} from '@/api/customerRelation/pmsMemberController'
+import {listMember,recoverMember,updateMember,listMemberById} from '@/api/customerRelation/pmsMemberController'
 export default {
   components: {MemberGrade},
   data() {
@@ -139,19 +139,19 @@ export default {
     deleteMemberList(val) {
       this.loading = true
       this.form.pageNum = val;
-      listMember(this.form).then(res => {
+      listMemberById(this.form).then(res => {
         this.loading = false;
-        this.tableData = res.data.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
       });
     },
     getSizeChange(val) {
       this.loading = true
       this.form.pageSize = val;
-      listMember(this.form).then(res => {
+      listMemberById(this.form).then(res => {
         this.loading = false
-        this.tableData = res.data.data;
-        this.total = res.data.pageSize;
+        this.tableData = res.data.list;
+        this.total = Number(res.data.total);
       });
     },
     recoverMangerClick(row) {
