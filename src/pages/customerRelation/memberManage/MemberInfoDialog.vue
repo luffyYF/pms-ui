@@ -12,7 +12,7 @@
                 <el-button size="mini" type="primary">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
-                <el-button size="mini" type="primary" @click="openLogout">注销</el-button>
+                <el-button size="mini" type="primary" @click="openLogout(memberInfo)">注销</el-button>
                 <el-button size="mini" type="primary">挂失</el-button>
                 <el-button size="mini" type="primary" @click="openPrint">登记补打</el-button>
             </el-row>
@@ -75,6 +75,7 @@ import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
+import {delMember} from '@/api/customerRelation/pmsMemberController'
 
 export default {
     components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
@@ -110,22 +111,39 @@ export default {
         });
       },
       //注销会员卡
-      openLogout() {
-        this.$confirm('确认注销改会员卡?', '提示', {
+      // openLogout(memberInfo) {
+      //   this.$confirm('确认注销改会员卡?', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     delMember({cardExchangeId:row.cardExchangeId})
+      //     this.$message({
+      //       type: 'success',
+      //       message: '注销成功!'
+      //     });
+      //   }).catch(() => {
+      //     this.$message({
+      //       type: 'info',
+      //       message: '已取消注销'
+      //     });          
+      //   });
+      // },
+      openLogout (memberInfo) {
+        this.$confirm('确定注销该会员卡?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '注销成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消注销'
-          });          
-        });
+        delMember({memPk:memberInfo.memPk}).then(res => {
+              if(res.code == 1){
+                  this.$message({ type: 'success', message: "注销成功！" })
+                  //this.listSearch()
+              }else{
+                 this.$message({ type: 'warning', message: "注销失败！" })
+              }
+          })
+        })
       },
     handleClose () {
             this.dialogMemberVisible = false
