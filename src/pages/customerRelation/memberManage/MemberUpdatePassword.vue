@@ -18,14 +18,14 @@
             </div>
           </el-col>
         </el-col>
-				<el-form-item label="原密码:" size="mini">
-          <el-input type="password" v-model="dataForm.oldPwd"></el-input>
-          <el-checkbox size="mini" label="忘记密码" true-label="Y" false-label="N"></el-checkbox>
+				<el-form-item label="原密码:" size="mini" prop="originalPassword">
+          <el-input type="password" v-model="dataForm.originalPassword" :disabled="dataForm.type=='Y'"></el-input>
+          <el-checkbox size="mini" label="忘记密码" v-model="dataForm.type" true-label="Y" false-label="N"></el-checkbox>
         </el-form-item>
-				<el-form-item label="新密码:" size="mini">
-           <el-input type="password" v-model="dataForm.newPwd"></el-input>
+				<el-form-item label="新密码:" size="mini" prop="newPassword">
+           <el-input type="password" v-model="dataForm.newPassword"></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码:" size="mini">
+        <el-form-item label="确认新密码:" size="mini" prop="confirmNewPwd">
            <el-input type="password" v-model="dataForm.confirmNewPwd"></el-input>
         </el-form-item>
         <el-form-item>
@@ -33,10 +33,6 @@
 				    <el-button type="primary" size="mini" @click="submitModify">确认</el-button>
         </el-form-item>
 			</el-form>
-			<!-- <span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-				<el-button type="primary" size="mini" @click="submitModify">确认</el-button>
-			</span> -->
 		</el-dialog>
   </section>
 </template>
@@ -55,21 +51,22 @@ import {updateMemberPassword} from '@/api/customerRelation/pmsMemberController'
           balance: 0,
           cardNumber: '', 
           isCallback:true,
-          oldPwd:'',
-          newPwd:'',
-          confirmNewPwd:''
+          originalPassword:'',
+          newPassword:'',
+          confirmNewPwd:'',
+          type:'N'
         },
-         rules:{
-          oldPwd:[
+      rules:{
+          originalPassword:[
             { required: true, message: '请输入旧密码', trigger: 'blur' },
           ],
-          newPwd:[
+          newPassword:[
             { required: true, message: '请输入新密码', trigger: 'blur,change' },
-            { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
+            //{ min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
           ],
           confirmNewPwd:[
             { required: true, message: '请确认密码', trigger: 'blur,change' },
-            { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
+           // { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
           ]
         }
       }
@@ -77,26 +74,28 @@ import {updateMemberPassword} from '@/api/customerRelation/pmsMemberController'
     methods: {
        submitModify(){
         if(true) {
-          console.log(this.dataForm)
           updateMemberPassword(this.dataForm).then(res=>{
-            this.$message.success('修改密码成功');
-            this.dataForm.newPwd = '';
-            this.dataForm.confirmNewPwd = '';
-            this.dataForm.oldPwd = '';
+          if(res.code==1){
+            this.$message({message:'修改密码成功！',type:'success'});
+            this.dialogVisible=false;
+          }else{
+            this.$message.sub_msg;
+            this.dialogVisible=true;
+          }
           })
         }
       },
       verification(){
         var content = '';
-        if (this.dataForm.oldPwd == '') {
+        if (this.dataForm.originalPassword == '') {
           content = '旧密码不能为空';
-        } else if (this.dataForm.newPwd == '') {
+        } else if (this.dataForm.newPassword == '') {
           content = '新密码不能为空'
-        } else if (this.dataForm.newPwd.length < 6 || this.dataForm.newPwd.length > 15) {
+        } else if (this.dataForm.newPassword.length < 6 || this.dataForm.newPassword.length > 15) {
           content = '新密码不符合规则'
         } else if (this.dataForm.confirmNewPwd == '') {
           content = '请确认密码'
-        } else if (this.dataForm.newPwd != this.dataForm.confirmNewPwd) {
+        } else if (this.dataForm.newPassword != this.dataForm.confirmNewPwd) {
           content = '两次密码不一致'
         }
         if(content != '') {
@@ -107,7 +106,6 @@ import {updateMemberPassword} from '@/api/customerRelation/pmsMemberController'
       },
       showDialog (data,isCallback) {
         this.isCallback = isCallback
-        console.log(data)
         this.dataForm = {
           memPk: data.memPk,
           memName: data.memName,
