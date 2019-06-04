@@ -4,30 +4,58 @@
   <section class="member-dialog">
 		<el-dialog class="add-permission" title="积分增减" :visible.sync="dialogVisible" width="600px"
 							:close-on-click-modal="false" :before-close="handleClose">
-			<el-form ref="dataForm" :model="dataForm" label-width="120px">
-				<el-form-item label="会员卡号" size="mini">
+			<el-form ref="dataForm" :model="dataForm" label-width="120px" :rules="rules">
+        <el-row>
+          <el-col :span="12">
+				<el-form-item label="会员卡号:" size="mini">
           <el-input v-model="dataForm.cardNumber" class="input-width" readonly></el-input>
         </el-form-item>
-        <el-form-item label="会员姓名" size="mini">
+          </el-col>
+          <el-col :span="12">
+        <el-form-item label="会员姓名:" size="mini">
           <el-input v-model="dataForm.memName" class="input-width" readonly></el-input>
         </el-form-item>
-        <el-form-item label="会员级别" size="mini">
+         </el-col>
+         </el-row>
+          <el-row>
+          <el-col :span="12">
+        <el-form-item label="会员级别:" size="mini">
           <el-input v-model="dataForm.gradeName" class="input-width" readonly></el-input>
         </el-form-item>
-          <el-form-item label="剩余积分" size="mini">
+          </el-col>
+            <el-col :span="12">
+          <el-form-item label="剩余积分:" size="mini">
           <el-input v-model="dataForm.availableIntegral" class="input-width" readonly></el-input>
         </el-form-item>
+            </el-col>
+          </el-row>
+        <el-row>
+            <el-col :span="12">
+            <el-form-item label="变化:" size="mini">
+              <el-radio v-model="radio" label="1">增加</el-radio>
+              <el-radio v-model="radio" label="2">减少</el-radio>
+            </el-form-item>
+            </el-col>
+            <el-col :span="12">
+            <el-form-item label="积分:" size="mini" prop="integral">
+             <el-input v-model="integral" class="input-width" ></el-input>
+            </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="备注:" size="mini" prop="remark">
+          <el-input v-model="remark" class="input-width" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+        </el-form-item> 
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-				<el-button type="primary" size="mini" @click="saveData" :loading="loading">{{dataForm.typePk == null ? '保存' : '修改'}}</el-button>
+				<el-button type="primary" size="mini" @click="sureClick" :loading="loading">确定</el-button>
 			</span>
 		</el-dialog>
   </section>
 </template>
 
 <script>  
-import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
+//import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
 
   export default {
     data () {
@@ -36,14 +64,24 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
 				loading: false,
         dataForm: {
           memPk: '',
-          //gradePk: '',
           memName: '',
-          balance: 0,
-          projectCode: 234,
           cardNumber: '', 
-          remark: '',
+          gradeName:'',
+          availableIntegral:0,
           isCallback:true
         },
+        radio: '1',
+        remark: '',
+        integral:'',
+        rules:{
+          integral:[
+            { required: true, message: '请输入积分', trigger: 'blur' },
+          ],
+          remark:[
+            { required: true, message: '请输入备注', trigger: 'blur,change' },
+           // { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
+          ],
+        }
       }
     },
     methods: {
@@ -52,63 +90,41 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
         console.log(data)
         this.dataForm = {
           memPk: data.memPk,
-         // gradePk: data.gradePk,
           memName: data.memName,
-          balance: data.availableBalance.toFixed(2),
-          projectCode: 234,
           cardNumber: data.cardNumber, 
-          remark: '',
+          gradeName:data.gradeName,
+          availableIntegral:data.availableIntegral,
         }
         this.dialogVisible = true
       },
-      saveData(){
-        this.loading = true
-        recharge(this.dataForm).then(result => {
-          if(result.code == 1){
-            this.$message({
-              message: result.sub_msg,
-              type: 'success'
-            });
-          }
-          this.dialogVisible = false
-          if(this.isCallback){
-            this.$emit('callback')
-          } 
-        }).finally(() => {
-          this.loading = false
-        })
+      sureClick(){
+        if(true){
+
+        }
       },
+      // saveData(){
+      //   this.loading = true
+      //   recharge(this.dataForm).then(result => {
+      //     if(result.code == 1){
+      //       this.$message({
+      //         message: result.sub_msg,
+      //         type: 'success'
+      //       });
+      //     }
+      //     this.dialogVisible = false
+      //     if(this.isCallback){
+      //       this.$emit('callback')
+      //     } 
+      //   }).finally(() => {
+      //     this.loading = false
+      //   })
+      // },
       handleClose () {
         this.dialogVisible = false
         if(this.isCallback){
             this.$emit('callback')
         }
 			},
-			handleChange (val) {
-        //giveRule({gradePk: this.dataForm.gradePk, price: val}).then(res => {
-          // if (res.data.detailPo.type == 0) {
-          //   this.dataForm.donationMoney = this.dataForm.rechargeMoney * (res.data.detailPo.giveCount/100)
-          // } else {
-          //   this.dataForm.donationMoney = res.data.detailPo.giveCount
-          // }
-          // this.dataForm.couponPos = res.data.couponPos
-          // this.dataForm.giftPos = res.data.giftPos
-      //  })
-      },
-      // handleChangeDonation (val) {
-      //   this.dataForm.totalMoney = this.dataForm.rechargeMoney + val
-      // },
-      handleBlur () {
-        // if (this.dataForm.rechargeMoney == undefined) {
-        //   this.dataForm.rechargeMoney = 0
-        // }
-        // if (this.dataForm.donationMoney == undefined) {
-        //   this.dataForm.donationMoney = 0
-        // }
-        // if (this.dataForm.totalMoney == undefined) {
-        //   this.dataForm.totalMoney= 0
-        // }
-      },
     }
   }
 </script>
