@@ -108,8 +108,6 @@
         <member-integral-exchange ref="memberIntegralExchangeRefs" @callback="memberListData(form.pageNum)"></member-integral-exchange>
         <member-update-password ref="memberUpdatePasswordRefs" @callback="memberListData(form.pageNum)"></member-update-password>
         <member-exchange-card ref="memberExchangeCardRefs" @callback="memberListData(form.pageNum)"></member-exchange-card>
-        <member-logout ref="memberLogoutRefs" @callback="memberListData(form.pageNum)"></member-logout>
-
     </div>
 </template>
 
@@ -122,7 +120,6 @@ import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDia
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
 import MemberExchangeCardDetailDialog from "./MemberCardExchange/MemberExchangeCardDetailDialog.vue"
 import MemberUpdatePassword from "./MemberUpdatePassword.vue"
-import MemberLogout from "./MemberLogout.vue"
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
 import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
 import MemberExchangeCard from "./MemberCardExchange/MemberExchangeCard.vue"
@@ -131,10 +128,10 @@ import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
-import {printMember} from '@/api/customerRelation/pmsMemberController'
+import {printMember,delMember} from '@/api/customerRelation/pmsMemberController'
 
 export default {
-    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberLogout,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
+    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
   data() {
     return {
       dialogMemberVisible: false,
@@ -206,8 +203,8 @@ export default {
       },
       //注销会员卡
       openLogout (memberInfo) {
-        if(memberInfo.balance!=0||member.availableIntegral!=0){
-            this.$confirm('您还有可用积分或余额，是否要强制注销该卡', '提示', {
+        if(memberInfo.balance!=0||memberInfo.availableIntegral!=0){
+            this.$confirm('改会员还有可用积分或余额，是否要强制注销该卡', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
@@ -215,7 +212,6 @@ export default {
           delMember({memPk:memberInfo.memPk}).then(res => {
                 if(res.code == 1){
                     this.$message({ type: 'success', message: "强制注销成功！" })
-                    //this.listSearch()
                 }else{
                   this.$message({ type: 'warning', message: "强制注销失败！" })
                 }
@@ -306,9 +302,6 @@ export default {
     },
     memberUpdatePasswordClick(row){
         this.$refs.memberUpdatePasswordRefs.showDialog(row,false)
-    },
-    memberLogoutClick(row){
-        this.$refs.memberLogoutRefs.showDialog(row,false)
     },
     memberExchangeCard(row){
         this.$refs.memberExchangeCardRefs.showDialog(row,false);
