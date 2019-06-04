@@ -79,27 +79,27 @@
                 size="mini"
                 style="width: 100%">
                 <el-table-column
-                    prop="date"
+                    prop="column1"
                     label="房型">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="column2"
                     label="房价">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column3"
                     label="可定数">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column4"
                     label="可超数">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column5"
                     label="入住间数">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column6"
                     label="已排房">
                 </el-table-column>
             </el-table>
@@ -115,29 +115,29 @@
                     width="55">
                 </el-table-column>
                 <el-table-column
-                    prop="date"
+                    prop="column1"
                     label="房型">
                 </el-table-column>
                 <el-table-column
-                    prop="date"
+                    prop="column7"
                     label="房号">
                 </el-table-column>
                 <el-table-column
-                    prop="date"
+                    prop="column8"
                     label="房价">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column9"
                     label="早餐劵">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="column10"
                     label="备注">
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                     prop="address"
                     label="操作">
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
         </el-col>
     </el-row>
@@ -171,7 +171,21 @@
           retentionDate: moment().add(1, 'days'),
           //保留时间
           retentionTime: '06:00',
-        }
+        },
+        tableData:[
+            {
+                column1:'商务房',
+                column2:'200/300',
+                column3:'50',
+                column4:'10',
+                column5:'1',
+                column6:'0',
+                column7:'未排房',
+                column8:'200',
+                column9:'2',
+                column10:'',
+            }
+        ]
       }
     },
     created () {
