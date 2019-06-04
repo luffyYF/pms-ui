@@ -4,7 +4,7 @@
   <section class="member-dialog">
 		<el-dialog class="add-permission" title="修改密码" :visible.sync="dialogVisible" width="600px"
 							:close-on-click-modal="false" :before-close="handleClose">
-			<el-form ref="dataForm" :model="dataForm" label-width="120px">
+			<el-form ref="dataForm" :model="dataForm" label-width="120px" :rules="rules">
         <el-col :span="24">
           <el-col :span="12">
             <div class="title-right font-style">
@@ -18,55 +18,31 @@
             </div>
           </el-col>
         </el-col>
-				<el-form-item label="充值方式" prop="projectCode" size="mini">
-          <el-radio-group v-model="dataForm.projectCode">
-            <el-radio :label="234">现金</el-radio>
-            <el-radio :label="211">银行卡</el-radio>
-            <el-radio :label="235">支付宝</el-radio>
-            <el-radio :label="237">微信</el-radio>
-          </el-radio-group>
+				<el-form-item label="原密码:" size="mini">
+          <el-input type="password" v-model="dataForm.oldPwd"></el-input>
+          <el-checkbox size="mini" label="忘记密码" true-label="Y" false-label="N"></el-checkbox>
         </el-form-item>
-				<el-form-item label="会员卡号" size="mini">
-          <el-input v-model="dataForm.cardNumber" class="input-width" readonly></el-input>
+				<el-form-item label="新密码:" size="mini">
+           <el-input type="password" v-model="dataForm.newPwd"></el-input>
         </el-form-item>
-				<el-form-item label="充值金额" size="mini">
-          <el-input-number v-model="dataForm.rechargeMoney" class="input-width number-style" :min="0" :precision="2" :controls="false" @blur="handleBlur" @change="handleChange"></el-input-number>
+        <el-form-item label="确认新密码:" size="mini">
+           <el-input type="password" v-model="dataForm.confirmNewPwd"></el-input>
         </el-form-item>
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="赠送金额" size="mini">
-              <el-input-number v-model="dataForm.donationMoney" class="number-style" :min="0" :precision="2" :controls="false" @blur="handleBlur" @change="handleChangeDonation"></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="13">
-            <el-form-item label="充值赠送合计" label-width="100px" size="mini">
-              <el-input-number v-model="dataForm.totalMoney" class="number-style" :min="0" :precision="2" :controls="false" @blur="handleBlur" disabled></el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
-				<el-form-item label="赠送积分" size="mini">
-          <el-input-number v-model="dataForm.donationIntegral" class="input-width number-style" :min="0" :precision="2" :controls="false" @blur="handleBlur" disabled></el-input-number>
-        </el-form-item>
-				<el-form-item label="优惠券" size="mini">
-          <el-input v-model="dataForm.couponName" class="input-width" disabled></el-input>
-        </el-form-item>
-				<el-form-item label="礼品" size="mini">
-          <el-input v-model="dataForm.giftName" class="input-width" disabled></el-input>
-        </el-form-item>
-				<el-form-item label="备注" size="mini">
-          <el-input v-model="dataForm.remark" class="input-width" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+        <el-form-item>
+          	<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+				    <el-button type="primary" size="mini" @click="submitModify">确认</el-button>
         </el-form-item>
 			</el-form>
-			<span slot="footer" class="dialog-footer">
+			<!-- <span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-				<el-button type="primary" size="mini" @click="saveData" :loading="loading">{{dataForm.typePk == null ? '保存' : '修改'}}</el-button>
-			</span>
+				<el-button type="primary" size="mini" @click="submitModify">确认</el-button>
+			</span> -->
 		</el-dialog>
   </section>
 </template>
 
 <script>  
-import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
+import {updateMemberPassword} from '@/api/customerRelation/pmsMemberController'
 
   export default {
     data () {
@@ -75,102 +51,94 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
 				loading: false,
         dataForm: {
           memPk: '',
-          gradePk: '',
           memName: '',
           balance: 0,
-          projectCode: 234,
           cardNumber: '', 
-          couponName: '', 
-          giftName:'',
-          rechargeMoney: 0,
-          donationMoney: 0,
-          totalMoney: 0,
-          donationIntegral: 0,
-          remark: '',
-          couponPos: [],
-          giftPos: [],
-          isCallback:true
+          isCallback:true,
+          oldPwd:'',
+          newPwd:'',
+          confirmNewPwd:''
         },
+         rules:{
+          oldPwd:[
+            { required: true, message: '请输入旧密码', trigger: 'blur' },
+          ],
+          newPwd:[
+            { required: true, message: '请输入新密码', trigger: 'blur,change' },
+            { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
+          ],
+          confirmNewPwd:[
+            { required: true, message: '请确认密码', trigger: 'blur,change' },
+            { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
+          ]
+        }
       }
     },
     methods: {
+       submitModify(){
+        if(true) {
+          console.log(this.dataForm)
+          updateMemberPassword(this.dataForm).then(res=>{
+            this.$message.success('修改密码成功');
+            this.dataForm.newPwd = '';
+            this.dataForm.confirmNewPwd = '';
+            this.dataForm.oldPwd = '';
+          })
+        }
+      },
+      verification(){
+        var content = '';
+        if (this.dataForm.oldPwd == '') {
+          content = '旧密码不能为空';
+        } else if (this.dataForm.newPwd == '') {
+          content = '新密码不能为空'
+        } else if (this.dataForm.newPwd.length < 6 || this.dataForm.newPwd.length > 15) {
+          content = '新密码不符合规则'
+        } else if (this.dataForm.confirmNewPwd == '') {
+          content = '请确认密码'
+        } else if (this.dataForm.newPwd != this.dataForm.confirmNewPwd) {
+          content = '两次密码不一致'
+        }
+        if(content != '') {
+          this.$message.error(content);
+          return false;
+        }
+        return true;
+      },
       showDialog (data,isCallback) {
         this.isCallback = isCallback
         console.log(data)
         this.dataForm = {
           memPk: data.memPk,
-          gradePk: data.gradePk,
           memName: data.memName,
           balance: data.availableBalance.toFixed(2),
-          projectCode: 234,
           cardNumber: data.cardNumber, 
-          couponName: '', 
-          giftName:'',
-          rechargeMoney: 0,
-          donationMoney: 0,
-          totalMoney: 0,
-          donationIntegral: 0,
-          remark: '',
-          couponPos: [],
-          giftPos: [],
         }
         this.dialogVisible = true
       },
-      saveData(){
-        this.loading = true
-        recharge(this.dataForm).then(result => {
-          if(result.code == 1){
-            this.$message({
-              message: result.sub_msg,
-              type: 'success'
-            });
-          }
-          this.dialogVisible = false
-          if(this.isCallback){
-            this.$emit('callback')
-          } 
-        }).finally(() => {
-          this.loading = false
-        })
-      },
+      // saveData(){
+      //   this.loading = true
+      //   recharge(this.dataForm).then(result => {
+      //     if(result.code == 1){
+      //       this.$message({
+      //         message: result.sub_msg,
+      //         type: 'success'
+      //       });
+      //     }
+      //     this.dialogVisible = false
+      //     if(this.isCallback){
+      //       this.$emit('callback')
+      //     } 
+      //   }).finally(() => {
+      //     this.loading = false
+      //   })
+      // },
       handleClose () {
         this.dialogVisible = false
         if(this.isCallback){
             this.$emit('callback')
         }
 			},
-			handleChange (val) {
-        giveRule({gradePk: this.dataForm.gradePk, price: val}).then(res => {
-          if (res.data.detailPo.type == 0) {
-            this.dataForm.donationMoney = this.dataForm.rechargeMoney * (res.data.detailPo.giveCount/100)
-          } else {
-            this.dataForm.donationMoney = res.data.detailPo.giveCount
-          }
-          this.dataForm.totalMoney = this.dataForm.rechargeMoney + this.dataForm.donationMoney
-          this.dataForm.donationIntegral = res.data.detailPo.giveIntegral
-          this.dataForm.couponName = res.data.couponName
-          this.dataForm.giftName = res.data.giftName
-          this.dataForm.couponPos = res.data.couponPos
-          this.dataForm.giftPos = res.data.giftPos
-        })
-      },
-      handleChangeDonation (val) {
-        this.dataForm.totalMoney = this.dataForm.rechargeMoney + val
-      },
-      handleBlur () {
-        if (this.dataForm.rechargeMoney == undefined) {
-          this.dataForm.rechargeMoney = 0
-        }
-        if (this.dataForm.donationMoney == undefined) {
-          this.dataForm.donationMoney = 0
-        }
-        if (this.dataForm.totalMoney == undefined) {
-          this.dataForm.totalMoney= 0
-        }
-        if (this.dataForm.donationIntegral == undefined) {
-          this.dataForm.donationIntegral = 0
-        }
-      },
     }
   }
 </script>
