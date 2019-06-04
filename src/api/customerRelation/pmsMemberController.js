@@ -50,4 +50,9 @@ export const memberCertificateType = params => {
  export const updateMemberCard = params => {
    return request.post('/back/member/updateMemberCard', params)
 }
+ //修改会员密码
+ export const updateMemberPassword = params => {
+   return request.post('/back/member/updateMemberPassword', params)
+}
+
 

@@ -53,6 +53,7 @@
                             </div>
                         </el-col>
                     </el-row>
+                    <span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;温馨提示:已兑换的积分概不退换</span>
                 </el-col>
             </el-form>
 			<span slot="footer" class="dialog-footer">
