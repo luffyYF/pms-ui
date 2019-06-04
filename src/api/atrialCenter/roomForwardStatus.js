@@ -24,3 +24,8 @@ export const frowardRoomDetail = params => {
 export const getBookableCount = params => {
     return request.get('/back/frowardRoom/getBookableCount',{params:params});
 }
+
+// 今日可兑换商品查询
+export const listMemberIntegralExchange = params => {
+  return request.get('/pmsMemberIntegralExchangeLog/listMemberIntegralExchange', { params: params })
+}

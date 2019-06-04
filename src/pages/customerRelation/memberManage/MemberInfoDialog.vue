@@ -9,7 +9,7 @@
                 <el-button size="mini" type="primary">改密码</el-button>
                 <el-button size="mini" type="primary" @click="memberRechargeClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">充值</el-button>
                 <el-button size="mini" type="primary">积分增减</el-button>
-                <el-button size="mini" type="primary">积分兑换</el-button>
+                <el-button size="mini" type="primary" @click="memberIntegralForGoodsDialog(memberInfo)">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
                 <el-button size="mini" type="primary">注销</el-button>
@@ -45,11 +45,12 @@
                     <MemberIntegralRoomChangeRecord ref="MemberIntegralRoomChangeRecord"/>
                 </el-tab-pane>
             </el-tabs>
-            
-                
+
+
         </el-dialog>
         <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
         <MemberIntegralRoomChange ref="MemberIntegralRoomChange" />
+        <memberIntegralForGoodsDialog ref="memberIntegralForGoodsDialog"/>
     </div>
 </template>
 
@@ -67,10 +68,12 @@ import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumption
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
 
+import memberIntegralForGoodsDialog from "./memberIntegralForGoods/memberIntegralForGoods.vue"
+
 export default {
     components: { MemberInfo, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog,
     MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable ,
-    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange},
+    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,memberIntegralForGoodsDialog},
   data() {
     return {
       dialogMemberVisible: false,
@@ -105,6 +108,11 @@ export default {
         else if(this.activeName){
             this.$refs[this.activeName].init()
         }
+        else if(this.activeName=="memberIntegralForGoodsDialog"){
+          this.$nextTick(()=>{
+                this.$refs.memberIntegralForGoodsDialog.init(this.memberInfo.memPk,2)
+            })
+        }
     },
     showDialog(row){
         this.dialogMemberVisible = true
@@ -113,7 +121,7 @@ export default {
         this.$nextTick(()=>{
             this.$refs[this.activeName].init(row)
         })
-        
+
     },
     delCallback(){
         this.dialogMemberVisible = false
@@ -126,6 +134,12 @@ export default {
     memberRechargeClick (row) {
         this.$refs.memberRechargeRefs.showDialog(row,false)
     },
+
+    //积分兑换
+    memberIntegralForGoodsDialog(memberInfo){
+      this.$refs.memberIntegralForGoodsDialog.showDialog(memberInfo)
+    },
+
     memberRoomChangeClick(memberInfo){
         this.$refs.MemberIntegralRoomChange.showDialog(memberInfo)
     }

@@ -65,7 +65,7 @@
   </section>
 </template>
 
-<script>  
+<script>
 import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
 
   export default {
@@ -79,8 +79,8 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
           memName: '',
           balance: 0,
           projectCode: 234,
-          cardNumber: '', 
-          couponName: '', 
+          cardNumber: '',
+          couponName: '',
           giftName:'',
           rechargeMoney: 0,
           donationMoney: 0,
@@ -103,8 +103,8 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
           memName: data.memName,
           balance: data.availableBalance.toFixed(2),
           projectCode: 234,
-          cardNumber: data.cardNumber, 
-          couponName: '', 
+          cardNumber: data.cardNumber,
+          couponName: '',
           giftName:'',
           rechargeMoney: 0,
           donationMoney: 0,
@@ -129,7 +129,7 @@ import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
           this.dialogVisible = false
           if(this.isCallback){
             this.$emit('callback')
-          } 
+          }
         }).finally(() => {
           this.loading = false
         })
