@@ -108,7 +108,6 @@
         <member-integral-exchange ref="memberIntegralExchangeRefs" @callback="memberListData(form.pageNum)"></member-integral-exchange>
         <member-update-password ref="memberUpdatePasswordRefs" @callback="memberListData(form.pageNum)"></member-update-password>
         <member-exchange-card ref="memberExchangeCardRefs" @callback="memberListData(form.pageNum)"></member-exchange-card>
-
     </div>
 </template>
 
@@ -120,7 +119,7 @@ import MemberIntegralExchange from "./MemberIntegral/MemberIntegralExchange.vue"
 import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDialog.vue"
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
 import MemberExchangeCardDetailDialog from "./MemberCardExchange/MemberExchangeCardDetailDialog.vue"
-import MemberUpdatePassword from "./MemberUpdatePassword.vue";
+import MemberUpdatePassword from "./MemberUpdatePassword.vue"
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
 import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
 import MemberExchangeCard from "./MemberCardExchange/MemberExchangeCard.vue"
@@ -129,7 +128,7 @@ import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
-import {delMember,printMember} from '@/api/customerRelation/pmsMemberController'
+import {printMember,delMember} from '@/api/customerRelation/pmsMemberController'
 
 export default {
     components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
@@ -204,20 +203,50 @@ export default {
       },
       //注销会员卡
       openLogout (memberInfo) {
-        this.$confirm('确定注销该会员卡?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-        delMember({memPk:memberInfo.memPk}).then(res => {
-              if(res.code == 1){
-                  this.$message({ type: 'success', message: "注销成功！" })
-                  //this.listSearch()
-              }else{
-                 this.$message({ type: 'warning', message: "注销失败！" })
-              }
+        if(memberInfo.balance!=0||memberInfo.availableIntegral!=0){
+            this.$confirm('该会员还有可用积分或余额，是否要强制注销该卡', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+          delMember({memPk:memberInfo.memPk}).then(res => {
+                if(res.code == 1){
+                    this.$message({ type: 'success', message: "强制注销成功！" })
+                }else{
+                  this.$message({ type: 'warning', message: "强制注销失败！" })
+                }
+            })
           })
-        })
+          }else{
+              this.$confirm('确定注销该会员卡?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+            delMember({memPk:memberInfo.memPk}).then(res => {
+                  if(res.code == 1){
+                      this.$message({ type: 'success', message: "注销成功！" })
+                      //this.listSearch()
+                  }else{
+                    this.$message({ type: 'warning', message: "注销失败！" })
+                  }
+              })
+            })
+          }
+        // this.$confirm('确定注销该会员卡?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        // delMember({memPk:memberInfo.memPk}).then(res => {
+        //       if(res.code == 1){
+        //           this.$message({ type: 'success', message: "注销成功！" })
+        //           //this.listSearch()
+        //       }else{
+        //          this.$message({ type: 'warning', message: "注销失败！" })
+        //       }
+        //   })
+        // })
       },
     handleClose () {
             this.dialogMemberVisible = false

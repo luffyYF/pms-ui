@@ -41,7 +41,6 @@
       :data="houseList.table"
       :style="tableStyle"
       class="testTable"
-      height="500"
       :cell-style="tableCellClassName"
       :row-class-name="tableRowClassName"
       :summary-method="getSummaries"
