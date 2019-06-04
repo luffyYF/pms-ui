@@ -204,7 +204,7 @@ export default {
       //注销会员卡
       openLogout (memberInfo) {
         if(memberInfo.balance!=0||memberInfo.availableIntegral!=0){
-            this.$confirm('改会员还有可用积分或余额，是否要强制注销该卡', '提示', {
+            this.$confirm('该会员还有可用积分或余额，是否要强制注销该卡', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
