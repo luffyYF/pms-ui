@@ -12,7 +12,7 @@
                 <el-button size="mini" type="primary">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
-                <el-button size="mini" type="primary" @click="openLogout(memberInfo)">注销</el-button>
+                <el-button size="mini" type="primary" @click="memberLogoutClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">注销</el-button>
                 <el-button size="mini" type="primary">挂失</el-button>
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
@@ -108,6 +108,7 @@
         <member-integral-exchange ref="memberIntegralExchangeRefs" @callback="memberListData(form.pageNum)"></member-integral-exchange>
         <member-update-password ref="memberUpdatePasswordRefs" @callback="memberListData(form.pageNum)"></member-update-password>
         <member-exchange-card ref="memberExchangeCardRefs" @callback="memberListData(form.pageNum)"></member-exchange-card>
+        <member-logout ref="memberLogoutRefs" @callback="memberListData(form.pageNum)"></member-logout>
 
     </div>
 </template>
@@ -120,7 +121,8 @@ import MemberIntegralExchange from "./MemberIntegral/MemberIntegralExchange.vue"
 import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDialog.vue"
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
 import MemberExchangeCardDetailDialog from "./MemberCardExchange/MemberExchangeCardDetailDialog.vue"
-import MemberUpdatePassword from "./MemberUpdatePassword.vue";
+import MemberUpdatePassword from "./MemberUpdatePassword.vue"
+import MemberLogout from "./MemberLogout.vue"
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
 import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
 import MemberExchangeCard from "./MemberCardExchange/MemberExchangeCard.vue"
@@ -129,10 +131,10 @@ import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
-import {delMember,printMember} from '@/api/customerRelation/pmsMemberController'
+import {printMember} from '@/api/customerRelation/pmsMemberController'
 
 export default {
-    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
+    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberLogout,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
   data() {
     return {
       dialogMemberVisible: false,
@@ -203,22 +205,22 @@ export default {
         });
       },
       //注销会员卡
-      openLogout (memberInfo) {
-        this.$confirm('确定注销该会员卡?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-        delMember({memPk:memberInfo.memPk}).then(res => {
-              if(res.code == 1){
-                  this.$message({ type: 'success', message: "注销成功！" })
-                  //this.listSearch()
-              }else{
-                 this.$message({ type: 'warning', message: "注销失败！" })
-              }
-          })
-        })
-      },
+      // openLogout (memberInfo) {
+      //   this.$confirm('确定注销该会员卡?', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //   delMember({memPk:memberInfo.memPk}).then(res => {
+      //         if(res.code == 1){
+      //             this.$message({ type: 'success', message: "注销成功！" })
+      //             //this.listSearch()
+      //         }else{
+      //            this.$message({ type: 'warning', message: "注销失败！" })
+      //         }
+      //     })
+      //   })
+      // },
     handleClose () {
             this.dialogMemberVisible = false
             this.$emit('callback')
@@ -273,6 +275,9 @@ export default {
     },
     memberUpdatePasswordClick(row){
         this.$refs.memberUpdatePasswordRefs.showDialog(row,false)
+    },
+    memberLogoutClick(row){
+        this.$refs.memberLogoutRefs.showDialog(row,false)
     },
     memberExchangeCard(row){
         this.$refs.memberExchangeCardRefs.showDialog(row,false);

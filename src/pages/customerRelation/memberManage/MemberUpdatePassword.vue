@@ -86,7 +86,6 @@ export default {
   },
   methods: {
     submitModify() {
-
           if (this.verification()) {
             updateMemberPassword(this.dataForm).then(res => {
               if (res.code == 1) {
@@ -98,7 +97,6 @@ export default {
               }
             });
           }
-     
     },
     verification() {
       var content = "";
