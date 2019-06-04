@@ -209,9 +209,6 @@ export default {
     init(val) {
       this.realTimeRoomStatusMap = realTimeRoomStatusMap
     },
-    roomTypeCountMonitor(map){
-      this.roomTypeCount = map
-    },
     calendarRoomForwardStatus(row) {
       this.currentRoom = row;
       if (!this.currentDate) {
@@ -240,104 +237,17 @@ export default {
       // this.calendarPrice(current);
       // this.currDate = current
     },
-    //右边 tabs点击事件
-    handleClick(tab, event) {},
-    //房间样式
-    styleRoomStatusObject(item){
-      let classInfo = {
-        "width"        : '174px',
-        "height"       : "100px",
-        "border-radius": "5px"
-      }
-      roomStatusMap[item.roomStatus]
-      let bgInfo = this.setBackground('#fff','#fff')
-      return Object.assign(classInfo, bgInfo)
-    },
+    
     //设置房态背景色
     setBackground(color1,color2){
       return {
         "background": "linear-gradient("+color1+", "+color2+")"
       }
     },
-    //底部 样式
-    roomTypeColor(key){
-      let colorInfo = {
-        color: '#000'
-      }
-      colorInfo.color = realTimeRoomStatusColor[key].color1
-      return colorInfo
-    },
-    //订单详细弹窗 关闭回调事件
-    closeOrderDialog() {
-      this.init();
-    },
-    /**
-     * 底部
-     * 房态选择
-     */
-    roomTypeChange(){
-      console.log(this.roomTypeStart);
-      this.roomListSelectData.filterStatus = this.roomTypeStart
-      this.realTimeRoomStatus()
-    },
-    /**
-     * 获取房间配置
-     */
-    getRoomConfig(){},
-    //关联图标信息
-    relationIconHover(index) {
-      if (!this.roomList[index].orderInfo) {
-        console.log(index);
-        loadOrderInfo({ guestOrderPk: this.roomList[index].guestOrderPk }).then(
-          res => {
-            this.$set(this.roomList[index], "orderInfo", res.data);
-          }
-        )
-      }
-    },
-    //预抵信息
-    arrivalIconHover(index) {
-      if (!this.roomList[index].arrivalInfo) {
-        loadOrderInfo({
-          guestOrderPk: this.roomList[index].arrivalGuestPk
-        }).then(res => {
-          console.log(index);
-          this.$set(this.roomList[index], "arrivalInfo", res.data);
-        });
-      }
-    },
-    //房间管理弹窗 维修、停用
-    clickRoomManager() {
-      this.$refs.roomManagerRef.showDialog();
-    },
-    //联房
-    joinRoom(item) {
-      if (item.orderPk) {
-        this.$refs.joinRoomDialogRef.showDialog(item.orderPk);
-      } else if (item.arrivalOrderPk) {
-        this.$refs.joinRoomDialogRef.showDialog(item.arrivalOrderPk);
-      }
-    }
+    
   },
   mounted() {
-    this.channelArr = [];
-    //获取渠道类型
-    var typeList = JSON.parse(localStorage.getItem("pms_type"));
-    typeList.forEach(item => {
-      //渠道
-      if (item.typeMaster == "CHANNEL") {
-        this.channelArr.push(item);
-      }
-    });
-    //楼层
-    listStorey().then(res => {
-      this.floorArr = res.data;
-    });
-    //楼栋
-    listBuilding().then(res => {
-      this.buildingArr = res.data;
-    });
-    this.init();
+   
   },
   beforeDestroy() {}
 };

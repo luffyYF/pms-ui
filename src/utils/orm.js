@@ -175,18 +175,58 @@ export const roomStatusMap = {
 }
 //实时房态
 export const realTimeRoomStatusMap = {
-  'KJ': "空净",
-  'KZ': "空脏",
-  'ZJ': "住净",
-  'ZZ': "住脏",
-  'WX': "维修",
-  'YD': "预抵",
-  'YL': "预离",
-  'SR': "生日",
-  'TD': "团队",
-  'ZDF': "钟点房",
-  'TSF': "特殊房",
-  'MFF': "免费房"
+  'KJ': {
+    icon: false,
+    name: "空净"
+  },
+  'KZ': {
+    icon: false,
+    name: "空脏"
+  },
+  'ZJ': {
+    icon: false,
+    name: "住净"
+  },
+  'ZZ': {
+    icon: false,
+    name: "住脏"
+  },
+  'WX': {
+    icon: false,
+    name: "维修"
+  },
+  'YD': {
+    icon: true,
+    name: "预抵"
+  },
+  'YL': {
+    icon: true,
+    name: "预离"
+  },
+  'QF': {
+    icon: true,
+    name: "欠费"
+  },
+  'SR': {
+    icon: true,
+    name: "生日"
+  },
+  'TD': {
+    icon: true,
+    name: "团队"
+  },
+  'ZDF': {
+    icon: true,
+    name: "钟点房"
+  },
+  'TSF': {
+    icon: true,
+    name: "特殊房"
+  },
+  'MFF': {
+    icon: true,
+    name: "免费房"
+  }
 }
 
 // 停用：#f75e5e  #dd4b4b；
@@ -213,6 +253,7 @@ export const realTimeRoomStatusColor = {
   },
   'YD': "预抵",
   'YL': "预离",
+  'QF': "生日",
   'SR': "生日",
   'TD': "团队",
   'ZDF': "钟点房",
