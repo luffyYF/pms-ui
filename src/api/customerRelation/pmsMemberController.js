@@ -54,5 +54,10 @@ export const memberCertificateType = params => {
  export const updateMemberPassword = params => {
    return request.post('/back/member/updateMemberPassword', params)
 }
+//打印会员信息（查询会员信息）
+export const printMember = params => {
+   return request.get('/back/member/memberPrint', {params: params})
+ }
+ 
 
 
