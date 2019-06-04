@@ -12,7 +12,7 @@
                 <el-button size="mini" type="primary">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
-                <el-button size="mini" type="primary" @click="memberLogoutClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">注销</el-button>
+                <el-button size="mini" type="primary" @click="openLogout(memberInfo)">注销</el-button>
                 <el-button size="mini" type="primary">挂失</el-button>
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
@@ -205,22 +205,53 @@ export default {
         });
       },
       //注销会员卡
-      // openLogout (memberInfo) {
-      //   this.$confirm('确定注销该会员卡?', '提示', {
-      //     confirmButtonText: '确定',
-      //     cancelButtonText: '取消',
-      //     type: 'warning'
-      //   }).then(() => {
-      //   delMember({memPk:memberInfo.memPk}).then(res => {
-      //         if(res.code == 1){
-      //             this.$message({ type: 'success', message: "注销成功！" })
-      //             //this.listSearch()
-      //         }else{
-      //            this.$message({ type: 'warning', message: "注销失败！" })
-      //         }
-      //     })
-      //   })
-      // },
+      openLogout (memberInfo) {
+        if(memberInfo.balance!=0||member.availableIntegral!=0){
+            this.$confirm('您还有可用积分或余额，是否要强制注销该卡', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+          delMember({memPk:memberInfo.memPk}).then(res => {
+                if(res.code == 1){
+                    this.$message({ type: 'success', message: "强制注销成功！" })
+                    //this.listSearch()
+                }else{
+                  this.$message({ type: 'warning', message: "强制注销失败！" })
+                }
+            })
+          })
+          }else{
+              this.$confirm('确定注销该会员卡?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+            delMember({memPk:memberInfo.memPk}).then(res => {
+                  if(res.code == 1){
+                      this.$message({ type: 'success', message: "注销成功！" })
+                      //this.listSearch()
+                  }else{
+                    this.$message({ type: 'warning', message: "注销失败！" })
+                  }
+              })
+            })
+          }
+        // this.$confirm('确定注销该会员卡?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        // delMember({memPk:memberInfo.memPk}).then(res => {
+        //       if(res.code == 1){
+        //           this.$message({ type: 'success', message: "注销成功！" })
+        //           //this.listSearch()
+        //       }else{
+        //          this.$message({ type: 'warning', message: "注销失败！" })
+        //       }
+        //   })
+        // })
+      },
     handleClose () {
             this.dialogMemberVisible = false
             this.$emit('callback')
