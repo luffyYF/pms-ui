@@ -130,7 +130,8 @@ export default {
         memPk: data.memPk,
         memName: data.memName,
         balance: data.availableBalance.toFixed(2),
-        cardNumber: data.cardNumber
+        cardNumber: data.cardNumber,
+        type:"N"
       };
       this.dialogVisible = true;
     },
