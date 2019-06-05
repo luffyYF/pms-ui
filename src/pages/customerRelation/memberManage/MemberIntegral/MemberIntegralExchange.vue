@@ -68,14 +68,14 @@ import { integralExchange } from '@/api/customerRelation/pmsMemberLogController'
           cardNumber: '', 
           gradeName:'',
           availableIntegral:0,
-          isCallback:true
+          isCallback:true,
         },
         radio: 'increase',
         remark: '',
         integral:'',
         rules:{
           integral:[
-            { required: true, message: '请输入积分', trigger: 'blur' },
+            { required: true, message: '请输入积分', trigger: 'blur,change' },
           ],
           remark:[
             { required: true, message: '请输入备注', trigger: 'blur,change' },
@@ -86,7 +86,6 @@ import { integralExchange } from '@/api/customerRelation/pmsMemberLogController'
     methods: {
       showDialog (data,isCallback) {
         this.isCallback = isCallback
-        console.log(data)
         this.dataForm = {
           memPk: data.memPk,
           memName: data.memName,
@@ -99,53 +98,77 @@ import { integralExchange } from '@/api/customerRelation/pmsMemberLogController'
       sureClick(){
         if(true){
           //判断radio的类型
-          if(this.radio=="reduce"&&this.integral<this.dataForm.availableIntegral){
-            return this.integral=-this.integral;
-            console.log("新增积分"+this.integral);
-            integralExchange({integral:this.integral,remark:this.remark}).then(result => {
-            if(result.code == 1){
+          if(this.radio=="reduce"){
+            if(this.integral<this.dataForm.availableIntegral){
+              this.integral=-this.integral;
+                integralExchange({integral:this.integral,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
+                if(result.code == 1){
+                  this.$message({
+                    message: "积分减少成功！",
+                    type: 'success'
+                  });
+                }
+                this.dialogVisible = false
+                if(this.isCallback){
+                  this.$emit('callback')
+                } 
+            }).finally(() => {
+              this.loading = false
+            })
+            }else{
               this.$message({
-                message: result.sub_msg,
-                type: 'success'
-              });
-            }
-            this.dialogVisible = false
-            if(this.isCallback){
-              this.$emit('callback')
-            } 
-        }).finally(() => {
-          this.loading = false
-        })
-          }else{
-            integralExchange({integral:this.integral,remark:this.remark}).then(result => {
-          if(result.code == 1){
-            this.$message({
-              message: result.sub_msg,
-              type: 'success'
-            });
+                    message: "可用积分不足以减少！",
+                    type: 'warning'
+                  });
+            }  
+          }else {
+              integralExchange({integral:this.integral,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
+              if(result.code == 1){
+                this.$message({
+                  message: "积分增加成功！",
+                  type: 'success'
+                });
+              }
+              this.dialogVisible = false
+              if(this.isCallback){
+                this.$emit('callback')
+              } 
+            }).finally(() => {
+              this.loading = false
+            })
           }
-          this.dialogVisible = false
-          if(this.isCallback){
-            this.$emit('callback')
-          } 
-        }).finally(() => {
-          this.loading = false
-        })
-          }
-        //  integralExchange({integral:this.integral,remark:this.remark}).then(result => {
-        //   if(result.code == 1){
-        //     this.$message({
-        //       message: result.sub_msg,
-        //       type: 'success'
-        //     });
-        //   }
-        //   this.dialogVisible = false
-        //   if(this.isCallback){
-        //     this.$emit('callback')
-        //   } 
-        // }).finally(() => {
-        //   this.loading = false
-        // })
+          // if(this.radio=="reduce"&&this.integral<this.dataForm.availableIntegral){
+          //       this.integral=-this.integral;
+          //       integralExchange({integral:this.integral,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
+          //       if(result.code == 1){
+          //         this.$message({
+          //           message: "积分减少成功！",
+          //           type: 'success'
+          //         });
+          //       }
+          //       this.dialogVisible = false
+          //       if(this.isCallback){
+          //         this.$emit('callback')
+          //       } 
+          //   }).finally(() => {
+          //     this.loading = false
+          //   })
+          // }else {
+          //     integralExchange({integral:this.integral,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
+          //     if(result.code == 1){
+          //       this.$message({
+          //         message: "积分增加成功！",
+          //         type: 'success'
+          //       });
+          //     }
+          //     this.dialogVisible = false
+          //     if(this.isCallback){
+          //       this.$emit('callback')
+          //     } 
+          //   }).finally(() => {
+          //     this.loading = false
+          //   })
+          // }
         }
       },
       handleClose () {

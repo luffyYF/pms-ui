@@ -9,6 +9,6 @@ export const listMemberLog = params => {
    return request.get('/pmsMemberLog/list', {params: params})
 }
 export const integralExchange = params => {
-   return request.post('/pmsMemberLog/addIntegralRecode', {params: params})
+   return request.post('/pmsMemberLog/addIntegralRecode', params)
 }
 
