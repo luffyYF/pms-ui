@@ -16,7 +16,7 @@ import checkIn from '@/router/home/checkIn/index'
 //订单
 import orderForm from '@/router/home/orderForm/index'
 //订单详情
-import orderDetails from '@/router/home/orderDetails/index'
+// import orderDetails from '@/router/home/orderDetails/index'
 //会员
 import member from '@/router/home/member/index'
 //单位
@@ -72,7 +72,7 @@ children.push(conferenceRoom)
 children.push(system)
 children.push(cashPayment)
 children.push(moreFunctions)
-children.push(orderDetails)
+// children.push(orderDetails)
 
 
 router.children = children
