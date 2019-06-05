@@ -62,7 +62,9 @@ import {updateMemberCard } from '@/api/customerRelation/pmsMemberController'
           balance: data.availableBalance.toFixed(2),
           cardNumber: data.cardNumber, 
         }
-        this.dialogVisible = true
+        this.dialogVisible = true,
+        this.remark='',
+        this.newCardNumber=''
       },
       saveData(){
         this.loading = true

@@ -93,11 +93,13 @@ import { integralExchange } from '@/api/customerRelation/pmsMemberLogController'
           gradeName:data.gradeName,
           availableIntegral:data.availableIntegral,
         }
-        this.dialogVisible = true
+        this.dialogVisible = true,
+        this.integral="",
+        this.remark=""
       },
       sureClick(){
+        this.loading = true
         if(true){
-          //判断radio的类型
           if(this.radio=="reduce"){
             if(this.integral<this.dataForm.availableIntegral){
               this.integral=-this.integral;
@@ -137,38 +139,6 @@ import { integralExchange } from '@/api/customerRelation/pmsMemberLogController'
               this.loading = false
             })
           }
-          // if(this.radio=="reduce"&&this.integral<this.dataForm.availableIntegral){
-          //       this.integral=-this.integral;
-          //       integralExchange({integral:this.integral,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
-          //       if(result.code == 1){
-          //         this.$message({
-          //           message: "积分减少成功！",
-          //           type: 'success'
-          //         });
-          //       }
-          //       this.dialogVisible = false
-          //       if(this.isCallback){
-          //         this.$emit('callback')
-          //       } 
-          //   }).finally(() => {
-          //     this.loading = false
-          //   })
-          // }else {
-          //     integralExchange({integral:this.integral,remark:this.remark,memPk:this.dataForm.memPk}).then(result => {
-          //     if(result.code == 1){
-          //       this.$message({
-          //         message: "积分增加成功！",
-          //         type: 'success'
-          //       });
-          //     }
-          //     this.dialogVisible = false
-          //     if(this.isCallback){
-          //       this.$emit('callback')
-          //     } 
-          //   }).finally(() => {
-          //     this.loading = false
-          //   })
-          // }
         }
       },
       handleClose () {
