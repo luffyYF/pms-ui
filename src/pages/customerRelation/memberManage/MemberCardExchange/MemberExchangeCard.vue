@@ -55,7 +55,6 @@ import {updateMemberCard } from '@/api/customerRelation/pmsMemberController'
     methods: {
       showDialog (data,isCallback) {
         this.isCallback = isCallback
-        console.log(data)
         this.dataForm = {
           memPk: data.memPk,
           memName: data.memName,
