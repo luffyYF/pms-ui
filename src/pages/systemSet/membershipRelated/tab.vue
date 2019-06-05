@@ -9,9 +9,9 @@
         <MemberIntegralRule ref="MemberIntegralRule"/>
       </el-tab-pane>
 
-      <el-tab-pane label="会员积分明细" name="MemberIntegralExchangeLog">
+      <!-- <el-tab-pane label="会员积分明细" name="MemberIntegralExchangeLog">
         <MemberIntegralExchangeLog ref="MemberIntegralExchangeLog"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
 
       <el-tab-pane label="充值赠送规则" name="MemberRechargeGiveRule" v-if="hasPerm('pms:member:rechargeGiveRule')">
         <MemberRechargeGiveRule ref="MemberRechargeGiveRule"/>
@@ -49,7 +49,7 @@
   import MemberIntegralRoomChangeRule from './MemberIntegralRoomChangeRule'
   import MemberForwardPrice from './MemberForwardPrice'
   import IntegralExchangeRule from './IntegralExchangeRule'
-  import MemberIntegralExchangeLog from './MemberIntegralExchangeLog'
+  // import MemberIntegralExchangeLog from './MemberIntegralExchangeLog'
   
 
   
@@ -67,7 +67,7 @@
       MemberIntegralRoomChangeRule,
       MemberForwardPrice,
       IntegralExchangeRule,
-      MemberIntegralExchangeLog
+      // MemberIntegralExchangeLog
     },
     data () {
       return {
@@ -96,10 +96,12 @@
         }else if(this.activeName == 'MemberIntegralRule'){
           var child = this.$refs.MemberIntegralRule
           child.init()
-        }else if(this.activeName == 'MemberIntegralExchangeLog'){
-          var child = this.$refs.MemberIntegralExchangeLog
-          child.init()
-        }else if(this.activeName == 'MemberRechargeGiveRule'){
+        }
+        // else if(this.activeName == 'MemberIntegralExchangeLog'){
+        //   var child = this.$refs.MemberIntegralExchangeLog
+        //   child.init()
+        // }
+        else if(this.activeName == 'MemberRechargeGiveRule'){
           var child = this.$refs.MemberRechargeGiveRule
           child.init()
         }else if(this.activeName == 'MemberIntegralRoomChangeRule'){

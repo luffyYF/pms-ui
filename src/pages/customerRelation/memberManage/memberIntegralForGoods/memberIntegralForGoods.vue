@@ -21,7 +21,7 @@
                 <el-row :gutter="24">
                 <el-col :span="12">
                   <el-form-item label="会员类型" prop="gradeName">
-                  <el-input size="small" disabled v-model="memberInfo.gradeName" type="text"/>
+                  <el-input size="small" disabled v- model="memberInfo.gradeName" type="text"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" class="btn-right">
@@ -70,7 +70,7 @@
                         style="width: 100%"
                         border
                         highlight-current-row
-                        height="250">
+                        height="200">
                         <el-table-column
                           fixed
                           prop="giftName"
@@ -85,21 +85,30 @@
                         <el-table-column
                           label="兑换数量"
                           width="100">
-                           <el-input-number v-model="forNum" size="mini"   :controls="false" :min="1"  label="请输入兑换数量"></el-input-number>
+
+                            <el-input-number v-model="integralNumber" size="mini" @change="handlerPageNo"   :controls="false" :min="1"  label="请输入兑换数量"></el-input-number>
+
                         </el-table-column>
                         <el-table-column
                           prop="province"
                           label="操作"
                           width="100">
-                          <el-button type="primary" size="mini">移除</el-button>
+                          <template slot-scope="scope">
+                          <el-button type="primary" @click="deleteRow(scope.$index, tableData2)" size="mini">移除</el-button>
+                          </template>
                         </el-table-column>
                    </el-table>
+
+                   <el-form-item label="总计:" style="margin-left:-10px">
+                       <!-- <el-input size="small" disabled v-model="userIntegral"  type="text"/> -->
+                       <el-tag v-model="userIntegral"  size="small">{{userIntegral}}</el-tag>
+                    </el-form-item>
                 </el-col>
               </el-row>
             </el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="getAddress()" size="mini">确 定</el-button>
+        <el-button type="primary" @click="addClick()" size="mini">确 定</el-button>
 			</span>
 
       <!-- <el-dialog title="定位" :visible.sync="dialogVisible2" :before-close="handleClose2" width="800px">
@@ -115,7 +124,7 @@
 
 <script>
 import {listByMemberGrade } from '@/api/systemSet/member/pmsMemberIntegralRoomChangeRule'
-import {getBookableCount,listMemberIntegralExchange} from '@/api/atrialCenter/roomForwardStatus'
+import {getBookableCount,listMemberIntegralExchange,saveIntegralExchangeForGoods} from '@/api/atrialCenter/roomForwardStatus'
 
 //import {listMemberIntegralExchange} from '@/api/PmsMemberIntegralExchangeApi/listMemberIntegralExchange'
 
@@ -135,11 +144,13 @@ import Moment from 'moment'
         //   integral: '',
         //   province: '上海',
         //  }],
-         tableData:{},
-         tableData2:{},
-         forNum:1,
+         tableData:[],
+         tableData2:[],
          ids:[],
+         integralNumber:1,
          multipleSelection: [],
+         userIntegral:0,
+
         dataForm:{
             now:"",
             days:1,
@@ -181,34 +192,99 @@ import Moment from 'moment'
                 this.dataForm.ruleName = ""
             }
         },
+        //删除行
+        deleteRow(index, rows) {
+                rows.splice(index, 1);
+              },
 
 
          //获取下拉列表选中的id
        handleSelectionChange(val) {
         this.multipleSelection = val;
-        let machIds = []
-        this.multipleSelection.map((item)=> {
-        machIds.push(item.rulePk)
-        })
-        this.ids = machIds;
-        alert(this.ids)
+        // let machIds = []
+        // this.multipleSelection =val
+        // this.ids = machIds;
+      },
+
+      handlerPageNo(){
+         let sum = 0;
+           for(var a=0;a<this.tableData2.length;a++){
+            sum+= this.tableData2[a].integral*Number(this.integralNumber);
+           }
+           this.userIntegral = sum;
+           console.log(this.userIntegral)
       },
       //添加兑换商品
         addGoods(){
-          let rulePks = [];
-          rulePks = this.ids;
-          alert(rulePks)
-           for(var i=0;i<this.tableData.length;i++){
-              for(var j=0;j<=rulePks.length;j++){
-                if(rulePks[j]==this.tableData[i].rulePk){
-                  console.log("Pk"+this.tableData[i].rulePk);
-                 // this.tableData2=JSON.stringify(this.tableData[i]);
-                 this.tableData2 =this.tableData;
+          if(this.multipleSelection==''){
+            this.$message({ type: 'warning',message:'未选择兑换商品'})
+          }
+          let multipleSelection = this.multipleSelection;
+          let m = this.tableData2.length;
+           for(var i=0;i<multipleSelection.length;i++){
+              let flag = true;
+              for(var j=0;j<m;j++){
+                if(multipleSelection[j].rulePk == this.tableData2[i].rulePk){
+                  flag=false
+                  break;
                 }
               }
+              if(flag){
+                this.tableData2.push(JSON.parse(JSON.stringify(multipleSelection[i])))
+              }
            }
-           console.log(this.tableData2);
+            let sum = 0;
+           for(var a=0;a<this.tableData2.length;a++){
+            sum+= this.tableData2[a].integral*Number(this.integralNumber);
+           }
+           this.userIntegral = sum;
+           console.log(this.userIntegral)
         },
+
+         handlerPageNo(){
+            let sum=0;
+           for(var a=0;a<this.tableData2.length;a++){
+            sum+= this.tableData2[a].integral*Number(this.integralNumber);
+           }
+           this.userIntegral = sum;
+         },
+
+        //批量添加
+      addClick () {
+        this.$confirm('是否确定要兑换?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+        let Integrals = []
+        // this.multipleSelection = this.ids;
+        alert(this.multipleSelection)
+        if(this.multipleSelection!=null && this.multipleSelection.length!=0){
+            this.multipleSelection.forEach(tableData2 => {
+          Integrals.push({
+            giftName:tableData2.giftName,
+            integral: tableData2.integral,
+            integralNumber:tableData2.integralNumber,
+            rulePk:tableData2.rulePk,
+            memPk:this.memberInfo.memPk,
+            userIntegral: this.userIntegral
+          })
+        })
+        }else{
+          this.$message({ type: 'warning',message:'请勾选需要兑换的商品'})
+          return
+        }
+        if(this.userIntegral>this.memberInfo.availableIntegral){
+           this.$message({ type: 'warning',message:'积分不足'})
+           return
+        }
+          saveIntegralExchangeForGoods(Integrals).then(res => {
+            this.$message({ type: 'success', message: res.sub_msg })
+            //this.listMachRoad()
+          })
+        })
+      },
+
         showDialog(memberInfo) {
             this.memberInfo = memberInfo
             this.listQuery.gradePk = memberInfo.gradePk

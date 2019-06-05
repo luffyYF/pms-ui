@@ -29,3 +29,10 @@ export const getBookableCount = params => {
 export const listMemberIntegralExchange = params => {
   return request.get('/pmsMemberIntegralExchangeLog/listMemberIntegralExchange', { params: params })
 }
+
+// 批量添加兑换商品
+export const saveIntegralExchangeForGoods = params => {
+  return request.post('/pmsMemberIntegralExchangeLog/saveIntegralExchangeForGoods', params)
+}
+
+

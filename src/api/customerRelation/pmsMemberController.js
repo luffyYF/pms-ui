@@ -28,7 +28,7 @@ export const updateMember = params => {
 }
 
 export const delMember = params => {
-   return request.post('/back/member/del', params)
+   return request.get('/back/member/del', {params:params})
 }
 
 export const recoverMember = params => {
@@ -46,4 +46,13 @@ export const memberCertificateType = params => {
  export const recharge = params => {
     return request.post('/back/member/recharge', params)
  }
+ //修改会员卡号
+ export const updateMemberCard = params => {
+   return request.post('/back/member/updateMemberCard', params)
+}
+ //修改会员密码
+ export const updateMemberPassword = params => {
+   return request.post('/back/member/updateMemberPassword', params)
+}
+
 

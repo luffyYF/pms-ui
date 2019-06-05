@@ -17,14 +17,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        
         <el-form-item label="楼层：">
           <el-select
             class="selectWidth"
             v-model="selectForm.floor"
-            placeholder="请选择"
-            clearable
-            @change="init">
+            placeholder="请选择" clearable @change="init">
             <el-option
               v-for="y in floorArr"
               :key="y.storeyPk"
@@ -50,10 +47,9 @@
             ref="channelRef"
             class="selectWidth"
             @callback="init"
-            v-model="selectForm.channel"
-          />
+            v-model="selectForm.channel"/>
         </el-form-item>
-         <el-form-item label="房号：">
+        <el-form-item label="房号：">
           <el-input class="selectWidth" v-model="roomNumber" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item>
@@ -63,18 +59,18 @@
     </el-header>
     <el-container class="room-pattern-container">
       <el-main>
-        <div id="rowRoom" class="rowRoom">
-          <div class="floorstorey">
-            <div class="title">16栋1楼<span>（空净20间&nbsp;&nbsp;空脏20间&nbsp;&nbsp;住净20间&nbsp;&nbsp;住脏20间&nbsp;&nbsp;维修20间&nbsp;&nbsp;停用20间&nbsp;&nbsp;预抵20间&nbsp;&nbsp;预离20间&nbsp;&nbsp;生日20间&nbsp;&nbsp;团队20间&nbsp;&nbsp;钟点房20间&nbsp;&nbsp;接待房20间）</span></div>
+        <div id="rowRoom" class="rowRoom" >
+          <div class="floorstorey" v-for="(ite, index) in roomList" :key="index">
+            <div class="title" v-if='ite.buildingName || ite.storeyName'>{{ite.buildingName?ite.buildingName:''}}{{ite.storeyName?ite.storeyName+'层':''}}<span>（空净20间&nbsp;&nbsp;空脏20间&nbsp;&nbsp;住净20间&nbsp;&nbsp;住脏20间&nbsp;&nbsp;维修20间&nbsp;&nbsp;停用20间&nbsp;&nbsp;预抵20间&nbsp;&nbsp;预离20间&nbsp;&nbsp;生日20间&nbsp;&nbsp;团队20间&nbsp;&nbsp;钟点房20间&nbsp;&nbsp;接待房20间）</span></div>
             <!-- 房间item begin -->
             <div class="pattern-li"
               @contextmenu.prevent="rightClick(item,$event)"
-              @click.prevent="roomClick(item)"
+              @click="roomClick(item)"
               @dblclick="toCheckin(item)"
-              @click.ctrl.prevent="ctrlClick(item,index)"
-              :class="classRoomStatusObject(item)"
-              v-for="(item, index) in checkedFilter(numberFilter(roomList))"
-              :key="index">
+              @click.ctrl="ctrlClick(item,index)"
+              :style="styleRoomStatusObject(item)"
+              v-for="(item, i) in ite.roomList"
+              :key="i">
               <!-- 房间号 渠道 -->
               <div class="pattern-li-item">
                 <label class="rm">{{item.roomNumber}}</label>
@@ -93,7 +89,6 @@
                   <label class="channelinfo">{{item.arrivalChannelName}}</label>
                 </div>
               </div>
-
               <!-- 状态图标 -->
               <div class="pattern-li-item button-status-icon">
                 <!-- 入住关联类型 -->
@@ -277,7 +272,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="房态" name="4" class="room-status-calendar-box">
-            <full-calendar ref="calendar" :events="meetingEventList" lang="zh" @changeMonth="changeMonth">
+            <full-calendar ref="calendar" v-if="aside.activeName == 4" :events="meetingEventList" lang="zh" @changeMonth="changeMonth">
             </full-calendar>
           </el-tab-pane>
           <el-tab-pane label="日志" name="5">
@@ -293,23 +288,11 @@
     </el-container>
     <el-footer height="50px" class="room-pattern-footer">
       <div>
-        <el-radio-group v-model="roomTypeStart" size="mini">
-          <el-radio-button label="0">全部(20)</el-radio-button>
-          <el-radio-button label="1"><span class="Ident"></span><span>空净(20)</span></el-radio-button>
-          <el-radio-button label="2"><span class="Ident"></span><span>空脏(20)</span></el-radio-button>
-          <el-radio-button label="3"><span class="Ident"></span><span>住净(20)</span></el-radio-button>
-          <el-radio-button label="4"><span class="Ident"></span><span>住脏(20)</span></el-radio-button>
-          <el-radio-button label="5"><span class="Ident"></span><span>维修(20)</span></el-radio-button>
-          <el-radio-button label="6"><span class="Ident"></span><span>预抵(20)</span></el-radio-button>
-          <el-radio-button label="7"><span class="Ident"></span><span>预离(20)</span></el-radio-button>
-          <el-radio-button label="8"><span class="Ident"></span><span>生日(20)</span></el-radio-button>
-          <el-radio-button label="9"><span class="Ident"></span><span>团队(20)</span></el-radio-button>
-          <el-radio-button label="10"><span class="Ident"></span><span>钟点房(20)</span></el-radio-button>
-          <el-radio-button label="11"><span class="Ident"></span><span>免费房(20)</span></el-radio-button>
-          <el-radio-button label="12"><span class="Ident"></span><span>接待房(20)</span></el-radio-button>
+        <el-radio-group v-model="roomTypeStart" size="mini" @change="roomTypeChange">
+          <el-radio-button label="">全部(20)</el-radio-button>
+          <el-radio-button :label="i" v-for="(item,i) in realTimeRoomStatusMap" :key='i'><span class="Ident"></span><span>{{item}}(20)</span></el-radio-button>
         </el-radio-group>
       </div>
-      <div></div>
     </el-footer>
     <!-- 右键菜单 -->
     <roomMenu ref="roomMenu"></roomMenu>
@@ -325,27 +308,24 @@
 </template>
 <script>
 import moment from "moment";
-import { checkInTypeMap, orderStatusMap, nightTrialTime } from "@/utils/orm";
+import { roomStatusMap,realTimeRoomStatusMap,checkInTypeMap, orderStatusMap, nightTrialTime } from "@/utils/orm";
 
-import {
-  currentRoomList,
-  updateRoomStatus,
-  loadOrderInfo
-} from "@/api/roomStatus/pmsRoomStatusController";
+import { realTimeRoomInfo,realTimeRoomStatus, updateRoomStatus, loadOrderInfo } from "@/api/roomStatus/pmsRoomStatusController";
 import { listStorey } from "@/api/systemSet/roomSetting/floorRoom";
 import { listBuilding } from "@/api/systemSet/roomSetting/buildingController";
 import { listRoomForWordByRoomPk } from "@/api/atrialCenter/roomForwardStatus";
 import { listType } from "@/api/utils/pmsTypeController";
-import { find } from "@/api/systemSet/pmsSysParamController";
+import { find } from "@/api/systemSet/pmsParamConfigController";
 
 
 
 // import DialogCheckinVisible from "@/pages/bookingForm/order/OrderDialog";
-
+//=====================组件==========================
 import RoomManager from "$pages/roomPattern/roomManager/RoomManager";
 import DisableAndRepairDialog from '$pages/roomPattern/roomManager/DisableAndRepairDialog'
 //右键菜单
 import roomMenu from "$pages/roomPattern/roomMenu";
+import { constants } from 'os';
 
 export default {
   components: {
@@ -361,14 +341,18 @@ export default {
       roomNumber: "",
       checkInTypeMap: checkInTypeMap,
       orderStatusMap: orderStatusMap,
+      roomList: [], //房态数据
+      roomListSelectData:realTimeRoomInfo,//筛选条件
       roomTypeStart:0,
-      roomList: [],
+      roomConfig:{}, //房间配置
       roomType: [], //房间类型
       floorArr: [], //楼层数据
       buildingArr: [], //楼栋数据
-      channelArr: [], //渠道数据
+      realTimeRoomStatusMap:{},//房态类型
       repairType: [],
       disableRoomType: [],
+      channelArr: [], //渠道数据
+
       aside:{
         //右边
         activeName: "1",
@@ -492,60 +476,37 @@ export default {
         }
       });
     },
+    //双击房态
+    toCheckin(room) {
+      if (room.arrivalOrderPk) {
+        //回显订单
+        setTimeout(() => {
+          this.$refs.checkinDialogRef.initOrderInfo(
+            room.arrivalOrderPk,
+            "visitor",
+            room.arrivalGuestPk
+          );
+        }, 0);
+      } else {
+        //办理入住
+        setTimeout(() => {
+          this.$refs.checkinDialogRef.initEmpty(room);
+        }, 0);
+      }
+    },
     /**
      * 初始化调用，查找房间数据
      * @augments */
     init(val) {
-      // if(val){
-      //   this.selectForm.channel = val
-      // }
-      let data = {
-        buildingPk: this.selectForm.building,
-        roomTypePk: this.selectForm.roomType,
-        floorPk: this.selectForm.floor,
-        checkInType: this.selectForm.checkInType,
-        channelPk: this.selectForm.channel
-      };
-      currentRoomList(data).then(res => {
-        // this.roomList = res.data
-        this.roomList = JSON.parse(JSON.stringify(res.data));
-
-        var typeList = JSON.parse(localStorage.getItem("pms_type"));
-        this.roomType = [];
-        // console.log(typeList.length)
-        typeList.forEach(item => {
-          if (item.typeMaster == "ROOM_TYPE") {
-            this.roomType.push(item);
-          }
-        });
-        // listType({typeMaster:'ROOM_TYPE'}).then(res2=>{
-        //   this.roomType = res2.data.data
-        // })
-
-        this.$refs.channelRef.load(true);
-        //标识预离
-        let now =
-          moment().hour() >= nightTrialTime
-            ? moment()
-            : moment().subtract(1, "days");
-
-        this.roomList.forEach(item => {
-          if (item.arrivalOrderPk && item.arrivalGuestPk) {
-            this.$set(item, "futureFlag", "Y");
-          }
-          if (
-            item.guestEndDate &&
-            moment(item.guestEndDate).format("YYYY-MM-DD") <=
-              now.format("YYYY-MM-DD")
-          ) {
-            this.$set(item, "leaveFlag", true);
-          } else {
-            this.$set(item, "leaveFlag", null);
-          }
-        });
-        this.$nextTick();
-        this.$forceUpdate();
-        // localStorage.setItem("roomList",JSON.stringify(this.roomList))
+      this.realTimeRoomStatusMap = realTimeRoomStatusMap
+      this.realTimeRoomStatus()
+    },
+    realTimeRoomStatus(){
+      let data = this.roomListSelectData;
+      realTimeRoomStatus(data).then(res => {
+        this.roomList = res.data;
+        // this.$nextTick();
+        // this.$forceUpdate();
       });
     },
     calendarRoomForwardStatus(row) {
@@ -576,189 +537,42 @@ export default {
       // this.calendarPrice(current);
       // this.currDate = current
     },
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          done();
-          this.init();
-        })
-        .catch(_ => {});
-    },
+    //右边 tabs点击事件
     handleClick(tab, event) {},
-    classRoomStatusObject(item) {
-      // 控制房间的背景颜色
-      return {
-        occupy: item.roomStatus == "OCCUPY",
-        dirty: item.roomStatus == "DIRTY",
-        clean_nocheck: item.roomStatus == "CLEAN_NOCHECK",
-        clean_checked: item.roomStatus == "CLEAN_CHECKED",
-        repair_room: item.roomStatus == "REPAIR_ROOM",
-        disable_room: item.roomStatus == "DISABLE_ROOM",
-        "connect-room": item.connectRoom
-      };
+    //房间样式
+    styleRoomStatusObject(item){
+      let classInfo = {
+        "width"        : '174px',
+        "height"       : "100px",
+        "border-radius": "5px"
+      }
+      roomStatusMap[item.roomStatus]
+      let bgInfo = this.setBackground('#fff','#fff')
+      console.log(Object.assign(classInfo, bgInfo))
+      return Object.assign(classInfo, bgInfo)
     },
+    setBackground(color1,color2){
+      return {
+        "background": "linear-gradient("+color1+", "+color2+")"
+      }
+    },
+    //订单详细弹窗 关闭回调事件
     closeOrderDialog() {
       this.init();
     },
-    // 房间操作 begin
-    changeRoomStatus(room, status, index) {
-      //更新房间状态
-      let realStatus = status;
-      if (room["guestOrderPk"] && status == "CLEAN_CHECKED") {
-        //有订单，且需要清洁检查
-        realStatus = "OCCUPY";
-      }
-      let data = {
-        roomStatePk: room.roomStatePk,
-        roomStatus: realStatus
-      };
-      updateRoomStatus(data)
-        .then(res => {
-          if (res.code == 1) {
-            this.roomList[index].roomStatus = realStatus;
-            this.$message({ type: "success", message: "操作成功" });
-          }
-        })
-        .catch(error => {});
+    /**
+     * 底部
+     * 房态选择
+     */
+    roomTypeChange(){
+      console.log(this.roomTypeStart);
+      this.roomListSelectData.filterStatus = this.roomTypeStart
+      this.realTimeRoomStatus()
     },
-    
-    toCheckin(room) {
-      if (room.arrivalOrderPk) {
-        //回显订单
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initOrderInfo(
-            room.arrivalOrderPk,
-            "visitor",
-            room.arrivalGuestPk
-          );
-        }, 0);
-      } else {
-        //办理入住
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initEmpty(room);
-        }, 0);
-      }
-    },
-    toDialogVisible(item, type) {
-      //打开订单弹窗
-      if (type == "info") {
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initOrderInfo(
-            item.orderPk,
-            "visitor",
-            item.guestOrderPk
-          );
-        }, 0);
-      } else if (type == "settle") {
-        setTimeout(() => {
-          this.$refs.checkinDialogRef.initOrderInfo(
-            item.orderPk,
-            "bill",
-            item.guestOrderPk
-          );
-        }, 0);
-      }
-    },
-    //房间操作 end
-
-    //房间筛选
-    checkedFilter(rooms) {
-      let condition = this.checkList;
-      return rooms.filter(function(room) {
-        if (condition.length == 0) {
-          //都不勾选 显示所有
-          return room;
-        }
-
-        if (condition.indexOf("empty") != -1) {
-          //勾选空房
-          if (
-            (room.roomStatus == "DIRTY" ||
-              room.roomStatus == "CLEAN_NOCHECK" ||
-              room.roomStatus == "CLEAN_CHECKED") &&
-            room.futureFlag != "Y"
-          ) {
-            return room;
-          }
-        }
-
-        if (condition.indexOf("OCCUPY") != -1 && room.roomStatus == "OCCUPY") {
-          //勾选占用
-          return room;
-        }
-        if (condition.indexOf("DIRTY") != -1 && room.roomStatus == "DIRTY") {
-          //勾选脏房
-          return room;
-        }
-        if (
-          condition.indexOf("CLEAN_NOCHECK") != -1 &&
-          room.roomStatus == "CLEAN_NOCHECK"
-        ) {
-          //勾选清洁未检查
-          return room;
-        }
-        if (
-          condition.indexOf("CLEAN_CHECKED") != -1 &&
-          room.roomStatus == "CLEAN_CHECKED"
-        ) {
-          //勾选清洁已检查
-          return room;
-        }
-        if (condition.indexOf("leaveFlag") != -1 && room.leaveFlag) {
-          //勾选预离
-          return room;
-        }
-        if (
-          condition.indexOf("REPAIR_ROOM") != -1 &&
-          room.roomStatus == "REPAIR_ROOM"
-        ) {
-          //勾选维修房
-          return room;
-        }
-        if (
-          condition.indexOf("DISABLE_ROOM") != -1 &&
-          room.roomStatus == "DISABLE_ROOM"
-        ) {
-          //勾选停用房
-          return room;
-        }
-        if (
-          condition.indexOf("SELF_USE") != -1 &&
-          room.roomStatus == "SELF_USE"
-        ) {
-          //勾选自用房
-          return room;
-        }
-        if (
-          condition.indexOf("FREE_ROOM") != -1 &&
-          room.roomStatus == "FREE_ROOM"
-        ) {
-          //勾选免费房
-          return room;
-        }
-        if (condition.indexOf("futureFlag") != -1 && room.futureFlag == "Y") {
-          //勾选今日预抵
-          return room;
-        }
-      });
-    },
-    //房间号搜索
-    numberFilter(rooms) {
-      const curr = this;
-      return rooms.filter(function(room) {
-        if (curr.roomNumber) {
-          if (room.roomNumber.indexOf(curr.roomNumber) >= 0) {
-            return room;
-          }
-        } else {
-          return room;
-        }
-      });
-    },
-    simpleDate(date) {
-      return moment(date).format("MM-DD");
-    },
-
+    /**
+     * 获取房间配置
+     */
+    getRoomConfig(){},
     //关联图标信息
     relationIconHover(index) {
       if (!this.roomList[index].orderInfo) {
@@ -767,7 +581,7 @@ export default {
           res => {
             this.$set(this.roomList[index], "orderInfo", res.data);
           }
-        );
+        )
       }
     },
     //预抵信息
@@ -781,11 +595,10 @@ export default {
         });
       }
     },
-
+    //房间管理弹窗 维修、停用
     clickRoomManager() {
       this.$refs.roomManagerRef.showDialog();
     },
-
     //联房
     joinRoom(item) {
       if (item.orderPk) {
@@ -796,24 +609,20 @@ export default {
     }
   },
   mounted() {
-    this.repairType = [];
-    this.disableRoomType = [];
     this.channelArr = [];
+    //获取渠道类型
     var typeList = JSON.parse(localStorage.getItem("pms_type"));
     typeList.forEach(item => {
-      if (item.typeMaster == "REPAIR") {
-        this.repairType.push(item);
-      }
-      if (item.typeMaster == "DISABLE") {
-        this.disableRoomType.push(item);
-      }
+      //渠道
       if (item.typeMaster == "CHANNEL") {
         this.channelArr.push(item);
       }
     });
+    //楼层
     listStorey().then(res => {
       this.floorArr = res.data;
     });
+    //楼栋
     listBuilding().then(res => {
       this.buildingArr = res.data;
     });

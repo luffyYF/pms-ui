@@ -11,23 +11,23 @@
                             <div class="bg-reserve">
                                 <h5 class="info-title">活动信息</h5>
                                 <el-form-item label="预抵">
-                                    <el-date-picker v-model="dataForm.now" value-format="yyyy-MM-dd HH:mm:ss" style="width:90%;" type="datetime" placeholder="选择日期时间" ></el-date-picker>
+                                    <el-date-picker @change="dateChange" v-model="listQuery.now" :clearable="false" value-format="yyyy-MM-dd HH:mm:ss" style="width:90%;" type="datetime" placeholder="选择日期时间" ></el-date-picker>
                                 </el-form-item>
-                                <el-form-item label="活动名称" prop="ruleName">
-                                    <el-select @change="ruleChange" size="mini" style="width:90%;" v-model="dataForm.rulePk"  placeholder="状态" clearable >
+                                <el-form-item label="活动名称" prop="rulePk">
+                                    <el-select @change="ruleChange" size="mini" style="width:90%;" :clearable="false" v-model="dataForm.rulePk"  placeholder="活动名称" clearable >
                                         <el-option v-for="y in list" :label="y.ruleName" :value="y.rulePk" :key="y.rulePk"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="入住房型" prop="ruleName">
+                                <el-form-item label="入住房型" prop="roomTypeName">
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.roomTypeName" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="所需积分" prop="ruleName">
+                                <el-form-item label="所需积分" prop="integral">
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.integral" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="可预定数" prop="ruleName">
+                                <el-form-item label="可预定数" prop="total">
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.total" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="入住房价" prop="ruleName">
+                                <el-form-item label="入住房价" prop="price">
                                     <el-input size="mini" style="width:90%;" v-model="dataForm.price" type="text"/>
                                 </el-form-item>
                             </div>
@@ -35,27 +35,29 @@
                         <el-col :span="12">
                             <div class="bg-reserve">
                                 <h5 class="info-title">会员信息</h5>
-                                <el-form-item label="会员名称" prop="ruleName">
+                                <el-form-item label="会员名称" prop="memName">
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="memberInfo.memName" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="会员卡号" prop="ruleName">
+                                <el-form-item label="会员卡号" prop="cardNumber">
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="memberInfo.cardNumber" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="剩余积分" prop="ruleName">
+                                <el-form-item label="剩余积分" prop="availableIntegral">
                                     <el-input size="mini" :readonly="true" style="width:90%;" v-model="memberInfo.availableIntegral" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="入住天数" prop="ruleName">
-                                    <el-input size="mini" style="width:90%;" v-model="dataForm.days" type="text"/>
+                                <el-form-item label="入住天数" prop="days">
+                                    <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.days" type="text"/>
                                 </el-form-item>
-                                <el-form-item label="入住间数" prop="ruleName">
-                                    <el-input size="mini" style="width:90%;" v-model="dataForm.num" type="text"/>
+                                <el-form-item label="入住间数" prop="num">
+                                    <el-input size="mini" :readonly="true" style="width:90%;" v-model="dataForm.num" type="text"/>
                                 </el-form-item>
                             </div>
                         </el-col>
                     </el-row>
+                    <span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;温馨提示:已兑换的积分概不退换</span>
                 </el-col>
             </el-form>
 			<span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="saveClick" size="mini">确定</el-button>
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
 			</span>
 		</el-dialog>
@@ -65,6 +67,7 @@
 <script>
 import {listByMemberGrade } from '@/api/systemSet/member/pmsMemberIntegralRoomChangeRule'
 import {getBookableCount} from '@/api/atrialCenter/roomForwardStatus'
+import {saveRoomChangeReserve } from '@/api/order/pmsOrderController'
 import Moment from 'moment'
   export default {
     components:{},
@@ -98,6 +101,15 @@ import Moment from 'moment'
       }
     },
     methods: {
+        dateChange(){
+            this.dataForm.rulePk = ""
+            this.dataForm.ruleName = ""
+            this.dataForm.roomTypePk = ""
+            this.dataForm.roomTypeName = ""
+            this.dataForm.integral = 0
+            this.dataForm.total = 0
+            this.listByMemberGrade()
+        },
         ruleChange(val){
             if(val){
                 let obj = this.ruleObj[val]
@@ -105,6 +117,7 @@ import Moment from 'moment'
                 this.dataForm.roomTypePk = obj.roomTypePk
                 this.dataForm.roomTypeName = obj.roomTypeName
                 this.dataForm.integral = obj.integral
+                this.dataForm.price = obj.basePrice
                 this.getBookableCount()
             }else{
                 this.dataForm.ruleName = ""
@@ -112,6 +125,21 @@ import Moment from 'moment'
         },
         showDialog(memberInfo) {
             this.memberInfo = memberInfo
+            this.dataForm = {
+                now:"",
+                days:1,
+                num:1,
+                price:0,
+                rulePk:"",
+                ruleName:"",
+                roomTypePk:"",
+                roomTypeName:"",
+                availableIntegral:0,
+                memName:"",
+                cardNumber:"",
+                integral:0,
+                total:0
+            }
             this.listQuery.gradePk = memberInfo.gradePk
             this.listQuery.availableIntegral = memberInfo.availableIntegral
             this.dialogVisible = true
@@ -142,6 +170,50 @@ import Moment from 'moment'
                 this.dataForm.total = res.data
             })
         },
+        saveClick(){
+            
+            if(!this.dataForm.rulePk){
+                this.$message({ type: 'warning', message: "请选择需要兑换的活动" })
+                return
+            }
+            if(this.dataForm.integral > this.memberInfo.availableIntegral){
+                this.$message({ type: 'warning', message: "积分不足" })
+                return
+            }
+            if(this.dataForm.total == null || this.dataForm.total == 0){
+                this.$message({ type: 'warning', message: "可预订房量不足" })
+                return
+            }
+            
+            let data = {
+                order:{
+                    userName :this.memberInfo.memName,
+                    userPhone : this.memberInfo.memPhone,
+                    isTeam : "N",
+                    remark: "积分换房"
+                },
+                guestOrder:{
+                    checkInType: 0,
+                    roomTypePk : this.dataForm.roomTypePk,
+                    currPrice : this.dataForm.price,
+                    beginDate : this.dataForm.now,
+                    endDate : Moment(new Date(this.dataForm.now)).add("days",1).format("YYYY-MM-DD HH:mm:ss"),
+                    isSecret :"N",
+                    remark : "积分换房",
+                    guestName:this.memberInfo.memName,
+                    guestPhone : this.memberInfo.memPhone,
+                    memPk : this.memberInfo.memPk,
+                },
+                roomChangeDto:{
+                    rulePk : this.dataForm.rulePk
+                }
+            }
+            saveRoomChangeReserve(data).then(res=>{
+                this.$message({ type: 'success', message: "积分换房成功" })
+                this.dialogVisible = false
+            })
+
+        }
     }
   }
 </script>

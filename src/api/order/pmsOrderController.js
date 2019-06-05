@@ -25,6 +25,10 @@ export const rowRoomOrder = params => {
 export const reserveOrder = params => {
     return request.post('/back/order/reserve', params)
 }
+// 新增积分换房预定
+export const saveRoomChangeReserve = params => {
+    return request.post('/back/order/saveRoomChangeReserve', params)
+}
 //团队预定
 export const teamReserve = params => {
     return request.post('/back/order/teamReserve', params)

@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-
-
-
 //一级菜单
 import ClassSelection from '@/pages/ClassSelection.vue'
 import Login from '@/pages/Login.vue'
@@ -20,9 +17,9 @@ Vue.use(Router)
  */
 export const routes = [
   // 登录
-  {path: '/login', hidden: true, component: Login, name: '登录'},
-  {path: '/404', hidden: true, component: NotFound, name: '404页面'},
-  {path: '/classSelection', hidden: true,component: ClassSelection, name: '班次选择'}
+  {path: '/login', hidden: false, component: Login, name: '登录'},
+  {path: '/404', hidden: false, component: NotFound, name: '404页面'},
+  {path: '/classSelection', hidden: false,component: ClassSelection, name: '班次选择'}
 ]
 
 routes.push(home)
