@@ -209,13 +209,19 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-          delMember({memPk:memberInfo.memPk}).then(res => {
-                if(res.code == 1){
-                    this.$message({ type: 'success', message: "强制注销成功！" })
-                }else{
-                  this.$message({ type: 'warning', message: "强制注销失败！" })
-                }
-            })
+           this.$confirm('此强制注销操作不可恢复，是否确定?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+            delMember({memPk:memberInfo.memPk}).then(res => {
+                  if(res.code == 1){
+                      this.$message({ type: 'success', message: "强制注销成功！" })
+                  }else{
+                    this.$message({ type: 'warning', message: "强制注销失败！" })
+                  }
+              })
+            }) 
           })
           }else{
               this.$confirm('确定注销该会员卡?', '提示', {
@@ -233,20 +239,6 @@ export default {
               })
             })
           }
-        // this.$confirm('确定注销该会员卡?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        // delMember({memPk:memberInfo.memPk}).then(res => {
-        //       if(res.code == 1){
-        //           this.$message({ type: 'success', message: "注销成功！" })
-        //           //this.listSearch()
-        //       }else{
-        //          this.$message({ type: 'warning', message: "注销失败！" })
-        //       }
-        //   })
-        // })
       },
     handleClose () {
             this.dialogMemberVisible = false

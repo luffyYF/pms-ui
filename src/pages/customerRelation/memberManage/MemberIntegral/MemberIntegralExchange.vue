@@ -32,8 +32,8 @@
         <el-row>
             <el-col :span="12">
             <el-form-item label="变化:" size="mini">
-              <el-radio v-model="radio" label="1">增加</el-radio>
-              <el-radio v-model="radio" label="2">减少</el-radio>
+              <el-radio v-model="radio" label="increase">增加</el-radio>
+              <el-radio v-model="radio" label="reduce">减少</el-radio>
             </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -55,7 +55,7 @@
 </template>
 
 <script>  
-//import { giveRule, recharge } from '@/api/customerRelation/pmsMemberController'
+import { integralExchange } from '@/api/customerRelation/pmsMemberLogController'
 
   export default {
     data () {
@@ -70,7 +70,7 @@
           availableIntegral:0,
           isCallback:true
         },
-        radio: '1',
+        radio: 'increase',
         remark: '',
         integral:'',
         rules:{
@@ -79,7 +79,6 @@
           ],
           remark:[
             { required: true, message: '请输入备注', trigger: 'blur,change' },
-           // { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur,change' }
           ],
         }
       }
@@ -99,26 +98,56 @@
       },
       sureClick(){
         if(true){
-
+          //判断radio的类型
+          if(this.radio=="reduce"&&this.integral<this.dataForm.availableIntegral){
+            return this.integral=-this.integral;
+            console.log("新增积分"+this.integral);
+            integralExchange({integral:this.integral,remark:this.remark}).then(result => {
+            if(result.code == 1){
+              this.$message({
+                message: result.sub_msg,
+                type: 'success'
+              });
+            }
+            this.dialogVisible = false
+            if(this.isCallback){
+              this.$emit('callback')
+            } 
+        }).finally(() => {
+          this.loading = false
+        })
+          }else{
+            integralExchange({integral:this.integral,remark:this.remark}).then(result => {
+          if(result.code == 1){
+            this.$message({
+              message: result.sub_msg,
+              type: 'success'
+            });
+          }
+          this.dialogVisible = false
+          if(this.isCallback){
+            this.$emit('callback')
+          } 
+        }).finally(() => {
+          this.loading = false
+        })
+          }
+        //  integralExchange({integral:this.integral,remark:this.remark}).then(result => {
+        //   if(result.code == 1){
+        //     this.$message({
+        //       message: result.sub_msg,
+        //       type: 'success'
+        //     });
+        //   }
+        //   this.dialogVisible = false
+        //   if(this.isCallback){
+        //     this.$emit('callback')
+        //   } 
+        // }).finally(() => {
+        //   this.loading = false
+        // })
         }
       },
-      // saveData(){
-      //   this.loading = true
-      //   recharge(this.dataForm).then(result => {
-      //     if(result.code == 1){
-      //       this.$message({
-      //         message: result.sub_msg,
-      //         type: 'success'
-      //       });
-      //     }
-      //     this.dialogVisible = false
-      //     if(this.isCallback){
-      //       this.$emit('callback')
-      //     } 
-      //   }).finally(() => {
-      //     this.loading = false
-      //   })
-      // },
       handleClose () {
         this.dialogVisible = false
         if(this.isCallback){
