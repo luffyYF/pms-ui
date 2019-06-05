@@ -73,7 +73,7 @@
           </table>
         </div> -->
 
-            <el-tabs type="border-card" style="margin-top:10px;" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
+            <el-tabs type="border-card" style="margin-top:10px;min-height:300px;" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
                 <el-tab-pane label="基础信息" name="MemberInfo">
                     <MemberInfo ref="MemberInfo" @callback="delCallback" />
                 </el-tab-pane>
@@ -95,8 +95,8 @@
                 <el-tab-pane label="积分兑换明细" name="2">
 
                 </el-tab-pane>
-                <el-tab-pane label="卡升级明细" name="3">
-
+                <el-tab-pane label="卡升级明细" name="MemberUpgradeRecord">
+                    <MemberUpgradeRecord ref="MemberUpgradeRecord"/>
                 </el-tab-pane>
                 <el-tab-pane label="积分换房明细" name="MemberIntegralRoomChangeRecord">
                     <MemberIntegralRoomChangeRecord ref="MemberIntegralRoomChangeRecord"/>
@@ -120,6 +120,9 @@ import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDia
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
 import MemberExchangeCardDetailDialog from "./MemberCardExchange/MemberExchangeCardDetailDialog.vue"
 import MemberUpdatePassword from "./MemberUpdatePassword.vue"
+import MemberUpgradeRecord from "./MemberUpgradeRecord.vue"
+
+
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
 import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
 import MemberExchangeCard from "./MemberCardExchange/MemberExchangeCard.vue"
@@ -131,7 +134,10 @@ import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIn
 import {printMember,delMember} from '@/api/customerRelation/pmsMemberController'
 
 export default {
-    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,MemberIntegralRoomChangeRecord,MemberIntegralRoomChange },
+    components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard,
+    MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,
+    MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,
+    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,MemberUpgradeRecord },
   data() {
     return {
       dialogMemberVisible: false,
@@ -260,6 +266,10 @@ export default {
         }else if(this.activeName == "MemberExchangeCardDetail"){
             this.$nextTick(()=>{
                 this.$refs.MemberExchangeCardDetail.init(this.memberInfo.memPk,1)
+            })
+        }else if(this.activeName == "MemberUpgradeRecord"){
+            this.$nextTick(()=>{
+                this.$refs.MemberUpgradeRecord.init(this.memberInfo.memPk)
             })
         }
         else if(this.activeName){
