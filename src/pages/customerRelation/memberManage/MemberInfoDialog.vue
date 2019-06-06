@@ -17,17 +17,19 @@
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
             <!-- 打印补登 -->
-            <div style="text-align:center;display:none" id="print-memberReport">
+            <div style="text-align:center;" id="print-memberReport">
                 <div class="tavs-title">
                   <div style="margin-left: 7px;text-align: left;">
                     <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
                   </div>
                    <h3 style="text-align:center">{{activeCompany.companyName}}</h3>
                   <h4 style="text-align:center">会员登记单</h4>
+                  <span>打印日期：{{datepickerTime}}</span>
                 </div>
                 <el-form ref="dataForm" size="small" :model="dataForm" label-width="250px"  style="text-align:center">
                   <el-row>
                     <el-col :span="24">
+                      <span>登记日期：{{dataForm.createTime}}</span>
                       <el-form-item label="会员卡号 Card ID：">{{dataForm.cardNumber}}</el-form-item>
                       <el-form-item label="会员姓名 Name：">{{dataForm.memName}}</el-form-item>
                       <el-form-item label="证件号码 ID NO：">{{dataForm.certificateNo}}</el-form-item>
@@ -81,6 +83,7 @@
 
 <script>
 import { getLodop } from "@/utils/lodop";
+import moment from "moment";
 import MemberInfo from "./MemberInfo";
 import MemberRecharge from "./MemberRecharge/MemberRecharge.vue"
 import MemberIntegralExchange from "./MemberIntegral/MemberIntegralExchange.vue"
@@ -121,9 +124,10 @@ export default {
         address:'',
         remark:'',
         createUserName:'',
+        createTime:''
       },
       LODOP: null,
-      // datepickerTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      datepickerTime: moment().format("YYYY-MM-DD HH:mm:ss"),
     };
   },
   mounted() {
@@ -264,6 +268,7 @@ export default {
             address:row.address,
             remark:row.remark,
             createUserName:row.createUserName,
+            createTime:row.createTime,
         }
     },
     delCallback(){
