@@ -3,9 +3,9 @@
     <el-aside width="140px">
         <el-menu
             class="el-menu-vertical-demo"
-            background-color="#2b3c58"
             text-color="#fff"
             :router='true'
+            :default-active='defaultActive.activeName'
             active-text-color="#fff">
             <el-menu-item :index="v.path" v-for="(v,i) in router" v-show="i>0" :key='i'>
                 <span slot="title">{{v.name}}</span>
@@ -19,19 +19,31 @@
 </template>
 
 <script>
-  export default {
+export default {
     props:["router","activeName"],
     data () {
-      return {}
+        return {
+            defaultActive:{
+                activeName:''
+            }
+        }
     },
-    created() {},
+    created() {
+        let matched = this.$route.matched
+        let parent = this.router[0]
+        if(matched.length > 1){
+            parent = matched[matched.length-1]
+        }        
+        this.setActiveName(parent.path)
+    },
     methods: {
-      handleClick (tab, event) {},
-      setActiveName(v){
-          this.activeName = v
-      }
+        handleClick (tab, event) {},
+        setActiveName(v){
+            this.$set(this.defaultActive,'activeName',v)
+            console.log(this.defaultActive)
+        }
     }
-  }
+}
 </script>
 <style scoped lang='scss'>
 .el-container{
@@ -40,7 +52,14 @@
     border-right: 1px solid #2b3c58;
     background-color: #2b3c58;
     .el-menu{
-      border-right: 0px solid #21324E;
+        background-color: transparent;
+        border-right: 0px solid #21324E;
+        .el-menu-item{
+            &.is-active{
+                background-color: #21324E;
+                border-right: 1px solid #21324E;
+            }
+        }
     }
   }
 }

@@ -115,6 +115,11 @@
             {{scope.row.availableIntegral}}
           </template>
         </el-table-column>
+        <el-table-column prop="usedIntegral" label="已用积分" align="center" width="120">
+          <template slot-scope="scope">
+            {{scope.row.usedIntegral}}
+          </template>
+        </el-table-column>
          <el-table-column prop="housingDays" label="住房天数" align="center" width="120">
           <template slot-scope="scope">
             {{scope.row.housingDays}}

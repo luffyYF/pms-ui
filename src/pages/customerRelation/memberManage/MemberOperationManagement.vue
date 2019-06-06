@@ -34,6 +34,7 @@
                 <el-form-item label="证件号">
                     <el-input v-model="message.certificateNo"></el-input>
                 </el-form-item>
+                <IDCardScan @callback="setCardInfo" class="vilcen"></IDCardScan>
               </el-col>
               <el-col :span="12">  
                 <el-form-item label="车号">
@@ -140,11 +141,13 @@
 </template>
 
 <script>
+import IDCardScan from '@/components/Idcard/IDCardScan'
 import {updateMember,delMember,memberCertificateType} from '@/api/customerRelation/pmsMemberController'
 // import {powerJudge} from '@/utils/permissionsOperation.js'
 
 export default {
     props: ['message'],
+    components:{IDCardScan},
     data() {
       return {
         dialogModifyMembeInfo: false,
@@ -176,10 +179,7 @@ export default {
     },
     methods: {
       memberCertificateTypeList() {
-          memberCertificateType().then(res => {
-              console.log(res.data)
-              this.certificateTypeoption = res.data;
-          });
+        this.certificateTypeoption = this.getCertificateType()
       },
       updateMemberType(message) {
           updateMember(message).then(res => {
@@ -207,6 +207,16 @@ export default {
             self.$emit('asfcascas')
             
           })
+      },
+      setCardInfo (data) {
+      this.message.memName = data.peopleName
+      this.message.certificateNo = data.peopleIdCode
+      this.message.birthday = data.peopleBirthday
+      this.message.address = data.peopleAddress
+      this.message.memSex = data.peopleSex
+      this.message.nationality = data.certType
+      this.message.certificateType = 'TWO_IDENTITY'
+      this.idcard(1)
       },
       // powerJudge(id){
       //   return powerJudge(id);

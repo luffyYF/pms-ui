@@ -22,14 +22,21 @@
                 </el-radio-group>
             </el-form-item>
         </el-col>
-        <el-form-item label="计费规则:">
-            <channel-select ref="channelRef" v-model="formInline.channelTypePk" style="width: 199px;"/>
+        <el-form-item label="计费规则:" v-show="formInline.checkInType == 4">
+            <el-select v-model="value" placeholder="请选择"  style="width: 199px;">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+            </el-select>
         </el-form-item>
         <el-form-item label="预抵日期:">
             <el-date-picker v-model="formInline.arrivalsDate" type="date" placeholder="选择日期" style="width: 110px;"></el-date-picker>
             <el-time-select v-model="formInline.arrivalsTime" :picker-options="{ start: '08:30', step: '00:15', end: '18:30' }" placeholder="选择时间"  style="width: 85px;"></el-time-select>
         </el-form-item>
-        <el-form-item label="入住天数:">
+        <el-form-item label="入住天数:" v-show="formInline.checkInType != 4">
            <el-input-number size="mini" v-model="formInline.checkInDays" style="width: 199px;"></el-input-number>
         </el-form-item>
         <el-form-item label="预离日期:">
@@ -65,70 +72,72 @@
         </el-form-item>
     </el-form>
     <el-row>
-        <el-col :span="10">
+        <el-col :span="10" class="line">
             <el-table
                 :data="tableData"
                 height="500px"
+                size="mini"
                 style="width: 100%">
                 <el-table-column
-                    prop="date"
+                    prop="column1"
                     label="房型">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="column2"
                     label="房价">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column3"
                     label="可定数">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column4"
                     label="可超数">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column5"
                     label="入住间数">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column6"
                     label="已排房">
                 </el-table-column>
             </el-table>
         </el-col>
-        <el-col :span="12" :offset="1">
+        <el-col :span="12" :offset="1" class="line">
             <el-table
                 :data="tableData"
                 height="500px"
+                size="mini"
                 style="width: 100%">
                 <el-table-column
                     type="selection"
                     width="55">
                 </el-table-column>
                 <el-table-column
-                    prop="date"
+                    prop="column1"
                     label="房型">
                 </el-table-column>
                 <el-table-column
-                    prop="date"
+                    prop="column7"
                     label="房号">
                 </el-table-column>
                 <el-table-column
-                    prop="date"
+                    prop="column8"
                     label="房价">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="column9"
                     label="早餐劵">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="column10"
                     label="备注">
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                     prop="address"
                     label="操作">
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
         </el-col>
     </el-row>
@@ -147,9 +156,9 @@
           //订单来源
           channelTypePk:'',
           // 入住类型
-          checkInType:'',
+          checkInType: 0,
           //客户类型
-          customerType:'',
+          customerType: 0,
           //预抵日期
           arrivalsDate: moment(),
           //预抵时间
@@ -162,7 +171,21 @@
           retentionDate: moment().add(1, 'days'),
           //保留时间
           retentionTime: '06:00',
-        }
+        },
+        tableData:[
+            {
+                column1:'商务房',
+                column2:'200/300',
+                column3:'50',
+                column4:'10',
+                column5:'1',
+                column6:'0',
+                column7:'未排房',
+                column8:'200',
+                column9:'2',
+                column10:'',
+            }
+        ]
       }
     },
     created () {
@@ -176,5 +199,12 @@
   }
 </script>
 <style scoped lang='scss'>
-
+.el-form.demo-form-inline{
+    .el-form-item--mini.el-form-item{
+        margin-bottom: 15px
+    }
+}
+.line{
+    border: 1px solid #DCDFE6
+}
 </style>

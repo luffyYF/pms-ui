@@ -158,7 +158,7 @@
             <span>离 {{scope.row.endDate}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="房型(房号)" width="70" align="center">
+        <el-table-column label="房型(房号)" align="center">
           <template slot-scope="scope">
             <span>{{roomCount(scope.row.guestDtos)}}</span>
           </template>

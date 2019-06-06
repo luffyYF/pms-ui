@@ -4,6 +4,13 @@ import request from '@/utils/requestJson'
  * 房态接口
  */
 
+/**
+ *  查找实时房态
+ */
+export const realTimeRoomStatus= params => {
+    return request.get('/back/room/status/list2', { params: params })
+}
+
 //查找实时房态
 export const currentRoomList = params => {
     return request.get('/back/room/status/list', {params:params})
