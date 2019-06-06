@@ -15,3 +15,17 @@ export function hasPermission(permission) {
     return false;
   }
 }
+
+export function getCertificateType() {
+  let list = []
+  var typeList = JSON.parse(localStorage.getItem("pms_type"))
+  typeList.forEach(item=> {
+    if(item.typeMaster == "CERTIFICATE_TYPE"){
+      list.push({
+        name:item.typeName,
+        id:item.typeCode
+      });
+    }
+  })
+  return list 
+}

@@ -179,10 +179,7 @@ export default {
     },
     methods: {
       memberCertificateTypeList() {
-          memberCertificateType().then(res => {
-              console.log(res.data)
-              this.certificateTypeoption = res.data;
-          });
+        this.certificateTypeoption = this.getCertificateType()
       },
       updateMemberType(message) {
           updateMember(message).then(res => {
