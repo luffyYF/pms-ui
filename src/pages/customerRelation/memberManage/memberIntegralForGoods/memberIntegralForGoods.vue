@@ -21,7 +21,7 @@
                 <el-row :gutter="24">
                 <el-col :span="12">
                   <el-form-item label="会员类型" prop="gradeName">
-                  <el-input size="small" disabled v- model="memberInfo.gradeName" type="text"/>
+                  <el-input size="small" disabled v-model="memberInfo.gradeName" type="text"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" class="btn-right">
@@ -85,9 +85,10 @@
                         <el-table-column
                           label="兑换数量"
                           width="100">
-
+                          <!-- <template slot-scope="scope">
+                            <el-input-number v-model="scope.row.integralNumber" size="mini" :min="1" :controls="false"></el-input-number>
+                          </template> -->
                             <el-input-number v-model="integralNumber" size="mini" @change="handlerPageNo"   :controls="false" :min="1"  label="请输入兑换数量"></el-input-number>
-
                         </el-table-column>
                         <el-table-column
                           prop="province"
@@ -174,6 +175,7 @@ import Moment from 'moment'
       }
     },
     created(){
+
       this.listMemberIntegralExchange();
     },
     methods: {
@@ -195,6 +197,11 @@ import Moment from 'moment'
         //删除行
         deleteRow(index, rows) {
                 rows.splice(index, 1);
+                let sum=0;
+                  for(var a=0;a<this.tableData2.length;a++){
+                    sum+= this.tableData2[a].integral*Number(this.integralNumber);
+                  }
+                  this.userIntegral = sum;
               },
 
 
@@ -206,14 +213,6 @@ import Moment from 'moment'
         // this.ids = machIds;
       },
 
-      handlerPageNo(){
-         let sum = 0;
-           for(var a=0;a<this.tableData2.length;a++){
-            sum+= this.tableData2[a].integral*Number(this.integralNumber);
-           }
-           this.userIntegral = sum;
-           console.log(this.userIntegral)
-      },
       //添加兑换商品
         addGoods(){
           if(this.multipleSelection==''){
@@ -238,7 +237,7 @@ import Moment from 'moment'
             sum+= this.tableData2[a].integral*Number(this.integralNumber);
            }
            this.userIntegral = sum;
-           console.log(this.userIntegral)
+           console.log(this.userIntegral);
         },
 
          handlerPageNo(){
@@ -251,6 +250,7 @@ import Moment from 'moment'
 
         //批量添加
       addClick () {
+        alert(this.integralNumber)
         this.$confirm('是否确定要兑换?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -264,10 +264,13 @@ import Moment from 'moment'
           Integrals.push({
             giftName:tableData2.giftName,
             integral: tableData2.integral,
-            integralNumber:tableData2.integralNumber,
+            integralNumber:this.integralNumber,
             rulePk:tableData2.rulePk,
             memPk:this.memberInfo.memPk,
-            userIntegral: this.userIntegral
+            userIntegral: this.userIntegral,
+            giftPk:memberInfo.giftPk,
+            ruleName:memberInfo.ruleName
+
           })
         })
         }else{

@@ -35,4 +35,11 @@ export const saveIntegralExchangeForGoods = params => {
   return request.post('/pmsMemberIntegralExchangeLog/saveIntegralExchangeForGoods', params)
 }
 
+// 兑换商品详细列表
+export const listIntegralExchangeForGoods = params => {
+  return request.get('/pmsMemberIntegralExchangeLog/listIntegralExchangeForGoods', { params: params })
+}
+
+
+
 

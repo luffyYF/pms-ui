@@ -52,6 +52,9 @@
         <el-form-item label="卡费" porp="cardFee">
           <el-input v-model="form.cardFee" readonly></el-input>
         </el-form-item>
+        <el-form-item label="密码" porp="password">
+          <el-input v-model="form.password" type="password" ></el-input>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input :disabled="true" v-model="form.remark"></el-input>
         </el-form-item>
@@ -355,6 +358,7 @@ export default {
           'agreementUnitPk':'',
           'accountNumber':'',
           'nationality':'DL',
+          "password":""
       },
       form: {
           "address": '',
@@ -384,6 +388,7 @@ export default {
           'agreementUnitPk':'',
           'accountNumber':'',
           'nationality':'DL',
+          "password":""
       },
       rules: {
         certificateNo: [{ required: true, message: "证件类型不能为空" }],
