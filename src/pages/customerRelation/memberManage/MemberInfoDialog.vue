@@ -4,11 +4,11 @@
         <!-- 会员管理 dialog -->
         <el-dialog title="会员管理" :visible.sync="dialogMemberVisible" width="930px" :before-close="handleClose" class="dialogMemberManage">
             <el-row>
-                <el-button size="mini" type="primary" @click="memberExchangeCard(memberInfo)" :disabled="memberInfo.rechargeFlag == 'N'">换卡</el-button>
+                <el-button size="mini" type="primary" @click="memberExchangeCard(memberInfo)">换卡</el-button>
                 <el-button size="mini" type="primary">补卡</el-button>
-                <el-button size="mini" type="primary" @click="memberUpdatePasswordClick(memberInfo)" :disabled="memberInfo.rechargeFlag == 'N'">改密码</el-button>
+                <el-button size="mini" type="primary" @click="memberUpdatePasswordClick(memberInfo)">改密码</el-button>
                 <el-button size="mini" type="primary"  @click="memberRechargeClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">充值</el-button>
-                <el-button size="mini" type="primary" @click="memberIntegralExchangeClick(memberInfo)" :disabled="memberInfo.rechargeFlag == 'N'">积分增减</el-button>
+                <el-button size="mini" type="primary" @click="memberIntegralExchangeClick(memberInfo)">积分增减</el-button>
                 <el-button size="mini" type="primary">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
@@ -238,7 +238,6 @@ export default {
             delMember({memPk:memberInfo.memPk}).then(res => {
                   if(res.code == 1){
                       this.$message({ type: 'success', message: "注销成功！" })
-                      //this.listSearch()
                   }else{
                     this.$message({ type: 'warning', message: "注销失败！" })
                   }
@@ -299,14 +298,14 @@ export default {
     memberRoomChangeClick(memberInfo){
         this.$refs.MemberIntegralRoomChange.showDialog(memberInfo)
     },
-     memberIntegralExchangeClick (row) {
-        this.$refs.memberIntegralExchangeRefs.showDialog(row,false)
+     memberIntegralExchangeClick (memberInfo) {
+        this.$refs.memberIntegralExchangeRefs.showDialog(memberInfo)
     },
-    memberUpdatePasswordClick(row){
-        this.$refs.memberUpdatePasswordRefs.showDialog(row,false)
+    memberUpdatePasswordClick(memberInfo){
+        this.$refs.memberUpdatePasswordRefs.showDialog(memberInfo)
     },
-    memberExchangeCard(row){
-        this.$refs.memberExchangeCardRefs.showDialog(row,false);
+    memberExchangeCard(memberInfo){
+        this.$refs.memberExchangeCardRefs.showDialog(memberInfo);
     },
   }
 }
