@@ -160,7 +160,7 @@ export default {
       return true;
     },
     findMiniApp () {
-      getMiniApp().then(res => {
+      getMiniApp({status: 1}).then(res => {
         this.miniapp = res.data
       })
     },
