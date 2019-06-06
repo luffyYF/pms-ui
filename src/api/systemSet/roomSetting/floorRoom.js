@@ -69,5 +69,12 @@ export const delRoom = params => {
 export const getRflRoomInfo = params => {
   return request.get('/back/room/getRflRoomInfo', {params:params})
 }
+/**
+ * 
+ * @param {查找楼层} params 
+ */
+export const selectStorey = params => {
+  return request.get('/back/storey/selectStorey', {params:params})
+}
 
 
