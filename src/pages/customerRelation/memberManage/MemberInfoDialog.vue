@@ -16,62 +16,30 @@
                 <el-button size="mini" type="primary">挂失</el-button>
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
-
-              <!-- <div class="tabs-container" id="print-dailyreport">
-          <div class="tavs-title">
-            <div style="margin-left: 7px;text-align: left;">
-              <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+            <!-- 打印补登 -->
+            <div style="text-align:center;display:none" id="print-memberReport">
+                <div class="tavs-title">
+                  <div style="margin-left: 7px;text-align: left;">
+                    <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+                  </div>
+                   <h3 style="text-align:center">{{activeCompany.companyName}}</h3>
+                  <h4 style="text-align:center">会员登记单</h4>
+                </div>
+                <el-form ref="dataForm" size="small" :model="dataForm" label-width="250px"  style="text-align:center">
+                  <el-row>
+                    <el-col :span="24">
+                      <el-form-item label="会员卡号 Card ID：">{{dataForm.cardNumber}}</el-form-item>
+                      <el-form-item label="会员姓名 Name：">{{dataForm.memName}}</el-form-item>
+                      <el-form-item label="证件号码 ID NO：">{{dataForm.certificateNo}}</el-form-item>
+                      <el-form-item label="联系电话 Phone：">{{dataForm.memPhone}}</el-form-item>
+                      <el-form-item label="会员级别 Type：">{{dataForm.gradeName}}</el-form-item>
+                      <el-form-item label="地址 Address：">{{dataForm.address}}</el-form-item>
+                      <el-form-item label="备注 Remark：">{{dataForm.remark}}</el-form-item>
+                      <el-form-item label="操作人 Operator：">{{dataForm.createUserName}}</el-form-item>
+                    </el-col>
+                  </el-row>
+                </el-form>
             </div>
-            <h3 style="text-align:center">会员登记单</h3>
-          </div>
-          <table
-            width="100%"
-            border="0"
-            style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;"
-            cellpadding="6"
-            cellspacing="0"
-          >
-            <thead>
-              <tr>
-                <th
-                  colspan="2"
-                  style="text-align: left;font-size: 14px;"
-                >店铺：{{activeCompany.companyName}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="width:25%;border: 1px solid #000;">会员卡号</td>
-               <td style="width:25%;border: 1px solid #000;">{{item.name}}</td>
-                
-              </tr>
-                <tr v-for="(item, index) in tableData" :key="index">
-              <td style="width:25%;border: 1px solid #000;">会员姓名</td>
-                <td style="width:25%;border: 1px solid #000;">{{item.day}}</td>
-              </tr>
-              <tr>
-                <td style="width:25%;border: 1px solid #000;">本月累计</td>
-                <td style="width:25%;border: 1px solid #000;">{{item.month}}</td>
-              </tr>
-              <tr>
-                <td style="width:25%;border: 1px solid #000;">本年累计</td>
-                <td style="width:25%;border: 1px solid #000;">{{item.year}}</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="2" style="text-align: left;font-size: 14px;">
-                  打印人：
-                  <span>{{userInfo.realName}}</span>
-                </td>
-                <td colspan="2" style="text-align: right;font-size: 14px;">
-                  打印日期：
-                  <span>{{datepickerTime}}</span>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div> -->
 
             <el-tabs type="border-card" style="margin-top:10px;min-height:300px;" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
                 <el-tab-pane label="基础信息" name="MemberInfo">
@@ -144,8 +112,17 @@ export default {
       memberInfo: {}, //会员资料
       total: 0,
       activeName:"MemberInfo",
-      // LODOP: null,
-      // tableData: [],
+      dataForm:{
+        cardNumber:'',
+        memName:'',
+        certificateNo:'',
+        memPhone:'',
+        gradeName:'',
+        address:'',
+        remark:'',
+        createUserName:'',
+      },
+      LODOP: null,
       // datepickerTime: moment().format("YYYY-MM-DD HH:mm:ss"),
     };
   },
@@ -153,26 +130,19 @@ export default {
 //       console.log(this.$refs)
 //     this.activeName = this.$refs.checkTabs.panes[0].name
   },
-  // created(){
-  //   var test = window.localStorage.getItem("current_logon_company");
-  //   this.activeCompany = JSON.parse(test);
-  //   if (
-  //     this.activeCompany.companyName == "" ||
-  //     this.activeCompany.companyName == null ||
-  //     this.activeCompany.companyName == undefined
-  //   ) {
-  //     this.activeCompany.companyName == "";
-  //   }
-  //   this.userInfo = JSON.parse(localStorage.getItem("pms_userinfo"));
-  //   this.dailyReport();
-  // },
+  created(){
+    var test = window.localStorage.getItem("current_logon_company");
+    this.activeCompany = JSON.parse(test);
+    if (
+      this.activeCompany.companyName == "" ||
+      this.activeCompany.companyName == null ||
+      this.activeCompany.companyName == undefined
+    ) {
+      this.activeCompany.companyName == "";
+    }
+    this.userInfo = JSON.parse(localStorage.getItem("pms_userinfo"));
+  },
   methods: {
-    //  dailyReport() {
-    //   printMember({memPk:memberInfo.memPk}).then(res => {
-    //     console.log(res.data);
-    //     this.tableData = res.data;
-    //   });
-    // },
       //登记补打印
        openPrint(memberInfo) {
         this.$confirm('是否要打印?', '提示', {
@@ -180,32 +150,35 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-      // this.LODOP = getLodop();
-      // if (!this.LODOP) {
-      //   return;
-      // }
-      // this.LODOP.PRINT_INITA(0, 0, 794, 1123, "每日日报打印");
-      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
-      // this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
-      // this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
-      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 3);
-      // this.LODOP.SET_PRINT_STYLEA(0, "TableHeightScope", 1);
-      // this.LODOP.ADD_PRINT_HTM(16,"1%","98%",1103,document.getElementById("print-dailyreport").innerHTML);
-      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
-      // this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
-      // this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
-      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 3);
-      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 1);
-      this.$message({
-            type: 'success',
-            message: '打印成功!'
+          this.createdOneFormPrint();	
+          if (this.LODOP) {
+            this.LODOP.PREVIEW();
+          }
+        this.$message({
+              type: 'success',
+              message: '正在打印预览...!'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消打印预览'
+            });          
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消打印'
-          });          
-        });
+      },
+      createdOneFormPrint(){
+          this.LODOP = getLodop();
+          if (!this.LODOP) {
+            return;
+          }
+          this.LODOP.PRINT_INITA(0, 0, 148, 210, "会员登记打印");
+          this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
+          this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+          this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+          this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 3);
+          this.LODOP.SET_PRINT_STYLEA(0, "TableHeightScope", 1);
+          this.LODOP.ADD_PRINT_HTM(50,"1%","98%",500,document.getElementById("print-memberReport").innerHTML);
+          this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+          this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
       },
       //注销会员卡
       openLogout (memberInfo) {
@@ -282,7 +255,16 @@ export default {
         this.$nextTick(()=>{
             this.$refs[this.activeName].init(row)
         })
-        
+        this.dataForm={
+            cardNumber:row.cardNumber,
+            memName:row.memName,
+            certificateNo:row.certificateNo,
+            memPhone:row.memPhone,
+            gradeName:row.gradeName,
+            address:row.address,
+            remark:row.remark,
+            createUserName:row.createUserName,
+        }
     },
     delCallback(){
         this.dialogMemberVisible = false
