@@ -467,9 +467,7 @@ export default {
       })
     },
     memberCertificateType(){
-      memberCertificateType().then(result => {
-        this.certificateType = result.data
-      })
+      this.certificateType = this.getCertificateType()
     },
     agreementUnit(){
     },
