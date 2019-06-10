@@ -17,7 +17,7 @@
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
             <!-- 打印补登 -->
-            <div style="text-align:center;" id="print-memberReport">
+            <div style="text-align:center;display:none" id="print-memberReport">
                 <div class="tavs-title">
                   <div style="margin-left: 7px;text-align: left;">
                     <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
