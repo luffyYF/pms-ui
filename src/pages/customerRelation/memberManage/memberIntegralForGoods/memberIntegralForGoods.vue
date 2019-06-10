@@ -59,7 +59,7 @@
                    </el-table>
 
                 </el-col>
-                <el-col :span="2" >
+                <el-col :span="2" style="margin-left:-18px;margin-top:80px" >
                     <el-button type="success" size="mini" @click="addGoods()" icon="el-icon-arrow-right" class="btn-center">添加</el-button>
                 </el-col>
 
@@ -174,10 +174,10 @@ import Moment from 'moment'
         }
       }
     },
-    created(){
+    // created(){
 
-      this.listMemberIntegralExchange();
-    },
+    //   this.listMemberIntegralExchange();
+    // },
     methods: {
         ruleChange(val){
             if(val){
@@ -221,8 +221,11 @@ import Moment from 'moment'
           let multipleSelection = this.multipleSelection;
           let m = this.tableData2.length;
            for(var i=0;i<multipleSelection.length;i++){
+
               let flag = true;
               for(var j=0;j<m;j++){
+                console.log("左边"+multipleSelection[j].rulePk);
+                console.log(this.tableData2[i].rulePk);
                 if(multipleSelection[j].rulePk == this.tableData2[i].rulePk){
                   flag=false
                   break;
@@ -238,6 +241,7 @@ import Moment from 'moment'
            }
            this.userIntegral = sum;
            console.log(this.userIntegral);
+           console.log(this.tableData2);
         },
 
          handlerPageNo(){
@@ -268,9 +272,9 @@ import Moment from 'moment'
             rulePk:tableData2.rulePk,
             memPk:this.memberInfo.memPk,
             userIntegral: this.userIntegral,
-            giftPk:memberInfo.giftPk,
-            ruleName:memberInfo.ruleName
-
+            giftPk:this.memberInfo.giftPk,
+            ruleName:this.memberInfo.ruleName,
+            type:this.memberInfo.type
           })
         })
         }else{
@@ -284,6 +288,7 @@ import Moment from 'moment'
           saveIntegralExchangeForGoods(Integrals).then(res => {
             this.$message({ type: 'success', message: res.sub_msg })
             //this.listMachRoad()
+            this.dialogVisible = false;
           })
         })
       },
@@ -293,12 +298,13 @@ import Moment from 'moment'
             this.listQuery.gradePk = memberInfo.gradePk
             this.listQuery.availableIntegral = memberInfo.availableIntegral
             this.dialogVisible = true
+            this.tableData2=[];
+            this.integralNumber = 1;
             this.listMemberIntegralExchange();
             this.listByMemberGrade()
         },
         //获取今日可兑换礼品的列表
         listMemberIntegralExchange(){
-
             listMemberIntegralExchange({integral:this.listQuery.availableIntegral}).then(res =>{
                 this.tableData = res.data;
             })
@@ -311,7 +317,6 @@ import Moment from 'moment'
                 this.ruleObj = {}
                 for(var i=0;i<this.list.length;i++){
                     this.ruleObj[this.list[i].rulePk] = this.list[i]
-
                 }
             })
         },
