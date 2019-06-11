@@ -9,7 +9,7 @@
                 <el-button size="mini" type="primary" @click="memberUpdatePasswordClick(memberInfo)">改密码</el-button>
                 <el-button size="mini" type="primary"  @click="memberRechargeClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">充值</el-button>
                 <el-button size="mini" type="primary" @click="memberIntegralExchangeClick(memberInfo)">积分增减</el-button>
-                <el-button size="mini" type="primary">积分兑换</el-button>
+                <el-button size="mini" type="primary" @click="memberIntegralForGoodsDialog(memberInfo)">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
                 <el-button size="mini" type="primary" @click="openLogout(memberInfo)">注销</el-button>
@@ -17,7 +17,7 @@
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
             <!-- 打印补登 -->
-            <div style="text-align:center;" id="print-memberReport">
+            <div style="text-align:center;width:100%" id="print-memberReport">
                 <div class="tavs-title">
                   <div style="margin-left: 7px;text-align: left;">
                     <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
@@ -63,7 +63,7 @@
                     <MemberExchangeCardDetail ref="MemberExchangeCardDetail"/>
                 </el-tab-pane>
                 <el-tab-pane label="积分兑换明细" name="2">
-
+                    <memberIntegralForGoodsDetail ref="memberIntegralForGoodsDetail"/>
                 </el-tab-pane>
                 <el-tab-pane label="卡升级明细" name="MemberUpgradeRecord">
                     <MemberUpgradeRecord ref="MemberUpgradeRecord"/>
@@ -75,6 +75,8 @@
         </el-dialog>
         <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
         <MemberIntegralRoomChange ref="MemberIntegralRoomChange" />
+        <member-integral-forGoods ref="memberIntegralForGoodsRefs"></member-integral-forGoods>
+
         <member-integral-exchange ref="memberIntegralExchangeRefs" @callback="memberListData(form.pageNum)"></member-integral-exchange>
         <member-update-password ref="memberUpdatePasswordRefs" @callback="memberListData(form.pageNum)"></member-update-password>
         <member-exchange-card ref="memberExchangeCardRefs" @callback="memberListData(form.pageNum)"></member-exchange-card>
@@ -104,11 +106,14 @@ import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTab
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
 import {printMember,delMember} from '@/api/customerRelation/pmsMemberController'
 
+import memberIntegralForGoods from "./memberIntegralForGoods/memberIntegralForGoods.vue"
+import memberIntegralForGoodsDetail from "./memberIntegralForGoods/memberIntegralForGoodsDetail.vue"
+
 export default {
     components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard,
     MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,
     MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,
-    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,MemberUpgradeRecord },
+    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,MemberUpgradeRecord,memberIntegralForGoods,memberIntegralForGoodsDetail },
   data() {
     return {
       dialogMemberVisible: false,
@@ -154,7 +159,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.createdOneFormPrint();	
+          this.createdOneFormPrint();
           if (this.LODOP) {
             this.LODOP.PREVIEW();
           }
@@ -166,7 +171,7 @@ export default {
             this.$message({
               type: 'info',
               message: '已取消打印预览'
-            });          
+            });
           });
       },
       createdOneFormPrint(){
@@ -174,10 +179,10 @@ export default {
           if (!this.LODOP) {
             return;
           }
-          this.LODOP.PRINT_INITA(0, 0, 148, 210, "会员登记打印");
+          this.LODOP.PRINT_INITA(0, 0, 148, 210, "会员登记打印");//设置大小和标题
           this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
           this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
-          this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+          this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);//设置边框
           this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 3);
           this.LODOP.SET_PRINT_STYLEA(0, "TableHeightScope", 1);
           this.LODOP.ADD_PRINT_HTM(50,"1%","98%",500,document.getElementById("print-memberReport").innerHTML);
@@ -204,7 +209,7 @@ export default {
                     this.$message({ type: 'warning', message: "强制注销失败！" })
                   }
               })
-            }) 
+            })
           })
           }else{
               this.$confirm('确定注销该会员卡?', '提示', {
@@ -251,6 +256,11 @@ export default {
         else if(this.activeName){
             this.$refs[this.activeName].init()
         }
+        else if(this.activeName=="memberIntegralForGoodsDetail"){
+          this.$nextTick(()=>{
+                this.$refs.memberIntegralForGoodsDetail.init(this.memberInfo.memPk,1)
+            })
+        }
     },
     showDialog(row){
         this.dialogMemberVisible = true
@@ -282,6 +292,12 @@ export default {
     memberRechargeClick (row) {
         this.$refs.memberRechargeRefs.showDialog(row,false)
     },
+
+    //积分兑换
+    memberIntegralForGoodsDialog(memberInfo){
+      this.$refs.memberIntegralForGoodsRefs.showDialog(memberInfo)
+    },
+
     memberRoomChangeClick(memberInfo){
         this.$refs.MemberIntegralRoomChange.showDialog(memberInfo)
     },
