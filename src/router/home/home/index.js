@@ -2,7 +2,7 @@
  * 首页默认显示
  * 房态图
  */
-import RoomChart from '$pages/roomPattern/roomPattern.vue'
+import RoomChart from '$pages/roomPattern/index.vue'
 
 const router = {
     path: '/',

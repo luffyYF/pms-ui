@@ -52,11 +52,19 @@
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+      <!-- <DisableAndRepairDialog ref="disableAndRepairDialogRef" @callback="init"></DisableAndRepairDialog> -->
+    <!-- 订单详细弹窗 -->
+    <!-- <DialogCheckinVisible ref="checkinDialogRef" @closecheckin="closeOrderDialog($event)"/> -->
+    <!-- 房间管理弹窗 维修、停用 -->
+    <!-- <RoomManager ref="roomManagerRef" @callback="init"></RoomManager> -->
+    <!-- 联房 -->
+    <!-- <join-room-dialog ref="joinRoomDialogRef" @callback="init"></join-room-dialog> -->
   </section>
 </template>
 
 <script>
-
+import RoomManager from "$pages/roomPattern/roomManager/RoomManager";
+import DisableAndRepairDialog from '$pages/roomPattern/roomManager/DisableAndRepairDialog'
 export default {
   components: {  },
   data() {
@@ -74,7 +82,6 @@ export default {
   },
   methods: {
     show(item,left,top) {   
-
       this.$set(this.position,"top",top+"px")
       if(this.position.left === 1){
         this.$set(this.position,"left",(left-57)+"px")

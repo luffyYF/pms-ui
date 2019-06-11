@@ -1,67 +1,5 @@
 <template>
-  <el-container class="room-pattern-class">
-    <el-header height="50px" class="room-pattern-header">
-      <el-form :inline="true" size="mini" class="">
-        <el-form-item label="楼栋：">
-          <el-select
-            class="selectWidth"
-            v-model="selectForm.building"
-            placeholder="请选择"
-            clearable
-            @change="init">
-            <el-option
-              v-for="y in buildingArr"
-              :key="y.buildingPk"
-              :label="y.buildingName"
-              :value="y.buildingPk"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="楼层：">
-          <el-select
-            class="selectWidth"
-            v-model="selectForm.floor"
-            placeholder="请选择" clearable @change="init">
-            <el-option
-              v-for="y in floorArr"
-              :key="y.storeyPk"
-              :label="y.storeyName"
-              :value="y.storeyPk"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="房型：">
-          <el-select
-            class="selectWidth"
-            v-model="selectForm.roomType"
-            placeholder="请选择"
-            clearable
-            @change="init"
-          >
-            <el-option v-for="y in roomType" :label="y.typeName" :value="y.typePk" :key="y.typePk"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="渠道：">
-          <channel-select
-            placeholder="请选择"
-            ref="channelRef"
-            class="selectWidth"
-            @callback="init"
-            v-model="selectForm.channel"/>
-        </el-form-item>
-        <el-form-item label="房号：">
-          <el-input class="selectWidth" v-model="selectForm.roomNumber" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="screhbtn" @click="init">搜索</el-button>
-        </el-form-item>
-      </el-form>
-    </el-header>
-    <el-container class="room-pattern-container">
-      <el-main>
-        <RoomRow ref="RoomRow" @roomTypeCount='roomTypeCountMonitor'></RoomRow>
-      </el-main>
-      <el-aside width="300px">
+    <div>
         <div class="buttonOr">
           <el-button size="mini">预定</el-button>
           <el-button size="mini">办理入住</el-button>
@@ -113,69 +51,17 @@
             </el-table>
           </el-tab-pane>
         </el-tabs>
-      </el-aside>
-    </el-container>
-    <el-footer height="50px" class="room-pattern-footer">
-      <div>
-        <el-radio-group v-model="roomTypeStart" size="mini" @change="roomTypeChange">
-          <el-radio-button label="">全部(20)</el-radio-button>
-          <el-radio-button :label="i" v-for="(item,i) in realTimeRoomStatusMap" :key='i'><span v-if="item.icon" class="Ident" ></span><span :style='roomTypeColor(i,item.icon)'>{{item.name}}({{roomTypeCount[i] || 0}})</span></el-radio-button>
-        </el-radio-group>
-      </div>
-    </el-footer>
-    
-
-    <!-- <DisableAndRepairDialog ref="disableAndRepairDialogRef" @callback="init"></DisableAndRepairDialog> -->
-    <!-- 订单详细弹窗 -->
-    <!-- <DialogCheckinVisible ref="checkinDialogRef" @closecheckin="closeOrderDialog($event)"/> -->
-    <!-- 房间管理弹窗 维修、停用 -->
-    <!-- <RoomManager ref="roomManagerRef" @callback="init"></RoomManager> -->
-    <!-- 联房 -->
-    <!-- <join-room-dialog ref="joinRoomDialogRef" @callback="init"></join-room-dialog> -->
-  </el-container>
+    </div>
 </template>
 <script>
 import moment from "moment";
-import { roomStatusMap,realTimeRoomStatusMap,realTimeRoomStatusColor,checkInTypeMap, orderStatusMap, nightTrialTime } from "@/utils/orm";
-
-import { realTimeRoomStatus, updateRoomStatus, loadOrderInfo } from "@/api/roomStatus/pmsRoomStatusController";
-import { listStorey } from "@/api/systemSet/roomSetting/floorRoom";
-import { listBuilding } from "@/api/systemSet/roomSetting/buildingController";
-import { listRoomForWordByRoomPk } from "@/api/atrialCenter/roomForwardStatus";
-
-// import DialogCheckinVisible from "@/pages/bookingForm/order/OrderDialog";
 //=====================组件==========================
-import RoomManager from "$pages/roomPattern/roomManager/RoomManager";
-import DisableAndRepairDialog from '$pages/roomPattern/roomManager/DisableAndRepairDialog'
-
-//房间
-import RoomRow from "$pages/roomPattern/roomRow";
 
 export default {
-  components: {
-    "full-calendar": require("vue-fullcalendar"),
-    DisableAndRepairDialog,
-    // DialogCheckinVisible,
-    RoomManager,
-    RoomRow
-  },
+  components: {},
   data() {
     return {
       moment: moment,
-      
-      checkInTypeMap: checkInTypeMap,
-      orderStatusMap: orderStatusMap,
-      roomList: [], //房态数据
-      roomListSelectData:{},//筛选条件
-      roomType: [], //房间类型
-      floorArr: [], //楼层数据
-      buildingArr: [], //楼栋数据
-      realTimeRoomStatusMap:{},//房态类型
-      channelArr: [], //渠道数据
-
-      roomTypeStart: '',//房态标识
-      roomTypeCount: {}, //房态标识房间统计
-
       aside:{
         //右边
         activeName: "1",
@@ -184,18 +70,6 @@ export default {
         //联房
         tableData:[],
       },
-      
-      checkList: [],
-      //搜索表单
-      selectForm: {
-        roomType: null,
-        floor: null,
-        building: null,
-        channel: null,
-        checkInType: null,
-        roomNumber: "",
-      },
-
       //远期房态
       currentRoom: null,
       meetingEventList: [],
@@ -205,9 +79,11 @@ export default {
   methods: {
     /**
      * 初始化调用，查找房间数据
-     * @augments */
-    init(val) {
-      this.realTimeRoomStatusMap = realTimeRoomStatusMap
+     * @augments 
+     */
+    init(val) {},
+    setRoomInfo(obj){
+        console.log(obj);
     },
     calendarRoomForwardStatus(row) {
       this.currentRoom = row;
@@ -237,7 +113,13 @@ export default {
       // this.calendarPrice(current);
       // this.currDate = current
     },
-    
+    //批量转脏
+    clickRoomManager(){
+
+    },
+    handleClick(){
+
+    },
     //设置房态背景色
     setBackground(color1,color2){
       return {
