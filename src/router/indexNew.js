@@ -7,7 +7,7 @@ import Login from '@/pages/Login.vue'
 import NotFound from '@/pages/404.vue'
 
 import home from '@/router/home/index'
-import room from '@/router/room/index'
+// import room from '@/router/room/index'
 
 Vue.use(Router)
 
@@ -23,7 +23,7 @@ export const routes = [
 ]
 
 routes.push(home)
-routes.push(room)
+// routes.push(room)
 
 export default new Router({
   routes: routes

@@ -119,7 +119,7 @@ import {
   findRoomReason,
   loadOrderInfo
 } from "@/api/roomStatus/pmsRoomStatusController";
-import { find } from "@/api/systemSet/pmsSysParamController";
+import { find } from "@/api/systemSet/pmsParamConfigController";
 import { getNewGuestOrder } from "@/api/utils/pmsTimerController";
 import { allTypeList } from "@/api/utils/pmsTypeController";
 import { Message } from "element-ui";

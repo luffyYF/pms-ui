@@ -9,69 +9,84 @@
                 <el-button size="mini" type="primary" @click="memberUpdatePasswordClick(memberInfo)">改密码</el-button>
                 <el-button size="mini" type="primary"  @click="memberRechargeClick(memberInfo)"  :disabled="memberInfo.rechargeFlag == 'N'">充值</el-button>
                 <el-button size="mini" type="primary" @click="memberIntegralExchangeClick(memberInfo)">积分增减</el-button>
-                <el-button size="mini" type="primary">积分兑换</el-button>
+                <el-button size="mini" type="primary" @click="memberIntegralForGoodsDialog(memberInfo)">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <el-button size="mini" type="primary">会员升级</el-button>
                 <el-button size="mini" type="primary" @click="openLogout(memberInfo)">注销</el-button>
                 <el-button size="mini" type="primary">挂失</el-button>
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
-
-              <!-- <div class="tabs-container" id="print-dailyreport">
-          <div class="tavs-title">
-            <div style="margin-left: 7px;text-align: left;">
-              <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+            <!-- 打印补登 -->
+            <div style="text-align:center;display:none;width:100%">
+                <div class="tavs-title" id="print-memberReport">
+                  <div style="margin-left: 7px;text-align: left;">
+                    <img :src="activeCompany.companyImg|sourceImgUrl" width="250px">
+                  </div>
+                   <h3 style="text-align:center">{{activeCompany.companyName}}</h3>
+                   <h4 style="text-align:center">会员登记单</h4>
+                </div>
+                <div id="print-memberReportTable">
+                  <table
+                  width="100%"
+                  border="0"
+                  style="border-collapse:collapse;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;"
+                  cellpadding="6"
+                  cellspacing="0"
+                >
+                  <thead>
+                    <tr>
+                      <th colspan="2" style="text-align: center;font-size: 14px;">
+                        打印日期：{{datepickerTime}}<br><span>登记日期：{{dataForm.createTime}}</span>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th colspan="2">
+                        <hr align=center noshade  width="80%">
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">会员卡号 Card ID:</td>
+                      <td style="width:50%;">{{dataForm.cardNumber}}</td>
+                    </tr>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">会员姓名 Name:</td>
+                      <td style="width:50%;">{{dataForm.memName}}</td>
+                    </tr>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">证件号码 ID NO:</td>
+                      <td style="width:50%;">{{dataForm.certificateNo}}</td>
+                    </tr>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">联系电话 Phone:</td>
+                      <td style="width:50%;">{{dataForm.memPhone}}</td>
+                    </tr>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">会员级别 Type:</td>
+                      <td style="width:50%;">{{dataForm.gradeName}}</td>
+                    </tr>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">地址 Address:</td>
+                      <td style="width:50%;">{{dataForm.address}}</td>
+                    </tr>
+                    <tr :v-model="dataForm">
+                      <td style="width:50%;">备注 Remark:</td>
+                      <td style="width:50%;">{{dataForm.remark}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:50%;">操作人 Operator:</td>
+                      <td style="width:50%;">{{userInfo.realName}}</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="2" style="text-align: center;font-size: 12px;"><span>--------------------欢迎下次光临--------------------</span></td>
+                    </tr>
+                  </tfoot>
+              </table>
+             </div>
             </div>
-            <h3 style="text-align:center">会员登记单</h3>
-          </div>
-          <table
-            width="100%"
-            border="0"
-            style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 14px;margin:0 auto;color:black;text-align: center;"
-            cellpadding="6"
-            cellspacing="0"
-          >
-            <thead>
-              <tr>
-                <th
-                  colspan="2"
-                  style="text-align: left;font-size: 14px;"
-                >店铺：{{activeCompany.companyName}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="width:25%;border: 1px solid #000;">会员卡号</td>
-               <td style="width:25%;border: 1px solid #000;">{{item.name}}</td>
-                
-              </tr>
-                <tr v-for="(item, index) in tableData" :key="index">
-              <td style="width:25%;border: 1px solid #000;">会员姓名</td>
-                <td style="width:25%;border: 1px solid #000;">{{item.day}}</td>
-              </tr>
-              <tr>
-                <td style="width:25%;border: 1px solid #000;">本月累计</td>
-                <td style="width:25%;border: 1px solid #000;">{{item.month}}</td>
-              </tr>
-              <tr>
-                <td style="width:25%;border: 1px solid #000;">本年累计</td>
-                <td style="width:25%;border: 1px solid #000;">{{item.year}}</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="2" style="text-align: left;font-size: 14px;">
-                  打印人：
-                  <span>{{userInfo.realName}}</span>
-                </td>
-                <td colspan="2" style="text-align: right;font-size: 14px;">
-                  打印日期：
-                  <span>{{datepickerTime}}</span>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div> -->
 
             <el-tabs type="border-card" style="margin-top:10px;min-height:300px;" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
                 <el-tab-pane label="基础信息" name="MemberInfo">
@@ -93,7 +108,7 @@
                     <MemberExchangeCardDetail ref="MemberExchangeCardDetail"/>
                 </el-tab-pane>
                 <el-tab-pane label="积分兑换明细" name="2">
-
+                    <memberIntegralForGoodsDetail ref="memberIntegralForGoodsDetail"/>
                 </el-tab-pane>
                 <el-tab-pane label="卡升级明细" name="MemberUpgradeRecord">
                     <MemberUpgradeRecord ref="MemberUpgradeRecord"/>
@@ -105,6 +120,8 @@
         </el-dialog>
         <member-recharge ref="memberRechargeRefs" @callback="memberListData(form.pageNum)"></member-recharge>
         <MemberIntegralRoomChange ref="MemberIntegralRoomChange" />
+        <member-integral-forGoods ref="memberIntegralForGoodsRefs"></member-integral-forGoods>
+
         <member-integral-exchange ref="memberIntegralExchangeRefs" @callback="memberListData(form.pageNum)"></member-integral-exchange>
         <member-update-password ref="memberUpdatePasswordRefs" @callback="memberListData(form.pageNum)"></member-update-password>
         <member-exchange-card ref="memberExchangeCardRefs" @callback="memberListData(form.pageNum)"></member-exchange-card>
@@ -113,6 +130,7 @@
 
 <script>
 import { getLodop } from "@/utils/lodop";
+import moment from "moment";
 import MemberInfo from "./MemberInfo";
 import MemberRecharge from "./MemberRecharge/MemberRecharge.vue"
 import MemberIntegralExchange from "./MemberIntegral/MemberIntegralExchange.vue"
@@ -133,46 +151,52 @@ import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTab
 import  MemberIntegralRoomChangeRecord from './MemberIntegralRoomChange/MemberIntegralRoomChangeRecord.vue'
 import {printMember,delMember} from '@/api/customerRelation/pmsMemberController'
 
+import memberIntegralForGoods from "./memberIntegralForGoods/memberIntegralForGoods.vue"
+import memberIntegralForGoodsDetail from "./memberIntegralForGoods/memberIntegralForGoodsDetail.vue"
+
 export default {
     components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard,
     MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,
     MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,
-    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,MemberUpgradeRecord },
+    MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,MemberUpgradeRecord,memberIntegralForGoods,memberIntegralForGoodsDetail },
   data() {
     return {
       dialogMemberVisible: false,
       memberInfo: {}, //会员资料
       total: 0,
       activeName:"MemberInfo",
-      // LODOP: null,
-      // tableData: [],
-      // datepickerTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      dataForm:{
+        cardNumber:'',
+        memName:'',
+        certificateNo:'',
+        memPhone:'',
+        gradeName:'',
+        address:'',
+        remark:'',
+        createUserName:'',
+        createTime:''
+      },
+      LODOP: null,
+      datepickerTime: moment().format("YYYY-MM-DD HH:mm:ss"),
     };
   },
   mounted() {
 //       console.log(this.$refs)
 //     this.activeName = this.$refs.checkTabs.panes[0].name
   },
-  // created(){
-  //   var test = window.localStorage.getItem("current_logon_company");
-  //   this.activeCompany = JSON.parse(test);
-  //   if (
-  //     this.activeCompany.companyName == "" ||
-  //     this.activeCompany.companyName == null ||
-  //     this.activeCompany.companyName == undefined
-  //   ) {
-  //     this.activeCompany.companyName == "";
-  //   }
-  //   this.userInfo = JSON.parse(localStorage.getItem("pms_userinfo"));
-  //   this.dailyReport();
-  // },
+  created(){
+    var test = window.localStorage.getItem("current_logon_company");
+    this.activeCompany = JSON.parse(test);
+    if (
+      this.activeCompany.companyName == "" ||
+      this.activeCompany.companyName == null ||
+      this.activeCompany.companyName == undefined
+    ) {
+      this.activeCompany.companyName == "";
+    }
+    this.userInfo = JSON.parse(localStorage.getItem("pms_userinfo"));
+  },
   methods: {
-    //  dailyReport() {
-    //   printMember({memPk:memberInfo.memPk}).then(res => {
-    //     console.log(res.data);
-    //     this.tableData = res.data;
-    //   });
-    // },
       //登记补打印
        openPrint(memberInfo) {
         this.$confirm('是否要打印?', '提示', {
@@ -180,33 +204,48 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-      // this.LODOP = getLodop();
-      // if (!this.LODOP) {
-      //   return;
-      // }
-      // this.LODOP.PRINT_INITA(0, 0, 794, 1123, "每日日报打印");
-      // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
-      // this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
-      // this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
-      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 3);
-      // this.LODOP.SET_PRINT_STYLEA(0, "TableHeightScope", 1);
-      // this.LODOP.ADD_PRINT_HTM(16,"1%","98%",1103,document.getElementById("print-dailyreport").innerHTML);
-      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
-      // this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
-      // this.LODOP.ADD_PRINT_HTM(1093,"2%","98%",30,"<font color='#000000' size='2'><span tdata='pageNO'>第##页</span>，<span tdata='pageCount'>共##页</span></font>");
-      // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 3);
-      // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 1);
-      this.$message({
-            type: 'success',
-            message: '打印成功!'
+          this.createdOneFormPrint();
+          if (this.LODOP) {
+            this.LODOP.PREVIEW();
+          }
+        this.$message({
+              type: 'success',
+              message: '正在打印预览...'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消打印预览'
+            });
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消打印'
-          });          
-        });
       },
+      createdOneFormPrint(){
+          this.LODOP = getLodop();
+          if (!this.LODOP) {
+            return;
+          }
+          this.LODOP.PRINT_INITA(0, 0, 105, 148, "会员登记单打印");//设置大小和标题
+          this.LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A6");
+          this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
+          this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+          this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);//设置边框
+          this.LODOP.ADD_PRINT_TABLE(120,"1%","98%",100,document.getElementById("print-memberReportTable").innerHTML);
+          this.LODOP.SET_PRINT_STYLEA(0,"Vorient",3);
+          this.LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",1);
+          this.LODOP.ADD_PRINT_HTM(10,"1%","98%",110,document.getElementById("print-memberReport").innerHTML);
+          this.LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+          this.LODOP.SET_PRINT_STYLEA(0,"LinkedItem",1);
+
+          // this.LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A6"); //1指定纵向打印,指定A6纸
+          // this.LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); // 显示背景
+          // this.LODOP.SET_SHOW_MODE("HIDE_PAGE_PERCENT", true);
+          // this.LODOP.SET_SHOW_MODE("HIDE_PAPER_BOARD", 1);
+          // this.LODOP.SET_PRINT_STYLEA(0, "Vorient", 2);
+          // this.LODOP.SET_PRINT_STYLEA(0, "TableHeightScope", 1);
+          // this.LODOP.ADD_PRINT_HTM(10,"1%","98%","98%",document.getElementById("print-memberReport").innerHTML);
+          // this.LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+          // this.LODOP.SET_PRINT_STYLEA(0, "LinkedItem", 1);
+    },
       //注销会员卡
       openLogout (memberInfo) {
         if(memberInfo.balance!=0||memberInfo.availableIntegral!=0){
@@ -222,12 +261,12 @@ export default {
             }).then(() => {
             delMember({memPk:memberInfo.memPk}).then(res => {
                   if(res.code == 1){
-                      this.$message({ type: 'success', message: "强制注销成功！" })
+                    this.$message({ type: 'success', message: "强制注销成功！" })
                   }else{
                     this.$message({ type: 'warning', message: "强制注销失败！" })
                   }
               })
-            }) 
+            })
           })
           }else{
               this.$confirm('确定注销该会员卡?', '提示', {
@@ -237,7 +276,7 @@ export default {
             }).then(() => {
             delMember({memPk:memberInfo.memPk}).then(res => {
                   if(res.code == 1){
-                      this.$message({ type: 'success', message: "注销成功！" })
+                    this.$message({ type: 'success', message: "注销成功！" })
                   }else{
                     this.$message({ type: 'warning', message: "注销失败！" })
                   }
@@ -274,6 +313,11 @@ export default {
         else if(this.activeName){
             this.$refs[this.activeName].init()
         }
+        else if(this.activeName=="memberIntegralForGoodsDetail"){
+          this.$nextTick(()=>{
+                this.$refs.memberIntegralForGoodsDetail.init(this.memberInfo.memPk,1)
+            })
+        }
     },
     showDialog(row){
         this.dialogMemberVisible = true
@@ -282,7 +326,17 @@ export default {
         this.$nextTick(()=>{
             this.$refs[this.activeName].init(row)
         })
-        
+        this.dataForm={
+            cardNumber:row.cardNumber,
+            memName:row.memName,
+            certificateNo:row.certificateNo,
+            memPhone:row.memPhone,
+            gradeName:row.gradeName,
+            address:row.address,
+            remark:row.remark,
+            createUserName:row.createUserName,
+            createTime:row.createTime,
+        }
     },
     delCallback(){
         this.dialogMemberVisible = false
@@ -295,6 +349,12 @@ export default {
     memberRechargeClick (row) {
         this.$refs.memberRechargeRefs.showDialog(row,false)
     },
+
+    //积分兑换
+    memberIntegralForGoodsDialog(memberInfo){
+      this.$refs.memberIntegralForGoodsRefs.showDialog(memberInfo)
+    },
+
     memberRoomChangeClick(memberInfo){
         this.$refs.MemberIntegralRoomChange.showDialog(memberInfo)
     },
