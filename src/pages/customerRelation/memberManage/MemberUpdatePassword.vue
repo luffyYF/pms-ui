@@ -25,7 +25,9 @@
             </div>
           </el-col>
         </el-col>
-        <el-form-item label="原密码:" size="mini" prop="originalPassword" v-if="dataForm.type!='Y'">
+         <el-row>
+         <el-col :span="15">
+        <el-form-item label="原密码:" size="mini" v-if="dataForm.type!='Y'">
           <el-input
             type="password"
             v-model="dataForm.originalPassword"
@@ -39,6 +41,8 @@
             :disabled="dataForm.type=='Y'"
           ></el-input>
         </el-form-item>
+        </el-col>
+        <el-col :span="9">
         <el-form-item label size="mini">
           <el-checkbox
             size="mini"
@@ -48,10 +52,12 @@
             false-label="N"
           ></el-checkbox>
         </el-form-item>
-        <el-form-item label="新密码:" size="mini" prop="newPassword">
+         </el-col>
+         </el-row>
+        <el-form-item label="新密码:" size="mini">
           <el-input type="password" v-model="dataForm.newPassword"></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码:" size="mini" prop="confirmNewPwd">
+        <el-form-item label="确认新密码:" size="mini">
           <el-input type="password" v-model="dataForm.confirmNewPwd"></el-input>
         </el-form-item>
       </el-form>
@@ -86,7 +92,6 @@ export default {
   },
   methods: {
     submitModify() {
-
           if (this.verification()) {
             updateMemberPassword(this.dataForm).then(res => {
               if (res.code == 1) {
@@ -98,7 +103,6 @@ export default {
               }
             });
           }
-     
     },
     verification() {
       var content = "";
@@ -126,7 +130,11 @@ export default {
         memPk: data.memPk,
         memName: data.memName,
         balance: data.availableBalance.toFixed(2),
-        cardNumber: data.cardNumber
+        cardNumber: data.cardNumber,
+        originalPassword: "",
+        newPassword: "",
+        confirmNewPwd: "",
+        type:"N"
       };
       this.dialogVisible = true;
     },

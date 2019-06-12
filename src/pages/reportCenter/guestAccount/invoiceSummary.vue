@@ -72,7 +72,7 @@
           </thead>
           <tbody>
             <template v-for="obj in tableData">
-              <tr :key="obj.item.projectPk" style="page-break-before:always">
+              <tr :key="obj.item.projectPk" style="page-break-after:always">
                 <td
                   :rowspan="(obj.item.length+2)"
                   colspan="2"
@@ -89,7 +89,7 @@
                 <td colspan="2" style="border:1px solid black;">{{item.orderGuestNo}}</td>
               </tr>
 
-              <tr :key="obj.item.projectPk" style="page-break-after:always">
+              <tr :key="obj.item.projectPk" >
                 <td colspan="2" style="border:1px solid black;">合计</td>
                 <td colspan="2" style="border:1px solid black;"></td>
                 <td colspan="2" style="border:1px solid black;">{{amountTotal(obj.item).toFixed(2)}}</td>

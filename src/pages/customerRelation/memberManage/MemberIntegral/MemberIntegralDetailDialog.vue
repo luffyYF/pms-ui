@@ -25,7 +25,7 @@ import MemberIntegralDetailTable from "./MemberIntegralDetailTable";
       showDialog(id, type) {
         this.dialogVisible = true
         this.$nextTick(()=>{
-          console.log(this.$refs)
+
           this.$refs.MemberIntegralDetailTableRef.init(id, type)
         })
       },

@@ -160,9 +160,11 @@ import MemberRecharge from "./MemberRecharge/MemberRecharge.vue"
 import MemberRechargeDetailDialog from "./MemberRecharge/MemberRechargeDetailDialog.vue"
 import MemberIntegralDetailDialog from "./MemberIntegral/MemberIntegralDetailDialog.vue"
 import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumptionDetailDialog.vue"
+import memberIntegralForGoodsDialog from "./memberIntegralForGoods/memberIntegralForGoods.vue"
+
 
 export default {
-  components: { MemberGrade, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberInfoDialog },
+  components: { MemberGrade, MemberRecharge, MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberInfoDialog,memberIntegralForGoodsDialog},
   data() {
     return {
       memberLevel: [],
