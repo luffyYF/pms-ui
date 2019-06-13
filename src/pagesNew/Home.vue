@@ -22,22 +22,16 @@
       <transition name="el-fade-in-linear">
         <router-view></router-view>
       </transition>
-      <audio id="audio" src="http://www.housefeel.cn/Control/File/mp3/yuyintishi.mp3"></audio>
     </el-col>
     <el-col :span="24" class="line-footer">
       <!-- 酒店编码：{{footerData.companyCode}} &nbsp;&nbsp;&nbsp; -->
       {{activeCompany.companyName}}
-      <span
-        style="float:right"
-      >操作员：{{footerData.realName}}</span>
-      <span
-        style="float:right"
-      >夜审</span>
-      <span
-        style="float:right"
-      >营业日期：{{footerData.bussinessDate}}</span>
+      <span>退出</span>
+      <span>操作员：{{footerData.realName}}</span>
+      <span>夜审</span>
+      <span>营业日期：{{footerData.bussinessDate}}</span>
     </el-col>
-
+     <audio id="audio" src="http://www.housefeel.cn/Control/File/mp3/yuyintishi.mp3"></audio>
     <div class="asd">
       <el-dialog
         title="预定提醒"
@@ -50,8 +44,7 @@
         :visible.sync="ydDialogVisible"
         :append-to-body="false"
         :close-on-click-modal="false"
-        width="480px"
-      >
+        width="480px">
         <el-table :data="ydList" height="200px" @row-click="showOrderInfo">
           <el-table-column align="center" prop="channelTypeName" label="渠道" width="80"></el-table-column>
           <el-table-column align="center" prop="guestName" label="客人" width="60"></el-table-column>
@@ -119,7 +112,7 @@ import {
   findRoomReason,
   loadOrderInfo
 } from "@/api/roomStatus/pmsRoomStatusController";
-import { find } from "@/api/systemSet/pmsSysParamController";
+import { find } from "@/api/systemSet/pmsParamConfigController";
 import { getNewGuestOrder } from "@/api/utils/pmsTimerController";
 import { allTypeList } from "@/api/utils/pmsTypeController";
 import { Message } from "element-ui";

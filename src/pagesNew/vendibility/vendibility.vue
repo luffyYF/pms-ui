@@ -12,7 +12,7 @@
         <date-picker v-model="beginAndEnd"></date-picker>
          
         <el-form-item label="查看方式：">
-          <el-radio-group v-model="radio1">
+          <el-radio-group v-model="type">
             <el-radio-button :label="1">按房型</el-radio-button>
             <el-radio-button :label="0">按房间</el-radio-button>
           </el-radio-group>

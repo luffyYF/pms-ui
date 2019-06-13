@@ -1,7 +1,26 @@
 <template>
     <div id="rowRoom" class="rowRoom" >
         <div class="floorstorey" v-for="(ite, index) in roomList" :key="index">
-            <div class="title" v-if='ite.buildingName || ite.storeyName'>{{ite.buildingName?ite.buildingName:''}}{{ite.storeyName?ite.storeyName+'层':''}}<span>（空净20间&nbsp;&nbsp;空脏20间&nbsp;&nbsp;住净20间&nbsp;&nbsp;住脏20间&nbsp;&nbsp;维修20间&nbsp;&nbsp;停用20间&nbsp;&nbsp;预抵20间&nbsp;&nbsp;预离20间&nbsp;&nbsp;生日20间&nbsp;&nbsp;团队20间&nbsp;&nbsp;钟点房20间&nbsp;&nbsp;接待房20间）</span></div>
+            <div class="title" v-if='ite.buildingName || ite.storeyName'>
+                {{ite.buildingName?ite.buildingName:''}}{{ite.storeyName?ite.storeyName+'层':''}}
+                <span>
+                    （
+                    <span v-if="ite['KJ']">空净{{ite['KJ']}}间</span>
+                    <span v-if="ite['KZ']">空脏{{ite['KZ']}}间</span>
+                    <span v-if="ite['ZJ']">住净{{ite['ZJ']}}间</span>
+                    <span v-if="ite['ZZ']">住脏{{ite['ZZ']}}间</span>
+                    <span v-if="ite['WX']">维修{{ite['WX']}}间</span>
+                    <span v-if="ite['YD']">预抵{{ite['YD']}}间</span>
+                    <span v-if="ite['YL']">预离{{ite['YL']}}间</span>
+                    <span v-if="ite['QF']">欠费{{ite['QF']}}间</span>
+                    <span v-if="ite['SR']">生日{{ite['SR']}}间</span>
+                    <span v-if="ite['TD']">团队{{ite['TD']}}间</span>
+                    <span v-if="ite['ZDF']">钟点房{{ite['ZDF']}}间</span>
+                    <span v-if="ite['MFF']">免费房{{ite['MFF']}}间</span>
+                    <span v-if="ite['TSF']">特殊房{{ite['TSF']}}间</span>
+                    ）
+                </span>
+            </div>
             <!-- 房间item begin -->
             <div class="pattern-li"
             @contextmenu.prevent="rightClick(item,$event)"
@@ -50,19 +69,19 @@
                     <span>房间价格：￥{{item.orderInfo.guestPo.currPrice}}</span>
                     <br>
                     <div v-if="item.roomRelationType>1 && item.orderInfo.guestList && item.orderInfo.guestList.length>0">
-                    <hr>
-                    <div class="manay-guest-panel" v-for="(g,guestIndex) in item.orderInfo.guestList" :key="guestIndex">
-                        房号：{{g.roomNumber}}
-                        <br>
-                        房型：{{g.roomTypeName}}
-                        <br>
-                        状态：{{orderStatusMap[g.orderStatus]}}
-                        <br>
-                        抵店：{{g.beginDate}}
-                        <br>
-                        离店：{{g.endDate}}
-                        <br>
-                    </div>
+                        <hr>
+                        <div class="manay-guest-panel" v-for="(g,guestIndex) in item.orderInfo.guestList" :key="guestIndex">
+                            房号：{{g.roomNumber}}
+                            <br>
+                            房型：{{g.roomTypeName}}
+                            <br>
+                            状态：{{orderStatusMap[g.orderStatus]}}
+                            <br>
+                            抵店：{{g.beginDate}}
+                            <br>
+                            离店：{{g.endDate}}
+                            <br>
+                        </div>
                     </div>
                 </div>
                 <el-button
@@ -141,7 +160,6 @@
                     class="detailsinfo reserve_today"
                     v-if="item.arrivalGuestPk"></label>
                 </el-popover>
-
                 <!-- 欠费-->
                 <el-popover placement="bottom" width="200" trigger="hover" :content="'欠费金额：￥'+Math.abs(item.owePirce)">
                 <label slot="reference" class="detailsinfo arrears" v-if="item.owePirce"></label>
@@ -193,8 +211,7 @@ export default {
       checkInTypeMap: checkInTypeMap,
       orderStatusMap: orderStatusMap,
       roomList: [], //房态数据
-      roomListSelectData:realTimeRoomInfo,//筛选条件
-      roomTypeCount: {}, //房态标识房间统计
+      roomListSelectData: realTimeRoomInfo,//筛选条件
 
       //快捷操作测试
       oDiv: null,
@@ -274,7 +291,7 @@ export default {
     //点击房间
     roomClick(item) {
       console.log("鼠标点击房间");
-      this.calendarRoomForwardStatus(item);
+    //   this.calendarRoomForwardStatus(item);
       this.roomList.forEach(room => {
         this.$set(room, "connectRoom", false);
         //标识虚线框 arrivalOrderPk
@@ -295,6 +312,7 @@ export default {
           }
         }
       });
+      this.$emit("roomClick",item)
     },
     //双击房态
     toCheckin(room) {
@@ -318,137 +336,16 @@ export default {
      * 初始化调用，查找房间数据
      * @augments */
     init(val) {
-      this.realTimeRoomStatus()
+        this.roomListSelectData = val
+        this.realTimeRoomStatus()
     },
     //查询实时房态
     realTimeRoomStatus(){
-      let data = this.roomListSelectData;
-      realTimeRoomStatus(data).then(res => {
-        res.data.room.forEach(data=>{
-          data.roomList.forEach(obj=>{
-            // 空净
-            if(obj.roomState == 1){
-              if(data.hasOwnProperty('KJ')){
-                data['KJ']++
-              }else{
-                data['KJ'] = 0
-              }
-            }
-            // 空脏
-            else if(obj.roomState == 2){
-              if(data.hasOwnProperty('KZ')){
-                data['KZ']++
-              }else{
-                data['KZ'] = 0
-              }
-            }
-            // 住净
-            else if(obj.roomState == 3){
-              if(data.hasOwnProperty('ZJ')){
-                data['ZJ']++
-              }else{
-                data['ZJ'] = 0
-              }
-            }
-            // 住脏
-            else if(obj.roomState == 4){
-              if(data.hasOwnProperty('ZZ')){
-                data['ZZ']++
-              }else{
-                data['ZZ'] = 0
-              }
-            }
-            //维修
-            else if(obj.roomState == 5){
-              if(data.hasOwnProperty('WX')){
-                data['WX']++
-              }else{
-                data['WX'] = 0
-              }
-            }
-            //钟点房
-            if(obj.checkInType == 1){
-              if(data.hasOwnProperty('ZDF')){
-                data['ZDF']++
-              }else{
-                data['ZDF'] = 0
-              }
-            }
-            //特殊房
-            else if(obj.checkInType == 2){
-              if(data.hasOwnProperty('ZDF')){
-                data['ZDF']++
-              }else{
-                data['ZDF'] = 0
-              }
-            }
-            //免费房
-            else if(obj.checkInType == 3){
-              if(data.hasOwnProperty('ZDF')){
-                data['ZDF']++
-              }else{
-                data['ZDF'] = 0
-              }
-            }
-            //入住团房
-            if(obj.roomRelationType == 3){
-              if(data.hasOwnProperty('TD')){
-                data['TD']++
-              }else{
-                data['TD'] = 0
-              }
-            }
-            //预定团房
-            else if(obj.arrivalRelationType == 3){
-              if(data.hasOwnProperty('TD')){
-                data['TD']++
-              }else{
-                data['TD'] = 0
-              }
-            }
-            //预抵
-            if(obj.arrivalFlag == 1){
-              if(data.hasOwnProperty('YD')){
-                data['YD']++
-              }else{
-                data['YD'] = 0
-              }
-            }
-            //预离
-            if(obj.dueoutFlag == 1){
-              if(data.hasOwnProperty('YL')){
-                data['YL']++
-              }else{
-                data['YL'] = 0
-              }
-            }
-            //生日
-            if(obj.birthdayFlag == 1){
-              if(data.hasOwnProperty('SR')){
-                data['SR']++
-              }else{
-                data['SR'] = 0
-              }
-            }
-            //欠费
-            if(obj.oweFlag == 1){
-              if(data.hasOwnProperty('QF')){
-                data['QF']++
-              }else{
-                data['QF'] = 0
-              }
-            }
-          })
-          this.roomList.push(data)
-        })
-        this.roomTypeCount = res.data.count
-        this.$emit("roomTypeCount",this.roomTypeCount)
-        this.roomList = res.data.room
-        // this.$nextTick();
-        // this.$forceUpdate();
+      realTimeRoomStatus(this.roomListSelectData).then(res => {
+        this.$emit("roomTypeCount",res.data.count)
+        this.roomList = this.statisticsRoomIdentify(res.data.room)
       });
     },
-
     //房间样式
     styleRoomStatusObject(item){
       let classInfo = {
@@ -466,10 +363,83 @@ export default {
         "background": "linear-gradient("+color1+", "+color2+")"
       }
     },
-   
-    
-    
-  
+    /**
+     * 统计每个状态标识的数量
+     */
+    statisticsRoomIdentify(list){
+        list.forEach(data=>{
+          data.roomList.forEach(obj=>{
+            //获取房间状态标识
+            let val = this.getIdentifying(obj)
+            //汇总每个状态标识的数量
+            if(data.hasOwnProperty(val)){
+                data[val]++
+            }else{
+                data[val] = 0
+            }
+          })
+        })
+        return list
+    },
+   /**
+    * 获取标识
+    */
+    getIdentifying(obj){
+        let val = 'KJ'
+        // 空净
+        if(obj.roomState == 1){
+            val = 'KJ'
+        }
+        // 空脏
+        else if(obj.roomState == 2){
+            val = 'KZ'
+        }
+        // 住净
+        else if(obj.roomState == 3){
+            val = 'ZJ'
+        }
+        // 住脏
+        else if(obj.roomState == 4){
+            val = 'ZZ'
+        }
+        //维修
+        else if(obj.roomState == 5){
+            val = 'WX'
+        }
+        //钟点房
+        if(obj.checkInType == 1){
+            val = 'ZDF'
+        }
+        //特殊房
+        else if(obj.checkInType == 2){
+            val = 'TSF'
+        }
+        //免费房
+        else if(obj.checkInType == 3){
+            val = 'MFF'
+        }
+        //入住团房 || 预定团房
+        if(obj.roomRelationType == 3 || obj.arrivalRelationType == 3){
+            val = 'TD'
+        }
+        //预抵
+        if(obj.arrivalFlag == 1){
+           val = 'YD'
+        }
+        //预离
+        if(obj.dueoutFlag == 1){
+           val = 'YL'
+        }
+        //生日
+        if(obj.birthdayFlag == 1){
+            val = 'SR'
+        }
+        //欠费
+        if(obj.oweFlag == 1){
+            val = 'QF'
+        }
+        return val
+    },
     //关联图标信息
     relationIconHover(index) {
       if (!this.roomList[index].orderInfo) {
