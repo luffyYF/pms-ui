@@ -76,5 +76,12 @@ export const getRflRoomInfo = params => {
 export const selectStorey = params => {
   return request.get('/back/storey/selectStorey', {params:params})
 }
+/**
+ * 
+ * @param {散客和房型} params 
+ */
+export const listRoomTypePrice = params => {
+  return request.get('/back/roomTypePrice/listRoomTypePrice', {params:params})
+}
 
 

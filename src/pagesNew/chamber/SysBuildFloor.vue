@@ -62,23 +62,21 @@
             border 
             :data="roomData"
             height="473">
-            <el-table-column prop="roomNumber" label="房型编号" align="center">
+            <el-table-column prop="typeCode" label="房型代码" align="center">
             </el-table-column>
-             <el-table-column prop="roomNumber" label="房型名称" align="center">
+             <el-table-column prop="typeName" label="房型名称" align="center">
             </el-table-column>
-             <el-table-column prop="roomNumber" label="名称简写" align="center">
+             <el-table-column prop="typeDescribe" label="房型描述" align="center">
             </el-table-column>
-            <el-table-column prop="roomNumber" label="房数" align="center">
+            <el-table-column prop="roomCount" label="房数" align="center">
             </el-table-column>
-            <el-table-column prop="roomTypePk" label="房型标价" align="center">
-              <template slot-scope="scope">
+            <el-table-column prop="standardPrice" label="房型标价" align="center">
+              <!-- <template slot-scope="scope">
                 <span>{{listTypeDataView[scope.row.roomTypePk].typeName}}</span>
                 <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
-              </template>
+              </template> -->
             </el-table-column>
-            <el-table-column prop="roomNumber" label="散客" align="center">
-            </el-table-column>
-            <el-table-column prop="remark" label="备注" align="center">
+            <el-table-column prop="price" label="散客" align="center">
             </el-table-column>
           </el-table>
         </div>
@@ -159,7 +157,7 @@
 
 <script>
 import {listBuilding,addBuilding,updateBuilding,delBuilding,selectBuilding} from '@/api/systemSet/roomSetting/buildingController'
-import {addStorey, listStorey, delStorey,updateStorey,selectStorey} from '@/api/systemSet/roomSetting/floorRoom'
+import {addStorey, listStorey, delStorey,updateStorey,selectStorey,listRoomTypePrice} from '@/api/systemSet/roomSetting/floorRoom'
 export default {
   components: {},
   data() {
@@ -184,13 +182,22 @@ export default {
   },
  created(){
      this.listBuilding(),
-     this.listStorey()
+     this.listStorey(),
+     this.listRoomTypePrice()
   },
   methods: {
      listBuilding(){
       const self = this
       listBuilding().then(result => {
         self.tableData = result.data
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+     listRoomTypePrice(){
+      const self = this
+      listRoomTypePrice().then(result => {
+        self.roomData = result.data
       }).catch(() => {
         self.loading = false
       })
