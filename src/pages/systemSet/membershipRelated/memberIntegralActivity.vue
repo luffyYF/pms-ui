@@ -2,47 +2,40 @@
 <template>
   <div class="heightOverflow100">
     <div class="bg-reserve">
+       <h5 class="info-title">会员积分活动管理</h5>
       <el-col :span="24" class="book-info">
-        <el-form ref="pageObj" size="mini" :model="pageObj" label-width="110px">
+        <el-form ref="pageObj" size="mini" :inline="true" :model="pageObj" label-width="110px">
           <el-row class="info-li">
-            <el-col :span="4">
               <el-form-item label="状态" prop="ruleName">
                   <el-select size="mini" style="width:100%;" v-model="pageObj.status" placeholder="状态" clearable >
                       <el-option v-for="y in statusList" :label="y.label" :value="y.value" :key="y.value"></el-option>
                   </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="4">
               <el-form-item label="是否启用" prop="ruleName">
                   <el-select size="mini" style="width:100%;" v-model="pageObj.enableFlag" placeholder="是否启用" clearable >
                       <el-option v-for="y in enableFlagList" :label="y.label" :value="y.value" :key="y.value"></el-option>
                   </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="6">
-            <el-form-item label="时间段:">
-            <div class="block">
-            <el-date-picker
-              v-model="timeValue"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
-            </div>
-            </el-form-item>
-            </el-col>
-            <el-col :span="4" style="margin-left:50px">
-            <el-form-item label="活动名称" prop="activityName">
+              <el-form-item label="时间段:">
+              <div class="block">
+              <el-date-picker
+                v-model="timeValue"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+              </div>
+              </el-form-item>
+              <el-form-item label="活动名称" prop="activityName">
                   <el-input placeholder="请输入活动" v-model="pageObj.activityName" style="width: 100px;"
                 size="mini" clearable/>
               </el-form-item>
-              </el-col>
-            <el-col :span="4" style="margin-left:80px">
+              <el-form-item label="活动名称" prop="activityName">
                 <el-button type="primary" size="mini" icon="el-icon-search" class="add-pro" v-if="queryPower" @click="listMemberIntegralActivity()">查询</el-button>
                 <el-button type="primary" size="mini" class="add-pro" v-if="hasPerm('pms:IntegralRoomChange:add')" @click="addClick()">添加规则</el-button>
-            </el-col>
+              </el-form-item>
           </el-row>
         </el-form>
       </el-col>
@@ -166,7 +159,7 @@ import { request } from 'https';
         // this.listRule()
         // this.listGrade()
         this.listMemberIntegralActivity();
-        this.listMember();
+        // this.listMember();
       },
 
       listGrade(){
@@ -229,17 +222,9 @@ import { request } from 'https';
           self.loading = false
         })
       },
-
-      // addClick(){
-      //   this.$refs.MemberIntegralRoomChangeRuleEditRef.showDialog()
-      // },
       addClick(){
         this.$refs.memberIntegralActivityEditRef.showDialog()
       },
-      // editClick(row){
-      //   var temoObj = JSON.parse(JSON.stringify(row))
-      //   this.$refs.MemberIntegralRoomChangeRuleEditRef.showDialog(temoObj)
-      // },
       editClick(row){
         var temoObj = JSON.parse(JSON.stringify(row))
         this.$refs.memberIntegralActivityEditRef.showDialog(temoObj)
