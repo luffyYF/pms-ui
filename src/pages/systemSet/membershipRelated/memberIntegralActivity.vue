@@ -79,7 +79,7 @@
         </el-table-column>
         <el-table-column label="创建人" prop="updateUserName" align="center">
         </el-table-column>
-        <el-table-column label="创建时间" prop="createTime" align="center">
+        <el-table-column label="创建时间" prop="createTime" align="center" show-overflow-tooltip>
         </el-table-column>
         <el-table-column label="修改时间" prop="createTime" align="center" show-overflow-tooltip>
         </el-table-column>

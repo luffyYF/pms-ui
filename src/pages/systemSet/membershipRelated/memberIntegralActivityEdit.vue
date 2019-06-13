@@ -49,7 +49,7 @@
 
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+      <el-button @click="handleClose" size="mini">取 消</el-button>
       <el-button type="primary" size="mini" :loading="loading" @click="saveData">保存</el-button>
     </span>
   </el-dialog>
@@ -206,18 +206,23 @@
             type:0,
             integral:0,
             gradePks:[],
-            week:[]
+            activityName:null,
+            gradePk:null,
+            datepicker:null,
+            channel:null,
+            activityMode:null,
+            activityQuota:null,
           }
         }
       },
       handleClose () {
         this.dataForm.datepicker,
-          //   this.dataForm.activityName=null,
-          //  this.dataForm. gradePk=null,
-          //  this.dataForm. datepicker=null,
-          //  this.dataForm. channel=null,
-          //   this.dataForm.activityMode=null,
-          //   this.dataForm.activityQuota=1,
+            this.dataForm.activityName=null,
+           this.dataForm. gradePk=null,
+           this.dataForm. datepicker=null,
+           this.dataForm. channel=null,
+            this.dataForm.activityMode=null,
+            this.dataForm.activityQuota=1,
           this.dialogVisible = false
 
       },
@@ -227,14 +232,6 @@
         let refs = this.$refs
         refs.dataForm.validate(valid => {
           if (valid) {
-            // if(this.dataForm == 1 && this.dataForm.gradePks.length == 0){
-            //     this.$message({ type: 'warning', message: "指定会员时会员选择不能为空" })
-            //     return
-            // }
-            // if(this.dataForm.week.length == 0){
-            //     this.$message({ type: 'warning', message: "请选择有效星期" })
-            //     return
-            // }
             this.dataForm.beginDate = this.dataForm.datepicker[0]
             this.dataForm.endDate = this.dataForm.datepicker[1]
             this.loading = true
