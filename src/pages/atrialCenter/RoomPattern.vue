@@ -508,7 +508,6 @@
   // import {findToday} from '@/api/order/pmsOrderController'
   import {listRoomForWordByRoomPk} from '@/api/atrialCenter/roomForwardStatus'
   import {listType} from '@/api/utils/pmsTypeController'
-  import {find} from '@/api/systemSet/pmsSysParamController'
 
   import DialogCheckinVisible from '@/pages/reserveManage/order/OrderDialog'
   import RoomManager from '@/pages/atrialCenter/roomPattern/roomManager'

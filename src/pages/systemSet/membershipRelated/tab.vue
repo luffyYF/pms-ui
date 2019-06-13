@@ -1,7 +1,7 @@
 <template>
   <div class="height-programme-one">
     <el-tabs type="border-card" v-model="activeName" ref='checkTabs' @tab-click="handleClick">
-      
+
       <el-tab-pane label="会员级别管理" name="memberLevel">
         <member-level ref="memberLevel"/>
       </el-tab-pane>
@@ -28,13 +28,16 @@
       <el-tab-pane label="积分商品管理" name="memberIntegralCommodity">
         <member-integral-commodity ref="memberIntegralCommodity"/>
       </el-tab-pane>
+      <el-tab-pane label="会员积分活动" name="memberIntegralActivity">
+        <member-integral-activity ref="memberIntegralActivity"/>
+      </el-tab-pane>
       <!-- <el-tab-pane label="充值优惠管理" name="memberRechargeDiscount">
         <member-recharge-discount ref="memberRechargeDiscount"/>
       </el-tab-pane>
       <el-tab-pane label="会员卡费管理" name="memberCardFee">
         <member-card-fee ref="memberCardFee"/>
       </el-tab-pane> -->
-      
+
     </el-tabs>
   </div>
 </template>
@@ -49,13 +52,14 @@
   import MemberIntegralRoomChangeRule from './MemberIntegralRoomChangeRule'
   import MemberForwardPrice from './MemberForwardPrice'
   import IntegralExchangeRule from './IntegralExchangeRule'
+  import memberIntegralActivity from './memberIntegralActivity'
   // import MemberIntegralExchangeLog from './MemberIntegralExchangeLog'
-  
 
-  
-  
+
+
+
   // import {powerJudge} from '@/utils/permissionsOperation.js'
-  
+
   export default {
     components: {
       MemberIntegralCommodity,
@@ -67,6 +71,7 @@
       MemberIntegralRoomChangeRule,
       MemberForwardPrice,
       IntegralExchangeRule,
+      memberIntegralActivity,
       // MemberIntegralExchangeLog
     },
     data () {
@@ -113,11 +118,14 @@
         }else if(this.activeName == 'IntegralExchangeRule'){
           var child = this.$refs.IntegralExchangeRule
           child.init()
+        }else if(this.activeName == 'memberIntegralActivity'){
+          var child = this.$refs.memberIntegralActivity
+          child.init()
         }
 
-        
 
-        
+
+
       },
       // powerJudge(id){
       //   return powerJudge(id);
