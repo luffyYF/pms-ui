@@ -254,7 +254,6 @@ import Moment from 'moment'
 
         //批量添加
       addClick () {
-        alert(this.integralNumber)
         this.$confirm('是否确定要兑换?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -262,7 +261,6 @@ import Moment from 'moment'
         }).then(() => {
         let Integrals = []
         // this.multipleSelection = this.ids;
-        alert(this.multipleSelection)
         if(this.multipleSelection!=null && this.multipleSelection.length!=0){
             this.multipleSelection.forEach(tableData2 => {
           Integrals.push({
@@ -300,6 +298,7 @@ import Moment from 'moment'
             this.dialogVisible = true
             this.tableData2=[];
             this.integralNumber = 1;
+            this.userIntegral=0;
             this.listMemberIntegralExchange();
             this.listByMemberGrade()
         },

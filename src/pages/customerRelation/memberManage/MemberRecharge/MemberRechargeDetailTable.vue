@@ -85,9 +85,7 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
         this.queryParams.pageNum = val
         this.listSearch()
       },
-    },
-
-    //计算总和
+      //计算总和
         //计算总和
     getSummaries(param) {
       const { columns, data } = param;
@@ -121,6 +119,9 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
       });
       return sums;
     },
+    },
+
+
     filters: {
       toMoney: function(num) {
         if(num){

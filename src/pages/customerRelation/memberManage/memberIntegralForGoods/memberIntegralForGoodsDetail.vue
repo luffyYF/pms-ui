@@ -13,8 +13,8 @@
         <el-table-column prop="userIntegral" label="使用积分"></el-table-column>
         <el-table-column prop="giftName" label="兑换礼品/优惠卷" width="184"></el-table-column>
         <el-table-column prop="integralNumber" label="数量"></el-table-column>
-        <el-table-column prop="integralNumber" label="价值"></el-table-column>
-        <el-table-column prop="createUserId" label="操作员"></el-table-column>
+        <el-table-column prop="integral" label="价值"></el-table-column>
+        <el-table-column prop="userName" label="操作员"></el-table-column>
       </el-table>
 
       <el-pagination
@@ -93,7 +93,7 @@ import {listIntegralExchangeForGoods} from '@/api/atrialCenter/roomForwardStatus
             sums[index] = sums[index].toFixed(2);
             //给价格合计添加单位
             //sums[index] += ' 元';
-          } else if (index == 7) {
+          } else if (index == 5) {
             sums[index] = "N/A";
           }
           // sums[index] += ' 元';
