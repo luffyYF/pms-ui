@@ -107,12 +107,8 @@
 </template>
 
 <script>
-  import {listGrade,delRule,listRule } from '@/api/systemSet/member/pmsMemberIntegralRoomChangeRule'
-  // import MemberIntegralRoomChangeRuleEdit from './MemberIntegralRoomChangeRuleEdit'
-
   import memberIntegralActivityEdit from './memberIntegralActivityEdit'
   import {listMemberIntegralActivity,updateMemberIntegralActivity,deleteMemberIntegralActivity,insertMemberIntegralActivity,listMember } from '@/api/systemSet/member/pmsMemberIntegralActivity'
-  // import {listGrade} from '@/api/systemSet/member/pmsMemberRechargeGiveRule'
 import { request } from 'https';
   export default {
    components: { memberIntegralActivityEdit },
@@ -162,45 +158,7 @@ import { request } from 'https';
         // this.listMember();
       },
 
-      listGrade(){
-        const self = this
-        self.gradeList = [];
-        listGrade().then(result => {
-          self.gradeObj = {
 
-          }
-          self.gradeList = result.data
-          for(var i=0;i<result.data.length;i++){
-            self.gradeObj[result.data[i].gradePk] = result.data[i].gradeName
-          }
-        }).catch(() => {
-
-        }).finally(()=>{
-        })
-      },
-      listRule(){
-        if(!this.queryPower){
-          this.$message({ type: 'warning', message: "权限不足" })
-          return
-        }
-        self.loading = true
-        listRule(this.pageObj).then(result => {
-            var data = result.data.list;
-            for(var i=0;i<data.length;i++){
-              if(data[i].effectiveWeek){
-                data[i].week = data[i].effectiveWeek.split(",")
-              }
-            }
-            this.tableData = data
-            this.pageObj.total = parseInt(result.data.total)
-            console.log(this.pageObj)
-            self.loading = false
-        }).catch(() => {
-          self.loading = false
-        }).finally(()=>{
-          self.loading = false
-        })
-      },
       listMemberIntegralActivity(){
         self.loading = true
         if (this.timeValue != null && this.timeValue.length == 2) {
@@ -246,12 +204,12 @@ import { request } from 'https';
       // 分页相关
       handleSizeChange (val) {
         this.pageObj.pageSize = val
-        this.listRule()
+        //this.listRule()
       },
       // 分页相关
       handleCurrentChange (val) {
         this.pageObj.pageNum = val
-        this.listRule()
+        //this.listRule()
       },
     }
   }
