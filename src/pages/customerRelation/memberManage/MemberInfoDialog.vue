@@ -95,9 +95,9 @@
                 <el-tab-pane label="充值明细" name="MemberRechargeTable">
                      <MemberRechargeTable ref="MemberRechargeTable" />
                 </el-tab-pane>
-                <!-- <el-tab-pane label="卡支付明细" name="0">
-
-                </el-tab-pane> -->
+                <el-tab-pane label="卡支付明细" name="MemberCardPayDetail">
+                   <MemberCardPayDetail ref="MemberCardPayDetail"/>
+                </el-tab-pane>
                 <el-tab-pane label="消费明细" name="MemberConsumptionDetailTable">
                     <MemberConsumptionDetailTable ref="MemberConsumptionDetailTable" />
                 </el-tab-pane>
@@ -145,6 +145,7 @@ import MemberConsumptionDetailDialog from "./MemberConsumption/MemberConsumption
 import MemberIntegralRoomChange from "./MemberIntegralRoomChange/MemberIntegralRoomChange.vue"
 import MemberExchangeCard from "./MemberCardExchange/MemberExchangeCard.vue"
 import MemberExchangeCardDetail from "./MemberCardExchange/MemberExchangeCardDetail.vue"
+import MemberCardPayDetail from "./MemberCardExchange/MemberCardPayDetail.vue"
 import MemberRechargeTable from "./MemberRecharge/MemberRechargeDetailTable.vue"
 import  MemberConsumptionDetailTable from './MemberConsumption/MemberConsumptionDetailTable.vue'
 import  MemberIntegralDetailTable from './MemberIntegral/MemberIntegralDetailTable.vue'
@@ -157,7 +158,7 @@ import memberIntegralForGoodsDetail from "./memberIntegralForGoods/memberIntegra
 export default {
     components: { MemberInfo, MemberRecharge,MemberIntegralExchange,MemberUpdatePassword,MemberExchangeCard,
     MemberRechargeDetailDialog, MemberIntegralDetailDialog, MemberConsumptionDetailDialog,MemberRechargeTable,
-    MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberExchangeCardDetailDialog,
+    MemberConsumptionDetailTable,MemberIntegralDetailTable,MemberExchangeCardDetail,MemberCardPayDetail,MemberExchangeCardDetailDialog,
     MemberIntegralRoomChangeRecord,MemberIntegralRoomChange,MemberUpgradeRecord,memberIntegralForGoods,memberIntegralForGoodsDetail },
   data() {
     return {
@@ -305,6 +306,10 @@ export default {
             this.$nextTick(()=>{
                 this.$refs.MemberExchangeCardDetail.init(this.memberInfo.memPk,1)
             })
+        }else if(this.activeName == "MemberCardPayDetail"){
+          this.$nextTick(()=>{
+              this.$refs.MemberCardPayDetail.init(this.memberInfo.memPk,1)
+          })
         }else if(this.activeName == "MemberUpgradeRecord"){
             this.$nextTick(()=>{
                 this.$refs.MemberUpgradeRecord.init(this.memberInfo.memPk)
@@ -318,7 +323,7 @@ export default {
         else if(this.activeName){
             this.$refs[this.activeName].init()
         }
-        
+
     },
     showDialog(row){
         this.dialogMemberVisible = true

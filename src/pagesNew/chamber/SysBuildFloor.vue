@@ -55,6 +55,32 @@
         </div>
         </div>
       </el-col>
+       <el-col :span="24">
+        <div class="bg-reserve book-info">
+          <h5 class="info-title">房间设置</h5>
+          <el-table size="mini" 
+            border 
+            :data="roomData"
+            height="473">
+            <el-table-column prop="typeCode" label="房型代码" align="center">
+            </el-table-column>
+             <el-table-column prop="typeName" label="房型名称" align="center">
+            </el-table-column>
+             <el-table-column prop="typeDescribe" label="房型描述" align="center">
+            </el-table-column>
+            <el-table-column prop="roomCount" label="房数" align="center">
+            </el-table-column>
+            <el-table-column prop="standardPrice" label="房型标价" align="center">
+              <!-- <template slot-scope="scope">
+                <span>{{listTypeDataView[scope.row.roomTypePk].typeName}}</span>
+                <el-input v-if="scope.row.usingFlag == 'Y'" v-model="scope.row.overtimeBilling" size="mini" placeholder="请输入计费"></el-input>
+              </template> -->
+            </el-table-column>
+            <el-table-column prop="price" label="散客" align="center">
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-col>
     </el-row>
     <!-- 添加楼栋 -->
     <el-dialog title="添加楼栋" :visible.sync="addBuildDialog" width="400px">
@@ -131,7 +157,7 @@
 
 <script>
 import {listBuilding,addBuilding,updateBuilding,delBuilding,selectBuilding} from '@/api/systemSet/roomSetting/buildingController'
-import {addStorey, listStorey, delStorey,updateStorey,selectStorey} from '@/api/systemSet/roomSetting/floorRoom'
+import {addStorey, listStorey, delStorey,updateStorey,selectStorey,listRoomTypePrice} from '@/api/systemSet/roomSetting/floorRoom'
 export default {
   components: {},
   data() {
@@ -147,7 +173,6 @@ export default {
       storeyData: [],
       roomData: [],
       tableData: [],
-     // buildingData:[],
       selectBan:{},
       loading:false,
       banLoading:false,
@@ -157,13 +182,22 @@ export default {
   },
  created(){
      this.listBuilding(),
-     this.listStorey()
+     this.listStorey(),
+     this.listRoomTypePrice()
   },
   methods: {
      listBuilding(){
       const self = this
       listBuilding().then(result => {
         self.tableData = result.data
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+     listRoomTypePrice(){
+      const self = this
+      listRoomTypePrice().then(result => {
+        self.roomData = result.data
       }).catch(() => {
         self.loading = false
       })
@@ -183,6 +217,7 @@ export default {
       },
       openAddStorey(){
           this.addStoreyDialog=true
+          this.storeyName=""
       },
       openUpdateStorey(storeyPk){
           console.log("楼层主键："+storeyPk);
@@ -235,7 +270,7 @@ export default {
     updateStorey(){
       this.commitLoading = true;
       const self = this
-      updateStorey({storeyName:self.storeyName,storeyPk:self.storeyPk}).then(result => {
+      updateStorey({storeyName:self.storeyName,storeyPk:self.storeyPk,buildingPk:self.buildingPk}).then(result => {
         if(result.code == 1){
           self.$message({
             message: '修改成功',
