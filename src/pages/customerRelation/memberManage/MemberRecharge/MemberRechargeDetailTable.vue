@@ -120,6 +120,9 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
         return sums;
       },
     },
+    },
+
+
     filters: {
       toMoney: function(num) {
         if(num){
