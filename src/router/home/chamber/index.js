@@ -9,6 +9,8 @@ import SysLeasehold from '$pages/chamber/SysLeasehold.vue'
 import SysRoomCompensation from '$pages/chamber/SysRoomCompensation.vue'
 import SysBan from '$pages/chamber/SysBan.vue'
 import SysRepairReason from '$pages/chamber/SysRepairReason.vue'
+import SysBuildFloor from '$pages/chamber/SysBuildFloor.vue'
+import SysRoomCode from '$pages/chamber/SysRoomCode.vue'
 
 const router = {
     path: '/chamber',
@@ -26,6 +28,8 @@ hidden: true,
         {path: '/chamber/sysRoomCompensation',  component: SysRoomCompensation, prem: 'pms', name: '客房赔偿设置',icon: ''},
         {path: '/chamber/sysBan',  component: SysBan, prem: 'pms', name: '楼栋管理',icon: ''},
         {path: '/chamber/sysRepairReason',  component: SysRepairReason, prem: 'pms', name: '维修停用原因设置',icon: ''},
+        {path: '/chamber/sysBuildFloor',  component: SysBuildFloor, prem: 'pms', name: '楼栋楼层管理',icon: ''},
+        {path: '/chamber/sysRoomCode',  component: SysRoomCode, prem: 'pms', name: '房间号码设置',icon: ''},
     ]
 }
 

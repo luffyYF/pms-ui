@@ -131,6 +131,9 @@ export default {
         memName: data.memName,
         balance: data.availableBalance.toFixed(2),
         cardNumber: data.cardNumber,
+        originalPassword: "",
+        newPassword: "",
+        confirmNewPwd: "",
         type:"N"
       };
       this.dialogVisible = true;

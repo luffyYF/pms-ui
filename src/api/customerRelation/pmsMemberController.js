@@ -58,6 +58,14 @@ export const memberCertificateType = params => {
 export const printMember = params => {
    return request.get('/back/member/memberPrint', {params: params})
  }
+//卡支付列表
+ export const listMemberCardPayDetail = params => {
+   return request.get('/back/member/cardPay/list', {params: params})
+}
+//删除卡支付明细
+export const delMemberCardPayDetail = params => {
+   return request.get('/back/member/cardPay/del',{params: params})
+}
  
 
 

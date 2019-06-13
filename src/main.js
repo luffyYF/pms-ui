@@ -10,8 +10,8 @@ import '@/utils/zhcn_moment.js'
 
 import App from './App'
 import AMap from 'vue-amap'
-import router from './router/indexNew'
-// import router from './router/index'
+// import router from './router/indexNew'
+import router from './router/index'
 // import store from './store/index'
 import './permission'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -19,13 +19,14 @@ import './components/common/index'
 import 'swiper/dist/css/swiper.css'
 import fullCalendar from 'vue-fullcalendar'
 import './directive'
-import {hasPermission} from "@/utils/hasPermission";
+import {hasPermission,getCertificateType} from "@/utils/hasPermission";
 import {refreshPmsType} from "@/utils/refreshPmsType";
 
 import {hotelHardware} from '@/utils/orm'
 
 //全局的常量
 Vue.prototype.hasPerm = hasPermission
+Vue.prototype.getCertificateType = getCertificateType
 Vue.prototype.refreshType = refreshPmsType
 
 Vue.prototype.HOTEL_HARDWARE = hotelHardware

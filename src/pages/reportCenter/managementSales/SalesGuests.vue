@@ -93,29 +93,30 @@
             </el-table-column>
           </el-table> -->
           <div id="print-salesGuestsTable">
-          <table width="100%"  border="0" style="border-collapse:collapse;border-color:black;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: center;" cellpadding="0" cellspacing="0">
+          <table width="100%"  border="0" style="border-collapse:collapse;font-family: 宋体;font-size: 12px;margin:0 auto;color:black;text-align: center;" cellpadding="0" cellspacing="0">
              <thead>
             <tr>
               <td colspan="7" style="text-align: left;font-size: 14px;">店铺：{{activeCompany.companyName}}</td>
               <td colspan="10" style="text-align:right;font-size:14px;">营业日期：<span>自 {{printDate.beginDate}} 至 {{printDate.endDate}}</span></td>
             </tr>
              <tr>
-              <th style="border: 1px solid #000;">渠道</th>
-              <th style="border: 1px solid #000;">房晚数</th>
-              <th style="border: 1px solid #000;">房晚数%</th>
-              <th style="border: 1px solid #000;">人晚数</th>
-              <th style="border: 1px solid #000;">人晚数%</th>
-              <th style="border: 1px solid #000;">房租收入</th>
-              <th style="border: 1px solid #000;">房租收入%</th>
-              <th style="border: 1px solid #000;">餐饮收入</th>
-              <th style="border: 1px solid #000;">其他收入</th>
-              <th style="border: 1px solid #000;">消费合计</th>
-              <th style="border: 1px solid #000;">消费合计%</th>
-              <th style="border: 1px solid #000;">平均房价</th>
-              <th style="border: 1px solid #000;">房均消费</th>
-              <th style="border: 1px solid #000;">人均消费</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">渠道</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">房晚数</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">房晚数%</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">人晚数</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">人晚数%</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">房租收入</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">房租收入%</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">餐饮收入</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">其他收入</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">消费合计</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">消费合计%</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">平均房价</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">房均消费</th>
+              <th style="border: 1px solid #000;padding: 6px 0;border-bottom: 0;">人均消费</th>
             </tr>
           </thead>
+          <tbody>
             <!-- <tr>
               <th style="border: 1px solid #000;">渠道</th>
               <th style="border: 1px solid #000;">房晚数</th>
@@ -132,24 +133,25 @@
               <th style="border: 1px solid #000;">房均消费</th>
               <th style="border: 1px solid #000;">人均消费</th>
             </tr> -->
-            <tr v-for="(item, index) in tableData" :key="index">
-              <td style="border: 1px solid #000;">{{item.channelName}}</td>
-              <td style="border: 1px solid #000;">{{item.rentalRoomNum}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,1)}}</span></td>
-              <td style="border: 1px solid #000;">{{item.peopleNightRoomNum}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,2)}}</span></td>
-              <td style="border: 1px solid #000;">{{item.houseFeeIncome}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,3)}}</span></td>
-              <td style="border: 1px solid #000;">{{item.cateringFeeIncome}}</td>
-              <td style="border: 1px solid #000;">{{item.orderFeeIncome}}</td>
-              <td style="border: 1px solid #000;">{{item.consumptionAmount}}</td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,4)}}</span></td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,5)}}</span></td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,6)}}</span></td>
-              <td style="border: 1px solid #000;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,7)}}</span></td>
-            </tr>
+              <tr v-for="(item, index) in tableData" :key="index">
+                <td style="border: 1px solid #000;padding: 6px 0;">{{item.channelName}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;">{{item.rentalRoomNum}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,1)}}</span></td>
+                <td style="border: 1px solid #000;padding: 6px 0;">{{(item.peopleNightRoomNum).toFixed(2)}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,2)}}</span></td>
+                <td style="border: 1px solid #000;padding: 6px 0;">{{(item.houseFeeIncome).toFixed(2)}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,3)}}</span></td>
+                <td style="border: 1px solid #000;padding: 6px 0;">{{(item.cateringFeeIncome).toFixed(2)}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;">{{(item.orderFeeIncome).toFixed(2)}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;">{{(item.consumptionAmount).toFixed(2)}}</td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,4)}}</span></td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,5)}}</span></td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,6)}}</span></td>
+                <td style="border: 1px solid #000;padding: 6px 0;"><span v-if="tableData.length-1 != index">{{item | moneyFilter(sumObj,7)}}</span></td>
+              </tr>
+            </tbody>
             <!-- 合计 -->
-            <tr>
+            <!-- <tr>
               <td style="border: 1px solid #000;">合计</td>
               <td style="border: 1px solid #000;">{{heji.a}}</td>
               <td style="border: 1px solid #000;">N/A</td>
@@ -164,13 +166,13 @@
               <td style="border: 1px solid #000;">N/A</td>
               <td style="border: 1px solid #000;">N/A</td>
               <td style="border: 1px solid #000;">N/A</td>
-            </tr>
-             <tfoot>
-            <tr>
-              <td colspan="7" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
-              <td colspan="7" style="text-align: right;font-size: 14px;">打印日期：<span>{{printDate.now}}</span></td>
-            </tr>
-          </tfoot>
+            </tr> -->
+            <tfoot>
+              <tr>
+                <td colspan="7" style="text-align: left;font-size: 14px;">打印人：<span>{{userInfo.realName}}</span></td>
+                <td colspan="7" style="text-align: right;font-size: 14px;">打印日期：<span>{{printDate.now}}</span></td>
+              </tr>
+            </tfoot>
           </table>
           <!-- <p style="height:20px;"><span class="left">打印日期：{{printDate.now}}</span><span class="right">	操作员：	{{userInfo.realName}}</span></p> -->
           <p style="height:20px;color:red">	注：此报表为夜审报表，数据统计截止到昨天。。</p>
@@ -399,7 +401,7 @@ export default {
     this.userInfo = JSON.parse(localStorage.getItem('pms_userinfo'));
   },
   mounted() {
-    
+
   },
 }
 </script>

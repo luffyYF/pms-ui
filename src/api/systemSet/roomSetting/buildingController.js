@@ -28,3 +28,7 @@ export const listBuildingRoom = params => {
 export const updateBuildingRoom = params => {
     return request.post('/back/building/room/update', params)
 }
+//根据主键查找楼栋
+export const selectBuilding = params => {
+    return request.get('/back/building/selectBuilding',{params:params})
+}

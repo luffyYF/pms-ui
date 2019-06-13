@@ -55,14 +55,15 @@ import {updateMemberCard } from '@/api/customerRelation/pmsMemberController'
     methods: {
       showDialog (data,isCallback) {
         this.isCallback = isCallback
-        console.log(data)
         this.dataForm = {
           memPk: data.memPk,
           memName: data.memName,
           balance: data.availableBalance.toFixed(2),
           cardNumber: data.cardNumber, 
         }
-        this.dialogVisible = true
+        this.dialogVisible = true,
+        this.remark='',
+        this.newCardNumber=''
       },
       saveData(){
         this.loading = true

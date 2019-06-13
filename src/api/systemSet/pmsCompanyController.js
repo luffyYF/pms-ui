@@ -1,4 +1,5 @@
 import request from '@/utils/requestJson'
+import wechatRequest from '@/utils/requestJsonWechat'
 
 /**
  * 酒店接口
@@ -15,5 +16,5 @@ export const updateCompany = params => {
 }
 
 export const getMiniApp = params => {
-    return request.get('/back/pmsCompany/getMiniApp', params)
+    return wechatRequest.get('/back/wechatApply/getWechatApplyByStatus', {params : params})
 }

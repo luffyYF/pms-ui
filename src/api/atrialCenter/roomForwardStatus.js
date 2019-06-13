@@ -24,3 +24,22 @@ export const frowardRoomDetail = params => {
 export const getBookableCount = params => {
     return request.get('/back/frowardRoom/getBookableCount',{params:params});
 }
+
+// 今日可兑换商品查询
+export const listMemberIntegralExchange = params => {
+  return request.get('/pmsMemberIntegralExchangeLog/listMemberIntegralExchange', { params: params })
+}
+
+// 批量添加兑换商品
+export const saveIntegralExchangeForGoods = params => {
+  return request.post('/pmsMemberIntegralExchangeLog/saveIntegralExchangeForGoods', params)
+}
+
+// 兑换商品详细列表
+export const listIntegralExchangeForGoods = params => {
+  return request.get('/pmsMemberIntegralExchangeLog/listIntegralExchangeForGoods', { params: params })
+}
+
+
+
+
