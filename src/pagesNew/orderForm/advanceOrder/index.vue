@@ -148,13 +148,11 @@
           style="width: 200px;"
         ></el-input>
       </el-form-item>
-      <el-col :span="24">
-        <el-form-item label style="float:right;">
+      <el-form-item label style="float:right;">
           <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
           <el-button type="primary" @click="createExcel" size="mini">重置</el-button>
           <el-button size="mini" type="primary" @click="reserveClick">导出</el-button>
         </el-form-item>
-      </el-col>
     </el-form>
     <el-table :data="tableData" border style="width: 100%;font-size:12px" size="mini">
       <el-table-column prop="userName" label="预定人" align="center"></el-table-column>
@@ -162,12 +160,16 @@
       <el-table-column prop="userPhone" label="手机号码" align="center"></el-table-column>
       <el-table-column label="预定时间" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.scheduledTime }}</span>
+          <span>{{ scope.row.scheduledTime[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="抵离时间" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.estimatedTime }}</span>
+          <span>
+            {{'抵 '+ scope.row.estimatedTime[0] }}
+            <br>
+            {{'离 '+ scope.row.estimatedTime[1] }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="roomTypePk" label="房型（房号）" align="center">
@@ -179,7 +181,10 @@
       <el-table-column prop="totalRoomCharge" label="总房费（元））" align="center"></el-table-column>
       <el-table-column prop="orderStatus" label="状态" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
-        <el-button type="text" size="small">移除</el-button>
+        <el-button type="text" size="small">详情</el-button>
+        <el-button type="text" size="small">定金</el-button>
+        <el-button type="text" size="small">NOSHOW</el-button>
+        <el-button type="text" size="small">取消</el-button>
       </el-table-column>
     </el-table>
 
