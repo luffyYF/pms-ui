@@ -83,5 +83,12 @@ export const selectStorey = params => {
 export const listRoomTypePrice = params => {
   return request.get('/back/roomTypePrice/listRoomTypePrice', {params:params})
 }
+/**
+ * 
+ * @param {根据楼栋主键查找楼层} params 
+ */
+export const listStoreyByBuildingPk = params => {
+  return request.get('/back/storey/listStoreyByBuildingPk', {params:params})
+}
 
 
