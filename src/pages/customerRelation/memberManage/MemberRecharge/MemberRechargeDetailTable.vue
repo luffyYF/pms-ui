@@ -87,41 +87,39 @@ import { listMemberLog } from '@/api/customerRelation/pmsMemberLogController'
       },
       //计算总和
         //计算总和
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = "总计";
-          return;
-        }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
+      getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = "总计";
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            if (index == 6) {
+              sums[index] = sums[index].toFixed(2);
+              //给价格合计添加单位
+              //sums[index] += ' 元';
+            } else if (index == 7) {
+              sums[index] = "N/A";
             }
-          }, 0);
-          if (index == 6) {
-            sums[index] = sums[index].toFixed(2);
-            //给价格合计添加单位
-            //sums[index] += ' 元';
-          } else if (index == 7) {
+            // sums[index] += ' 元';
+          } else {
             sums[index] = "N/A";
           }
-          // sums[index] += ' 元';
-        } else {
-          sums[index] = "N/A";
-        }
-      });
-      return sums;
+        });
+        return sums;
+      },
     },
-    },
-
-
     filters: {
       toMoney: function(num) {
         if(num){

@@ -7,21 +7,6 @@
         <el-form-item label="活动名称" prop="activityName">
             <el-input size="mini" style="width:100%;" v-model="dataForm.activityName" type="text"/>
         </el-form-item>
-
-        <el-form-item label="是否启用" prop="enableFlag">
-            <el-switch
-            style="display: block"
-            v-model="dataForm.enableFlag"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="是"
-            inactive-text="否"
-            active-value="1"
-            inactive-value="0">
-            </el-switch>
-            <!-- <el-checkbox size="mini" v-model="dataForm.enable"></el-checkbox> -->
-        </el-form-item>
-
         <el-form-item label="会员类型:" prop="gradePk">
             <el-select size="mini" style="width:100%;" v-model="dataForm.gradePk" placeholder="会员类型" clearable >
                 <el-option  v-for="item in memberList" :label="item.label" :value="item.value" :key="item.value"></el-option>
@@ -46,10 +31,24 @@
             </el-date-picker>
         </el-form-item>
 
+        <el-form-item label="是否启用" prop="enableFlag">
+            <el-switch
+            style="display: block"
+            v-model="dataForm.enableFlag"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="是"
+            inactive-text="否"
+            active-value="1"
+            inactive-value="0">
+            </el-switch>
+            <!-- <el-checkbox size="mini" v-model="dataForm.enable"></el-checkbox> -->
+        </el-form-item>
+
 
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="this.dialogVisible = false" size="mini">取 消</el-button>
+      <el-button @click="handleClose" size="mini">取 消</el-button>
       <el-button type="primary" size="mini" :loading="loading" @click="saveData">保存</el-button>
     </span>
   </el-dialog>
@@ -73,7 +72,6 @@
             datepicker:[],
             activityName:null,
             gradePk:null,
-            datepicker:null,
             channel:null,
             activityMode:null,
             activityQuota:1,
@@ -81,25 +79,22 @@
             endDate:null
         },
         options: [{
-          value: '0',
+          value: 0,
           label: '官网'
         }, {
-          value: '1',
+          value: 1,
           label: '微网站',
           disabled: true
         }],
         activity: [{
-          value: '0',
+          value: 0,
           label: '多倍积分'
         }, {
-          value: '1',
+          value: 1,
           label: '额外积分',
           disabled: true
         }],
-        memberList:[{
-           value: '0',
-          label: '官网'
-        }],
+        memberList:[],
         memberTypeList:[{
 
         }],
@@ -193,14 +188,14 @@
             row.datepicker = []
             row.datepicker[0] = row.beginDate,
             row.datepicker[1] = row.endDate
-            this.title = "修改规则"
+            this.title = "修改会员积分活动"
             if(row.type == 0){
                 row.gradePks = []
             }
             this.dataForm = row
             console.log(JSON.stringify(this.dataForm))
         }else{
-          this.title = "添加规则"
+          this.title = "添加会员积分活动"
           this.dataForm = {
             enableFlag:0,
             type:0,
@@ -208,7 +203,7 @@
             gradePks:[],
             activityName:null,
             gradePk:null,
-            datepicker:null,
+            datepicker:[],
             channel:null,
             activityMode:null,
             activityQuota:null,
@@ -216,13 +211,13 @@
         }
       },
       handleClose () {
-        // this.dataForm.datepicker,
-        //     this.dataForm.activityName=null,
-        //    this.dataForm. gradePk=null,
-        //    this.dataForm. datepicker=null,
-        //    this.dataForm. channel=null,
-        //     this.dataForm.activityMode=null,
-        //     this.dataForm.activityQuota=1,
+        this.dataForm.datepicker,
+          this.dataForm.activityName=null,
+          this.dataForm. gradePk=null,
+          this.dataForm. datepicker=[],
+          this.dataForm. channel=null,
+          this.dataForm.activityMode=null,
+          this.dataForm.activityQuota=1,
           this.dialogVisible = false
 
       },
