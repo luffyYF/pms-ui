@@ -49,7 +49,7 @@
 
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleClose" size="mini">取 消</el-button>
+      <el-button @click="this.dialogVisible = false" size="mini">取 消</el-button>
       <el-button type="primary" size="mini" :loading="loading" @click="saveData">保存</el-button>
     </span>
   </el-dialog>
@@ -216,13 +216,13 @@
         }
       },
       handleClose () {
-        this.dataForm.datepicker,
-            this.dataForm.activityName=null,
-           this.dataForm. gradePk=null,
-           this.dataForm. datepicker=null,
-           this.dataForm. channel=null,
-            this.dataForm.activityMode=null,
-            this.dataForm.activityQuota=1,
+        // this.dataForm.datepicker,
+        //     this.dataForm.activityName=null,
+        //    this.dataForm. gradePk=null,
+        //    this.dataForm. datepicker=null,
+        //    this.dataForm. channel=null,
+        //     this.dataForm.activityMode=null,
+        //     this.dataForm.activityQuota=1,
           this.dialogVisible = false
 
       },

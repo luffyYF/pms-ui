@@ -77,13 +77,13 @@
                 <span v-else>禁用</span>
             </template>
         </el-table-column>
-        <el-table-column label="创建人" prop="updateUserName" align="center">
+        <el-table-column label="创建人" prop="createUser" align="center">
         </el-table-column>
         <el-table-column label="创建时间" prop="createTime" align="center" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column label="修改时间" prop="createTime" align="center" show-overflow-tooltip>
+        <el-table-column label="修改时间" prop="updateDate" align="center" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column label="修改人" prop="updateUserName" align="center">
+        <el-table-column label="修改人" prop="updateUser" align="center">
         </el-table-column>
         <el-table-column label="操作" align="center" width="200" fixed="right">
             <template slot-scope="scope">
