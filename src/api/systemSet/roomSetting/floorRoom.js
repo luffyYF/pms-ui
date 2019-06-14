@@ -91,4 +91,9 @@ export const listStoreyByBuildingPk = params => {
   return request.get('/back/storey/listStoreyByBuildingPk', {params:params})
 }
 
+//查找所有房间列表
+export const listAllRoom = params => {
+  return request.get('/back/room/listAllRoom',{params:params})
+}
+
 

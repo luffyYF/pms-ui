@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <div class="bg-reserve book-info">
-          <h5 class="info-title">【{{selectStorey.storeyName}}】房间属性</h5>
+          <h5 class="info-title">房间属性</h5>
           <el-form label-width="20px" :inline="true" size="mini">
             <el-form-item label=" ">
               <el-button @click="openAddRoomDialog" type="primary">添加房间</el-button>
@@ -135,7 +135,7 @@
     <el-dialog title="修改房间" :visible.sync="updateRoomDialog" width="820px">
       <el-form :model="selectRoom" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼层：">
-          <span class="text-cs">{{selectStorey.storeyName}}</span>
+          <span class="text-cs" :v-model="selectRoom.storeyPk">{{selectStorey.storeyName}}</span>
         </el-form-item>
         <el-form-item label="房号：">
           <span class="text-cs">{{selectRoom.roomNumber}}</span>
@@ -284,6 +284,16 @@
             </el-select>
             <el-input v-else :type="obj.type" v-model="obj.value" :placeholder="'请输入'+obj.label" auto-complete="off"></el-input>
         </el-form-item>
+         <el-form-item label="楼层名称：" required>
+          <el-select v-model="storeyPk" prop="storeyPk" placeholder="请选择楼层">
+            <el-option 
+              v-for="item in storeyNameData"
+              :key="item.storeyPk"
+              :label="item.storeyName"
+              :value="item.storeyPk">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="batchPropDialog = false" size="mini">取 消</el-button>
@@ -294,12 +304,11 @@
 </template>
 
 <script>
-import {listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms,listStoreyByBuildingPk} from '@/api/systemSet/roomSetting/floorRoom'
+import {listRoom,listAllRoom,selectStorey,listStorey,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms,listStoreyByBuildingPk} from '@/api/systemSet/roomSetting/floorRoom'
 import {listType} from '@/api/utils/pmsTypeController'
 import UploadAvatar from "@/components/UploadImage/UploadAvatar2"
 import {allListApi } from '@/api/systemSet/hotelHardware/hotelHardware'
 import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
-import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
 import {addApi,updateApi,detailApi,deleteApi } from '@/api/systemSet/hotelHardware/DeviceRoomLockParamApi'
 export default {
   components: {UploadAvatar},
@@ -316,6 +325,7 @@ export default {
       buildingName:'',
       storeyName: undefined,
       storeyData: [],
+      storeyNameData:[],
       storeyPk:'',
       selectStorey:{storeyName:'未选择'},
       selectRoom: {},
@@ -439,14 +449,31 @@ export default {
 //   },
 created(){
     this.listBuilding();
-    this.listType()
-    //this.listStorey();
+    this.listType();
+    this.listStoreyRoom();
+    this.selectStoreyName();
 },
   methods: {
      listBuilding(){
       const self = this
       listBuilding().then(result => {
         self.buildingData = result.data
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+    listStoreys(){
+      const self = this
+      listStorey().then(result => {
+        self.storeyNameData = result.data
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+    selectStoreyName(){
+      const self = this
+      selectStorey({storeyPk:this.selectRoom.storeyPk}).then(result => {
+         self.selectStorey.storeyName = result.data.storeyName
       }).catch(() => {
         self.loading = false
       })
@@ -474,7 +501,9 @@ created(){
     },
     batchPropClick(){
       this.batchPropDialog = true
+      this.listStoreys();
     },
+  
     saveBatchClck(){
       var pmsRoomPo = {
         
@@ -495,15 +524,13 @@ created(){
           return
       }
       var data = {
-          //storeyPk:this.selectStorey.storeyPk,
           storeyPk:this.storeyPk,
           props:props,
           pmsRoomPo:pmsRoomPo
       }
       batchUpdateRoomProp(data).then(res=>{
           this.batchPropDialog = false
-          //this.listStoreyRoom(this.selectStorey.storeyPk)
-           this.listStoreyRoom(this.storeyPk)
+          this.listStoreyRoom()
           this.$message({ type: res.code == 1?'success':'warning', message: res.sub_msg })
       })
     },
@@ -524,8 +551,7 @@ created(){
             if(res.code == 1){
                 this.$message({ type: 'success', message: res.sub_msg })
                 this.roomLockDialog = false
-               // this.listStoreyRoom(this.selectStorey.storeyPk)
-               this.listStoreyRoom(this.storeyPk)
+                this.listStoreyRoom()
             }else{
                 this.$message({ type: 'warning', message: res.sub_msg })
             }
@@ -558,8 +584,7 @@ created(){
             message: res.sub_msg,
             type: res.code == 1?'success':'warning'
           });
-         // this.listStoreyRoom(this.selectStorey.storeyPk)
-          this.listStoreyRoom(this.storeyPk)
+         this.listStoreyRoom()
         })
       });
     },
@@ -619,15 +644,9 @@ created(){
         self.listTypeDataView[value.typePk] = value;
       })
     },
-    storeyRowClick(row, event, column){
-      this.selectStorey = row
-      this.loading = true
-      //this.listStoreyRoom(this.selectStorey.storeyPk)
-      this.listStoreyRoom(this.storeyPk)
-    },
     listStoreyRoom(){
       const self = this;
-      listStoreyRoom({storeyPk: self.storeyPk}).then(result => {
+      listAllRoom().then(result => {
         self.roomData = result.data
         self.loading = false
       }).catch(() => {
@@ -658,7 +677,7 @@ created(){
             type: 'success'
           })
         }
-        this.listStoreyRoom(this.storeyPk)
+        this.listStoreyRoom()
         self.addRoomDialog = false 
       }).finally(()=>{
         this.commitLoading = false;
@@ -679,7 +698,7 @@ created(){
             type: 'success'
           })
         }
-        this.listStoreyRoom(this.storeyPk)
+        this.listStoreyRoom()
         self.batchAddRoomDialog = false 
       }).finally(()=>{
         this.commitLoading = false;
@@ -716,6 +735,7 @@ created(){
       let str = JSON.stringify(row)
       this.selectRoom = JSON.parse(str)
       this.updateRoomDialog = true
+            this.selectStoreyName();
     },
     updateRoom(){
       this.commitLoading = true;
@@ -751,7 +771,6 @@ created(){
               message: '删除成功',
               type: 'success'
             });
-            this.storeyRowClick(this.selectStorey);
           }
           self.listStoreyRoom()
         })
