@@ -80,12 +80,13 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="200" fixed="right">
             <template slot-scope="scope">
+              <el-button type="danger" v-if="hasPerm('pms:IntegralRoomChange:delete')" @click="deleteClick(scope.row.activityId,scope.row.enableFlag)"
+                    size="mini">{{scope.row.enableFlag==0?'启用':'禁用'}}
+                </el-button>
                 <el-button type="primary" v-if="hasPerm('pms:IntegralRoomChange:update')" @click="editClick(scope.row)"
                         size="mini">编辑
                 </el-button>
-                <el-button type="danger" v-if="hasPerm('pms:IntegralRoomChange:delete')" @click="deleteClick(scope.row.activityId)"
-                    size="mini">删除
-                </el-button>
+
             </template>
         </el-table-column>
       </el-table>
@@ -187,13 +188,13 @@ import { request } from 'https';
         var temoObj = JSON.parse(JSON.stringify(row))
         this.$refs.memberIntegralActivityEditRef.showDialog(temoObj)
       },
-      deleteClick (id) {
-        this.$confirm('确定删除数据?', '提示', {
+      deleteClick (id,enableFlag) {
+        this.$confirm('确定要禁用?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteMemberIntegralActivity({activityId:id}).then(res => {
+          deleteMemberIntegralActivity({activityId:id,enableFlag:enableFlag}).then(res => {
               if(res.code == 1){
                   this.listMemberIntegralActivity()
               }
