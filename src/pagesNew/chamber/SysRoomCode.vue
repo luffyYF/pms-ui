@@ -444,9 +444,6 @@ export default {
       //智能锁
     };
   },
-//   mounted(){
-//     this.init();
-//   },
 created(){
     this.listBuilding();
     this.listType();
@@ -678,9 +675,16 @@ created(){
           })
         }
         this.listStoreyRoom()
-        self.addRoomDialog = false 
+        self.addRoomDialog = false
+        self.addFrom=''
+        self.buildingPk=''
+        self.storeyPk=''
       }).finally(()=>{
         this.commitLoading = false;
+        self.addRoomDialog = false
+        self.addFrom=''
+        self.buildingPk=''
+        self.storeyPk=''
       })
     },
     deleteRow(index, rows) {
@@ -700,8 +704,19 @@ created(){
         }
         this.listStoreyRoom()
         self.batchAddRoomDialog = false 
+        self.previewData=''
+        self.buildingPk=''
+        self.storeyPk=''
+        self.itemP.roomTypePk=''
+        self.value5=''
       }).finally(()=>{
         this.commitLoading = false;
+        self.batchAddRoomDialog = false 
+        self.previewData=''
+        self.buildingPk=''
+        self.storeyPk=''
+        self.itemP.roomTypePk=''
+        self.value5=''
       })
     },
     previewRoom(){
@@ -735,7 +750,7 @@ created(){
       let str = JSON.stringify(row)
       this.selectRoom = JSON.parse(str)
       this.updateRoomDialog = true
-            this.selectStoreyName();
+      this.selectStoreyName();
     },
     updateRoom(){
       this.commitLoading = true;
