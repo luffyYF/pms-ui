@@ -19,10 +19,10 @@
                 fixed="right"
                 label="操作">
                 <template slot-scope="scope">
-                  <el-button @click="openAddBuildDialog" type="text" size="mini">添加</el-button>
-                  <el-button @click="openUpdateBuildDialog(scope.row.buildingPk)" type="text" size="mini">修改</el-button>
-                  <el-button v-if="scope.row.buildingPk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button>
-                  <el-button v-if="scope.row.buildingPk != ''" @click="deleteClick(scope.row)" type="text" size="mini">删除</el-button>
+                  <el-button @click="openAddBuildDialog" type="text" size="mini" v-if="hasPerm('pms:building:add')">添加</el-button>
+                  <el-button @click="openUpdateBuildDialog(scope.row.buildingPk)" type="text" size="mini" v-if="hasPerm('pms:building:update')">修改</el-button>
+                  <!-- <el-button v-if="scope.row.buildingPk == ''" @click="deleteRow(scope.$index, tableData)" type="text" size="mini">取消</el-button> -->
+                  <el-button @click="deleteClick(scope.row)" type="text" size="mini" v-if="hasPerm('pms:building:del')" >删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -46,9 +46,9 @@
             fixed="right"
             label="操作">
             <template slot-scope="scope">
-              <el-button @click="openAddStorey" type="text" size="mini">添加</el-button>
-              <el-button @click="delStorey(scope.row)" type="text" size="mini">删除</el-button>
-              <el-button @click="openUpdateStorey(scope.row.storeyPk)" type="text" size="mini">修改</el-button>
+              <el-button @click="openAddStorey" type="text" size="mini" v-if="hasPerm('pms:storey:add')" >添加</el-button>
+              <el-button @click="delStorey(scope.row)" type="text" size="mini" v-if="hasPerm('pms:storey:del')" >删除</el-button>
+              <el-button @click="openUpdateStorey(scope.row.storeyPk)" type="text" size="mini" v-if="hasPerm('pms:storey:update')" >修改</el-button>
             </template>
           </el-table-column>
         </el-table>

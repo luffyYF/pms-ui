@@ -6,13 +6,13 @@
           <h5 class="info-title">房间属性</h5>
           <el-form label-width="20px" :inline="true" size="mini">
             <el-form-item label=" ">
-              <el-button @click="openAddRoomDialog" type="primary">添加房间</el-button>
+              <el-button @click="openAddRoomDialog" type="primary" v-if="hasPerm('pms:room:add')" >添加房间</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button @click="batchAddRoomDialog = true" type="primary">批量生成房间</el-button>
+              <el-button @click="batchAddRoomDialog = true" type="primary" v-if="hasPerm('pms:room:adds')" >批量生成房间</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button @click="batchPropClick" type="primary">批量修改房间</el-button>
+              <el-button @click="batchPropClick" type="primary" v-if="hasPerm('pms:room:batchUpdateRoomProp')" >批量修改房间</el-button>
             </el-form-item>
             
           </el-form>

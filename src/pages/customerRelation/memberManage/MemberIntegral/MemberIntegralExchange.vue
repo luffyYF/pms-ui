@@ -1,4 +1,4 @@
-// 会员充值编辑
+// 会员增减
 // Created by Administrator on 2019-02-21T16:46:19.175.
 <template>
   <section class="member-dialog">
@@ -48,7 +48,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-				<el-button type="primary" size="mini" @click="sureClick" :loading="loading">确定</el-button>
+				<el-button type="primary" size="mini" @click="sureClick" :loading="loading" v-if="hasPerm('pms:member:addIntegralRecode')">确定</el-button>
 			</span>
 		</el-dialog>
   </section>

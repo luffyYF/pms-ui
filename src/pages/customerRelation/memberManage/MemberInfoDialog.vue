@@ -12,7 +12,7 @@
                 <el-button size="mini" type="primary" @click="memberIntegralForGoodsDialog(memberInfo)">积分兑换</el-button>
                 <el-button size="mini" type="primary" @click="memberRoomChangeClick(memberInfo)">积分换房</el-button>
                 <!-- <el-button size="mini" type="primary">会员升级</el-button> -->
-                <el-button size="mini" type="primary" @click="openLogout(memberInfo)">注销</el-button>
+                <el-button size="mini" type="primary" @click="openLogout(memberInfo)" v-if="hasPerm('pms:member:del')">注销</el-button>
                 <!-- <el-button size="mini" type="primary">挂失</el-button> -->
                 <el-button size="mini" type="primary" @click="openPrint(memberInfo)">登记补打</el-button>
             </el-row>
