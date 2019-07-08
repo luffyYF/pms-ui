@@ -76,5 +76,24 @@ export const getRflRoomInfo = params => {
 export const selectStorey = params => {
   return request.get('/back/storey/selectStorey', {params:params})
 }
+/**
+ * 
+ * @param {散客和房型} params 
+ */
+export const listRoomTypePrice = params => {
+  return request.get('/back/roomTypePrice/listRoomTypePrice', {params:params})
+}
+/**
+ * 
+ * @param {根据楼栋主键查找楼层} params 
+ */
+export const listStoreyByBuildingPk = params => {
+  return request.get('/back/storey/listStoreyByBuildingPk', {params:params})
+}
+
+//查找所有房间列表
+export const listAllRoom = params => {
+  return request.get('/back/room/listAllRoom',{params:params})
+}
 
 

@@ -17,8 +17,8 @@
         <el-table-column prop="remark" label="备注"  min-width="150px"></el-table-column>
         <el-table-column fixed="right" label="操作" align="center"  min-width="100px">
           <template slot-scope="scope">
-             <el-button type="danger" @click="deleteClick(scope.row)"
-                    size="mini">删除
+             <el-button type="danger" @click="deleteClick(scope.row)" 
+                    size="mini"  v-if="hasPerm('pms:memberCardPay:del')">删除
              </el-button>
           </template>
         </el-table-column>

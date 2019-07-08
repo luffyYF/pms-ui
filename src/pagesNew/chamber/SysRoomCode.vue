@@ -1,45 +1,18 @@
 <template>
   <div class="content-body" v-loading="loading">
     <el-row>
-      <!-- <el-col :span="5">
-        <div class="bg-reserve book-info init_floor">
-        <h5 class="info-title">楼层</h5>
-        <el-form label-width="px" size="mini" :inline="true"  style="padding-left:10px">
-          <el-form-item label="楼层号">
-            <el-input-number v-model="storeyName" placeholder="请输入楼层号" class="block_input" :controls="false"></el-input-number>
-          </el-form-item>
-          <el-button @click="addStorey" type="primary" size="mini" style="margin-bottom: 16px;">添加</el-button>
-        </el-form>
-        <el-table size="mini" 
-          border 
-          :data="storeyData"
-          @row-click.self="storeyRowClick"
-          height="388">
-          <el-table-column prop="storeyName" label="楼层" align="center">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            fixed="right"
-            label="操作">
-            <template slot-scope="scope">
-              <el-button @click="delStorey(scope.row)" type="text" size="mini">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        </div>
-      </el-col> -->
       <el-col :span="24">
         <div class="bg-reserve book-info">
-          <h5 class="info-title">【{{selectStorey.storeyName}}】房间属性</h5>
+          <h5 class="info-title">房间属性</h5>
           <el-form label-width="20px" :inline="true" size="mini">
             <el-form-item label=" ">
-              <el-button @click="openAddRoomDialog" type="primary">添加房间</el-button>
+              <el-button @click="openAddRoomDialog" type="primary" v-if="hasPerm('pms:room:add')" >添加房间</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button @click="batchAddRoomDialog = true" type="primary">批量生成房间</el-button>
+              <el-button @click="batchAddRoomDialog = true" type="primary" v-if="hasPerm('pms:room:adds')" >批量生成房间</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button @click="batchPropClick" type="primary">批量修改房间</el-button>
+              <el-button @click="batchPropClick" type="primary" v-if="hasPerm('pms:room:batchUpdateRoomProp')" >批量修改房间</el-button>
             </el-form-item>
             
           </el-form>
@@ -103,7 +76,7 @@
     <el-dialog title="添加房间" :visible.sync="addRoomDialog" width="820px">
       <el-form :model="addFrom" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼栋名称：" required>
-         <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋">
+         <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋" @change="selectBuildingPk">
             <el-option 
               v-for="item in buildingData"
               :key="item.buildingPk"
@@ -115,12 +88,13 @@
           <el-input-number v-model="addFrom.roomNumber" placeholder="请输入房号" :controls="false" class="text_position"></el-input-number>
         </el-form-item>
         <el-form-item label="楼层名称：" required>
-           <el-select v-model="storeyPk" prop="storeyPk" placeholder="请选择楼层">
+          <el-select v-model="storeyPk" prop="storeyPk" placeholder="请选择楼层">
             <el-option 
               v-for="item in storeyData"
               :key="item.storeyPk"
               :label="item.storeyName"
-              :value="item.storeyPk"></el-option>
+              :value="item.storeyPk">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="房间类型：" required>
@@ -161,7 +135,7 @@
     <el-dialog title="修改房间" :visible.sync="updateRoomDialog" width="820px">
       <el-form :model="selectRoom" :label-width="formLabelWidth" :inline="true" size="mini">
         <el-form-item label="楼层：">
-          <span class="text-cs">{{selectStorey.storeyName}}</span>
+          <span class="text-cs" :v-model="selectRoom.storeyPk">{{selectStorey.storeyName}}</span>
         </el-form-item>
         <el-form-item label="房号：">
           <span class="text-cs">{{selectRoom.roomNumber}}</span>
@@ -205,6 +179,15 @@
     <!-- 批量添加房间 -->
     <el-dialog title="批量添加房间" :visible.sync="batchAddRoomDialog" width="820px">
       <el-form :model="previewData" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" size="mini">
+         <el-form-item label="楼栋名称：" required>
+         <el-select v-model="buildingPk" prop="buildingPk" placeholder="请选择楼栋" @change="selectBuildingPk">
+            <el-option 
+              v-for="item in buildingData"
+              :key="item.buildingPk"
+              :label="item.buildingName"
+              :value="item.buildingPk"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="楼层：" required>
           <el-select v-model="previewData.storeyPk" prop="storeyPk" placeholder="请选择房间类型" @change="enters">
             <el-option 
@@ -301,6 +284,16 @@
             </el-select>
             <el-input v-else :type="obj.type" v-model="obj.value" :placeholder="'请输入'+obj.label" auto-complete="off"></el-input>
         </el-form-item>
+         <el-form-item label="楼层名称：" required>
+          <el-select v-model="storeyPk" prop="storeyPk" placeholder="请选择楼层">
+            <el-option 
+              v-for="item in storeyNameData"
+              :key="item.storeyPk"
+              :label="item.storeyName"
+              :value="item.storeyPk">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="batchPropDialog = false" size="mini">取 消</el-button>
@@ -311,12 +304,11 @@
 </template>
 
 <script>
-import {listRoom,listStoreyRoom,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms} from '@/api/systemSet/roomSetting/floorRoom'
+import {listRoom,listAllRoom,selectStorey,listStorey,batchUpdateRoomProp, addRoom, addRooms, updateRoom, delRoom, previewRooms,listStoreyByBuildingPk} from '@/api/systemSet/roomSetting/floorRoom'
 import {listType} from '@/api/utils/pmsTypeController'
 import UploadAvatar from "@/components/UploadImage/UploadAvatar2"
 import {allListApi } from '@/api/systemSet/hotelHardware/hotelHardware'
 import {listBuilding} from '@/api/systemSet/roomSetting/buildingController'
-import {listStorey} from '@/api/systemSet/roomSetting/floorRoom'
 import {addApi,updateApi,detailApi,deleteApi } from '@/api/systemSet/hotelHardware/DeviceRoomLockParamApi'
 export default {
   components: {UploadAvatar},
@@ -333,6 +325,7 @@ export default {
       buildingName:'',
       storeyName: undefined,
       storeyData: [],
+      storeyNameData:[],
       storeyPk:'',
       selectStorey:{storeyName:'未选择'},
       selectRoom: {},
@@ -451,12 +444,11 @@ export default {
       //智能锁
     };
   },
-//   mounted(){
-//     this.init();
-//   },
 created(){
     this.listBuilding();
-    this.listStorey();
+    this.listType();
+    this.listStoreyRoom();
+    this.selectStoreyName();
 },
   methods: {
      listBuilding(){
@@ -467,13 +459,36 @@ created(){
         self.loading = false
       })
     },
-     listStorey(){
+    listStoreys(){
       const self = this
       listStorey().then(result => {
+        self.storeyNameData = result.data
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+    selectStoreyName(){
+      const self = this
+      selectStorey({storeyPk:this.selectRoom.storeyPk}).then(result => {
+         self.selectStorey.storeyName = result.data.storeyName
+      }).catch(() => {
+        self.loading = false
+      })
+    },
+     listStorey(){
+      if(!this.buildingPk){
+        this.$message.warning("楼栋号不能为空")
+        return;
+      }
+      const self = this
+      listStoreyByBuildingPk({buildingPk:this.buildingPk}).then(result => {
         self.storeyData = result.data
       }).catch(() => {
         self.loading = false
       })
+    },
+    selectBuildingPk(){
+      this.listStorey();
     },
     //批量修改属性 begin
     propChange(val,key){
@@ -482,15 +497,10 @@ created(){
       }
     },
     batchPropClick(){
-    //   if(this.selectStorey.storeyName == '未选择'){
-    //     this.$message({
-    //       message: '请选择楼层',
-    //       type: 'warning'
-    //     });
-    //     return
-    //   }
       this.batchPropDialog = true
+      this.listStoreys();
     },
+  
     saveBatchClck(){
       var pmsRoomPo = {
         
@@ -511,13 +521,13 @@ created(){
           return
       }
       var data = {
-          storeyPk:this.selectStorey.storeyPk,
+          storeyPk:this.storeyPk,
           props:props,
           pmsRoomPo:pmsRoomPo
       }
       batchUpdateRoomProp(data).then(res=>{
           this.batchPropDialog = false
-          this.listStoreyRoom(this.selectStorey.storeyPk)
+          this.listStoreyRoom()
           this.$message({ type: res.code == 1?'success':'warning', message: res.sub_msg })
       })
     },
@@ -538,7 +548,7 @@ created(){
             if(res.code == 1){
                 this.$message({ type: 'success', message: res.sub_msg })
                 this.roomLockDialog = false
-                this.listStoreyRoom(this.selectStorey.storeyPk)
+                this.listStoreyRoom()
             }else{
                 this.$message({ type: 'warning', message: res.sub_msg })
             }
@@ -571,7 +581,7 @@ created(){
             message: res.sub_msg,
             type: res.code == 1?'success':'warning'
           });
-          this.listStoreyRoom(this.selectStorey.storeyPk)
+         this.listStoreyRoom()
         })
       });
     },
@@ -598,8 +608,8 @@ created(){
     },
     //智能锁
     init(){
-      this.listStorey()
-      this.listType()
+     // this.listStorey()
+      //this.listType()
     },
     numSort: function (a,b) {
       return a.count-b.count;
@@ -631,14 +641,9 @@ created(){
         self.listTypeDataView[value.typePk] = value;
       })
     },
-    storeyRowClick(row, event, column){
-      this.selectStorey = row
-      this.loading = true
-      this.listStoreyRoom(this.selectStorey.storeyPk)
-    },
     listStoreyRoom(){
       const self = this;
-      listStoreyRoom({storeyPk: self.selectStorey.storeyPk}).then(result => {
+      listAllRoom().then(result => {
         self.roomData = result.data
         self.loading = false
       }).catch(() => {
@@ -647,7 +652,7 @@ created(){
     },
     listRoom(storeyPk) {
       const self = this;
-      listRoom({storeyPk: self.selectStorey.storeyPk}).then(result => {
+      listRoom({storeyPk: self.storeyPk}).then(result => {
         self.roomData = result.data
         self.loading = false
       }).catch(() => {
@@ -655,21 +660,12 @@ created(){
       })
     },
     openAddRoomDialog(){
-    //   if(this.selectStorey.storeyName == '未选择'){
-    //     this.$message({
-    //       message: '请选择楼层',
-    //       type: 'warning'
-    //     });
-    //   }else{
-    //     this.addFrom={intelligentFlag:'N',rflFlag:'N'}
-    //     this.addRoomDialog = true
-    //   }
     this.addRoomDialog=true;
     },
     addRoom() {
       this.commitLoading = true;
       const self = this
-      self.addFrom.storeyPk = this.selectStorey.storeyPk
+      self.addFrom.storeyPk=this.storeyPk
       addRoom(self.addFrom).then(result => {
         if(result.code == 1){
           self.addFrom = self.addFroms
@@ -678,10 +674,17 @@ created(){
             type: 'success'
           })
         }
-        this.listStoreyRoom(this.selectStorey.storeyPk)
-        self.addRoomDialog = false 
+        this.listStoreyRoom()
+        self.addRoomDialog = false
+        self.addFrom=''
+        self.buildingPk=''
+        self.storeyPk=''
       }).finally(()=>{
         this.commitLoading = false;
+        self.addRoomDialog = false
+        self.addFrom=''
+        self.buildingPk=''
+        self.storeyPk=''
       })
     },
     deleteRow(index, rows) {
@@ -690,7 +693,7 @@ created(){
     addRooms(){
       this.commitLoading = true;
       const self = this
-      self.addFrom.storeyPk = this.selectStorey.storeyPk
+      self.addFrom.storeyPk = this.storeyPk
       addRooms(self.previewRoomes).then(result => {
         if(result.code == 1){
           self.addFrom = self.addFroms
@@ -699,10 +702,21 @@ created(){
             type: 'success'
           })
         }
-        this.listStoreyRoom(this.selectStorey.storeyPk)
+        this.listStoreyRoom()
         self.batchAddRoomDialog = false 
+        self.previewData=''
+        self.buildingPk=''
+        self.storeyPk=''
+        self.itemP.roomTypePk=''
+        self.value5=''
       }).finally(()=>{
         this.commitLoading = false;
+        self.batchAddRoomDialog = false 
+        self.previewData=''
+        self.buildingPk=''
+        self.storeyPk=''
+        self.itemP.roomTypePk=''
+        self.value5=''
       })
     },
     previewRoom(){
@@ -736,6 +750,7 @@ created(){
       let str = JSON.stringify(row)
       this.selectRoom = JSON.parse(str)
       this.updateRoomDialog = true
+      this.selectStoreyName();
     },
     updateRoom(){
       this.commitLoading = true;
@@ -771,7 +786,6 @@ created(){
               message: '删除成功',
               type: 'success'
             });
-            this.storeyRowClick(this.selectStorey);
           }
           self.listStoreyRoom()
         })

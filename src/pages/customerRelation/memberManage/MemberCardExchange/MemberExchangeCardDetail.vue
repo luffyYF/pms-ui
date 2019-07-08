@@ -16,7 +16,7 @@
         <el-table-column fixed="right" label="操作" align="center"  min-width="150px">
           <template slot-scope="scope">
              <el-button type="danger" @click="deleteClick(scope.row)"
-                    size="mini">删除
+                    size="mini" v-if="hasPerm('pms:memberCard:del')">删除
                 </el-button>
           </template>
         </el-table-column>

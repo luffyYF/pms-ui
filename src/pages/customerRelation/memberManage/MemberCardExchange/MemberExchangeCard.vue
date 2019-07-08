@@ -27,7 +27,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-        <el-button type="primary" size="mini" @click="saveData" :loading="loading">保存</el-button>
+        <el-button type="primary" size="mini" @click="saveData" :loading="loading" v-if="hasPerm('pms:member:updateMemberCard')">保存</el-button>
 			</span>
 		</el-dialog>
   </section>

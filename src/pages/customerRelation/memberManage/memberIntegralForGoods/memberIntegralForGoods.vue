@@ -254,6 +254,7 @@ import Moment from 'moment'
 
         //批量添加
       addClick () {
+
         this.$confirm('是否确定要兑换?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

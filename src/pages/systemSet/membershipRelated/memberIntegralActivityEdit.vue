@@ -56,7 +56,6 @@
 
 <script>
   import Moment from 'moment'
-  import {listGrade,addRule,updateRule} from '@/api/systemSet/member/pmsMemberIntegralRoomChangeRule'
   import {listMemberIntegralActivity,updateMemberIntegralActivity,deleteMemberIntegralActivity,insertMemberIntegralActivity,listMember } from '@/api/systemSet/member/pmsMemberIntegralActivity'
 
   export default {
@@ -118,7 +117,7 @@
         //     console.log(this.dataForm.gradePks);
         // },
 
-        // 显示所有的商品下拉列表的值
+        // 显示所有的会员下拉列表的值
       listMember() {
         listMember().then(response => {
           this.memberList = [];
@@ -141,34 +140,6 @@
         this.dataForm.gradePk = brandName;
       },
 
-      //   listMember(){
-      //     const self = this
-      //     self.member = [];
-      //     listMember().then(result =>{
-      //     this.member= result.data;
-      //     for(var i=0;i<=this.member.length;i++){
-      //         this.member.push({label: brandList[i].productName, value: brandList[i].productId});
-      //     }
-
-      //           self.member = self.member.concat(result.data)
-      //     })
-      // },
-      listGrade(row){
-        const self = this
-        self.gradeList = [];
-        listGrade().then(result => {
-            // if(row){
-            //     self.gradeList.push({
-            //         gradePk:row.gradePk,
-            //         gradeName:row.gradeName
-            //     })
-            // }
-            self.gradeList = self.gradeList.concat(result.data)
-        }).catch(() => {
-
-        }).finally(()=>{
-        })
-      },
         listRoomType(){
             var typeList = JSON.parse(localStorage.getItem("pms_type"))
             this.roomTypeList = []
@@ -180,19 +151,17 @@
         },
       showDialog (row) {
         this.dialogVisible = true
-        this.listGrade(row)
+        //this.listGrade(row)
         this.listMember()
         this.listRoomType()
-        this.dataForm.gradePk = row.gradePk
+        //this.dataForm.gradePk = row.gradePk
         if (row) {
             row.datepicker = []
             row.datepicker[0] = row.beginDate,
             row.datepicker[1] = row.endDate
             this.title = "修改会员积分活动"
-            if(row.type == 0){
-                row.gradePks = []
-            }
             this.dataForm = row
+            //this.dataForm.activityId=null
             console.log(JSON.stringify(this.dataForm))
         }else{
           this.title = "添加会员积分活动"
@@ -230,6 +199,7 @@
             this.dataForm.beginDate = this.dataForm.datepicker[0]
             this.dataForm.endDate = this.dataForm.datepicker[1]
             this.loading = true
+
             let api
             if (this.dataForm.activityId) {
               api = updateMemberIntegralActivity(this.dataForm)

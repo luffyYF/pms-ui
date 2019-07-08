@@ -80,12 +80,13 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="200" fixed="right">
             <template slot-scope="scope">
+              <el-button type="danger" v-if="hasPerm('pms:IntegralRoomChange:delete')" @click="deleteClick(scope.row.activityId,scope.row.enableFlag)"
+                    size="mini">{{scope.row.enableFlag==0?'启用':'禁用'}}
+                </el-button>
                 <el-button type="primary" v-if="hasPerm('pms:IntegralRoomChange:update')" @click="editClick(scope.row)"
                         size="mini">编辑
                 </el-button>
-                <el-button type="danger" v-if="hasPerm('pms:IntegralRoomChange:delete')" @click="deleteClick(scope.row.activityId)"
-                    size="mini">删除
-                </el-button>
+
             </template>
         </el-table-column>
       </el-table>
@@ -107,12 +108,8 @@
 </template>
 
 <script>
-  import {listGrade,delRule,listRule } from '@/api/systemSet/member/pmsMemberIntegralRoomChangeRule'
-  // import MemberIntegralRoomChangeRuleEdit from './MemberIntegralRoomChangeRuleEdit'
-
   import memberIntegralActivityEdit from './memberIntegralActivityEdit'
   import {listMemberIntegralActivity,updateMemberIntegralActivity,deleteMemberIntegralActivity,insertMemberIntegralActivity,listMember } from '@/api/systemSet/member/pmsMemberIntegralActivity'
-  // import {listGrade} from '@/api/systemSet/member/pmsMemberRechargeGiveRule'
 import { request } from 'https';
   export default {
    components: { memberIntegralActivityEdit },
@@ -162,45 +159,7 @@ import { request } from 'https';
         // this.listMember();
       },
 
-      listGrade(){
-        const self = this
-        self.gradeList = [];
-        listGrade().then(result => {
-          self.gradeObj = {
 
-          }
-          self.gradeList = result.data
-          for(var i=0;i<result.data.length;i++){
-            self.gradeObj[result.data[i].gradePk] = result.data[i].gradeName
-          }
-        }).catch(() => {
-
-        }).finally(()=>{
-        })
-      },
-      listRule(){
-        if(!this.queryPower){
-          this.$message({ type: 'warning', message: "权限不足" })
-          return
-        }
-        self.loading = true
-        listRule(this.pageObj).then(result => {
-            var data = result.data.list;
-            for(var i=0;i<data.length;i++){
-              if(data[i].effectiveWeek){
-                data[i].week = data[i].effectiveWeek.split(",")
-              }
-            }
-            this.tableData = data
-            this.pageObj.total = parseInt(result.data.total)
-            console.log(this.pageObj)
-            self.loading = false
-        }).catch(() => {
-          self.loading = false
-        }).finally(()=>{
-          self.loading = false
-        })
-      },
       listMemberIntegralActivity(){
         self.loading = true
         if (this.timeValue != null && this.timeValue.length == 2) {
@@ -229,13 +188,13 @@ import { request } from 'https';
         var temoObj = JSON.parse(JSON.stringify(row))
         this.$refs.memberIntegralActivityEditRef.showDialog(temoObj)
       },
-      deleteClick (id) {
-        this.$confirm('确定删除数据?', '提示', {
+      deleteClick (id,enableFlag) {
+        this.$confirm('确定要禁用?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteMemberIntegralActivity({activityId:id}).then(res => {
+          deleteMemberIntegralActivity({activityId:id,enableFlag:enableFlag}).then(res => {
               if(res.code == 1){
                   this.listMemberIntegralActivity()
               }
@@ -246,12 +205,12 @@ import { request } from 'https';
       // 分页相关
       handleSizeChange (val) {
         this.pageObj.pageSize = val
-        this.listRule()
+        //this.listRule()
       },
       // 分页相关
       handleCurrentChange (val) {
         this.pageObj.pageNum = val
-        this.listRule()
+        //this.listRule()
       },
     }
   }

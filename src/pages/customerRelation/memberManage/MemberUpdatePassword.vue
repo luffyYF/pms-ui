@@ -63,7 +63,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-        <el-button type="primary" size="mini" @click="submitModify">确认</el-button>
+        <el-button type="primary" size="mini" @click="submitModify" v-if="hasPerm('pms:member:updateMemberPassword')">确认</el-button>
       </span>
     </el-dialog>
   </section>
