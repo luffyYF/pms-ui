@@ -87,7 +87,43 @@
         <el-button type="text" size="small">开发票</el-button>
       </el-table-column>
     </el-table>
+    <el-dialog title="开发票" visible="true">
+        
+        <el-row>
+          <e-col :span="4">开票类型：</e-col>
+          <e-col :span="20">
+            <el-radio-group v-model="invoiceData.invoiceType">
+              <el-radio :label="1">增值税电子发票</el-radio>
+              <el-radio :label="2">增值税普通发票</el-radio>
+              <el-radio :label="3">增值税专用发票</el-radio>
+            </el-radio-group>
+          </e-col>
+        </el-row>
+        <el-row>
+          <e-col :span="4">开票类型：</e-col>
+          <e-col :span="20">
+            <el-radio-group v-model="invoiceData.invoiceType">
+              <el-radio :label="1">增值税电子发票</el-radio>
+              <el-radio :label="2">增值税普通发票</el-radio>
+              <el-radio :label="3">增值税专用发票</el-radio>
+            </el-radio-group>
+          </e-col>
+        </el-row>
+        <el-row>
+            <el-input placeholder="请输入内容" v-model="input" :disabled="true"></el-input>
+         <el-input placeholder="请输入内容" v-model="input" :disabled="true"></el-input>
+          <!-- <e-col :span="3">消费金额：</e-col>
+          <e-col :span="8">
+            
+          </e-col>
+          <e-col :span="3">已开票金额</e-col>
 
+          <e-col :span="8">
+          
+          </e-col> -->
+        </el-row>
+      </el-container>
+    </el-dialog>
     <el-pagination
       style="text-align:center;margin:10px 0;"
       @size-change="handleSizeChange"
@@ -102,6 +138,9 @@
 export default {
   data() {
     return {
+      invoiceData: {
+        invoiceType: 1
+      },
       tableData: [
         {
           orderStatus: "43434",
